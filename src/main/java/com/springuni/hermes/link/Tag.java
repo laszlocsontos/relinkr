@@ -1,6 +1,5 @@
-package com.springuni.hermes.user;
+package com.springuni.hermes.link;
 
-import java.io.Serializable;
 import javax.persistence.Embeddable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,11 +7,11 @@ import lombok.EqualsAndHashCode;
 @Data
 @Embeddable
 @EqualsAndHashCode(of = "value")
-public class UserId implements Serializable {
+public class Tag {
 
-    private final long value;
+    private final String value;
 
-    public UserId(long value) {
+    public Tag(String value) {
         this.value = value;
     }
 

@@ -8,10 +8,12 @@ import java.util.Optional;
 import java.util.Set;
 import javax.persistence.ElementCollection;
 import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+@Entity
 public class User extends AbstractPersistable<UserId> {
 
     private EmailAddress emailAddress;
