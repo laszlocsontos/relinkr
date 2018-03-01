@@ -14,7 +14,6 @@ import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Transient;
 import lombok.EqualsAndHashCode;
-import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponents;
@@ -22,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Embeddable
 @EqualsAndHashCode
-public class LongUrl {
+class LongUrl {
 
     private URL baseUrl;
 
@@ -106,13 +105,7 @@ public class LongUrl {
     }
 
     public LongUrl apply(UtmParameters utmParameters) {
-        Assert.notNull(utmParameters, "utmParameters cannot be null");
-        try {
-            return new LongUrl(baseUrl.toString(), utmParameters);
-        } catch (InvalidLongUrlException e) {
-            // This should never happen as baseUrl itself is a valid java.net.URL.
-            throw new AssertionError("Internal error: baseUrl=" + baseUrl, e);
-        }
+        return from(baseUrl, utmParameters);
     }
 
     public URL getBaseUrl() {
@@ -134,6 +127,15 @@ public class LongUrl {
     @Override
     public String toString() {
         return getTargetUrl().toString();
+    }
+
+    static LongUrl from(URL url, UtmParameters utmParameters) {
+        try {
+            return new LongUrl(url.toString(), utmParameters);
+        } catch (InvalidLongUrlException e) {
+            // This should never happen as url itself is a valid java.net.URL.
+            throw new AssertionError("Internal error: baseUrl=" + url, e);
+        }
     }
 
 }

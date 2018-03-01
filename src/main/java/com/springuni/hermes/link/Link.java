@@ -1,46 +1,46 @@
 package com.springuni.hermes.link;
 
-import static java.util.Collections.unmodifiableSet;
+import static javax.persistence.DiscriminatorType.CHAR;
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
 
-import com.springuni.hermes.user.Ownable;
-import com.springuni.hermes.user.UserId;
 import java.net.URL;
-import java.util.Set;
-import javax.persistence.ElementCollection;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.MappedSuperclass;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-@Entity
-public class Link extends AbstractPersistable<LinkId> implements Ownable {
+@MappedSuperclass
+@Inheritance(strategy = SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = CHAR, name = "link_type")
+abstract class Link extends AbstractPersistable<LinkId> {
 
     @Embedded
-    private LongUrl longUrl;
+    protected LongUrl longUrl;
 
-    @Embedded
-    private UserId owner;
+    public Link(String baseUrl) throws InvalidLongUrlException {
+        longUrl = new LongUrl(baseUrl);
+    }
 
-    @ElementCollection
-    private Set<Tag> tags;
+    public Link(String baseUrl, UtmParameters utmParameters) throws InvalidLongUrlException {
+        longUrl = new LongUrl(baseUrl, utmParameters);
+    }
 
-    public void apply(UtmParameters utmParameters) {
-        longUrl = longUrl.apply(utmParameters);
+    Link(LongUrl longUrl) {
+        this.longUrl = longUrl;
+    }
+
+    /*
+     * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
+     */
+    Link() {
     }
 
     @Override
     @EmbeddedId
     public LinkId getId() {
         return super.getId();
-    }
-
-    @Override
-    public UserId getOwner() {
-        return owner;
-    }
-
-    public void setOwner(UserId owner) {
-        this.owner = owner;
     }
 
     public URL getBaseUrl() {
@@ -51,25 +51,13 @@ public class Link extends AbstractPersistable<LinkId> implements Ownable {
         return longUrl.getTargetUrl();
     }
 
-    public Set<Tag> getTags() {
-        return unmodifiableSet(tags);
-    }
-
-    public void addTag(Tag tag) {
-        tags.add(tag);
-    }
-
-    public void removeTag(Tag tag) {
-        tags.remove(tag);
-    }
-
-    public void updateBaseUrl(String baseUrl) throws InvalidLongUrlException {
-        longUrl = new LongUrl(baseUrl, longUrl.getUtmParameters());
-    }
-
     @Override
     public String toString() {
         return getTargetUrl().toString();
+    }
+
+    public void updateLongUrl(String baseUrl) throws InvalidLongUrlException {
+        longUrl = new LongUrl(baseUrl, longUrl.getUtmParameters());
     }
 
 }
