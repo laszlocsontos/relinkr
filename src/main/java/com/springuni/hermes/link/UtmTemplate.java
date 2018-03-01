@@ -74,7 +74,7 @@ public class UtmTemplate extends AbstractPersistable<UtmTemplateId> implements O
 
     public void setUtmParameters(Set<UtmParameters> utmParameterSet) {
         Set<UtmParameters> newUtmParameterSet = new LinkedHashSet<>(utmParameterSet.size());
-        newUtmParameterSet.addAll(newUtmParameterSet);
+        newUtmParameterSet.addAll(utmParameterSet);
         this.utmParameters = newUtmParameterSet;
     }
 

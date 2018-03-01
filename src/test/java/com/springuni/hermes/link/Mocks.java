@@ -1,5 +1,11 @@
 package com.springuni.hermes.link;
 
+import static java.util.Collections.unmodifiableSet;
+
+import com.springuni.hermes.user.UserId;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 class Mocks {
 
     static final String LONG_URL_BASE_S
@@ -25,8 +31,12 @@ class Mocks {
     static final String UTM_TERM_V = "term";
     static final String UTM_CONTENT_V = "content";
 
-    static UtmParameters UTM_PARAMETERS_MINIMAL;
-    static UtmParameters UTM_PARAMETERS_FULL;
+    static final UtmParameters UTM_PARAMETERS_MINIMAL;
+    static final UtmParameters UTM_PARAMETERS_FULL;
+    static final Set<UtmParameters> UTM_PARAMETERS_SET;
+
+    static final UserId OWNER = new UserId(1);
+    static final String UTM_TEMPLATE_NAME = "template";
 
     static {
         try {
@@ -48,6 +58,12 @@ class Mocks {
                     UTM_MEDIUM_V,
                     UTM_CAMPAIGN_V
             );
+
+            Set<UtmParameters> utmParametersSet = new LinkedHashSet<>(2);
+            utmParametersSet.add(UTM_PARAMETERS_FULL);
+            utmParametersSet.add(UTM_PARAMETERS_MINIMAL);
+            UTM_PARAMETERS_SET = unmodifiableSet(utmParametersSet);
+
         } catch (Exception e) {
             // This shouldn't happen, if it does, make test cases fail.
             throw new AssertionError(e);
