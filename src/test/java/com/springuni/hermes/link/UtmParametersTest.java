@@ -1,5 +1,11 @@
 package com.springuni.hermes.link;
 
+import static com.springuni.hermes.link.Mocks.UTM_CAMPAIGN_V;
+import static com.springuni.hermes.link.Mocks.UTM_CONTENT_V;
+import static com.springuni.hermes.link.Mocks.UTM_MEDIUM_V;
+import static com.springuni.hermes.link.Mocks.UTM_PARAMETERS_FULL;
+import static com.springuni.hermes.link.Mocks.UTM_SOURCE_V;
+import static com.springuni.hermes.link.Mocks.UTM_TERM_V;
 import static com.springuni.hermes.link.UtmParameters.UTM_CAMPAIGN;
 import static com.springuni.hermes.link.UtmParameters.UTM_CONTENT;
 import static com.springuni.hermes.link.UtmParameters.UTM_MEDIUM;
@@ -10,32 +16,18 @@ import static org.junit.Assert.assertThat;
 
 import java.util.Map;
 import org.hamcrest.collection.IsMapContaining;
-import org.junit.Before;
 import org.junit.Test;
 
 public class UtmParametersTest {
 
-    private UtmParameters utmParameters;
-
-    @Before
-    public void setUp() throws Exception {
-        utmParameters = new UtmParameters(
-                "test1",
-                "test2",
-                "test3",
-                "test4",
-                "test5"
-        );
-    }
-
     @Test
     public void asMap() {
-        Map<String, String> utmParameterMap = utmParameters.asMap();
-        assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_SOURCE, "test1"));
-        assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_MEDIUM, "test2"));
-        assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_CAMPAIGN, "test3"));
-        assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_TERM, "test4"));
-        assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_CONTENT, "test5"));
+        Map<String, String> utmParameterMap = UTM_PARAMETERS_FULL.asMap();
+        assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_SOURCE, UTM_SOURCE_V));
+        assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_MEDIUM, UTM_MEDIUM_V));
+        assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_CAMPAIGN, UTM_CAMPAIGN_V));
+        assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_TERM, UTM_TERM_V));
+        assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_CONTENT, UTM_CONTENT_V));
     }
 
     @Test(expected = MissingUtmParameterException.class)
@@ -55,27 +47,27 @@ public class UtmParametersTest {
 
     @Test
     public void getUtmSource() {
-        assertEquals("test1", utmParameters.getUtmSource());
+        assertEquals(UTM_SOURCE_V, UTM_PARAMETERS_FULL.getUtmSource());
     }
 
     @Test
     public void getUtmMedium() {
-        assertEquals("test2", utmParameters.getUtmMedium());
+        assertEquals(UTM_MEDIUM_V, UTM_PARAMETERS_FULL.getUtmMedium());
     }
 
     @Test
     public void getUtmCampaign() {
-        assertEquals("test3", utmParameters.getClass());
+        assertEquals(UTM_CAMPAIGN_V, UTM_PARAMETERS_FULL.getClass());
     }
 
     @Test
     public void getUtmTerm() {
-        assertEquals("test4", utmParameters.getUtmTerm().get());
+        assertEquals(UTM_TERM_V, UTM_PARAMETERS_FULL.getUtmTerm().get());
     }
 
     @Test
     public void getUtmContent() {
-        assertEquals("test5", utmParameters.getUtmContent().get());
+        assertEquals(UTM_CONTENT_V, UTM_PARAMETERS_FULL.getUtmContent().get());
     }
 
 }
