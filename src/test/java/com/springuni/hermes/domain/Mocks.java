@@ -1,9 +1,15 @@
-package com.springuni.hermes.domain.link;
+package com.springuni.hermes.domain;
 
 import static java.util.Collections.unmodifiableSet;
 
+import com.springuni.hermes.domain.link.LinkId;
+import com.springuni.hermes.domain.link.LongUrl;
+import com.springuni.hermes.domain.link.Tag;
 import com.springuni.hermes.domain.user.UserId;
 import com.springuni.hermes.domain.utm.UtmParameters;
+import com.springuni.hermes.domain.visitor.IpAddress;
+import com.springuni.hermes.domain.visitor.VisitorId;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -42,6 +48,14 @@ public class Mocks {
     public static final Tag TAG_A = new Tag("A");
     public static final Tag TAG_B = new Tag("B");
 
+    public static final String IPV4_ADDRESS = "184.52.70.179";
+    public static final String IPV6_ADDRESS = "2001:db8:85a3:0:0:8a2e:370:7334";
+
+    public static final LinkId LINK_ID = new LinkId(1L);
+    public static final VisitorId VISITOR_ID = new VisitorId(1L);
+    public static final IpAddress VISITOR_IP;
+    public static final LocalDateTime TIMESTAMP = LocalDateTime.of(2018, 02, 28, 19, 52);
+
     static {
         try {
             LONG_URL_BASE = new LongUrl(LONG_URL_BASE_S);
@@ -68,6 +82,7 @@ public class Mocks {
             utmParametersSet.add(UTM_PARAMETERS_MINIMAL);
             UTM_PARAMETERS_SET = unmodifiableSet(utmParametersSet);
 
+            VISITOR_IP = new IpAddress(IPV4_ADDRESS);
         } catch (Exception e) {
             // This shouldn't happen, if it does, make test cases fail.
             throw new AssertionError(e);

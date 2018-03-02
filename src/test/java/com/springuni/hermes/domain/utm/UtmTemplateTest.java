@@ -1,10 +1,10 @@
 package com.springuni.hermes.domain.utm;
 
-import static com.springuni.hermes.domain.link.Mocks.OWNER;
-import static com.springuni.hermes.domain.link.Mocks.UTM_PARAMETERS_FULL;
-import static com.springuni.hermes.domain.link.Mocks.UTM_PARAMETERS_MINIMAL;
-import static com.springuni.hermes.domain.link.Mocks.UTM_PARAMETERS_SET;
-import static com.springuni.hermes.domain.link.Mocks.UTM_TEMPLATE_NAME;
+import static com.springuni.hermes.domain.Mocks.OWNER;
+import static com.springuni.hermes.domain.Mocks.UTM_PARAMETERS_FULL;
+import static com.springuni.hermes.domain.Mocks.UTM_PARAMETERS_MINIMAL;
+import static com.springuni.hermes.domain.Mocks.UTM_PARAMETERS_SET;
+import static com.springuni.hermes.domain.Mocks.UTM_TEMPLATE_NAME;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertFalse;

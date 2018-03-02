@@ -1,11 +1,11 @@
 package com.springuni.hermes.domain.link;
 
-import static com.springuni.hermes.domain.link.Mocks.LONG_URL_BASE_S;
-import static com.springuni.hermes.domain.link.Mocks.LONG_URL_WITHOUT_UTM;
-import static com.springuni.hermes.domain.link.Mocks.LONG_URL_WITHOUT_UTM_S;
-import static com.springuni.hermes.domain.link.Mocks.TAG_A;
-import static com.springuni.hermes.domain.link.Mocks.TAG_B;
-import static com.springuni.hermes.domain.link.Mocks.UTM_PARAMETERS_MINIMAL;
+import static com.springuni.hermes.domain.Mocks.LONG_URL_BASE_S;
+import static com.springuni.hermes.domain.Mocks.LONG_URL_WITHOUT_UTM;
+import static com.springuni.hermes.domain.Mocks.LONG_URL_WITHOUT_UTM_S;
+import static com.springuni.hermes.domain.Mocks.TAG_A;
+import static com.springuni.hermes.domain.Mocks.TAG_B;
+import static com.springuni.hermes.domain.Mocks.UTM_PARAMETERS_MINIMAL;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
