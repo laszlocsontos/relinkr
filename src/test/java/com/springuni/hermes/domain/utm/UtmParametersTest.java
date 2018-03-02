@@ -57,7 +57,7 @@ public class UtmParametersTest {
 
     @Test
     public void getUtmCampaign() {
-        assertEquals(UTM_CAMPAIGN_V, UTM_PARAMETERS_FULL.getClass());
+        assertEquals(UTM_CAMPAIGN_V, UTM_PARAMETERS_FULL.getUtmCampaign());
     }
 
     @Test
