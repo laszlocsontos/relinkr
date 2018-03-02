@@ -4,6 +4,7 @@ import static java.util.Collections.unmodifiableSet;
 
 import com.springuni.hermes.domain.user.Ownable;
 import com.springuni.hermes.domain.user.UserId;
+import com.springuni.hermes.domain.utm.UtmParameters;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.DiscriminatorValue;

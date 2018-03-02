@@ -15,7 +15,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @MappedSuperclass
 @Inheritance(strategy = SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = CHAR, name = "link_type")
-abstract class Link extends AbstractPersistable<LinkId> {
+public abstract class Link extends AbstractPersistable<LinkId> {
 
     @Embedded
     protected LongUrl longUrl;

@@ -23,7 +23,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Embeddable
 @EqualsAndHashCode
-class LongUrl {
+public class LongUrl {
 
     private URL baseUrl;
 
@@ -131,7 +131,7 @@ class LongUrl {
         return getTargetUrl().toString();
     }
 
-    static LongUrl from(URL url, UtmParameters utmParameters) {
+    public static LongUrl from(URL url, UtmParameters utmParameters) {
         try {
             return new LongUrl(url.toString(), utmParameters);
         } catch (InvalidUrlException e) {

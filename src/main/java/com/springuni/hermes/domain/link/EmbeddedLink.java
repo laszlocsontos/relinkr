@@ -1,5 +1,7 @@
 package com.springuni.hermes.domain.link;
 
+import com.springuni.hermes.domain.linkset.LinkSet;
+import com.springuni.hermes.domain.utm.UtmParameters;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,7 +29,7 @@ public class EmbeddedLink extends Link {
         super(baseUrl, utmParameters);
     }
 
-    EmbeddedLink(LongUrl longUrl) {
+    public EmbeddedLink(LongUrl longUrl) {
         super(longUrl);
     }
 

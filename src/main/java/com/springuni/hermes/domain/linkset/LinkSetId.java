@@ -1,4 +1,4 @@
-package com.springuni.hermes.domain.link;
+package com.springuni.hermes.domain.linkset;
 
 import java.io.Serializable;
 import javax.persistence.Embeddable;
@@ -17,4 +17,3 @@ public class LinkSetId implements Serializable {
     }
 
 }
-

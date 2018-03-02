@@ -1,7 +1,11 @@
-package com.springuni.hermes.domain.link;
+package com.springuni.hermes.domain.linkset;
 
 import static java.util.Collections.unmodifiableList;
 
+import com.springuni.hermes.domain.link.EmbeddedLink;
+import com.springuni.hermes.domain.link.InvalidUrlException;
+import com.springuni.hermes.domain.link.Link;
+import com.springuni.hermes.domain.link.LongUrl;
 import com.springuni.hermes.domain.user.Ownable;
 import com.springuni.hermes.domain.user.UserId;
 import com.springuni.hermes.domain.utm.UtmParameters;
