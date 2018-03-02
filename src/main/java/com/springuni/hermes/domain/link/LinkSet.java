@@ -4,6 +4,8 @@ import static java.util.Collections.unmodifiableList;
 
 import com.springuni.hermes.domain.user.Ownable;
 import com.springuni.hermes.domain.user.UserId;
+import com.springuni.hermes.domain.utm.UtmParameters;
+import com.springuni.hermes.domain.utm.UtmTemplate;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
