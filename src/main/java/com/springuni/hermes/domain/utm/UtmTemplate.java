@@ -1,4 +1,4 @@
-package com.springuni.hermes.domain.link;
+package com.springuni.hermes.domain.utm;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;

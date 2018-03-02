@@ -3,6 +3,7 @@ package com.springuni.hermes.domain.link;
 import static com.springuni.hermes.domain.link.Mocks.*;
 import static org.junit.Assert.*;
 
+import com.springuni.hermes.domain.utm.UtmTemplate;
 import java.net.URL;
 import org.junit.Before;
 import org.junit.Test;

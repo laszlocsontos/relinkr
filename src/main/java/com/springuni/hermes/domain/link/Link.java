@@ -3,6 +3,7 @@ package com.springuni.hermes.domain.link;
 import static javax.persistence.DiscriminatorType.CHAR;
 import static javax.persistence.InheritanceType.SINGLE_TABLE;
 
+import com.springuni.hermes.domain.utm.UtmParameters;
 import java.net.URL;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Embedded;

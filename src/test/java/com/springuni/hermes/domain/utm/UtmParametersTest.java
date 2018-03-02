@@ -1,4 +1,4 @@
-package com.springuni.hermes.domain.link;
+package com.springuni.hermes.domain.utm;
 
 import static com.springuni.hermes.domain.link.Mocks.UTM_CAMPAIGN_V;
 import static com.springuni.hermes.domain.link.Mocks.UTM_CONTENT_V;
@@ -6,11 +6,11 @@ import static com.springuni.hermes.domain.link.Mocks.UTM_MEDIUM_V;
 import static com.springuni.hermes.domain.link.Mocks.UTM_PARAMETERS_FULL;
 import static com.springuni.hermes.domain.link.Mocks.UTM_SOURCE_V;
 import static com.springuni.hermes.domain.link.Mocks.UTM_TERM_V;
-import static com.springuni.hermes.domain.link.UtmParameters.UTM_CAMPAIGN;
-import static com.springuni.hermes.domain.link.UtmParameters.UTM_CONTENT;
-import static com.springuni.hermes.domain.link.UtmParameters.UTM_MEDIUM;
-import static com.springuni.hermes.domain.link.UtmParameters.UTM_SOURCE;
-import static com.springuni.hermes.domain.link.UtmParameters.UTM_TERM;
+import static com.springuni.hermes.domain.utm.UtmParameters.UTM_CAMPAIGN;
+import static com.springuni.hermes.domain.utm.UtmParameters.UTM_CONTENT;
+import static com.springuni.hermes.domain.utm.UtmParameters.UTM_MEDIUM;
+import static com.springuni.hermes.domain.utm.UtmParameters.UTM_SOURCE;
+import static com.springuni.hermes.domain.utm.UtmParameters.UTM_TERM;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 

@@ -1,4 +1,4 @@
-package com.springuni.hermes.domain.link;
+package com.springuni.hermes.domain.utm;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -15,11 +15,11 @@ import org.springframework.util.StringUtils;
 @ToString
 public class UtmParameters {
 
-    static final String UTM_SOURCE = "utm_source";
-    static final String UTM_MEDIUM = "utm_medium";
-    static final String UTM_CAMPAIGN = "utm_campaign";
-    static final String UTM_TERM = "utm_term";
-    static final String UTM_CONTENT = "utm_content";
+    public static final String UTM_SOURCE = "utm_source";
+    public static final String UTM_MEDIUM = "utm_medium";
+    public static final String UTM_CAMPAIGN = "utm_campaign";
+    public static final String UTM_TERM = "utm_term";
+    public static final String UTM_CONTENT = "utm_content";
 
     private String utmSource;
     private String utmMedium;

@@ -1,4 +1,4 @@
-package com.springuni.hermes.domain.link;
+package com.springuni.hermes.domain.utm;
 
 import static com.springuni.hermes.domain.link.Mocks.OWNER;
 import static com.springuni.hermes.domain.link.Mocks.UTM_PARAMETERS_FULL;

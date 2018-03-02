@@ -1,4 +1,4 @@
-package com.springuni.hermes.domain.link;
+package com.springuni.hermes.domain.utm;
 
 import java.io.Serializable;
 import javax.persistence.Embeddable;
