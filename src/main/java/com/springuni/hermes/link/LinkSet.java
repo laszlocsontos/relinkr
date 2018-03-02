@@ -1,5 +1,7 @@
 package com.springuni.hermes.link;
 
+import static java.util.Collections.unmodifiableList;
+
 import com.springuni.hermes.user.Ownable;
 import com.springuni.hermes.user.UserId;
 import java.net.MalformedURLException;
@@ -16,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.springframework.util.Assert;
 
 public class LinkSet extends AbstractPersistable<LinkSetId> implements Ownable {
 
@@ -32,6 +35,32 @@ public class LinkSet extends AbstractPersistable<LinkSetId> implements Ownable {
     @OneToMany(mappedBy = "linkSet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Link> links = new ArrayList<>();
 
+    public LinkSet(String baseUrl, UtmTemplate utmTemplate, UserId owner)
+            throws InvalidLongUrlException {
+
+        Assert.notNull(baseUrl, "baseUrl cannot be null");
+        Assert.notNull(utmTemplate, "utmTemplate cannot be null");
+        Assert.notNull(owner, "owner cannot be null");
+
+        try {
+            this.baseUrl = new URL(baseUrl);
+        } catch (MalformedURLException e) {
+            throw new InvalidLongUrlException(e);
+        }
+
+        this.utmTemplate = utmTemplate;
+        this.owner = owner;
+
+        regenerateLinks();
+    }
+
+    /*
+     * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
+     */
+    LinkSet() {
+    }
+
+
     @EmbeddedId
     @Override
     public LinkSetId getId() {
@@ -40,6 +69,10 @@ public class LinkSet extends AbstractPersistable<LinkSetId> implements Ownable {
 
     public URL getBaseUrl() {
         return baseUrl;
+    }
+
+    public List<Link> getLinks() {
+        return unmodifiableList(links);
     }
 
     @Override
@@ -53,7 +86,7 @@ public class LinkSet extends AbstractPersistable<LinkSetId> implements Ownable {
 
     public void regenerateLinks() {
         links.clear();
-        Set<UtmParameters> utmParametersSet = utmTemplate.getUtmParameters();
+        Set<UtmParameters> utmParametersSet = utmTemplate.getUtmParametersSet();
         utmParametersSet.forEach(utmParameters -> {
             links.add(new EmbeddedLink(LongUrl.from(baseUrl, utmParameters)));
         });

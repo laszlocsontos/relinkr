@@ -11,6 +11,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.Assert;
 
@@ -23,20 +24,22 @@ public class UtmTemplate extends AbstractPersistable<UtmTemplateId> implements O
     private UserId owner;
 
     @ElementCollection
-    private Set<UtmParameters> utmParameters;
+    private Set<UtmParameters> utmParametersSet = new LinkedHashSet<>();
 
-    public UtmTemplate(String name, UserId owner) {
+    public UtmTemplate(@NotNull String name, @NotNull UserId owner) {
         this(name, owner, emptySet());
     }
 
-    public UtmTemplate(String name, UserId owner, Set<UtmParameters> utmParameters) {
+    public UtmTemplate(@NotNull String name, @NotNull UserId owner,
+            @NotNull Set<UtmParameters> utmParametersSet) {
         Assert.hasText(name, "name cannot be null");
         Assert.notNull(owner, "owner cannot be null");
-        Assert.notNull(utmParameters, "utmParameters cannot be null");
+        Assert.notNull(utmParametersSet, "owner cannot be null");
 
         this.name = name;
         this.owner = owner;
-        this.utmParameters = utmParameters;
+
+        setUtmParametersSet(utmParametersSet);
     }
 
     /*
@@ -68,14 +71,25 @@ public class UtmTemplate extends AbstractPersistable<UtmTemplateId> implements O
         this.owner = owner;
     }
 
-    public Set<UtmParameters> getUtmParameters() {
-        return unmodifiableSet(utmParameters);
+    public Set<UtmParameters> getUtmParametersSet() {
+        return unmodifiableSet(utmParametersSet);
     }
 
-    public void setUtmParameters(Set<UtmParameters> utmParameterSet) {
+    public void setUtmParametersSet(@NotNull Set<UtmParameters> utmParameterSet) {
+        Assert.notNull(utmParameterSet, "utmParameterSet cannot be null");
         Set<UtmParameters> newUtmParameterSet = new LinkedHashSet<>(utmParameterSet.size());
         newUtmParameterSet.addAll(utmParameterSet);
-        this.utmParameters = newUtmParameterSet;
+        utmParametersSet = newUtmParameterSet;
+    }
+
+    public void addUtmParameters(@NotNull UtmParameters utmParameters) {
+        Assert.notNull(utmParameters, "utmParameters cannot be null");
+        utmParametersSet.add(utmParameters);
+    }
+
+    public void removeUtmParameters(UtmParameters utmParameters) {
+        Assert.notNull(utmParameters, "utmParameters cannot be null");
+        utmParametersSet.remove(utmParameters);
     }
 
 }
