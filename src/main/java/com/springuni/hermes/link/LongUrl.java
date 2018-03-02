@@ -77,7 +77,7 @@ class LongUrl {
 
         try {
             baseUrl = baseUriComponents.toUri().toURL();
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | IllegalArgumentException e) {
             throw new InvalidLongUrlException("Couldn't build baseUrl", e);
         }
 
@@ -93,7 +93,7 @@ class LongUrl {
                     .build()
                     .toUri()
                     .toURL();
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | IllegalArgumentException e) {
             throw new InvalidLongUrlException("Couldn't build baseUrl", e);
         }
     }

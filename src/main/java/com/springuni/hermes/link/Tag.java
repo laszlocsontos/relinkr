@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Embeddable
-@EqualsAndHashCode(of = "value")
+@EqualsAndHashCode
 public class Tag {
 
     private final String value;

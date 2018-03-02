@@ -4,6 +4,7 @@ import static java.util.Collections.unmodifiableSet;
 
 import com.springuni.hermes.user.Ownable;
 import com.springuni.hermes.user.UserId;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
@@ -18,7 +19,7 @@ public class StandaloneLink extends Link implements Ownable {
     private UserId owner;
 
     @ElementCollection
-    private Set<Tag> tags;
+    private Set<Tag> tags = new LinkedHashSet<>();
 
     public StandaloneLink(String baseUrl) throws InvalidLongUrlException {
         super(baseUrl);

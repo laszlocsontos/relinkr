@@ -38,6 +38,9 @@ class Mocks {
     static final UserId OWNER = new UserId(1);
     static final String UTM_TEMPLATE_NAME = "template";
 
+    static final Tag TAG_A = new Tag("A");
+    static final Tag TAG_B = new Tag("B");
+
     static {
         try {
             LONG_URL_BASE = new LongUrl(LONG_URL_BASE_S);
