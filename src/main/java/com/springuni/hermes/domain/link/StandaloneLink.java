@@ -16,9 +16,6 @@ import javax.persistence.Entity;
 @DiscriminatorValue("S")
 public class StandaloneLink extends Link implements Ownable {
 
-    @Embedded
-    private UserId owner;
-
     @ElementCollection
     private Set<Tag> tags = new LinkedHashSet<>();
 
@@ -41,11 +38,6 @@ public class StandaloneLink extends Link implements Ownable {
 
     public void apply(UtmParameters utmParameters) {
         longUrl = longUrl.apply(utmParameters);
-    }
-
-    @Override
-    public UserId getOwner() {
-        return owner;
     }
 
     public Set<Tag> getTags() {
