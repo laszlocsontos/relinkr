@@ -18,12 +18,12 @@ public class EmbeddedLink extends Link {
         return linkSet;
     }
 
-    public EmbeddedLink(String baseUrl) throws InvalidLongUrlException {
+    public EmbeddedLink(String baseUrl) throws InvalidUrlException {
         super(baseUrl);
     }
 
     public EmbeddedLink(String baseUrl, UtmParameters utmParameters)
-            throws InvalidLongUrlException {
+            throws InvalidUrlException {
         super(baseUrl, utmParameters);
     }
 

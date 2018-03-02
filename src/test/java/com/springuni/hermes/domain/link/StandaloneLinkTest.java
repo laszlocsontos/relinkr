@@ -65,7 +65,7 @@ public class StandaloneLinkTest {
         assertEquals(LONG_URL_WITHOUT_UTM_S, link.getTargetUrl().toString());
     }
 
-    @Test(expected = InvalidLongUrlException.class)
+    @Test(expected = InvalidUrlException.class)
     public void updateLongUrl_withInValidUrl() throws Exception {
         link.updateLongUrl("bad");
     }

@@ -19,11 +19,11 @@ abstract class Link extends AbstractPersistable<LinkId> {
     @Embedded
     protected LongUrl longUrl;
 
-    public Link(String baseUrl) throws InvalidLongUrlException {
+    public Link(String baseUrl) throws InvalidUrlException {
         longUrl = new LongUrl(baseUrl);
     }
 
-    public Link(String baseUrl, UtmParameters utmParameters) throws InvalidLongUrlException {
+    public Link(String baseUrl, UtmParameters utmParameters) throws InvalidUrlException {
         longUrl = new LongUrl(baseUrl, utmParameters);
     }
 
@@ -56,7 +56,7 @@ abstract class Link extends AbstractPersistable<LinkId> {
         return getTargetUrl().toString();
     }
 
-    public void updateLongUrl(String baseUrl) throws InvalidLongUrlException {
+    public void updateLongUrl(String baseUrl) throws InvalidUrlException {
         longUrl = new LongUrl(baseUrl, longUrl.getUtmParameters());
     }
 

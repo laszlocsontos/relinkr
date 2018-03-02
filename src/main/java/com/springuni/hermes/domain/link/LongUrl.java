@@ -31,16 +31,16 @@ class LongUrl {
     @Embedded
     private UtmParameters utmParameters;
 
-    public LongUrl(String url) throws InvalidLongUrlException {
+    public LongUrl(String url) throws InvalidUrlException {
         this(url, null);
     }
 
-    public LongUrl(String url, UtmParameters utmParameters) throws InvalidLongUrlException {
+    public LongUrl(String url, UtmParameters utmParameters) throws InvalidUrlException {
         URI uri;
         try {
             uri = new URI(url);
         } catch (URISyntaxException | NullPointerException e) {
-            throw new InvalidLongUrlException(e);
+            throw new InvalidUrlException(e);
         }
 
         UriComponents uriComponents = UriComponentsBuilder.fromUri(uri).build();
@@ -78,7 +78,7 @@ class LongUrl {
         try {
             baseUrl = baseUriComponents.toUri().toURL();
         } catch (MalformedURLException | IllegalArgumentException e) {
-            throw new InvalidLongUrlException("Couldn't build baseUrl", e);
+            throw new InvalidUrlException("Couldn't build baseUrl", e);
         }
 
         if (this.utmParameters != null) {
@@ -94,7 +94,7 @@ class LongUrl {
                     .toUri()
                     .toURL();
         } catch (MalformedURLException | IllegalArgumentException e) {
-            throw new InvalidLongUrlException("Couldn't build baseUrl", e);
+            throw new InvalidUrlException("Couldn't build baseUrl", e);
         }
     }
 
@@ -132,7 +132,7 @@ class LongUrl {
     static LongUrl from(URL url, UtmParameters utmParameters) {
         try {
             return new LongUrl(url.toString(), utmParameters);
-        } catch (InvalidLongUrlException e) {
+        } catch (InvalidUrlException e) {
             // This should never happen as url itself is a valid java.net.URL.
             throw new AssertionError("Internal error: baseUrl=" + url, e);
         }

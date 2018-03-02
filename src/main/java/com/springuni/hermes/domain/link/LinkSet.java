@@ -36,7 +36,7 @@ public class LinkSet extends AbstractPersistable<LinkSetId> implements Ownable {
     private List<Link> links = new ArrayList<>();
 
     public LinkSet(String baseUrl, UtmTemplate utmTemplate, UserId owner)
-            throws InvalidLongUrlException {
+            throws InvalidUrlException {
 
         Assert.notNull(baseUrl, "baseUrl cannot be null");
         Assert.notNull(utmTemplate, "utmTemplate cannot be null");
@@ -45,7 +45,7 @@ public class LinkSet extends AbstractPersistable<LinkSetId> implements Ownable {
         try {
             this.baseUrl = new URL(baseUrl);
         } catch (MalformedURLException e) {
-            throw new InvalidLongUrlException(e);
+            throw new InvalidUrlException(e);
         }
 
         this.utmTemplate = utmTemplate;
@@ -92,11 +92,11 @@ public class LinkSet extends AbstractPersistable<LinkSetId> implements Ownable {
         });
     }
 
-    public void updateBaseUrl(@NotNull String baseUrl) throws InvalidLongUrlException {
+    public void updateBaseUrl(@NotNull String baseUrl) throws InvalidUrlException {
         try {
             this.baseUrl = new URL(baseUrl);
         } catch (MalformedURLException e) {
-            throw new InvalidLongUrlException(e);
+            throw new InvalidUrlException(e);
         }
 
         for (Link link : links) {

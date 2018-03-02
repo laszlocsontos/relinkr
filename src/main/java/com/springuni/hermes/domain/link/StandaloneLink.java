@@ -21,12 +21,12 @@ public class StandaloneLink extends Link implements Ownable {
     @ElementCollection
     private Set<Tag> tags = new LinkedHashSet<>();
 
-    public StandaloneLink(String baseUrl) throws InvalidLongUrlException {
+    public StandaloneLink(String baseUrl) throws InvalidUrlException {
         super(baseUrl);
     }
 
     public StandaloneLink(String baseUrl, UtmParameters utmParameters)
-            throws InvalidLongUrlException {
+            throws InvalidUrlException {
         super(baseUrl, utmParameters);
     }
 
