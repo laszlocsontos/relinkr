@@ -1,12 +1,14 @@
-package com.springuni.hermes.domain.visitor;
+package com.springuni.hermes.domain.click;
 
 import static com.springuni.hermes.domain.Mocks.IPV4_ADDRESS;
 import static com.springuni.hermes.domain.Mocks.IPV6_ADDRESS;
-import static com.springuni.hermes.domain.visitor.IpAddress.IpAddressType.IPV4;
-import static com.springuni.hermes.domain.visitor.IpAddress.IpAddressType.IPV6;
+import static com.springuni.hermes.domain.click.IpAddress.IpAddressType.IPV4;
+import static com.springuni.hermes.domain.click.IpAddress.IpAddressType.IPV6;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import com.springuni.hermes.domain.click.InvalidIpAddressException;
+import com.springuni.hermes.domain.click.IpAddress;
 import java.math.BigInteger;
 import org.junit.Before;
 import org.junit.Test;

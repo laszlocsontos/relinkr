@@ -1,4 +1,4 @@
-package com.springuni.hermes.domain.visitor;
+package com.springuni.hermes.domain.click;
 
 import static com.springuni.hermes.domain.Mocks.LINK_ID;
 import static com.springuni.hermes.domain.Mocks.TIMESTAMP;
@@ -7,6 +7,7 @@ import static com.springuni.hermes.domain.Mocks.VISITOR_IP;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+import com.springuni.hermes.domain.click.Click;
 import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;

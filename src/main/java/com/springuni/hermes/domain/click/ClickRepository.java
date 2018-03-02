@@ -1,4 +1,4 @@
-package com.springuni.hermes.domain.visitor;
+package com.springuni.hermes.domain.click;
 
 import com.springuni.hermes.domain.core.BaseRepository;
 

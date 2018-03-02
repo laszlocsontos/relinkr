@@ -1,9 +1,10 @@
-package com.springuni.hermes.domain.visitor;
+package com.springuni.hermes.domain.click;
 
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneOffset.UTC;
 
 import com.springuni.hermes.domain.link.LinkId;
+import com.springuni.hermes.domain.visitor.VisitorId;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;

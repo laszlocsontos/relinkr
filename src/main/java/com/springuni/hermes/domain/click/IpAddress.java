@@ -1,4 +1,4 @@
-package com.springuni.hermes.domain.visitor;
+package com.springuni.hermes.domain.click;
 
 import java.math.BigInteger;
 import java.net.Inet6Address;

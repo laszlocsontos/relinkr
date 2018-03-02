@@ -1,6 +1,4 @@
-package com.springuni.hermes.domain.visitor;
-
-import com.springuni.hermes.domain.utm.MissingUtmParameterException;
+package com.springuni.hermes.domain.click;
 
 public class InvalidIpAddressException extends Exception {
 

@@ -7,7 +7,7 @@ import com.springuni.hermes.domain.link.LongUrl;
 import com.springuni.hermes.domain.link.Tag;
 import com.springuni.hermes.domain.user.UserId;
 import com.springuni.hermes.domain.utm.UtmParameters;
-import com.springuni.hermes.domain.visitor.IpAddress;
+import com.springuni.hermes.domain.click.IpAddress;
 import com.springuni.hermes.domain.visitor.VisitorId;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
