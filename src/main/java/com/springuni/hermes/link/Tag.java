@@ -1,18 +1,13 @@
 package com.springuni.hermes.link;
 
+import com.springuni.hermes.core.ValueHolder;
 import javax.persistence.Embeddable;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@Data
 @Embeddable
-@EqualsAndHashCode
-public class Tag {
-
-    private final String value;
+public class Tag extends ValueHolder<String> {
 
     public Tag(String value) {
-        this.value = value;
+        super(value);
     }
 
 }
