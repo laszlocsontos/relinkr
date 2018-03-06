@@ -36,7 +36,7 @@ public class EmbeddedLinkRepositoryTest {
         LinkSet linkSet = new LinkSet(LONG_URL_BASE_S, utmTemplate, USER_ID);
         linkSet.regenerateLinks();
         this.linkSet = linkSetRepository.save(linkSet);
-        embeddedLink = this.linkSet.getLinks().get(0);
+        embeddedLink = this.linkSet.getEmbeddedLinks().get(0);
     }
 
     @Test

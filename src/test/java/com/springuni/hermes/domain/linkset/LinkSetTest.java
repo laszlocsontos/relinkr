@@ -32,7 +32,7 @@ public class LinkSetTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void getLinks() {
-        linkSet.getLinks().add(null);
+        linkSet.getEmbeddedLinks().add(null);
     }
 
     @Test
@@ -43,21 +43,21 @@ public class LinkSetTest {
     @Test
     public void regenerateLinks() {
         linkSet.regenerateLinks();
-        assertEquals(1, linkSet.getLinks().size());
+        assertEquals(1, linkSet.getEmbeddedLinks().size());
     }
 
     @Test
     public void updateBaseUrl() throws Exception {
         linkSet.updateBaseUrl(LONG_URL_WITHOUT_UTM_S);
         assertEquals(new URL(LONG_URL_WITHOUT_UTM_S), linkSet.getBaseUrl());
-        assertEquals(new URL(LONG_URL_WITHOUT_UTM_S), linkSet.getLinks().get(0).getBaseUrl());
+        assertEquals(new URL(LONG_URL_WITHOUT_UTM_S), linkSet.getEmbeddedLinks().get(0).getBaseUrl());
     }
 
     @Test
     public void updateUtmTemplate() {
         utmTemplate.addUtmParameters(UTM_PARAMETERS_FULL);
         linkSet.updateUtmTemplate(utmTemplate);
-        assertEquals(2, linkSet.getLinks().size());
+        assertEquals(2, linkSet.getEmbeddedLinks().size());
     }
 
 }

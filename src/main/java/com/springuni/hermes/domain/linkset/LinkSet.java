@@ -4,7 +4,6 @@ import static java.util.Collections.unmodifiableList;
 
 import com.springuni.hermes.domain.link.EmbeddedLink;
 import com.springuni.hermes.domain.link.InvalidUrlException;
-import com.springuni.hermes.domain.link.Link;
 import com.springuni.hermes.domain.link.LongUrl;
 import com.springuni.hermes.domain.user.Ownable;
 import com.springuni.hermes.domain.utm.UtmParameters;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -37,7 +35,7 @@ public class LinkSet extends AbstractPersistable<Long> implements Ownable {
     private UtmTemplate utmTemplate;
 
     @OneToMany(mappedBy = "linkSet", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EmbeddedLink> links = new ArrayList<>();
+    private List<EmbeddedLink> embeddedLinks = new ArrayList<>();
 
     public LinkSet(String baseUrl, UtmTemplate utmTemplate, Long userId)
             throws InvalidUrlException {
@@ -76,8 +74,8 @@ public class LinkSet extends AbstractPersistable<Long> implements Ownable {
         return baseUrl;
     }
 
-    public List<EmbeddedLink> getLinks() {
-        return unmodifiableList(links);
+    public List<EmbeddedLink> getEmbeddedLinks() {
+        return unmodifiableList(embeddedLinks);
     }
 
     @Override
@@ -90,10 +88,10 @@ public class LinkSet extends AbstractPersistable<Long> implements Ownable {
     }
 
     public void regenerateLinks() {
-        links.clear();
+        embeddedLinks.clear();
         Set<UtmParameters> utmParametersSet = utmTemplate.getUtmParametersSet();
         utmParametersSet.forEach(utmParameters -> {
-            links.add(new EmbeddedLink(LongUrl.from(baseUrl, utmParameters), this));
+            embeddedLinks.add(new EmbeddedLink(LongUrl.from(baseUrl, utmParameters), this));
         });
     }
 
@@ -104,14 +102,14 @@ public class LinkSet extends AbstractPersistable<Long> implements Ownable {
             throw new InvalidUrlException(e);
         }
 
-        for (Link link : links) {
-            link.updateLongUrl(baseUrl);
+        for (EmbeddedLink embeddedLink : embeddedLinks) {
+            embeddedLink.updateLongUrl(baseUrl);
         }
     }
 
     public void updateUtmTemplate(@NotNull UtmTemplate utmTemplate) {
         this.utmTemplate = utmTemplate;
-        if (!links.isEmpty()) {
+        if (!embeddedLinks.isEmpty()) {
             regenerateLinks();
         }
     }
