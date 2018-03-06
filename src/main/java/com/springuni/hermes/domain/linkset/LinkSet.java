@@ -7,7 +7,6 @@ import com.springuni.hermes.domain.link.InvalidUrlException;
 import com.springuni.hermes.domain.link.Link;
 import com.springuni.hermes.domain.link.LongUrl;
 import com.springuni.hermes.domain.user.Ownable;
-import com.springuni.hermes.domain.user.UserId;
 import com.springuni.hermes.domain.utm.UtmParameters;
 import com.springuni.hermes.domain.utm.UtmTemplate;
 import java.net.MalformedURLException;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
-import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,27 +25,34 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.Assert;
 
-public class LinkSet extends AbstractPersistable<LinkSetId> implements Ownable {
+@Entity
+public class LinkSet extends AbstractPersistable<Long> implements Ownable {
 
     private URL baseUrl;
 
-    @Embedded
-    private UserId owner;
+    private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "template_id")
     private UtmTemplate utmTemplate;
 
-    @JoinColumn(name = "link_id")
     @OneToMany(mappedBy = "linkSet", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Link> links = new ArrayList<>();
+    private List<EmbeddedLink> links = new ArrayList<>();
 
-    public LinkSet(String baseUrl, UtmTemplate utmTemplate, UserId owner)
+    public LinkSet(String baseUrl, UtmTemplate utmTemplate, Long userId)
+            throws InvalidUrlException {
+
+        this(null, baseUrl, utmTemplate, userId);
+    }
+
+    public LinkSet(Long linkSetId, String baseUrl, UtmTemplate utmTemplate, Long userId)
             throws InvalidUrlException {
 
         Assert.notNull(baseUrl, "baseUrl cannot be null");
         Assert.notNull(utmTemplate, "utmTemplate cannot be null");
-        Assert.notNull(owner, "owner cannot be null");
+        Assert.notNull(userId, "userId cannot be null");
+
+        setId(linkSetId);
 
         try {
             this.baseUrl = new URL(baseUrl);
@@ -55,7 +61,7 @@ public class LinkSet extends AbstractPersistable<LinkSetId> implements Ownable {
         }
 
         this.utmTemplate = utmTemplate;
-        this.owner = owner;
+        this.userId = userId;
 
         regenerateLinks();
     }
@@ -66,24 +72,17 @@ public class LinkSet extends AbstractPersistable<LinkSetId> implements Ownable {
     LinkSet() {
     }
 
-
-    @EmbeddedId
-    @Override
-    public LinkSetId getId() {
-        return super.getId();
-    }
-
     public URL getBaseUrl() {
         return baseUrl;
     }
 
-    public List<Link> getLinks() {
+    public List<EmbeddedLink> getLinks() {
         return unmodifiableList(links);
     }
 
     @Override
-    public UserId getOwner() {
-        return owner;
+    public Long getUserId() {
+        return userId;
     }
 
     public UtmTemplate getUtmTemplate() {
@@ -94,7 +93,7 @@ public class LinkSet extends AbstractPersistable<LinkSetId> implements Ownable {
         links.clear();
         Set<UtmParameters> utmParametersSet = utmTemplate.getUtmParametersSet();
         utmParametersSet.forEach(utmParameters -> {
-            links.add(new EmbeddedLink(LongUrl.from(baseUrl, utmParameters)));
+            links.add(new EmbeddedLink(LongUrl.from(baseUrl, utmParameters), this));
         });
     }
 

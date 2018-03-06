@@ -1,13 +1,24 @@
 package com.springuni.hermes.domain.link;
 
-import com.springuni.hermes.domain.core.ValueHolder;
+import java.io.Serializable;
 import javax.persistence.Embeddable;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 @Embeddable
-public class Tag extends ValueHolder<String> {
+@EqualsAndHashCode(of = "tagName")
+@Getter
+@ToString(of = "tagName")
+public class Tag implements Serializable {
 
-    public Tag(String value) {
-        super(value);
+    private String tagName;
+
+    public Tag(String tagName) {
+        this.tagName = tagName;
+    }
+
+    Tag() {
     }
 
 }

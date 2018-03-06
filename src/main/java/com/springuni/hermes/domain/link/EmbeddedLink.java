@@ -2,6 +2,7 @@ package com.springuni.hermes.domain.link;
 
 import com.springuni.hermes.domain.linkset.LinkSet;
 import com.springuni.hermes.domain.utm.UtmParameters;
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +13,7 @@ import javax.persistence.ManyToOne;
 @DiscriminatorValue("E")
 public class EmbeddedLink extends Link {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, optional = false)
     @JoinColumn(name = "linkset_id")
     private LinkSet linkSet;
 
@@ -29,8 +30,9 @@ public class EmbeddedLink extends Link {
         super(baseUrl, utmParameters);
     }
 
-    public EmbeddedLink(LongUrl longUrl) {
+    public EmbeddedLink(LongUrl longUrl, LinkSet linkSet) {
         super(longUrl);
+        this.linkSet = linkSet;
     }
 
     /*
@@ -38,6 +40,10 @@ public class EmbeddedLink extends Link {
      */
     EmbeddedLink() {
         super();
+    }
+
+    void setLinkSet(LinkSet linkSet) {
+        this.linkSet = linkSet;
     }
 
 }

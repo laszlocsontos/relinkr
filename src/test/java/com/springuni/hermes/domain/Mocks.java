@@ -2,18 +2,18 @@ package com.springuni.hermes.domain;
 
 import static java.util.Collections.unmodifiableSet;
 
-import com.springuni.hermes.domain.link.LinkId;
+import com.springuni.hermes.domain.click.IpAddress;
 import com.springuni.hermes.domain.link.LongUrl;
 import com.springuni.hermes.domain.link.Tag;
-import com.springuni.hermes.domain.user.UserId;
+import com.springuni.hermes.domain.user.EmailAddress;
 import com.springuni.hermes.domain.utm.UtmParameters;
-import com.springuni.hermes.domain.click.IpAddress;
-import com.springuni.hermes.domain.visitor.VisitorId;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class Mocks {
+
+    public static final EmailAddress EMAIL_ADDRESS = new EmailAddress("test@test.com");
 
     public static final String LONG_URL_BASE_S
             = "https://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html";
@@ -42,7 +42,7 @@ public class Mocks {
     public static final UtmParameters UTM_PARAMETERS_FULL;
     public static final Set<UtmParameters> UTM_PARAMETERS_SET;
 
-    public static final UserId OWNER = new UserId(1);
+    public static final Long USER_ID = 1L;
     public static final String UTM_TEMPLATE_NAME = "template";
 
     public static final Tag TAG_A = new Tag("A");
@@ -51,8 +51,9 @@ public class Mocks {
     public static final String IPV4_ADDRESS = "184.52.70.179";
     public static final String IPV6_ADDRESS = "2001:db8:85a3:0:0:8a2e:370:7334";
 
-    public static final LinkId LINK_ID = new LinkId(1L);
-    public static final VisitorId VISITOR_ID = new VisitorId(1L);
+    public static final Long LINK_ID = 1L;
+    public static final Long LINK_SET_ID = 1L;
+    public static final Long VISITOR_ID = 1L;
     public static final IpAddress VISITOR_IP;
     public static final LocalDateTime TIMESTAMP = LocalDateTime.of(2018, 02, 28, 19, 52);
 

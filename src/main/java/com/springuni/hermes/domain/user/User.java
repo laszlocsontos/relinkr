@@ -7,14 +7,13 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 import javax.persistence.ElementCollection;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 @Entity
-public class User extends AbstractPersistable<UserId> {
+public class User extends AbstractPersistable<Long> {
 
     private EmailAddress emailAddress;
     private String name;
@@ -33,12 +32,6 @@ public class User extends AbstractPersistable<UserId> {
     public User(EmailAddress emailAddress, String name, String twitterHandle) {
         this();
         update(emailAddress, name, twitterHandle);
-    }
-
-    @Override
-    @EmbeddedId
-    public UserId getId() {
-        return super.getId();
     }
 
     public void lock() {

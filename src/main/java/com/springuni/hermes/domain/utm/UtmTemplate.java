@@ -4,40 +4,37 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 
 import com.springuni.hermes.domain.user.Ownable;
-import com.springuni.hermes.domain.user.UserId;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.Assert;
 
 @Entity
-public class UtmTemplate extends AbstractPersistable<UtmTemplateId> implements Ownable {
+public class UtmTemplate extends AbstractPersistable<Long> implements Ownable {
 
     private String name;
 
-    @Embedded
-    private UserId owner;
+    private Long userId;
 
     @ElementCollection
     private Set<UtmParameters> utmParametersSet = new LinkedHashSet<>();
 
-    public UtmTemplate(@NotNull String name, @NotNull UserId owner) {
-        this(name, owner, emptySet());
+    public UtmTemplate(@NotNull String name, @NotNull Long userId) {
+        this(name, userId, emptySet());
     }
 
-    public UtmTemplate(@NotNull String name, @NotNull UserId owner,
+    public UtmTemplate(@NotNull String name, @NotNull Long userId,
             @NotNull Set<UtmParameters> utmParametersSet) {
         Assert.hasText(name, "name cannot be null");
-        Assert.notNull(owner, "owner cannot be null");
-        Assert.notNull(utmParametersSet, "owner cannot be null");
+        Assert.notNull(userId, "userId cannot be null");
+        Assert.notNull(utmParametersSet, "userId cannot be null");
 
         this.name = name;
-        this.owner = owner;
+        this.userId = userId;
 
         setUtmParametersSet(utmParametersSet);
     }
@@ -46,12 +43,6 @@ public class UtmTemplate extends AbstractPersistable<UtmTemplateId> implements O
      * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
      */
     UtmTemplate() {
-    }
-
-    @Override
-    @EmbeddedId
-    public UtmTemplateId getId() {
-        return super.getId();
     }
 
     public String getName() {
@@ -63,12 +54,12 @@ public class UtmTemplate extends AbstractPersistable<UtmTemplateId> implements O
     }
 
     @Override
-    public UserId getOwner() {
-        return owner;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setOwner(UserId owner) {
-        this.owner = owner;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Set<UtmParameters> getUtmParametersSet() {

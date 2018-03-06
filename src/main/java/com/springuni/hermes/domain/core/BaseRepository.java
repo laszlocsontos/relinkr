@@ -1,15 +1,14 @@
 package com.springuni.hermes.domain.core;
 
-import java.io.Serializable;
 import java.util.Optional;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
 
 @NoRepositoryBean
-public interface BaseRepository<T, ID extends Serializable> extends Repository<T, ID> {
+public interface BaseRepository<E, ID> extends Repository<E, ID> {
 
-    Optional<T> findById(ID id);
+    Optional<E> findById(ID id);
 
-    T save(T entity);
+    E save(E entity);
 
 }

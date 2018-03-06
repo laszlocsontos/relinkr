@@ -4,12 +4,11 @@ import static javax.persistence.DiscriminatorType.CHAR;
 import static javax.persistence.InheritanceType.SINGLE_TABLE;
 
 import com.springuni.hermes.domain.user.Ownable;
-import com.springuni.hermes.domain.user.UserId;
 import com.springuni.hermes.domain.utm.UtmParameters;
 import java.net.URL;
 import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import org.springframework.data.jpa.domain.AbstractPersistable;
@@ -17,13 +16,13 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @Entity
 @Inheritance(strategy = SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = CHAR, name = "link_type")
-public abstract class Link extends AbstractPersistable<LinkId> implements Ownable {
+@DiscriminatorValue("L")
+public abstract class Link extends AbstractPersistable<Long> implements Ownable {
 
     @Embedded
     protected LongUrl longUrl;
 
-    @Embedded
-    protected UserId owner;
+    protected Long userId;
 
 
     public Link(String baseUrl) throws InvalidUrlException {
@@ -45,14 +44,8 @@ public abstract class Link extends AbstractPersistable<LinkId> implements Ownabl
     }
 
     @Override
-    @EmbeddedId
-    public LinkId getId() {
-        return super.getId();
-    }
-
-    @Override
-    public UserId getOwner() {
-        return owner;
+    public Long getUserId() {
+        return userId;
     }
 
     public URL getBaseUrl() {

@@ -2,42 +2,33 @@ package com.springuni.hermes.domain.click;
 
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneOffset.UTC;
+import static javax.persistence.EnumType.STRING;
 
-import com.springuni.hermes.domain.link.LinkId;
-import com.springuni.hermes.domain.visitor.VisitorId;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import javax.persistence.Embedded;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.Assert;
 
 @Entity
-public class Click extends AbstractPersistable<ClickId> {
+public class Click extends AbstractPersistable<Long> {
 
-    @Embedded
-    private VisitorId visitorId;
+    private Long visitorId;
 
     @Embedded
     private IpAddress visitorIp;
 
-    @Enumerated
+    @Enumerated(STRING)
     private Country country;
 
-    @Embedded
-    private LinkId linkId;
+    private Long linkId;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime visitTimestamp;
-
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDate visitDate;
 
     private int visitDayOfWeek;
@@ -46,13 +37,13 @@ public class Click extends AbstractPersistable<ClickId> {
     private int visitMonth;
 
     public Click(
-            @NotNull VisitorId visitorId, @NotNull LinkId linkId, @NotNull IpAddress visitorIp) {
+            @NotNull Long visitorId, @NotNull Long linkId, @NotNull IpAddress visitorIp) {
 
         this(visitorId, linkId, visitorIp, null);
     }
 
     public Click(
-            @NotNull VisitorId visitorId, @NotNull LinkId linkId, @NotNull IpAddress visitorIp,
+            @NotNull Long visitorId, @NotNull Long linkId, @NotNull IpAddress visitorIp,
             @Nullable LocalDateTime visitTimestamp) {
 
         Assert.notNull(visitorId, "visitorId cannot be null");
@@ -70,17 +61,11 @@ public class Click extends AbstractPersistable<ClickId> {
         }
     }
 
-    @Override
-    @EmbeddedId
-    public ClickId getId() {
-        return super.getId();
-    }
-
     public Optional<Country> getCountry() {
         return Optional.ofNullable(country);
     }
 
-    public VisitorId getVisitorId() {
+    public Long getVisitorId() {
         return visitorId;
     }
 
@@ -88,8 +73,12 @@ public class Click extends AbstractPersistable<ClickId> {
         return visitorIp;
     }
 
-    public LinkId getLinkId() {
+    public Long getLinkId() {
         return linkId;
+    }
+
+    public LocalDate getVisitDate() {
+        return visitDate;
     }
 
     public int getVisitDayOfWeek() {

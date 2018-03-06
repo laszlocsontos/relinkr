@@ -2,7 +2,7 @@ package com.springuni.hermes.domain.linkset;
 
 import static com.springuni.hermes.domain.Mocks.LONG_URL_BASE_S;
 import static com.springuni.hermes.domain.Mocks.LONG_URL_WITHOUT_UTM_S;
-import static com.springuni.hermes.domain.Mocks.OWNER;
+import static com.springuni.hermes.domain.Mocks.USER_ID;
 import static com.springuni.hermes.domain.Mocks.UTM_PARAMETERS_FULL;
 import static com.springuni.hermes.domain.Mocks.UTM_PARAMETERS_MINIMAL;
 import static com.springuni.hermes.domain.Mocks.UTM_TEMPLATE_NAME;
@@ -20,9 +20,9 @@ public class LinkSetTest {
 
     @Before
     public void setUp() throws Exception {
-        utmTemplate = new UtmTemplate(UTM_TEMPLATE_NAME, OWNER);
+        utmTemplate = new UtmTemplate(UTM_TEMPLATE_NAME, USER_ID);
         utmTemplate.addUtmParameters(UTM_PARAMETERS_MINIMAL);
-        linkSet = new LinkSet(LONG_URL_BASE_S, utmTemplate, OWNER);
+        linkSet = new LinkSet(LONG_URL_BASE_S, utmTemplate, USER_ID);
     }
 
     @Test
