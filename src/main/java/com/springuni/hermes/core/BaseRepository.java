@@ -1,4 +1,4 @@
-package com.springuni.hermes.domain.core;
+package com.springuni.hermes.core;
 
 import java.util.Optional;
 import org.springframework.data.repository.NoRepositoryBean;

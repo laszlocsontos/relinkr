@@ -1,6 +1,6 @@
 package com.springuni.hermes.domain.link;
 
-import com.springuni.hermes.domain.core.OwnableRepository;
+import com.springuni.hermes.core.OwnableRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean

@@ -1,4 +1,4 @@
-package com.springuni.hermes.domain.core;
+package com.springuni.hermes.core;
 
 import com.springuni.hermes.domain.user.Ownable;
 import java.io.Serializable;

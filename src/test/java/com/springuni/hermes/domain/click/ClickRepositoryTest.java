@@ -5,7 +5,7 @@ import static com.springuni.hermes.domain.Mocks.TIMESTAMP;
 import static com.springuni.hermes.domain.Mocks.VISITOR_ID;
 import static com.springuni.hermes.domain.Mocks.VISITOR_IP;
 
-import com.springuni.hermes.domain.core.BaseRepositoryTest;
+import com.springuni.hermes.core.BaseRepositoryTest;
 
 public class ClickRepositoryTest extends BaseRepositoryTest<Click, Long, ClickRepository> {
 

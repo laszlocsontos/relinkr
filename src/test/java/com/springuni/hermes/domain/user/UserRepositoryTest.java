@@ -3,7 +3,7 @@ package com.springuni.hermes.domain.user;
 import static com.springuni.hermes.domain.Mocks.EMAIL_ADDRESS;
 import static org.junit.Assert.assertEquals;
 
-import com.springuni.hermes.domain.core.BaseRepositoryTest;
+import com.springuni.hermes.core.BaseRepositoryTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

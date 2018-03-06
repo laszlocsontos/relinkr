@@ -1,4 +1,4 @@
-package com.springuni.hermes.domain.core;
+package com.springuni.hermes.core;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
