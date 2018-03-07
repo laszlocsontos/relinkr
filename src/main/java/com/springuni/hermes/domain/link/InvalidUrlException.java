@@ -1,6 +1,8 @@
 package com.springuni.hermes.domain.link;
 
-public class InvalidUrlException extends Exception {
+import com.springuni.hermes.core.ApplicationException;
+
+public class InvalidUrlException extends ApplicationException {
 
     public InvalidUrlException() {
     }

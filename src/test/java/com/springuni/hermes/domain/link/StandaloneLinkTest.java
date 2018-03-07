@@ -6,10 +6,12 @@ import static com.springuni.hermes.domain.Mocks.LONG_URL_WITHOUT_UTM_S;
 import static com.springuni.hermes.domain.Mocks.TAG_A;
 import static com.springuni.hermes.domain.Mocks.TAG_B;
 import static com.springuni.hermes.domain.Mocks.UTM_PARAMETERS_MINIMAL;
+import static com.springuni.hermes.domain.link.Link.*;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -63,6 +65,11 @@ public class StandaloneLinkTest {
     @Test
     public void getTargetUrl() {
         assertEquals(LONG_URL_WITHOUT_UTM_S, link.getTargetUrl().toString());
+    }
+
+    @Test
+    public void getPath() {
+        assertEquals(HASHIDS_LENGTH, link.getPath().length());
     }
 
     @Test(expected = InvalidUrlException.class)
