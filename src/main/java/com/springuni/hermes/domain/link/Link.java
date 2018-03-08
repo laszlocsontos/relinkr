@@ -35,11 +35,11 @@ public abstract class Link extends LinkBase<Long> {
 
     private String path;
 
-    public Link(@NotNull String baseUrl, @NotNull Long userId) throws InvalidUrlException {
+    Link(@NotNull String baseUrl, @NotNull Long userId) throws InvalidUrlException {
         this(baseUrl, null, userId);
     }
 
-    public Link(@NotNull String baseUrl, @Nullable UtmParameters utmParameters,
+    Link(@NotNull String baseUrl, @Nullable UtmParameters utmParameters,
             @NotNull Long userId) throws InvalidUrlException {
         this(new LongUrl(baseUrl, utmParameters), userId);
     }

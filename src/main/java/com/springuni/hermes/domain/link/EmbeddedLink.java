@@ -1,6 +1,5 @@
 package com.springuni.hermes.domain.link;
 
-import com.springuni.hermes.domain.linkset.LinkSet;
 import com.springuni.hermes.domain.utm.UtmParameters;
 import java.util.Set;
 import javax.persistence.CascadeType;

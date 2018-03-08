@@ -1,4 +1,4 @@
-package com.springuni.hermes.domain.linkset;
+package com.springuni.hermes.domain.link;
 
 import com.springuni.hermes.core.OwnableRepository;
 

@@ -1,4 +1,4 @@
-package com.springuni.hermes.domain.linkset;
+package com.springuni.hermes.domain.link;
 
 import static com.springuni.hermes.domain.link.LinkStatus.PENDING;
 import static java.util.Collections.unmodifiableList;

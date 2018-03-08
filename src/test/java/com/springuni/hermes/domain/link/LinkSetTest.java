@@ -1,4 +1,4 @@
-package com.springuni.hermes.domain.linkset;
+package com.springuni.hermes.domain.link;
 
 import static com.springuni.hermes.domain.Mocks.LONG_URL_BASE_S;
 import static com.springuni.hermes.domain.Mocks.LONG_URL_WITHOUT_UTM_S;
@@ -8,6 +8,7 @@ import static com.springuni.hermes.domain.Mocks.UTM_PARAMETERS_MINIMAL;
 import static com.springuni.hermes.domain.Mocks.UTM_TEMPLATE_NAME;
 import static org.junit.Assert.assertEquals;
 
+import com.springuni.hermes.domain.link.LinkSet;
 import com.springuni.hermes.domain.utm.UtmTemplate;
 import java.net.URL;
 import org.junit.Before;

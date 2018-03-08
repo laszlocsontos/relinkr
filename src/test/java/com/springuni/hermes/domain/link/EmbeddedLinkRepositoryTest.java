@@ -6,8 +6,6 @@ import static com.springuni.hermes.domain.Mocks.UTM_PARAMETERS_FULL;
 import static com.springuni.hermes.domain.Mocks.UTM_TEMPLATE_NAME;
 import static org.junit.Assert.assertEquals;
 
-import com.springuni.hermes.domain.linkset.LinkSet;
-import com.springuni.hermes.domain.linkset.LinkSetRepository;
 import com.springuni.hermes.domain.utm.UtmTemplate;
 import org.junit.Before;
 import org.junit.Test;

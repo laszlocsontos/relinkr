@@ -13,11 +13,11 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.Assert;
 
 @MappedSuperclass
-public abstract class LinkBase<PK extends Serializable> extends AbstractPersistable<PK> implements Ownable {
+abstract class LinkBase<PK extends Serializable> extends AbstractPersistable<PK> implements Ownable {
 
     private Long userId;
 
-    public LinkBase(@NotNull Long userId) {
+    LinkBase(@NotNull Long userId) {
         Assert.notNull(userId, "userId cannot be null");
         this.userId = userId;
     }
@@ -25,7 +25,7 @@ public abstract class LinkBase<PK extends Serializable> extends AbstractPersista
     /*
      * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
      */
-    protected LinkBase() {
+    LinkBase() {
     }
 
     @Override
