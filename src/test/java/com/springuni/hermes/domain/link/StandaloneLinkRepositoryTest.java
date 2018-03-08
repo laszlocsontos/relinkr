@@ -1,6 +1,7 @@
 package com.springuni.hermes.domain.link;
 
 import static com.springuni.hermes.domain.Mocks.LONG_URL_BASE_S;
+import static com.springuni.hermes.domain.Mocks.USER_ID;
 
 import com.springuni.hermes.core.BaseRepositoryTest;
 
@@ -9,7 +10,7 @@ public class StandaloneLinkRepositoryTest extends
 
     @Override
     protected StandaloneLink createEntity() throws Exception {
-        return new StandaloneLink(LONG_URL_BASE_S);
+        return new StandaloneLink(LONG_URL_BASE_S, USER_ID);
     }
 
 }

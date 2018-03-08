@@ -1,6 +1,6 @@
 package com.springuni.hermes.domain.link;
 
-import static com.springuni.hermes.domain.link.LinkStatus.*;
+import static com.springuni.hermes.domain.link.LinkStatus.ACTIVE;
 
 import com.springuni.hermes.core.ApplicationException;
 import com.springuni.hermes.core.EntityNotFoundException;
@@ -74,8 +74,9 @@ class LinkServiceImpl implements LinkService {
     }
 
     @Override
-    public Link addLink(String baseUrl, UtmParameters utmParameters) throws InvalidUrlException {
-        StandaloneLink link = new StandaloneLink(baseUrl, utmParameters);
+    public Link addLink(String baseUrl, UtmParameters utmParameters, Long userId)
+            throws InvalidUrlException {
+        StandaloneLink link = new StandaloneLink(baseUrl, utmParameters, userId);
         return standaloneLinkRepository.save(link);
     }
 
@@ -94,9 +95,9 @@ class LinkServiceImpl implements LinkService {
     }
 
     @Override
-    public void archiveLink(long linkId) throws EntityNotFoundException {
+    public void archiveLink(long linkId) throws ApplicationException {
         StandaloneLink standaloneLink = getStandaloneLink(linkId);
-        standaloneLink.archive();
+        standaloneLink.markArchived();
         standaloneLinkRepository.save(standaloneLink);
     }
 

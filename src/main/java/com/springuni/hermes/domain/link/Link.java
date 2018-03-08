@@ -1,28 +1,25 @@
 package com.springuni.hermes.domain.link;
 
-import static com.springuni.hermes.domain.link.LinkStatus.*;
 import static javax.persistence.DiscriminatorType.CHAR;
-import static javax.persistence.EnumType.STRING;
 import static javax.persistence.InheritanceType.SINGLE_TABLE;
 
 import com.springuni.hermes.core.IdentityGenerator;
-import com.springuni.hermes.domain.user.Ownable;
 import com.springuni.hermes.domain.utm.UtmParameters;
 import java.net.URL;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.Inheritance;
 import org.hashids.Hashids;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Entity
 @Inheritance(strategy = SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = CHAR, name = "link_type")
 @DiscriminatorValue("L")
-public abstract class Link extends AbstractPersistable<Long> implements Ownable {
+public abstract class Link extends LinkBase<Long> {
 
     private static final String HASHIDS_SALT = "6cY$S!08HpP$pWRpEErhGp7H3307a^67";
     static final int HASHIDS_LENGTH = 11;
@@ -36,22 +33,19 @@ public abstract class Link extends AbstractPersistable<Long> implements Ownable 
     @Embedded
     protected LongUrl longUrl;
 
-    protected Long userId;
+    private String path;
 
-    protected String path;
-
-    @Enumerated(STRING)
-    protected LinkStatus linkStatus = PENDING;
-
-    public Link(String baseUrl) throws InvalidUrlException {
-        this(baseUrl, null);
+    public Link(@NotNull String baseUrl, @NotNull Long userId) throws InvalidUrlException {
+        this(baseUrl, null, userId);
     }
 
-    public Link(String baseUrl, UtmParameters utmParameters) throws InvalidUrlException {
-        this(new LongUrl(baseUrl, utmParameters));
+    public Link(@NotNull String baseUrl, @Nullable UtmParameters utmParameters,
+            @NotNull Long userId) throws InvalidUrlException {
+        this(new LongUrl(baseUrl, utmParameters), userId);
     }
 
-    Link(LongUrl longUrl) {
+    Link(@NotNull LongUrl longUrl, @NotNull Long userId) {
+        super(userId);
         this.longUrl = longUrl;
         path = generatePath();
     }
@@ -62,29 +56,12 @@ public abstract class Link extends AbstractPersistable<Long> implements Ownable 
     Link() {
     }
 
-    @Override
-    public Long getUserId() {
-        return userId;
-    }
-
     public URL getBaseUrl() {
         return longUrl.getBaseUrl();
     }
 
     public String getPath() {
         return path;
-    }
-
-    public void activate() {
-        linkStatus = ACTIVE;
-    }
-
-    public void archive() {
-        linkStatus = ARCHIVED;
-    }
-
-    public LinkStatus getLinkStatus() {
-        return linkStatus;
     }
 
     public URL getTargetUrl() {
@@ -96,7 +73,7 @@ public abstract class Link extends AbstractPersistable<Long> implements Ownable 
         return getTargetUrl().toString();
     }
 
-    public void updateLongUrl(String baseUrl) throws InvalidUrlException {
+    public void updateLongUrl(@NotNull String baseUrl) throws InvalidUrlException {
         updateLongUrl(baseUrl, longUrl.getUtmParameters());
     }
 

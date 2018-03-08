@@ -1,6 +1,8 @@
 package com.springuni.hermes.domain.link;
 
+import static com.springuni.hermes.domain.link.LinkStatus.PENDING;
 import static java.util.Collections.unmodifiableSet;
+import static javax.persistence.EnumType.STRING;
 
 import com.springuni.hermes.domain.user.Ownable;
 import com.springuni.hermes.domain.utm.UtmParameters;
@@ -9,29 +11,37 @@ import java.util.Set;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Entity
 @DiscriminatorValue("S")
 public class StandaloneLink extends Link implements Ownable {
 
+    @Enumerated(STRING)
+    private LinkStatus linkStatus = PENDING;
+
     @ElementCollection
     private Set<Tag> tags = new LinkedHashSet<>();
 
-    public StandaloneLink(String baseUrl) throws InvalidUrlException {
-        super(baseUrl);
+    public StandaloneLink(@NotNull String baseUrl, @NotNull Long userId)
+            throws InvalidUrlException {
+        super(baseUrl, userId);
     }
 
-    public StandaloneLink(String baseUrl, UtmParameters utmParameters)
+    public StandaloneLink(@NotNull String baseUrl, @Nullable UtmParameters utmParameters,
+            @NotNull Long userId)
             throws InvalidUrlException {
-        super(baseUrl, utmParameters);
+        super(baseUrl, utmParameters, userId);
     }
 
     StandaloneLink() {
         super();
     }
 
-    StandaloneLink(LongUrl longUrl) {
-        super(longUrl);
+    StandaloneLink(@NotNull LongUrl longUrl, @NotNull Long userId) {
+        super(longUrl, userId);
     }
 
     public void apply(UtmParameters utmParameters) {
@@ -48,6 +58,31 @@ public class StandaloneLink extends Link implements Ownable {
 
     public void removeTag(Tag tag) {
         tags.remove(tag);
+    }
+
+    @Override
+    public LinkStatus getLinkStatus() {
+        return linkStatus;
+    }
+
+    @Override
+    protected void setLinkStatus(LinkStatus linkStatus) {
+        this.linkStatus = linkStatus;
+    }
+
+    @Override
+    public void markActive() throws InvalidLinkStatusException {
+        super.markActive();
+    }
+
+    @Override
+    public void markArchived() throws InvalidLinkStatusException {
+        super.markArchived();
+    }
+
+    @Override
+    public void markBroken() throws InvalidLinkStatusException {
+        super.markBroken();
     }
 
 }

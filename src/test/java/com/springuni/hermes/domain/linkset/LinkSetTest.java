@@ -48,7 +48,7 @@ public class LinkSetTest {
 
     @Test
     public void updateBaseUrl() throws Exception {
-        linkSet.updateBaseUrl(LONG_URL_WITHOUT_UTM_S);
+        linkSet.updateLongUrl(LONG_URL_WITHOUT_UTM_S);
         assertEquals(new URL(LONG_URL_WITHOUT_UTM_S), linkSet.getBaseUrl());
         assertEquals(new URL(LONG_URL_WITHOUT_UTM_S), linkSet.getEmbeddedLinks().get(0).getBaseUrl());
     }

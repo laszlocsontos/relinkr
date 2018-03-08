@@ -5,6 +5,7 @@ import static com.springuni.hermes.domain.Mocks.LONG_URL_WITHOUT_UTM;
 import static com.springuni.hermes.domain.Mocks.LONG_URL_WITHOUT_UTM_S;
 import static com.springuni.hermes.domain.Mocks.TAG_A;
 import static com.springuni.hermes.domain.Mocks.TAG_B;
+import static com.springuni.hermes.domain.Mocks.USER_ID;
 import static com.springuni.hermes.domain.Mocks.UTM_PARAMETERS_MINIMAL;
 import static com.springuni.hermes.domain.link.Link.*;
 import static org.hamcrest.Matchers.contains;
@@ -25,7 +26,7 @@ public class StandaloneLinkTest {
 
     @Before
     public void setUp() throws Exception {
-        link = new StandaloneLink(LONG_URL_WITHOUT_UTM);
+        link = new StandaloneLink(LONG_URL_WITHOUT_UTM, USER_ID);
     }
 
     @Test

@@ -13,13 +13,13 @@ public interface LinkService {
 
     Link getLink(long linkId) throws EntityNotFoundException;
 
-    Link addLink(String baseUrl, UtmParameters utmParameters) throws InvalidUrlException;
+    Link addLink(String baseUrl, UtmParameters utmParameters, Long userId) throws InvalidUrlException;
 
     Link updateLink(long linkId, String baseUrl, UtmParameters utmParameters) throws ApplicationException;
 
     Page<StandaloneLink> listLinks(long userId, Pageable pageable);
 
-    void archiveLink(long linkId) throws EntityNotFoundException;
+    void archiveLink(long linkId) throws ApplicationException;
 
     void addTag(long linkId, String tagName) throws ApplicationException;
 
