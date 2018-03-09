@@ -13,7 +13,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.Assert;
 
 @MappedSuperclass
-abstract class LinkBase<PK extends Serializable> extends AbstractPersistable<PK> implements Ownable {
+public abstract class LinkBase<PK extends Serializable> extends AbstractPersistable<PK> implements Ownable {
 
     private Long userId;
 
