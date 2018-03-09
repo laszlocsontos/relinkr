@@ -14,4 +14,9 @@ public class UtmTemplateRepositoryTest extends
         return new UtmTemplate(UTM_TEMPLATE_NAME, USER_ID, UTM_PARAMETERS_SET);
     }
 
+    @Override
+    protected Long getNonExistentId() {
+        return 0L;
+    }
+
 }

@@ -30,4 +30,9 @@ public class UserRepositoryTest extends BaseRepositoryTest<User, Long, UserRepos
         return new User(EMAIL_ADDRESS, "Test", "test");
     }
 
+    @Override
+    protected Long getNonExistentId() {
+        return 0L;
+    }
+
 }

@@ -64,9 +64,15 @@ public abstract class Link extends LinkBase<Long> {
         return path;
     }
 
+    public UtmParameters getUtmParameters() {
+        return longUrl.getUtmParameters();
+    }
+
     public URL getTargetUrl() {
         return longUrl.getTargetUrl();
     }
+
+    public abstract LinkType getLinkType();
 
     @Override
     public String toString() {

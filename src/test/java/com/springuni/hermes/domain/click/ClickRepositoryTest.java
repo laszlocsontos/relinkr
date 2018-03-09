@@ -14,4 +14,9 @@ public class ClickRepositoryTest extends BaseRepositoryTest<Click, Long, ClickRe
         return new Click(VISITOR_ID, LINK_ID, VISITOR_IP, TIMESTAMP);
     }
 
+    @Override
+    protected Long getNonExistentId() {
+        return 0L;
+    }
+
 }

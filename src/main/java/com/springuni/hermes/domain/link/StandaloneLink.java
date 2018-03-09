@@ -1,6 +1,7 @@
 package com.springuni.hermes.domain.link;
 
 import static com.springuni.hermes.domain.link.LinkStatus.PENDING;
+import static com.springuni.hermes.domain.link.LinkType.STANDALONE;
 import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.EnumType.STRING;
 
@@ -58,6 +59,11 @@ public class StandaloneLink extends Link implements Ownable {
 
     public void removeTag(Tag tag) {
         tags.remove(tag);
+    }
+
+    @Override
+    public LinkType getLinkType() {
+        return STANDALONE;
     }
 
     @Override

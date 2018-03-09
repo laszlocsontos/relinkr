@@ -36,11 +36,19 @@ public abstract class BaseRepositoryTest<E extends AbstractPersistable<ID>, ID e
     }
 
     @Test
+    public void findById_withNonExistent() {
+        Optional<E> entityOptional = repository.findById(getNonExistentId());
+        assertFalse(entityOptional.isPresent());
+    }
+
+    @Test
     public void save() {
         entity = repository.save(entity);
         assertFalse(entity.isNew());
     }
 
     protected abstract E createEntity() throws Exception;
+
+    protected abstract ID getNonExistentId();
 
 }

@@ -2,6 +2,7 @@ package com.springuni.hermes.domain;
 
 import static java.util.Collections.unmodifiableSet;
 
+import com.springuni.hermes.core.ApplicationException;
 import com.springuni.hermes.domain.click.IpAddress;
 import com.springuni.hermes.domain.link.EmbeddedLink;
 import com.springuni.hermes.domain.link.InvalidUrlException;
@@ -113,7 +114,10 @@ public class Mocks {
         return linkSet.getEmbeddedLinks().get(0);
     }
 
-    public static StandaloneLink createStandaloneLink() throws InvalidUrlException {
-        return new StandaloneLink(LONG_URL_WITHOUT_UTM_S, USER_ID);
+    public static StandaloneLink createStandaloneLink() throws ApplicationException {
+        StandaloneLink standaloneLink = new StandaloneLink(LONG_URL_WITHOUT_UTM_S, USER_ID);
+        standaloneLink.markActive();
+        return standaloneLink;
     }
+
 }

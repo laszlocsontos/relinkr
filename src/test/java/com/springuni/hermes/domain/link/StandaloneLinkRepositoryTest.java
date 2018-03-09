@@ -13,4 +13,9 @@ public class StandaloneLinkRepositoryTest extends
         return new StandaloneLink(LONG_URL_BASE_S, USER_ID);
     }
 
+    @Override
+    protected Long getNonExistentId() {
+        return 0L;
+    }
+
 }

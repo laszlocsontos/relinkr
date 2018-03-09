@@ -8,6 +8,8 @@ import static com.springuni.hermes.domain.Mocks.TAG_B;
 import static com.springuni.hermes.domain.Mocks.USER_ID;
 import static com.springuni.hermes.domain.Mocks.UTM_PARAMETERS_MINIMAL;
 import static com.springuni.hermes.domain.link.Link.*;
+import static com.springuni.hermes.domain.link.LinkStatus.*;
+import static com.springuni.hermes.domain.link.LinkType.*;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
@@ -83,6 +85,50 @@ public class StandaloneLinkTest {
         link.updateLongUrl(LONG_URL_BASE_S);
         assertEquals(LONG_URL_BASE_S, link.getBaseUrl().toString());
         assertEquals(LONG_URL_BASE_S, link.getTargetUrl().toString());
+    }
+
+    @Test
+    public void getLinkType() {
+        assertEquals(STANDALONE, link.getLinkType());
+    }
+
+    @Test
+    public void markActive() throws InvalidLinkStatusException {
+        link.markActive();
+        assertEquals(ACTIVE, link.getLinkStatus());
+    }
+
+    @Test
+    public void markArchived() throws InvalidLinkStatusException {
+        link.markActive();
+        link.markArchived();
+        assertEquals(ARCHIVED, link.getLinkStatus());
+    }
+
+    @Test
+    public void markBroken() throws InvalidLinkStatusException {
+        link.markBroken();
+        assertEquals(BROKEN, link.getLinkStatus());
+    }
+
+    @Test(expected = InvalidLinkStatusException.class)
+    public void markActive_withActive() throws InvalidLinkStatusException {
+        link.markActive();
+        link.markActive();
+        assertEquals(ACTIVE, link.getLinkStatus());
+    }
+
+    @Test(expected = InvalidLinkStatusException.class)
+    public void markArchived_withPending() throws InvalidLinkStatusException {
+        link.markArchived();
+        assertEquals(ARCHIVED, link.getLinkStatus());
+    }
+
+    @Test(expected = InvalidLinkStatusException.class)
+    public void markBroken_withArchived() throws InvalidLinkStatusException {
+        link.markArchived();
+        link.markBroken();
+        assertEquals(BROKEN, link.getLinkStatus());
     }
 
 }

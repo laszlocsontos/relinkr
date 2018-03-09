@@ -4,8 +4,8 @@ import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 
 import com.springuni.hermes.core.ApplicationException;
 import com.springuni.hermes.core.EntityNotFoundException;
+import com.springuni.hermes.domain.link.Link;
 import com.springuni.hermes.domain.link.LinkService;
-import com.springuni.hermes.domain.link.StandaloneLink;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +30,7 @@ public class LinkController {
 
     @GetMapping(path = "/", produces = HAL_JSON_VALUE)
     Page<LinkResource> listLinks(@RequestParam(required = false) long userId, Pageable pageable) {
-        Page<StandaloneLink> linkList = linkService.listLinks(userId, pageable);
+        Page<Link> linkList = linkService.listLinks(userId, pageable);
 
         return null;
     }
@@ -53,7 +53,7 @@ public class LinkController {
     }
 
     @DeleteMapping(path = "/{id}/tags/{tagName}", produces = HAL_JSON_VALUE)
-    void removeTag(long linkId, String tagName) throws EntityNotFoundException {
+    void removeTag(long linkId, String tagName) throws ApplicationException {
         linkService.removeTag(linkId, tagName);
     }
 

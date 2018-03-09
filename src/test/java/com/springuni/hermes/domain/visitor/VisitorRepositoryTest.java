@@ -9,4 +9,9 @@ public class VisitorRepositoryTest extends BaseRepositoryTest<Visitor, Long, Vis
         return new Visitor();
     }
 
+    @Override
+    protected Long getNonExistentId() {
+        return 0L;
+    }
+
 }

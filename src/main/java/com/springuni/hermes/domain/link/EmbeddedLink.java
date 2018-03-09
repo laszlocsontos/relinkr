@@ -1,5 +1,7 @@
 package com.springuni.hermes.domain.link;
 
+import static com.springuni.hermes.domain.link.LinkType.EMBEDDED;
+
 import com.springuni.hermes.domain.utm.UtmParameters;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -47,6 +49,11 @@ public class EmbeddedLink extends Link {
     void setLinkSet(LinkSet linkSet) {
         Assert.notNull(linkSet, "linkSet cannot be null");
         this.linkSet = linkSet;
+    }
+
+    @Override
+    public LinkType getLinkType() {
+        return EMBEDDED;
     }
 
     @Override

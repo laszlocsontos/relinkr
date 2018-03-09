@@ -5,13 +5,6 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.EnumType.STRING;
 
-import com.springuni.hermes.domain.link.EmbeddedLink;
-import com.springuni.hermes.domain.link.InvalidLinkStatusException;
-import com.springuni.hermes.domain.link.InvalidUrlException;
-import com.springuni.hermes.domain.link.LinkBase;
-import com.springuni.hermes.domain.link.LinkStatus;
-import com.springuni.hermes.domain.link.LongUrl;
-import com.springuni.hermes.domain.link.Tag;
 import com.springuni.hermes.domain.utm.UtmParameters;
 import com.springuni.hermes.domain.utm.UtmTemplate;
 import java.net.MalformedURLException;

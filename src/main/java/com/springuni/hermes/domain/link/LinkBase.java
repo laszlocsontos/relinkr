@@ -48,7 +48,7 @@ public abstract class LinkBase<PK extends Serializable> extends AbstractPersista
     protected abstract void setLinkStatus(LinkStatus linkStatus);
 
     protected void markActive() throws InvalidLinkStatusException {
-        setLinkStatus(ACTIVE, EnumSet.of(PENDING, BROKEN));
+        setLinkStatus(ACTIVE, EnumSet.of(ARCHIVED, PENDING, BROKEN));
     }
 
     protected void markArchived() throws InvalidLinkStatusException {
