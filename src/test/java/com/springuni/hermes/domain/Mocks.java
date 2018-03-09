@@ -3,10 +3,15 @@ package com.springuni.hermes.domain;
 import static java.util.Collections.unmodifiableSet;
 
 import com.springuni.hermes.domain.click.IpAddress;
+import com.springuni.hermes.domain.link.EmbeddedLink;
+import com.springuni.hermes.domain.link.InvalidUrlException;
+import com.springuni.hermes.domain.link.LinkSet;
 import com.springuni.hermes.domain.link.LongUrl;
+import com.springuni.hermes.domain.link.StandaloneLink;
 import com.springuni.hermes.domain.link.Tag;
 import com.springuni.hermes.domain.user.EmailAddress;
 import com.springuni.hermes.domain.utm.UtmParameters;
+import com.springuni.hermes.domain.utm.UtmTemplate;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -90,4 +95,25 @@ public class Mocks {
         }
     }
 
+    public static UtmTemplate createUtmTemplate() {
+        UtmTemplate utmTemplate = new UtmTemplate(UTM_TEMPLATE_NAME, USER_ID);
+        utmTemplate.addUtmParameters(UTM_PARAMETERS_FULL);
+        return utmTemplate;
+    }
+
+    public static LinkSet createLinkSet() throws InvalidUrlException {
+        UtmTemplate utmTemplate = createUtmTemplate();
+        LinkSet linkSet = new LinkSet(LONG_URL_BASE_S, utmTemplate, USER_ID);
+        linkSet.regenerateLinks();
+        return linkSet;
+    }
+
+    public static EmbeddedLink createEmbeddedLink() throws InvalidUrlException {
+        LinkSet linkSet = createLinkSet();
+        return linkSet.getEmbeddedLinks().get(0);
+    }
+
+    public static StandaloneLink createStandaloneLink() throws InvalidUrlException {
+        return new StandaloneLink(LONG_URL_WITHOUT_UTM_S, USER_ID);
+    }
 }

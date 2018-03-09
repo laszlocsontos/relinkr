@@ -1,12 +1,8 @@
 package com.springuni.hermes.domain.link;
 
-import static com.springuni.hermes.domain.Mocks.LONG_URL_BASE_S;
-import static com.springuni.hermes.domain.Mocks.USER_ID;
-import static com.springuni.hermes.domain.Mocks.UTM_PARAMETERS_FULL;
-import static com.springuni.hermes.domain.Mocks.UTM_TEMPLATE_NAME;
+import static com.springuni.hermes.domain.Mocks.createLinkSet;
 import static org.junit.Assert.assertEquals;
 
-import com.springuni.hermes.domain.utm.UtmTemplate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,12 +25,8 @@ public class EmbeddedLinkRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        UtmTemplate utmTemplate = new UtmTemplate(UTM_TEMPLATE_NAME, USER_ID);
-        utmTemplate.addUtmParameters(UTM_PARAMETERS_FULL);
-        LinkSet linkSet = new LinkSet(LONG_URL_BASE_S, utmTemplate, USER_ID);
-        linkSet.regenerateLinks();
-        this.linkSet = linkSetRepository.save(linkSet);
-        embeddedLink = this.linkSet.getEmbeddedLinks().get(0);
+        linkSet = linkSetRepository.save(createLinkSet());
+        embeddedLink = linkSet.getEmbeddedLinks().get(0);
     }
 
     @Test

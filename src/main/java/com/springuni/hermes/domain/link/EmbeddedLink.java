@@ -9,12 +9,13 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.util.Assert;
 
 @Entity
 @DiscriminatorValue("E")
 public class EmbeddedLink extends Link {
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "linkset_id")
     private LinkSet linkSet;
 
@@ -44,6 +45,7 @@ public class EmbeddedLink extends Link {
     }
 
     void setLinkSet(LinkSet linkSet) {
+        Assert.notNull(linkSet, "linkSet cannot be null");
         this.linkSet = linkSet;
     }
 
