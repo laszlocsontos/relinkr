@@ -1,16 +1,16 @@
 package com.springuni.hermes.domain.link;
 
-import static com.springuni.hermes.domain.link.LinkStatus.*;
+import static com.springuni.hermes.domain.link.LinkStatus.ACTIVE;
+import static com.springuni.hermes.domain.link.LinkStatus.ARCHIVED;
+import static com.springuni.hermes.domain.link.LinkStatus.BROKEN;
 
 import com.springuni.hermes.core.AbstractEntity;
 import com.springuni.hermes.domain.user.Ownable;
 import java.io.Serializable;
 import java.net.URL;
-import java.util.EnumSet;
 import java.util.Set;
 import javax.persistence.MappedSuperclass;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.Assert;
 
 @MappedSuperclass
@@ -50,22 +50,23 @@ public abstract class LinkBase<PK extends Serializable>
     protected abstract void setLinkStatus(LinkStatus linkStatus);
 
     protected void markActive() throws InvalidLinkStatusException {
-        setLinkStatus(ACTIVE, EnumSet.of(ARCHIVED, PENDING, BROKEN));
+        setLinkStatus(ACTIVE, getLinkStatus().getNextLinkStatuses());
     }
 
     protected void markArchived() throws InvalidLinkStatusException {
-        setLinkStatus(ARCHIVED, EnumSet.of(ACTIVE, BROKEN));
+        setLinkStatus(ARCHIVED, getLinkStatus().getNextLinkStatuses());
     }
 
     protected void markBroken() throws InvalidLinkStatusException {
-        setLinkStatus(BROKEN, EnumSet.of(PENDING, ACTIVE));
+        setLinkStatus(BROKEN, getLinkStatus().getNextLinkStatuses());
     }
 
     private void setLinkStatus(LinkStatus linkStatus, Set<LinkStatus> expectedLinkStatuses)
             throws InvalidLinkStatusException {
 
-        if (!expectedLinkStatuses.contains(getLinkStatus())) {
-            throw InvalidLinkStatusException.forLinkStatus(linkStatus);
+        expectedLinkStatuses = getLinkStatus().getNextLinkStatuses();
+        if (!expectedLinkStatuses.contains(linkStatus)) {
+            throw InvalidLinkStatusException.forLinkStatus(linkStatus, expectedLinkStatuses);
         }
 
         setLinkStatus(linkStatus);

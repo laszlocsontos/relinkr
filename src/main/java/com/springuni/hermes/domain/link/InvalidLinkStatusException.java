@@ -1,6 +1,7 @@
 package com.springuni.hermes.domain.link;
 
 import com.springuni.hermes.core.ApplicationException;
+import java.util.Set;
 
 public class InvalidLinkStatusException extends ApplicationException {
 
@@ -19,8 +20,11 @@ public class InvalidLinkStatusException extends ApplicationException {
         super(message, cause);
     }
 
-    static InvalidLinkStatusException forLinkStatus(LinkStatus linkStatus) {
-        return new InvalidLinkStatusException("For link status: " + linkStatus);
+    static InvalidLinkStatusException forLinkStatus(
+            LinkStatus linkStatus, Set<LinkStatus> expectedLinkStatuses) {
+
+        return new InvalidLinkStatusException(
+                "For link status: " + linkStatus + "; expected: " + expectedLinkStatuses);
     }
 
 }
