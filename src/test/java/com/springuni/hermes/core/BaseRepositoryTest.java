@@ -10,12 +10,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.springframework.data.domain.Persistable;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
-public abstract class BaseRepositoryTest<E extends AbstractPersistable<ID>, ID extends Serializable, R extends BaseRepository<E, ID>> {
+public abstract class BaseRepositoryTest<E extends Persistable<ID>, ID extends Serializable, R extends BaseRepository<E, ID>> {
 
     @Autowired
     protected R repository;

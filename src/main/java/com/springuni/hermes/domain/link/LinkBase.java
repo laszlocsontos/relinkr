@@ -2,6 +2,7 @@ package com.springuni.hermes.domain.link;
 
 import static com.springuni.hermes.domain.link.LinkStatus.*;
 
+import com.springuni.hermes.core.AbstractEntity;
 import com.springuni.hermes.domain.user.Ownable;
 import java.io.Serializable;
 import java.net.URL;
@@ -13,7 +14,8 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.Assert;
 
 @MappedSuperclass
-public abstract class LinkBase<PK extends Serializable> extends AbstractPersistable<PK> implements Ownable {
+public abstract class LinkBase<PK extends Serializable>
+        extends AbstractEntity<PK> implements Ownable {
 
     private Long userId;
 

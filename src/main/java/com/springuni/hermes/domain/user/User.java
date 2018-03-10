@@ -3,6 +3,7 @@ package com.springuni.hermes.domain.user;
 import static com.springuni.hermes.domain.user.Role.ADMIN;
 import static com.springuni.hermes.domain.user.Role.USER;
 
+import com.springuni.hermes.core.AbstractEntity;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -13,7 +14,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 @Entity
-public class User extends AbstractPersistable<Long> {
+public class User extends AbstractEntity<Long> {
 
     private EmailAddress emailAddress;
     private String name;

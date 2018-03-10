@@ -3,18 +3,17 @@ package com.springuni.hermes.domain.utm;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 
+import com.springuni.hermes.core.AbstractEntity;
 import com.springuni.hermes.domain.user.Ownable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.Assert;
 
 @Entity
-public class UtmTemplate extends AbstractPersistable<Long> implements Ownable {
+public class UtmTemplate extends AbstractEntity<Long> implements Ownable {
 
     private String name;
 
