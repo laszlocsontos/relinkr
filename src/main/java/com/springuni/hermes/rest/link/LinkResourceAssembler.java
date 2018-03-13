@@ -3,8 +3,8 @@ package com.springuni.hermes.rest.link;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-import com.springuni.hermes.domain.link.Link;
-import com.springuni.hermes.domain.link.LinkStatus;
+import com.springuni.hermes.link.Link;
+import com.springuni.hermes.link.LinkStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.mvc.IdentifiableResourceAssemblerSupport;
 import org.springframework.stereotype.Component;

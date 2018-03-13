@@ -1,11 +1,11 @@
 package com.springuni.hermes.rest.link;
 
-import static com.springuni.hermes.domain.Mocks.PAGEABLE;
-import static com.springuni.hermes.domain.Mocks.TAG_A;
-import static com.springuni.hermes.domain.Mocks.USER_ID;
-import static com.springuni.hermes.domain.Mocks.createStandaloneLink;
-import static com.springuni.hermes.domain.link.LinkStatus.ACTIVE;
-import static com.springuni.hermes.domain.link.LinkStatus.ARCHIVED;
+import static com.springuni.hermes.Mocks.PAGEABLE;
+import static com.springuni.hermes.Mocks.TAG_A;
+import static com.springuni.hermes.Mocks.USER_ID;
+import static com.springuni.hermes.Mocks.createStandaloneLink;
+import static com.springuni.hermes.link.LinkStatus.ACTIVE;
+import static com.springuni.hermes.link.LinkStatus.ARCHIVED;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -23,8 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springuni.hermes.domain.link.LinkService;
-import com.springuni.hermes.domain.link.StandaloneLink;
+import com.springuni.hermes.link.LinkService;
+import com.springuni.hermes.link.StandaloneLink;
 import com.springuni.hermes.rest.link.LinkControllerTest.TestConfig;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,8 +1,8 @@
 package com.springuni.hermes.rest.link;
 
-import com.springuni.hermes.domain.link.LinkBase;
-import com.springuni.hermes.domain.link.LinkStatus;
-import com.springuni.hermes.domain.link.Tag;
+import com.springuni.hermes.link.LinkBase;
+import com.springuni.hermes.link.LinkStatus;
+import com.springuni.hermes.link.Tag;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.Set;

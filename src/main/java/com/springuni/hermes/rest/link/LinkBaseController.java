@@ -3,8 +3,8 @@ package com.springuni.hermes.rest.link;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 
 import com.springuni.hermes.core.EntityNotFoundException;
-import com.springuni.hermes.domain.link.LinkBase;
-import com.springuni.hermes.domain.link.LinkBaseService;
+import com.springuni.hermes.link.LinkBase;
+import com.springuni.hermes.link.LinkBaseService;
 import java.io.Serializable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

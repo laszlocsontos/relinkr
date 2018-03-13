@@ -5,7 +5,7 @@ import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 import com.springuni.hermes.core.ApplicationException;
-import com.springuni.hermes.domain.link.LinkService;
+import com.springuni.hermes.link.LinkService;
 import java.net.URI;
 import java.net.URL;
 import org.springframework.http.ResponseEntity;

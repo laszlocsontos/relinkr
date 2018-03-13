@@ -2,9 +2,9 @@ package com.springuni.hermes.rest.link;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.springuni.hermes.domain.link.Link;
-import com.springuni.hermes.domain.link.LinkBase;
-import com.springuni.hermes.domain.utm.UtmParameters;
+import com.springuni.hermes.link.Link;
+import com.springuni.hermes.link.LinkBase;
+import com.springuni.hermes.utm.UtmParameters;
 import java.util.Optional;
 import lombok.Data;
 import lombok.Getter;

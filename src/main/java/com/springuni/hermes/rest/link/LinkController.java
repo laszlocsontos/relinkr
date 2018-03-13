@@ -1,16 +1,16 @@
 package com.springuni.hermes.rest.link;
 
-import static com.springuni.hermes.domain.link.LinkStatus.ACTIVE;
-import static com.springuni.hermes.domain.link.LinkStatus.ARCHIVED;
+import static com.springuni.hermes.link.LinkStatus.ACTIVE;
+import static com.springuni.hermes.link.LinkStatus.ARCHIVED;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.accepted;
 import static org.springframework.http.ResponseEntity.ok;
 
 import com.springuni.hermes.core.ApplicationException;
-import com.springuni.hermes.domain.link.InvalidLinkStatusException;
-import com.springuni.hermes.domain.link.Link;
-import com.springuni.hermes.domain.link.LinkService;
-import com.springuni.hermes.domain.link.LinkStatus;
+import com.springuni.hermes.link.InvalidLinkStatusException;
+import com.springuni.hermes.link.Link;
+import com.springuni.hermes.link.LinkService;
+import com.springuni.hermes.link.LinkStatus;
 import java.util.EnumSet;
 import javax.validation.Valid;
 import org.springframework.data.domain.Page;

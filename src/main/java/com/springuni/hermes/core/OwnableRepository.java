@@ -1,6 +1,6 @@
 package com.springuni.hermes.core;
 
-import com.springuni.hermes.domain.user.Ownable;
+import com.springuni.hermes.user.Ownable;
 import java.io.Serializable;
 import java.util.List;
 import org.springframework.data.domain.Page;
