@@ -16,6 +16,8 @@ import com.springuni.hermes.domain.utm.UtmTemplate;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 public class Mocks {
 
@@ -62,6 +64,8 @@ public class Mocks {
     public static final Long VISITOR_ID = 1L;
     public static final IpAddress VISITOR_IP;
     public static final LocalDateTime TIMESTAMP = LocalDateTime.of(2018, 02, 28, 19, 52);
+
+    public static final Pageable PAGEABLE = PageRequest.of(0, 10);
 
     static {
         try {
@@ -115,7 +119,9 @@ public class Mocks {
     }
 
     public static StandaloneLink createStandaloneLink() throws ApplicationException {
-        StandaloneLink standaloneLink = new StandaloneLink(LONG_URL_WITHOUT_UTM_S, USER_ID);
+        StandaloneLink standaloneLink =
+                new StandaloneLink(LONG_URL_WITHOUT_UTM_S, UTM_PARAMETERS_FULL, USER_ID);
+        standaloneLink.setId(2L);
         standaloneLink.markActive();
         return standaloneLink;
     }

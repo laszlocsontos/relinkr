@@ -3,12 +3,16 @@ package com.springuni.hermes.domain.link;
 import static com.springuni.hermes.domain.link.LinkStatus.ACTIVE;
 import static com.springuni.hermes.domain.link.LinkStatus.ARCHIVED;
 import static com.springuni.hermes.domain.link.LinkStatus.BROKEN;
+import static com.springuni.hermes.domain.link.LinkStatus.PENDING;
+import static java.util.Collections.emptySet;
 
 import com.springuni.hermes.core.AbstractEntity;
 import com.springuni.hermes.domain.user.Ownable;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.MappedSuperclass;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Assert;
@@ -46,6 +50,18 @@ public abstract class LinkBase<PK extends Serializable>
     protected abstract void removeTag(Tag tag);
 
     public abstract LinkStatus getLinkStatus();
+
+    public Set<LinkStatus> getUserLinkStatuses() {
+        // Users cannot change state in PENDING state
+        if (PENDING.equals(getLinkStatus())) {
+            return emptySet();
+        }
+
+        return Collections.unmodifiableSet(
+                getLinkStatus().getNextLinkStatuses().stream().filter(LinkStatus::isUserSettable)
+                        .collect(Collectors.toSet())
+        );
+    }
 
     protected abstract void setLinkStatus(LinkStatus linkStatus);
 

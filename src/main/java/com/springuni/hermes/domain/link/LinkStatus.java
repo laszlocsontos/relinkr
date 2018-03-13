@@ -10,14 +10,16 @@ public enum LinkStatus implements Identifiable<String> {
 
     // Enum values cannot be forward-referenced here
 
-    ACTIVE("ARCHIVED", "BROKEN"),
-    BROKEN("ACTIVE", "ARCHIVED"),
-    PENDING("ACTIVE", "BROKEN"),
-    ARCHIVED("ACTIVE");
+    ACTIVE(true, "ARCHIVED", "BROKEN"),
+    BROKEN(false, "ACTIVE", "ARCHIVED"),
+    PENDING(false, "ACTIVE", "BROKEN"),
+    ARCHIVED(true, "ACTIVE");
 
+    private final boolean userSettable;
     private final Set<String> nextLinkStatuses;
 
-    LinkStatus(String... nextLinkStatuses) {
+    LinkStatus(boolean userSettable, String... nextLinkStatuses) {
+        this.userSettable = userSettable;
         this.nextLinkStatuses = Arrays.stream(nextLinkStatuses).collect(Collectors.toSet());
     }
 
@@ -30,6 +32,10 @@ public enum LinkStatus implements Identifiable<String> {
         return Collections.unmodifiableSet(
                 nextLinkStatuses.stream().map(LinkStatus::valueOf).collect(Collectors.toSet())
         );
+    }
+
+    public boolean isUserSettable() {
+        return userSettable;
     }
 
 }

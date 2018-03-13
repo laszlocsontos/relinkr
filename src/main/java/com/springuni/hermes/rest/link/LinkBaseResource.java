@@ -3,6 +3,7 @@ package com.springuni.hermes.rest.link;
 import com.springuni.hermes.domain.link.LinkBase;
 import com.springuni.hermes.domain.link.LinkStatus;
 import com.springuni.hermes.domain.link.Tag;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Set;
 import lombok.Getter;
@@ -15,16 +16,18 @@ import org.springframework.hateoas.ResourceSupport;
 @NoArgsConstructor
 public class LinkBaseResource extends ResourceSupport {
 
-    private Long userId;
-    private URL baseUrl;
+    private String baseUrl;
     private Set<Tag> tags;
     private LinkStatus linkStatus;
 
     public LinkBaseResource(LinkBase linkBase) {
-        userId = linkBase.getUserId();
-        baseUrl = linkBase.getBaseUrl();
+        baseUrl = linkBase.getBaseUrl().toString();
         tags = linkBase.getTags();
         linkStatus = linkBase.getLinkStatus();
+    }
+
+    LinkBaseResource(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 
 }

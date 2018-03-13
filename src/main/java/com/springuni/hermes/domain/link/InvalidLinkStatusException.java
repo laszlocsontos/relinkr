@@ -20,7 +20,7 @@ public class InvalidLinkStatusException extends ApplicationException {
         super(message, cause);
     }
 
-    static InvalidLinkStatusException forLinkStatus(
+    public static InvalidLinkStatusException forLinkStatus(
             LinkStatus linkStatus, Set<LinkStatus> expectedLinkStatuses) {
 
         return new InvalidLinkStatusException(

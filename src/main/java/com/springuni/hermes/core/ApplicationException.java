@@ -22,7 +22,7 @@ package com.springuni.hermes.core;
 /**
  * Created by lcsontos on 5/10/17.
  */
-public class ApplicationException extends Exception {
+public class ApplicationException extends RuntimeException {
 
     public ApplicationException() {
         super();

@@ -42,7 +42,7 @@ public class AbstractEntity<ID extends Serializable>
         return id;
     }
 
-    void setId(ID id) {
+    public void setId(ID id) {
         this.id = id;
     }
 
