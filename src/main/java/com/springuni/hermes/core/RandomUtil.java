@@ -45,7 +45,8 @@ public class RandomUtil {
         try {
             randomGenerator = SecureRandom.getInstance(ALGORITHM);
         } catch (NoSuchAlgorithmException nae) {
-            LOGGER.warn("Couldn't create strong secure random generator; reason: {}.", nae.getMessage());
+            LOGGER.warn("Couldn't create strong secure random generator; reason: {}.",
+                    nae.getMessage());
             randomGenerator = new SecureRandom();
         }
 

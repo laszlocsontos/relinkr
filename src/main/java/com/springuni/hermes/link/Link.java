@@ -21,9 +21,8 @@ import org.jetbrains.annotations.Nullable;
 @DiscriminatorValue("L")
 public abstract class Link extends LinkBase<Long> {
 
-    private static final String HASHIDS_SALT = "6cY$S!08HpP$pWRpEErhGp7H3307a^67";
     static final int HASHIDS_LENGTH = 11;
-
+    private static final String HASHIDS_SALT = "6cY$S!08HpP$pWRpEErhGp7H3307a^67";
     private static final String HASHIDS_ALPHABET =
             "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_-";
 

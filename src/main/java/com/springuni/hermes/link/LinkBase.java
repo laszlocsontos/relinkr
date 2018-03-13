@@ -51,6 +51,8 @@ public abstract class LinkBase<PK extends Serializable>
 
     public abstract LinkStatus getLinkStatus();
 
+    protected abstract void setLinkStatus(LinkStatus linkStatus);
+
     public Set<LinkStatus> getUserLinkStatuses() {
         // Users cannot change state in PENDING state
         if (PENDING.equals(getLinkStatus())) {
@@ -62,8 +64,6 @@ public abstract class LinkBase<PK extends Serializable>
                         .collect(Collectors.toSet())
         );
     }
-
-    protected abstract void setLinkStatus(LinkStatus linkStatus);
 
     protected void markActive() throws InvalidLinkStatusException {
         setLinkStatus(ACTIVE, getLinkStatus().getNextLinkStatuses());

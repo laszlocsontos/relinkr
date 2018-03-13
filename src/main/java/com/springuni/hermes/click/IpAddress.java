@@ -19,18 +19,11 @@ public class IpAddress {
     // a non-numeric value.
     private static final Pattern IPV4_AND_6_PATTERN =
             Pattern.compile("([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4}|(\\d{1,3}\\.){3}\\d{1,3}");
-
-    public enum IpAddressType {
-        IPV4, IPV6
-    }
-
     private String ipAddress;
     private BigInteger ipAddressDecimal;
     private IpAddressType ipAddressType;
-
     private boolean localAddress;
     private boolean multicastAddress;
-
     public IpAddress(String ipAddress) throws InvalidIpAddressException {
         Assert.notNull(ipAddress, "ipAddress cannot be null");
         this.ipAddress = ipAddress;
@@ -65,6 +58,10 @@ public class IpAddress {
     }
 
     IpAddress() {
+    }
+
+    public enum IpAddressType {
+        IPV4, IPV6
     }
 
 }

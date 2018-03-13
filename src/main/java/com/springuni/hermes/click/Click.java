@@ -65,6 +65,11 @@ public class Click extends AbstractPersistable<Long> {
         return Optional.ofNullable(country);
     }
 
+    public void setCountry(@NotNull Country country) {
+        Assert.notNull(country, "country cannot be null");
+        this.country = country;
+    }
+
     public Long getVisitorId() {
         return visitorId;
     }
@@ -99,11 +104,6 @@ public class Click extends AbstractPersistable<Long> {
 
     public LocalDateTime getVisitTimestamp() {
         return visitTimestamp;
-    }
-
-    public void setCountry(@NotNull Country country) {
-        Assert.notNull(country, "country cannot be null");
-        this.country = country;
     }
 
     public void setVisitTimestamp(@NotNull LocalDateTime visitTimestamp) {

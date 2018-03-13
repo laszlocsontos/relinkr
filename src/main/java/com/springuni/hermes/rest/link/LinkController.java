@@ -112,7 +112,8 @@ public class LinkController {
     }
 
     @DeleteMapping(path = "/{linkId}/tags/{tagName}")
-    HttpEntity removeTag(@PathVariable long linkId, @PathVariable String tagName) throws ApplicationException {
+    HttpEntity removeTag(@PathVariable long linkId, @PathVariable String tagName)
+            throws ApplicationException {
         linkService.removeTag(linkId, tagName);
 
         return ok().build();

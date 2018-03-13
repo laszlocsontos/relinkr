@@ -62,6 +62,20 @@ public class UtmParameters {
     UtmParameters() {
     }
 
+    public static UtmParameters of(Map<String, String> utmParameterMap)
+            throws MissingUtmParameterException {
+
+        Assert.notNull(utmParameterMap, "utmParameterMap cannot be null");
+
+        return new UtmParameters(
+                utmParameterMap.get(UTM_SOURCE),
+                utmParameterMap.get(UTM_MEDIUM),
+                utmParameterMap.get(UTM_CAMPAIGN),
+                utmParameterMap.get(UTM_TERM),
+                utmParameterMap.get(UTM_CONTENT)
+        );
+    }
+
     public Map<String, String> asMap() {
         Map<String, String> utmParameterMap = new LinkedHashMap<>();
 
@@ -95,20 +109,6 @@ public class UtmParameters {
 
     public Optional<String> getUtmContent() {
         return Optional.ofNullable(utmContent);
-    }
-
-    public static UtmParameters of(Map<String, String> utmParameterMap)
-            throws MissingUtmParameterException {
-
-        Assert.notNull(utmParameterMap, "utmParameterMap cannot be null");
-
-        return new UtmParameters(
-                utmParameterMap.get(UTM_SOURCE),
-                utmParameterMap.get(UTM_MEDIUM),
-                utmParameterMap.get(UTM_CAMPAIGN),
-                utmParameterMap.get(UTM_TERM),
-                utmParameterMap.get(UTM_CONTENT)
-        );
     }
 
 }

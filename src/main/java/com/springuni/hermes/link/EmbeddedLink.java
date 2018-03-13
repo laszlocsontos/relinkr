@@ -21,10 +21,6 @@ public class EmbeddedLink extends Link {
     @JoinColumn(name = "linkset_id")
     private LinkSet linkSet;
 
-    public LinkSet getLinkSet() {
-        return linkSet;
-    }
-
     public EmbeddedLink(String baseUrl, @NotNull Long userId) throws InvalidUrlException {
         super(baseUrl, userId);
     }
@@ -44,6 +40,10 @@ public class EmbeddedLink extends Link {
      */
     EmbeddedLink() {
         super();
+    }
+
+    public LinkSet getLinkSet() {
+        return linkSet;
     }
 
     void setLinkSet(LinkSet linkSet) {

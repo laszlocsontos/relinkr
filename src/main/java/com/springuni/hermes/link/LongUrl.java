@@ -106,6 +106,15 @@ public class LongUrl {
     LongUrl() {
     }
 
+    public static LongUrl from(URL url, UtmParameters utmParameters) {
+        try {
+            return new LongUrl(url.toString(), utmParameters);
+        } catch (InvalidUrlException e) {
+            // This should never happen as url itself is a valid java.net.URL.
+            throw new AssertionError("Internal error: baseUrl=" + url, e);
+        }
+    }
+
     public LongUrl apply(UtmParameters utmParameters) {
         return from(baseUrl, utmParameters);
     }
@@ -129,15 +138,6 @@ public class LongUrl {
     @Override
     public String toString() {
         return getTargetUrl().toString();
-    }
-
-    public static LongUrl from(URL url, UtmParameters utmParameters) {
-        try {
-            return new LongUrl(url.toString(), utmParameters);
-        } catch (InvalidUrlException e) {
-            // This should never happen as url itself is a valid java.net.URL.
-            throw new AssertionError("Internal error: baseUrl=" + url, e);
-        }
     }
 
 }

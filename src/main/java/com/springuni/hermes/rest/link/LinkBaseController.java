@@ -20,7 +20,7 @@ public class LinkBaseController<
         L extends LinkBase<ID>,
         S extends LinkBaseService<ID, L>,
         R extends LinkBaseResource
-> {
+        > {
 
     protected final S linkService;
 
