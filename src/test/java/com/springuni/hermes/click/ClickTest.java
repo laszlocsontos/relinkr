@@ -7,7 +7,6 @@ import static com.springuni.hermes.Mocks.VISITOR_IP;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-import com.springuni.hermes.click.Click;
 import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;

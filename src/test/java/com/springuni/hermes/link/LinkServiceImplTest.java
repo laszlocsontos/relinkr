@@ -1,7 +1,5 @@
 package com.springuni.hermes.link;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 public class LinkServiceImplTest {

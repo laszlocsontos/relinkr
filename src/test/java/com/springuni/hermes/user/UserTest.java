@@ -1,7 +1,9 @@
 package com.springuni.hermes.user;
 
-import static org.junit.Assert.*;
 import static com.springuni.hermes.user.Role.ADMIN;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;

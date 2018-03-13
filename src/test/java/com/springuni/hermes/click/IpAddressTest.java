@@ -7,8 +7,6 @@ import static com.springuni.hermes.click.IpAddress.IpAddressType.IPV6;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import com.springuni.hermes.click.InvalidIpAddressException;
-import com.springuni.hermes.click.IpAddress;
 import java.math.BigInteger;
 import org.junit.Before;
 import org.junit.Test;

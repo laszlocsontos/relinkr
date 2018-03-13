@@ -14,9 +14,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.data.domain.Pageable.unpaged;
 
+import com.springuni.hermes.Mocks;
 import com.springuni.hermes.core.ApplicationException;
 import com.springuni.hermes.core.EntityNotFoundException;
-import com.springuni.hermes.Mocks;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
