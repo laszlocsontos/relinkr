@@ -4,12 +4,12 @@ import static java.util.Collections.unmodifiableSet;
 
 import com.springuni.hermes.click.IpAddress;
 import com.springuni.hermes.core.ApplicationException;
-import com.springuni.hermes.link.EmbeddedLink;
-import com.springuni.hermes.link.InvalidUrlException;
-import com.springuni.hermes.link.LinkSet;
-import com.springuni.hermes.link.LongUrl;
-import com.springuni.hermes.link.StandaloneLink;
-import com.springuni.hermes.link.Tag;
+import com.springuni.hermes.link.model.EmbeddedLink;
+import com.springuni.hermes.link.model.InvalidUrlException;
+import com.springuni.hermes.link.model.LinkSet;
+import com.springuni.hermes.link.model.LongUrl;
+import com.springuni.hermes.link.model.StandaloneLink;
+import com.springuni.hermes.link.model.Tag;
 import com.springuni.hermes.user.EmailAddress;
 import com.springuni.hermes.utm.UtmParameters;
 import com.springuni.hermes.utm.UtmTemplate;
