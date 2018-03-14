@@ -1,4 +1,4 @@
-package com.springuni.hermes.core;
+package com.springuni.hermes.core.orm;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

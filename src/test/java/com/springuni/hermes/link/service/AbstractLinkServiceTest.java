@@ -9,9 +9,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.data.domain.Pageable.unpaged;
 
-import com.springuni.hermes.core.ApplicationException;
-import com.springuni.hermes.core.EntityNotFoundException;
-import com.springuni.hermes.core.OwnableRepository;
+import com.springuni.hermes.core.model.ApplicationException;
+import com.springuni.hermes.core.model.EntityNotFoundException;
+import com.springuni.hermes.core.orm.OwnableRepository;
 import com.springuni.hermes.link.model.LinkBase;
 import java.io.Serializable;
 import java.util.List;

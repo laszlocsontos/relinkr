@@ -17,18 +17,27 @@
  * along with springuni-particles.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.springuni.hermes.core;
-
-import lombok.Getter;
+package com.springuni.hermes.core.model;
 
 /**
  * Created by lcsontos on 5/10/17.
  */
-@Getter
-public class EntityNotFoundException extends GeneralEntityException {
+public class ApplicationException extends RuntimeException {
 
-    public EntityNotFoundException(String fieldName, Object fieldValue) {
-        super(fieldName, fieldValue);
+    public ApplicationException() {
+        super();
+    }
+
+    public ApplicationException(String message) {
+        super(message);
+    }
+
+    public ApplicationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ApplicationException(Throwable cause) {
+        super(cause);
     }
 
 }

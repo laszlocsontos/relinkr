@@ -1,6 +1,6 @@
 package com.springuni.hermes.link.service;
 
-import com.springuni.hermes.core.ApplicationException;
+import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.utm.UtmParameters;
 import java.net.URL;

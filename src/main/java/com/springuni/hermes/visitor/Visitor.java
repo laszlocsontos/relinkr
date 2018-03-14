@@ -1,6 +1,6 @@
 package com.springuni.hermes.visitor;
 
-import com.springuni.hermes.core.AbstractEntity;
+import com.springuni.hermes.core.orm.AbstractEntity;
 import javax.persistence.Entity;
 
 @Entity

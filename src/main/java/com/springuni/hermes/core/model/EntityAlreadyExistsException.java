@@ -17,14 +17,14 @@
  * along with springuni-particles.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.springuni.hermes.core;
+package com.springuni.hermes.core.model;
 
 /**
  * Created by lcsontos on 5/10/17.
  */
-public class EntityConflictsException extends GeneralEntityException {
+public class EntityAlreadyExistsException extends GeneralEntityException {
 
-    public EntityConflictsException(String fieldName, Object fieldValue) {
+    public EntityAlreadyExistsException(String fieldName, Object fieldValue) {
         super(fieldName, fieldValue);
     }
 

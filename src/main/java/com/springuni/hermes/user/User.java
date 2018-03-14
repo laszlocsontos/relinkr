@@ -3,7 +3,7 @@ package com.springuni.hermes.user;
 import static com.springuni.hermes.user.Role.ADMIN;
 import static com.springuni.hermes.user.Role.USER;
 
-import com.springuni.hermes.core.AbstractEntity;
+import com.springuni.hermes.core.orm.AbstractEntity;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;

@@ -5,7 +5,7 @@ import static com.springuni.hermes.link.model.LinkStatus.ARCHIVED;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
-import com.springuni.hermes.core.ApplicationException;
+import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.link.model.InvalidLinkStatusException;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.service.LinkService;

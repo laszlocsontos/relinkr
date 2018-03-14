@@ -2,7 +2,7 @@ package com.springuni.hermes.link.web;
 
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 
-import com.springuni.hermes.core.EntityNotFoundException;
+import com.springuni.hermes.core.model.EntityNotFoundException;
 import com.springuni.hermes.link.model.LinkBase;
 import com.springuni.hermes.link.service.LinkBaseService;
 import java.io.Serializable;

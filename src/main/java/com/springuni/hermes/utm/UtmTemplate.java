@@ -3,7 +3,7 @@ package com.springuni.hermes.utm;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 
-import com.springuni.hermes.core.AbstractEntity;
+import com.springuni.hermes.core.orm.AbstractEntity;
 import com.springuni.hermes.user.Ownable;
 import java.util.LinkedHashSet;
 import java.util.Set;

@@ -1,6 +1,6 @@
 package com.springuni.hermes.utm;
 
-import com.springuni.hermes.core.ApplicationException;
+import com.springuni.hermes.core.model.ApplicationException;
 
 public class MissingUtmParameterException extends ApplicationException {
 

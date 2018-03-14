@@ -11,8 +11,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import com.springuni.hermes.Mocks;
-import com.springuni.hermes.core.ApplicationException;
-import com.springuni.hermes.core.EntityNotFoundException;
+import com.springuni.hermes.core.model.ApplicationException;
+import com.springuni.hermes.core.model.EntityNotFoundException;
 import com.springuni.hermes.link.model.EmbeddedLink;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.StandaloneLink;

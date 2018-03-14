@@ -1,4 +1,4 @@
-package com.springuni.hermes.core;
+package com.springuni.hermes.core.model;
 
 public class GeneralEntityException extends ApplicationException {
 

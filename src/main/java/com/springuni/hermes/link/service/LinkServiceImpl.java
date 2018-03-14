@@ -3,8 +3,8 @@ package com.springuni.hermes.link.service;
 import static com.springuni.hermes.link.model.LinkStatus.ACTIVE;
 import static com.springuni.hermes.link.model.LinkType.STANDALONE;
 
-import com.springuni.hermes.core.ApplicationException;
-import com.springuni.hermes.core.EntityNotFoundException;
+import com.springuni.hermes.core.model.ApplicationException;
+import com.springuni.hermes.core.model.EntityNotFoundException;
 import com.springuni.hermes.link.model.InvalidUrlException;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkType;

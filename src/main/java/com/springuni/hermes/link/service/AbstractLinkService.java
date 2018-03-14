@@ -1,8 +1,8 @@
 package com.springuni.hermes.link.service;
 
-import com.springuni.hermes.core.ApplicationException;
-import com.springuni.hermes.core.EntityNotFoundException;
-import com.springuni.hermes.core.OwnableRepository;
+import com.springuni.hermes.core.model.ApplicationException;
+import com.springuni.hermes.core.model.EntityNotFoundException;
+import com.springuni.hermes.core.orm.OwnableRepository;
 import com.springuni.hermes.link.model.LinkBase;
 import com.springuni.hermes.link.model.Tag;
 import java.io.Serializable;

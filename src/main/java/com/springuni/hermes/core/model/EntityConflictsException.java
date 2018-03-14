@@ -17,27 +17,15 @@
  * along with springuni-particles.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.springuni.hermes.core;
+package com.springuni.hermes.core.model;
 
 /**
  * Created by lcsontos on 5/10/17.
  */
-public class ApplicationException extends RuntimeException {
+public class EntityConflictsException extends GeneralEntityException {
 
-    public ApplicationException() {
-        super();
-    }
-
-    public ApplicationException(String message) {
-        super(message);
-    }
-
-    public ApplicationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ApplicationException(Throwable cause) {
-        super(cause);
+    public EntityConflictsException(String fieldName, Object fieldValue) {
+        super(fieldName, fieldValue);
     }
 
 }

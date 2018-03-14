@@ -4,7 +4,7 @@ import static org.springframework.http.HttpStatus.MOVED_PERMANENTLY;
 import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-import com.springuni.hermes.core.ApplicationException;
+import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.link.service.LinkService;
 import java.net.URI;
 import java.net.URL;

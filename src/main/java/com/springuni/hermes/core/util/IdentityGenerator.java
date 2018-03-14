@@ -1,6 +1,5 @@
-package com.springuni.hermes.core;
+package com.springuni.hermes.core.util;
 
-import static com.springuni.hermes.core.RandomUtil.nextInt;
 import static java.time.Instant.now;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoUnit.MILLIS;
@@ -29,13 +28,22 @@ public final class IdentityGenerator {
      */
     public static final Instant EPOCH = LocalDateTime.of(2018, 03, 01, 0, 0, 0, 0).toInstant(UTC);
 
-    private static final ThreadLocal<Serial> THREAD_LOCAL_SERIAL;
+    private static final IdentityGenerator INSTANCE = new IdentityGenerator();
 
-    static {
-        THREAD_LOCAL_SERIAL = ThreadLocal.withInitial(() -> new Serial(nextInt(), nextInt()));
+    private final ThreadLocal<Serial> threadLocalSerial;
+
+    private IdentityGenerator(RandomGenerator randomGenerator) {
+        threadLocalSerial = ThreadLocal.withInitial(
+                () -> new Serial(randomGenerator.nextInt(), randomGenerator.nextInt())
+        );
     }
 
     private IdentityGenerator() {
+        this(RandomGenerator.getInstance());
+    }
+
+    public static IdentityGenerator getInstance() {
+        return INSTANCE;
     }
 
     /**
@@ -54,13 +62,13 @@ public final class IdentityGenerator {
      *
      * @return a new unique ID
      */
-    public static long generate() {
+    public long generate() {
         long time = MILLIS.between(EPOCH, now());
-        int serial = THREAD_LOCAL_SERIAL.get().increment();
+        int serial = threadLocalSerial.get().increment();
         return doGenerate(time, serial);
     }
 
-    static long doGenerate(long time, int serial) {
+    private static long doGenerate(long time, int serial) {
         return (time & 0x7ffffffffffL) << 20 | (serial & 0xfffff);
     }
 

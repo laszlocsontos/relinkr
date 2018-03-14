@@ -17,14 +17,17 @@
  * along with springuni-particles.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.springuni.hermes.core;
+package com.springuni.hermes.core.model;
+
+import lombok.Getter;
 
 /**
  * Created by lcsontos on 5/10/17.
  */
-public class EntityAlreadyExistsException extends GeneralEntityException {
+@Getter
+public class EntityNotFoundException extends GeneralEntityException {
 
-    public EntityAlreadyExistsException(String fieldName, Object fieldValue) {
+    public EntityNotFoundException(String fieldName, Object fieldValue) {
         super(fieldName, fieldValue);
     }
 

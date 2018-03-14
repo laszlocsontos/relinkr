@@ -3,6 +3,7 @@ package com.springuni.hermes.core;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.springuni.hermes.core.orm.BaseRepository;
 import java.io.Serializable;
 import java.util.Optional;
 import org.junit.Before;

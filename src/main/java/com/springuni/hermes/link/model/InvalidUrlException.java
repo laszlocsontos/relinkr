@@ -1,6 +1,6 @@
 package com.springuni.hermes.link.model;
 
-import com.springuni.hermes.core.ApplicationException;
+import com.springuni.hermes.core.model.ApplicationException;
 
 public class InvalidUrlException extends ApplicationException {
 
