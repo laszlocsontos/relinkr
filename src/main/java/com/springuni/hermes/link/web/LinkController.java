@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/links")
+@RequestMapping("/api/links")
 public class LinkController {
 
     private final LinkService linkService;

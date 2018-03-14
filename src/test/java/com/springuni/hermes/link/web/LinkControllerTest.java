@@ -69,7 +69,7 @@ public class LinkControllerTest {
         given(linkService.getLink(standaloneLink.getId())).willReturn(standaloneLink);
 
         ResultActions resultActions = mockMvc
-                .perform(get("/links/{linkId}", standaloneLink.getId()))
+                .perform(get("/api/links/{linkId}", standaloneLink.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_VALUE))
                 .andDo(print());
@@ -88,7 +88,7 @@ public class LinkControllerTest {
                 linkResource.getBaseUrl(), linkResource.getUtmParameters(), 1L)
         ).willReturn(standaloneLink);
 
-        ResultActions resultActions = mockMvc.perform(post("/links").contentType(APPLICATION_JSON)
+        ResultActions resultActions = mockMvc.perform(post("/api/links").contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(linkResource)))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -108,7 +108,7 @@ public class LinkControllerTest {
         ).willReturn(standaloneLink);
 
         ResultActions resultActions = mockMvc.perform(
-                put("/links/{linkId}", standaloneLink.getId()).contentType(APPLICATION_JSON)
+                put("/api/links/{linkId}", standaloneLink.getId()).contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(linkResource)))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -121,7 +121,7 @@ public class LinkControllerTest {
         given(linkService.listLinks(USER_ID, PAGEABLE))
                 .willReturn(new PageImpl<>(asList(standaloneLink), PAGEABLE, 1));
 
-        ResultActions resultActions = mockMvc.perform(get("/links")
+        ResultActions resultActions = mockMvc.perform(get("/api/links")
                 .param("page", String.valueOf(PAGEABLE.getPageNumber()))
                 .param("size", String.valueOf(PAGEABLE.getPageSize())))
                 .andExpect(status().isOk())
@@ -132,7 +132,7 @@ public class LinkControllerTest {
 
     @Test
     public void updateLinkStatus_withActive() throws Exception {
-        mockMvc.perform(put("/links/{linkId}/linkStatuses/{linkStatus}", standaloneLink.getId(),
+        mockMvc.perform(put("/api/links/{linkId}/linkStatuses/{linkStatus}", standaloneLink.getId(),
                 ACTIVE.name()))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -143,7 +143,7 @@ public class LinkControllerTest {
 
     @Test
     public void updateLinkStatus_withArchived() throws Exception {
-        mockMvc.perform(put("/links/{linkId}/linkStatuses/{linkStatus}", standaloneLink.getId(),
+        mockMvc.perform(put("/api/links/{linkId}/linkStatuses/{linkStatus}", standaloneLink.getId(),
                 ARCHIVED.name()))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -154,7 +154,7 @@ public class LinkControllerTest {
 
     @Test
     public void addTag() throws Exception {
-        mockMvc.perform(post("/links/{linkId}/tags/{tagName}", standaloneLink.getId(),
+        mockMvc.perform(post("/api/links/{linkId}/tags/{tagName}", standaloneLink.getId(),
                 TAG_A.getTagName()))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -165,7 +165,7 @@ public class LinkControllerTest {
 
     @Test
     public void removeTag() throws Exception {
-        mockMvc.perform(delete("/links/{linkId}/tags/{tagName}", standaloneLink.getId(),
+        mockMvc.perform(delete("/api/links/{linkId}/tags/{tagName}", standaloneLink.getId(),
                 TAG_A.getTagName()))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -197,14 +197,11 @@ public class LinkControllerTest {
                 .andExpect(jsonPath(path + ".utmParameters.utmContent",
                         is(standaloneLink.getUtmParameters().getUtmContent().orElse(null))))
                 .andExpect(jsonPath(path + "._links.self.href",
-                        is("http://localhost/links/" + standaloneLink.getId())))
+                        is("http://localhost/api/links/" + standaloneLink.getId())))
                 .andExpect(jsonPath(path + "._links.userLinkStatuses.href",
-                        is("http://localhost/links/" + standaloneLink.getId()
+                        is("http://localhost/api/links/" + standaloneLink.getId()
                                 + "/linkStatuses/ARCHIVED")))
-                .andExpect(jsonPath(path + "._links.shortLink.href",
-                        is("http://localhost/" + standaloneLink.getPath())))
-                .andExpect(jsonPath(path + "._links.shortLink.href",
-                        is("http://localhost/" + standaloneLink.getPath())));
+                .andExpect(jsonPath(path + "._links.shortLink.href", is("http://localhost/" + standaloneLink.getPath())));
     }
 
     @TestConfiguration
