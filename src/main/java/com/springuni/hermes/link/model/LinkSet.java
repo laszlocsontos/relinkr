@@ -50,11 +50,7 @@ public class LinkSet extends LinkBase<Long> {
         Assert.notNull(baseUrl, "baseUrl cannot be null");
         Assert.notNull(utmTemplate, "utmTemplate cannot be null");
 
-        try {
-            this.baseUrl = new URL(baseUrl);
-        } catch (MalformedURLException e) {
-            throw new InvalidUrlException(e);
-        }
+        setLongUrl(baseUrl);
 
         this.utmTemplate = utmTemplate;
 
@@ -81,21 +77,6 @@ public class LinkSet extends LinkBase<Long> {
         this.linkStatus = linkStatus;
     }
 
-    @Override
-    public void markActive() throws InvalidLinkStatusException {
-        super.markActive();
-    }
-
-    @Override
-    public void markArchived() throws InvalidLinkStatusException {
-        super.markArchived();
-    }
-
-    @Override
-    public void markBroken() throws InvalidLinkStatusException {
-        super.markBroken();
-    }
-
     public UtmTemplate getUtmTemplate() {
         return utmTemplate;
     }
@@ -114,15 +95,16 @@ public class LinkSet extends LinkBase<Long> {
     }
 
     public void updateLongUrl(@NotNull String baseUrl) throws InvalidUrlException {
-        try {
-            this.baseUrl = new URL(baseUrl);
-        } catch (MalformedURLException e) {
-            throw new InvalidUrlException(e);
-        }
+        setLongUrl(baseUrl);
 
         for (EmbeddedLink embeddedLink : embeddedLinks) {
             embeddedLink.updateLongUrl(baseUrl);
         }
+    }
+
+    private void setLongUrl(@NotNull String baseUrl) {
+        LongUrl longUrl = new LongUrl(baseUrl);
+        this.baseUrl = longUrl.getBaseUrl();
     }
 
     public void updateUtmTemplate(@NotNull UtmTemplate utmTemplate) {

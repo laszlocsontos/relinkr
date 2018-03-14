@@ -9,25 +9,23 @@ import com.springuni.hermes.link.model.InvalidUrlException;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkType;
 import com.springuni.hermes.link.model.StandaloneLink;
-import com.springuni.hermes.link.model.Tag;
 import com.springuni.hermes.link.model.UnsupportedLinkOperationException;
 import com.springuni.hermes.utm.UtmParameters;
 import java.net.URL;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-class LinkServiceImpl implements LinkService {
+class LinkServiceImpl
+        extends AbstractLinkService<Long, Link, LinkRepository<Link>> implements LinkService {
 
-    private final LinkRepository<Link> linkRepository;
     private final StandaloneLinkRepository standaloneLinkRepository;
 
     public LinkServiceImpl(
             LinkRepository<Link> linkRepository,
             StandaloneLinkRepository standaloneLinkRepository) {
 
-        this.linkRepository = linkRepository;
+        super(linkRepository);
+
         this.standaloneLinkRepository = standaloneLinkRepository;
     }
 
@@ -45,13 +43,6 @@ class LinkServiceImpl implements LinkService {
     }
 
     @Override
-    public Link getLink(long linkId) throws EntityNotFoundException {
-        return linkRepository
-                .findById(linkId)
-                .orElseThrow(() -> new EntityNotFoundException("id", linkId));
-    }
-
-    @Override
     public Link addLink(String baseUrl, UtmParameters utmParameters, Long userId)
             throws InvalidUrlException {
         StandaloneLink link = new StandaloneLink(baseUrl, utmParameters, userId);
@@ -59,53 +50,17 @@ class LinkServiceImpl implements LinkService {
     }
 
     @Override
-    public Link updateLink(long linkId, String baseUrl, UtmParameters utmParameters)
+    public Link updateLink(Long linkId, String baseUrl, UtmParameters utmParameters)
             throws ApplicationException {
 
         Link link = getLink(linkId);
-        expectStandaloneLink(link);
+        verifyLinkBeforeUpdate(link);
         link.updateLongUrl(baseUrl, utmParameters);
         return standaloneLinkRepository.save((StandaloneLink) link);
     }
 
     @Override
-    public Page<Link> listLinks(long userId, Pageable pageable) {
-        return linkRepository.findByUserId(userId, pageable);
-    }
-
-    @Override
-    public void activateLink(long linkId) throws ApplicationException {
-        Link link = getLink(linkId);
-        expectStandaloneLink(link);
-        link.markActive();
-        standaloneLinkRepository.save((StandaloneLink) link);
-    }
-
-    @Override
-    public void archiveLink(long linkId) throws ApplicationException {
-        Link link = getLink(linkId);
-        expectStandaloneLink(link);
-        link.markArchived();
-        standaloneLinkRepository.save((StandaloneLink) link);
-    }
-
-    @Override
-    public void addTag(long linkId, String tagName) throws ApplicationException {
-        Link link = getLink(linkId);
-        expectStandaloneLink(link);
-        link.addTag(new Tag(tagName));
-        standaloneLinkRepository.save((StandaloneLink) link);
-    }
-
-    @Override
-    public void removeTag(long linkId, String tagName) throws ApplicationException {
-        Link link = getLink(linkId);
-        expectStandaloneLink(link);
-        link.removeTag(new Tag(tagName));
-        standaloneLinkRepository.save((StandaloneLink) link);
-    }
-
-    private void expectStandaloneLink(Link link) throws UnsupportedLinkOperationException {
+    protected void verifyLinkBeforeUpdate(Link link) {
         LinkType linkType = link.getLinkType();
         if (!STANDALONE.equals(linkType)) {
             throw UnsupportedLinkOperationException.forLinkType(linkType);

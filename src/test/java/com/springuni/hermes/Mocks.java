@@ -109,6 +109,7 @@ public class Mocks {
     public static LinkSet createLinkSet() throws InvalidUrlException {
         UtmTemplate utmTemplate = createUtmTemplate();
         LinkSet linkSet = new LinkSet(LONG_URL_BASE_S, utmTemplate, USER_ID);
+        linkSet.markActive();
         linkSet.regenerateLinks();
         return linkSet;
     }
