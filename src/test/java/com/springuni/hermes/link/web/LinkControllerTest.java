@@ -23,8 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springuni.hermes.link.service.LinkService;
+import com.springuni.hermes.core.security.SecurityConfig;
 import com.springuni.hermes.link.model.StandaloneLink;
+import com.springuni.hermes.link.service.LinkService;
 import com.springuni.hermes.link.web.LinkControllerTest.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,13 +40,15 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+@Import({SecurityConfig.class, TestConfig.class})
 @RunWith(SpringRunner.class)
-@WebMvcTest(secure = false, controllers = LinkController.class)
-@Import(TestConfig.class)
+@WebMvcTest(controllers = LinkController.class)
+@WithMockUser
 public class LinkControllerTest {
 
     @Autowired
@@ -88,8 +91,9 @@ public class LinkControllerTest {
                 linkResource.getBaseUrl(), linkResource.getUtmParameters(), 1L)
         ).willReturn(standaloneLink);
 
-        ResultActions resultActions = mockMvc.perform(post("/api/links").contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(linkResource)))
+        ResultActions resultActions = mockMvc
+                .perform(post("/api/links").contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(linkResource)))
                 .andExpect(status().isOk())
                 .andDo(print());
 
@@ -201,7 +205,8 @@ public class LinkControllerTest {
                 .andExpect(jsonPath(path + "._links.userLinkStatuses.href",
                         is("http://localhost/api/links/" + standaloneLink.getId()
                                 + "/linkStatuses/ARCHIVED")))
-                .andExpect(jsonPath(path + "._links.shortLink.href", is("http://localhost/" + standaloneLink.getPath())));
+                .andExpect(jsonPath(path + "._links.shortLink.href",
+                        is("http://localhost/" + standaloneLink.getPath())));
     }
 
     @TestConfiguration
