@@ -1,5 +1,6 @@
 package com.springuni.hermes.link.web;
 
+import com.springuni.hermes.core.web.AbstractResource;
 import com.springuni.hermes.link.model.LinkBase;
 import com.springuni.hermes.link.model.LinkStatus;
 import com.springuni.hermes.link.model.Tag;
@@ -8,12 +9,11 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.hateoas.ResourceSupport;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class LinkBaseResource extends ResourceSupport {
+public class LinkBaseResource extends AbstractResource {
 
     private String baseUrl;
     private Set<String> tags;
@@ -22,7 +22,8 @@ public class LinkBaseResource extends ResourceSupport {
     public LinkBaseResource(LinkBase linkBase) {
         baseUrl = linkBase.getBaseUrl().toString();
         // FIXME: Why?
-        tags = (Set<String>)linkBase.getTags().stream().map(it -> ((Tag)it).getTagName()).collect(Collectors.toSet());
+        tags = (Set<String>) linkBase.getTags().stream().map(it -> ((Tag) it).getTagName())
+                .collect(Collectors.toSet());
         linkStatus = linkBase.getLinkStatus();
     }
 
