@@ -19,11 +19,11 @@
 
 package com.springuni.hermes.core.security.user;
 
-import com.springuni.hermes.user.NoSuchUserException;
-import com.springuni.hermes.user.UnconfirmedUserException;
-import com.springuni.hermes.user.User;
-import com.springuni.hermes.user.UserLockedException;
-import com.springuni.hermes.user.UserService;
+import com.springuni.hermes.user.model.NoSuchUserException;
+import com.springuni.hermes.user.model.UnconfirmedUserException;
+import com.springuni.hermes.user.model.User;
+import com.springuni.hermes.user.model.UserLockedException;
+import com.springuni.hermes.user.service.UserService;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import org.springframework.security.authentication.AuthenticationProvider;

@@ -7,7 +7,7 @@ import static com.springuni.hermes.link.model.LinkStatus.PENDING;
 import static java.util.Collections.emptySet;
 
 import com.springuni.hermes.core.orm.AbstractEntity;
-import com.springuni.hermes.user.Ownable;
+import com.springuni.hermes.user.model.Ownable;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.Collections;

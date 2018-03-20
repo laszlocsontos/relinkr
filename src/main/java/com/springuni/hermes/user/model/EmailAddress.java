@@ -1,4 +1,4 @@
-package com.springuni.hermes.user;
+package com.springuni.hermes.user.model;
 
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 

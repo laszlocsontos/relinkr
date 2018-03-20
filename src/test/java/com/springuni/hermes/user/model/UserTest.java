@@ -1,10 +1,12 @@
-package com.springuni.hermes.user;
+package com.springuni.hermes.user.model;
 
-import static com.springuni.hermes.user.Role.ADMIN;
+import static com.springuni.hermes.user.model.Role.ADMIN;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.springuni.hermes.user.model.EmailAddress;
+import com.springuni.hermes.user.model.User;
 import org.junit.Before;
 import org.junit.Test;
 

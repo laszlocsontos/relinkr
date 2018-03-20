@@ -8,7 +8,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import com.springuni.hermes.Mocks;
-import com.springuni.hermes.user.User;
+import com.springuni.hermes.user.model.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

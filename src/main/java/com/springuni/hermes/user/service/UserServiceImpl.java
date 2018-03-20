@@ -1,5 +1,6 @@
-package com.springuni.hermes.user;
+package com.springuni.hermes.user.service;
 
+import com.springuni.hermes.user.model.User;
 import java.util.Optional;
 import org.springframework.core.NamedInheritableThreadLocal;
 import org.springframework.stereotype.Service;

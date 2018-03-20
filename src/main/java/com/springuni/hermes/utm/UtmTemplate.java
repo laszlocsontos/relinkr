@@ -4,7 +4,7 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 
 import com.springuni.hermes.core.orm.AbstractEntity;
-import com.springuni.hermes.user.Ownable;
+import com.springuni.hermes.user.model.Ownable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.ElementCollection;

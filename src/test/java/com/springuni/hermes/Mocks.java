@@ -1,6 +1,6 @@
 package com.springuni.hermes;
 
-import static com.springuni.hermes.user.Role.ADMIN;
+import static com.springuni.hermes.user.model.Role.ADMIN;
 import static java.util.Collections.unmodifiableSet;
 
 import com.springuni.hermes.click.IpAddress;
@@ -11,8 +11,8 @@ import com.springuni.hermes.link.model.LinkSet;
 import com.springuni.hermes.link.model.LongUrl;
 import com.springuni.hermes.link.model.StandaloneLink;
 import com.springuni.hermes.link.model.Tag;
-import com.springuni.hermes.user.EmailAddress;
-import com.springuni.hermes.user.User;
+import com.springuni.hermes.user.model.EmailAddress;
+import com.springuni.hermes.user.model.User;
 import com.springuni.hermes.utm.UtmParameters;
 import com.springuni.hermes.utm.UtmTemplate;
 import java.time.LocalDateTime;

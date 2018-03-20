@@ -1,6 +1,6 @@
 package com.springuni.hermes.core.security.user;
 
-import com.springuni.hermes.user.UserService;
+import com.springuni.hermes.user.service.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

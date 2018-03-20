@@ -1,9 +1,11 @@
-package com.springuni.hermes.user;
+package com.springuni.hermes.user.service;
 
 import static com.springuni.hermes.Mocks.EMAIL_ADDRESS;
 import static org.junit.Assert.assertEquals;
 
 import com.springuni.hermes.core.BaseRepositoryTest;
+import com.springuni.hermes.user.model.User;
+import com.springuni.hermes.user.service.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

@@ -1,5 +1,6 @@
-package com.springuni.hermes.user;
+package com.springuni.hermes.user.model;
 
+import com.springuni.hermes.user.model.EmailAddress;
 import org.junit.Test;
 
 public class EmailAddressTest {

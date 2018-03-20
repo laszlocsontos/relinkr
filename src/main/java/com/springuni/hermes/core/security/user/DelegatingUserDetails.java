@@ -2,7 +2,7 @@ package com.springuni.hermes.core.security.user;
 
 import static java.util.stream.Collectors.toList;
 
-import com.springuni.hermes.user.User;
+import com.springuni.hermes.user.model.User;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

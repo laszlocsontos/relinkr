@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 
 import com.springuni.hermes.Mocks;
-import com.springuni.hermes.user.User;
-import com.springuni.hermes.user.UserService;
+import com.springuni.hermes.user.model.User;
+import com.springuni.hermes.user.service.UserService;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;

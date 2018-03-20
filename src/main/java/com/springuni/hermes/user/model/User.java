@@ -1,7 +1,7 @@
-package com.springuni.hermes.user;
+package com.springuni.hermes.user.model;
 
-import static com.springuni.hermes.user.Role.ADMIN;
-import static com.springuni.hermes.user.Role.USER;
+import static com.springuni.hermes.user.model.Role.ADMIN;
+import static com.springuni.hermes.user.model.Role.USER;
 import static java.util.Collections.unmodifiableSet;
 
 import com.springuni.hermes.core.orm.AbstractEntity;
