@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 
 import com.springuni.hermes.link.model.EmbeddedLink;
 import com.springuni.hermes.link.model.LinkSet;
-import com.springuni.hermes.link.service.EmbeddedLinkRepository;
-import com.springuni.hermes.link.service.LinkSetRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

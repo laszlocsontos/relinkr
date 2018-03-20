@@ -5,7 +5,6 @@ import static com.springuni.hermes.Mocks.USER_ID;
 
 import com.springuni.hermes.core.BaseRepositoryTest;
 import com.springuni.hermes.link.model.StandaloneLink;
-import com.springuni.hermes.link.service.StandaloneLinkRepository;
 
 public class StandaloneLinkRepositoryTest extends
         BaseRepositoryTest<StandaloneLink, Long, StandaloneLinkRepository> {

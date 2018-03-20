@@ -24,6 +24,7 @@ public class IpAddress {
     private IpAddressType ipAddressType;
     private boolean localAddress;
     private boolean multicastAddress;
+
     public IpAddress(String ipAddress) throws InvalidIpAddressException {
         Assert.notNull(ipAddress, "ipAddress cannot be null");
         this.ipAddress = ipAddress;

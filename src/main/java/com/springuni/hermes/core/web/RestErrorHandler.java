@@ -43,48 +43,50 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class RestErrorHandler extends ResponseEntityExceptionHandler {
 
-  @ExceptionHandler(ApplicationException.class)
-  public ResponseEntity<Object> handleApplicationException(final ApplicationException ex) {
-    return handleExceptionInternal(ex, BAD_REQUEST);
-  }
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<Object> handleApplicationException(final ApplicationException ex) {
+        return handleExceptionInternal(ex, BAD_REQUEST);
+    }
 
-  @ExceptionHandler(EntityAlreadyExistsException.class)
-  public ResponseEntity<Object> handleEntityExistsException(final EntityAlreadyExistsException ex) {
-    return handleExceptionInternal(ex, BAD_REQUEST);
-  }
+    @ExceptionHandler(EntityAlreadyExistsException.class)
+    public ResponseEntity<Object> handleEntityExistsException(
+            final EntityAlreadyExistsException ex) {
+        return handleExceptionInternal(ex, BAD_REQUEST);
+    }
 
-  @ExceptionHandler(EntityConflictsException.class)
-  public ResponseEntity<Object> handleEntityConflictsException(final EntityConflictsException ex) {
-    return handleExceptionInternal(ex, CONFLICT);
-  }
+    @ExceptionHandler(EntityConflictsException.class)
+    public ResponseEntity<Object> handleEntityConflictsException(
+            final EntityConflictsException ex) {
+        return handleExceptionInternal(ex, CONFLICT);
+    }
 
-  @ExceptionHandler(EntityNotFoundException.class)
-  public ResponseEntity<Object> handleEntityNotFoundException(final EntityNotFoundException ex) {
-    return handleExceptionInternal(ex, NOT_FOUND);
-  }
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Object> handleEntityNotFoundException(final EntityNotFoundException ex) {
+        return handleExceptionInternal(ex, NOT_FOUND);
+    }
 
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<Object> handleException(final Exception ex) {
-    return handleExceptionInternal(ex, INTERNAL_SERVER_ERROR);
-  }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleException(final Exception ex) {
+        return handleExceptionInternal(ex, INTERNAL_SERVER_ERROR);
+    }
 
-  @ExceptionHandler(UnsupportedOperationException.class)
-  public ResponseEntity<Object> handleUnsupportedOperationException(
-      final UnsupportedOperationException ex) {
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<Object> handleUnsupportedOperationException(
+            final UnsupportedOperationException ex) {
 
-    return handleExceptionInternal(ex, NOT_IMPLEMENTED);
-  }
+        return handleExceptionInternal(ex, NOT_IMPLEMENTED);
+    }
 
-  @Override
-  protected ResponseEntity<Object> handleExceptionInternal(
-      Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(
+            Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-    RestErrorResponse restErrorResponse = RestErrorResponse.of(status, ex);
-    return super.handleExceptionInternal(ex, restErrorResponse, headers, status, request);
-  }
+        RestErrorResponse restErrorResponse = RestErrorResponse.of(status, ex);
+        return super.handleExceptionInternal(ex, restErrorResponse, headers, status, request);
+    }
 
-  private ResponseEntity<Object> handleExceptionInternal(Exception ex, HttpStatus status) {
-    return handleExceptionInternal(ex, null, null, status, null);
-  }
+    private ResponseEntity<Object> handleExceptionInternal(Exception ex, HttpStatus status) {
+        return handleExceptionInternal(ex, null, null, status, null);
+    }
 
 }

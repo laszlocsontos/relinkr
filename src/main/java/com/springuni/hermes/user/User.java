@@ -2,10 +2,9 @@ package com.springuni.hermes.user;
 
 import static com.springuni.hermes.user.Role.ADMIN;
 import static com.springuni.hermes.user.Role.USER;
-import static java.util.Collections.*;
+import static java.util.Collections.unmodifiableSet;
 
 import com.springuni.hermes.core.orm.AbstractEntity;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;

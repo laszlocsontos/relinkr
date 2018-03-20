@@ -7,7 +7,6 @@ import static javax.persistence.EnumType.STRING;
 
 import com.springuni.hermes.utm.UtmParameters;
 import com.springuni.hermes.utm.UtmTemplate;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

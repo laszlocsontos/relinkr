@@ -19,10 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import com.springuni.hermes.link.model.InvalidLinkStatusException;
-import com.springuni.hermes.link.model.InvalidUrlException;
-import com.springuni.hermes.link.model.StandaloneLink;
-import com.springuni.hermes.link.model.Tag;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;

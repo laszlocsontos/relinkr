@@ -57,6 +57,10 @@ public final class IdentityGenerator {
         return EPOCH.plusMillis(time);
     }
 
+    private static long doGenerate(long time, int serial) {
+        return (time & 0x7ffffffffffL) << 20 | (serial & 0xfffff);
+    }
+
     /**
      * Generates a new unique ID for the given shard.
      *
@@ -66,10 +70,6 @@ public final class IdentityGenerator {
         long time = MILLIS.between(EPOCH, now());
         int serial = threadLocalSerial.get().increment();
         return doGenerate(time, serial);
-    }
-
-    private static long doGenerate(long time, int serial) {
-        return (time & 0x7ffffffffffL) << 20 | (serial & 0xfffff);
     }
 
     static class Serial {

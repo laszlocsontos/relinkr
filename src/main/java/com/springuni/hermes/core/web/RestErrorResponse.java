@@ -19,7 +19,6 @@
 
 package com.springuni.hermes.core.web;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,22 +30,22 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class RestErrorResponse {
 
-  private int statusCode;
-  private String reasonPhrase;
-  private String detailMessage;
+    private int statusCode;
+    private String reasonPhrase;
+    private String detailMessage;
 
-  protected RestErrorResponse(HttpStatus status, String detailMessage) {
-    statusCode = status.value();
-    reasonPhrase = status.getReasonPhrase();
-    this.detailMessage = detailMessage;
-  }
+    protected RestErrorResponse(HttpStatus status, String detailMessage) {
+        statusCode = status.value();
+        reasonPhrase = status.getReasonPhrase();
+        this.detailMessage = detailMessage;
+    }
 
-  public static RestErrorResponse of(HttpStatus status) {
-    return of(status, null);
-  }
+    public static RestErrorResponse of(HttpStatus status) {
+        return of(status, null);
+    }
 
-  public static RestErrorResponse of(HttpStatus status, Exception ex) {
-    return new RestErrorResponse(status, ex.getMessage());
-  }
+    public static RestErrorResponse of(HttpStatus status, Exception ex) {
+        return new RestErrorResponse(status, ex.getMessage());
+    }
 
 }

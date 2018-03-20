@@ -8,7 +8,6 @@ import static com.springuni.hermes.Mocks.UTM_PARAMETERS_MINIMAL;
 import static com.springuni.hermes.Mocks.UTM_TEMPLATE_NAME;
 import static org.junit.Assert.assertEquals;
 
-import com.springuni.hermes.link.model.LinkSet;
 import com.springuni.hermes.utm.UtmTemplate;
 import java.net.URL;
 import org.junit.Before;

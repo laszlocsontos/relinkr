@@ -24,8 +24,6 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -35,27 +33,27 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @Slf4j
 public class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-  static final int ONE_DAY_MINUTES = 24 * 60;
-  static final String X_SET_AUTHORIZATION_BEARER_HEADER = "X-Set-Authorization-Bearer";
+    static final int ONE_DAY_MINUTES = 24 * 60;
+    static final String X_SET_AUTHORIZATION_BEARER_HEADER = "X-Set-Authorization-Bearer";
 
-  private final JwtTokenService jwtTokenService;
+    private final JwtTokenService jwtTokenService;
 
-  public DefaultAuthenticationSuccessHandler(JwtTokenService jwtTokenService) {
-    this.jwtTokenService = jwtTokenService;
-  }
-
-  @Override
-  public void onAuthenticationSuccess(
-      HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-      throws IOException {
-
-    if (response.containsHeader(X_SET_AUTHORIZATION_BEARER_HEADER)) {
-      log.debug("{} has already been set.", X_SET_AUTHORIZATION_BEARER_HEADER);
-      return;
+    public DefaultAuthenticationSuccessHandler(JwtTokenService jwtTokenService) {
+        this.jwtTokenService = jwtTokenService;
     }
 
-    String jwtToken = jwtTokenService.createJwtToken(authentication, ONE_DAY_MINUTES);
-    response.setHeader(X_SET_AUTHORIZATION_BEARER_HEADER, jwtToken);
-  }
+    @Override
+    public void onAuthenticationSuccess(
+            HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+            throws IOException {
+
+        if (response.containsHeader(X_SET_AUTHORIZATION_BEARER_HEADER)) {
+            log.debug("{} has already been set.", X_SET_AUTHORIZATION_BEARER_HEADER);
+            return;
+        }
+
+        String jwtToken = jwtTokenService.createJwtToken(authentication, ONE_DAY_MINUTES);
+        response.setHeader(X_SET_AUTHORIZATION_BEARER_HEADER, jwtToken);
+    }
 
 }

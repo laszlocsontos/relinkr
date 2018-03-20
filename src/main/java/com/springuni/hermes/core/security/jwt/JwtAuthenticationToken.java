@@ -49,16 +49,6 @@ class JwtAuthenticationToken extends AbstractAuthenticationToken {
         this.userId = userId;
     }
 
-    @Override
-    public Object getCredentials() {
-        return null;
-    }
-
-    @Override
-    public Long getPrincipal() {
-        return userId;
-    }
-
     /**
      * Factory method for creating a new {@code {@link JwtAuthenticationToken}}.
      *
@@ -98,6 +88,16 @@ class JwtAuthenticationToken extends AbstractAuthenticationToken {
         );
 
         return jwtAuthenticationToken;
+    }
+
+    @Override
+    public Object getCredentials() {
+        return null;
+    }
+
+    @Override
+    public Long getPrincipal() {
+        return userId;
     }
 
 }

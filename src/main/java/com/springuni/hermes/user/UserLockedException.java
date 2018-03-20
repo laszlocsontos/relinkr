@@ -5,5 +5,4 @@ import com.springuni.hermes.core.model.ApplicationException;
 public class UserLockedException extends ApplicationException {
 
 
-
 }

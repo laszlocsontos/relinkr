@@ -4,7 +4,6 @@ import static javax.persistence.DiscriminatorType.CHAR;
 import static javax.persistence.InheritanceType.SINGLE_TABLE;
 
 import com.springuni.hermes.core.util.IdentityGenerator;
-import com.springuni.hermes.core.util.RandomGenerator;
 import com.springuni.hermes.utm.UtmParameters;
 import java.net.URL;
 import javax.persistence.DiscriminatorColumn;

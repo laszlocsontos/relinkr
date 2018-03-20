@@ -29,6 +29,10 @@ public final class RandomGenerator {
         threadLocalRandom = ThreadLocal.withInitial(this::createSecureRandom);
     }
 
+    public static RandomGenerator getInstance() {
+        return INSTANCE;
+    }
+
     private Random createSecureRandom() {
         SecureRandom randomGenerator;
         try {
@@ -41,10 +45,6 @@ public final class RandomGenerator {
 
         log.info("Created random generator with algorithm {}.", randomGenerator.getAlgorithm());
         return randomGenerator;
-    }
-
-    public static RandomGenerator getInstance() {
-        return INSTANCE;
     }
 
     public IntStream ints(long streamSize) {
