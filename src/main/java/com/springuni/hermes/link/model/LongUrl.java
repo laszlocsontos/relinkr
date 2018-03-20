@@ -1,13 +1,13 @@
 package com.springuni.hermes.link.model;
 
-import static com.springuni.hermes.utm.UtmParameters.UTM_CAMPAIGN;
-import static com.springuni.hermes.utm.UtmParameters.UTM_CONTENT;
-import static com.springuni.hermes.utm.UtmParameters.UTM_MEDIUM;
-import static com.springuni.hermes.utm.UtmParameters.UTM_SOURCE;
-import static com.springuni.hermes.utm.UtmParameters.UTM_TERM;
+import static com.springuni.hermes.utm.model.UtmParameters.UTM_CAMPAIGN;
+import static com.springuni.hermes.utm.model.UtmParameters.UTM_CONTENT;
+import static com.springuni.hermes.utm.model.UtmParameters.UTM_MEDIUM;
+import static com.springuni.hermes.utm.model.UtmParameters.UTM_SOURCE;
+import static com.springuni.hermes.utm.model.UtmParameters.UTM_TERM;
 
-import com.springuni.hermes.utm.MissingUtmParameterException;
-import com.springuni.hermes.utm.UtmParameters;
+import com.springuni.hermes.utm.model.MissingUtmParameterException;
+import com.springuni.hermes.utm.model.UtmParameters;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;

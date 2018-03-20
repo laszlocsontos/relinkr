@@ -1,4 +1,4 @@
-package com.springuni.hermes.utm;
+package com.springuni.hermes.utm.model;
 
 import static com.springuni.hermes.Mocks.USER_ID;
 import static com.springuni.hermes.Mocks.UTM_PARAMETERS_FULL;
@@ -11,6 +11,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import com.springuni.hermes.utm.model.UtmTemplate;
 import org.junit.Test;
 
 public class UtmTemplateTest {

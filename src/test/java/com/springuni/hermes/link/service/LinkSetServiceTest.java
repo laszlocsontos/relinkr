@@ -10,8 +10,8 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 
 import com.springuni.hermes.link.model.LinkSet;
-import com.springuni.hermes.utm.UtmTemplate;
-import com.springuni.hermes.utm.UtmTemplateService;
+import com.springuni.hermes.utm.model.UtmTemplate;
+import com.springuni.hermes.utm.service.UtmTemplateService;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;

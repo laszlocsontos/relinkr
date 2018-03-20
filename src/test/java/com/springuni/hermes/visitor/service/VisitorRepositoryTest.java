@@ -1,6 +1,8 @@
-package com.springuni.hermes.visitor;
+package com.springuni.hermes.visitor.service;
 
 import com.springuni.hermes.core.BaseRepositoryTest;
+import com.springuni.hermes.visitor.model.Visitor;
+import com.springuni.hermes.visitor.service.VisitorRepository;
 
 public class VisitorRepositoryTest extends BaseRepositoryTest<Visitor, Long, VisitorRepository> {
 

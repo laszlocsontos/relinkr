@@ -10,7 +10,7 @@ import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkType;
 import com.springuni.hermes.link.model.StandaloneLink;
 import com.springuni.hermes.link.model.UnsupportedLinkOperationException;
-import com.springuni.hermes.utm.UtmParameters;
+import com.springuni.hermes.utm.model.UtmParameters;
 import java.net.URL;
 import org.springframework.stereotype.Service;
 

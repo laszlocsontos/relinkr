@@ -1,4 +1,4 @@
-package com.springuni.hermes.utm;
+package com.springuni.hermes.utm.model;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;

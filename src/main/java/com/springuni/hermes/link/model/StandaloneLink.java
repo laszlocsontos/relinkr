@@ -6,7 +6,7 @@ import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.EnumType.STRING;
 
 import com.springuni.hermes.user.model.Ownable;
-import com.springuni.hermes.utm.UtmParameters;
+import com.springuni.hermes.utm.model.UtmParameters;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.DiscriminatorValue;

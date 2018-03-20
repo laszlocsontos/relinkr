@@ -2,7 +2,7 @@ package com.springuni.hermes.link.model;
 
 import static com.springuni.hermes.link.model.LinkType.EMBEDDED;
 
-import com.springuni.hermes.utm.UtmParameters;
+import com.springuni.hermes.utm.model.UtmParameters;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;

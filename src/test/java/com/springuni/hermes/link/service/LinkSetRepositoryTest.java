@@ -7,7 +7,7 @@ import static com.springuni.hermes.Mocks.UTM_TEMPLATE_NAME;
 
 import com.springuni.hermes.core.BaseRepositoryTest;
 import com.springuni.hermes.link.model.LinkSet;
-import com.springuni.hermes.utm.UtmTemplate;
+import com.springuni.hermes.utm.model.UtmTemplate;
 
 public class LinkSetRepositoryTest extends BaseRepositoryTest<LinkSet, Long, LinkSetRepository> {
 

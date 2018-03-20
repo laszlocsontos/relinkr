@@ -5,8 +5,8 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.EnumType.STRING;
 
-import com.springuni.hermes.utm.UtmParameters;
-import com.springuni.hermes.utm.UtmTemplate;
+import com.springuni.hermes.utm.model.UtmParameters;
+import com.springuni.hermes.utm.model.UtmTemplate;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

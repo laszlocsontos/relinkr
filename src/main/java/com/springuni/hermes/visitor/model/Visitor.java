@@ -1,4 +1,4 @@
-package com.springuni.hermes.visitor;
+package com.springuni.hermes.visitor.model;
 
 import com.springuni.hermes.core.orm.AbstractEntity;
 import javax.persistence.Entity;

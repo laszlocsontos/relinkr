@@ -1,8 +1,8 @@
 package com.springuni.hermes.link.service;
 
 import com.springuni.hermes.link.model.LinkSet;
-import com.springuni.hermes.utm.UtmTemplate;
-import com.springuni.hermes.utm.UtmTemplateService;
+import com.springuni.hermes.utm.model.UtmTemplate;
+import com.springuni.hermes.utm.service.UtmTemplateService;
 import org.springframework.stereotype.Service;
 
 @Service
