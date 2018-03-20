@@ -2,8 +2,10 @@ package com.springuni.hermes.user;
 
 import static com.springuni.hermes.user.Role.ADMIN;
 import static com.springuni.hermes.user.Role.USER;
+import static java.util.Collections.*;
 
 import com.springuni.hermes.core.orm.AbstractEntity;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -22,7 +24,9 @@ public class User extends AbstractEntity<Long> {
     @ElementCollection
     private Set<Role> roles;
 
+    private boolean confirmed;
     private boolean locked;
+
 
     public User() {
         roles = new LinkedHashSet<>();
@@ -32,6 +36,10 @@ public class User extends AbstractEntity<Long> {
     public User(EmailAddress emailAddress, String name, String twitterHandle) {
         this();
         update(emailAddress, name, twitterHandle);
+    }
+
+    public boolean isConfirmed() {
+        return confirmed;
     }
 
     public void lock() {
@@ -51,6 +59,10 @@ public class User extends AbstractEntity<Long> {
             return false;
         }
         return roles.contains(ADMIN);
+    }
+
+    public Set<Role> getRoles() {
+        return unmodifiableSet(roles);
     }
 
     public void grantRole(Role role) {

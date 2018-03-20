@@ -30,6 +30,10 @@ public class EmailAddress {
     EmailAddress() {
     }
 
+    public static EmailAddress of(String value) {
+        return new EmailAddress(value);
+    }
+
     private void validate(String value) {
         if (!EMAIL_ADDRESS_PATTERN.matcher(value).matches()) {
             throw new IllegalArgumentException("Invalid email address: " + value);

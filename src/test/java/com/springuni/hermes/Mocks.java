@@ -1,5 +1,6 @@
 package com.springuni.hermes;
 
+import static com.springuni.hermes.user.Role.*;
 import static java.util.Collections.unmodifiableSet;
 
 import com.springuni.hermes.click.IpAddress;
@@ -11,6 +12,8 @@ import com.springuni.hermes.link.model.LongUrl;
 import com.springuni.hermes.link.model.StandaloneLink;
 import com.springuni.hermes.link.model.Tag;
 import com.springuni.hermes.user.EmailAddress;
+import com.springuni.hermes.user.Role;
+import com.springuni.hermes.user.User;
 import com.springuni.hermes.utm.UtmParameters;
 import com.springuni.hermes.utm.UtmTemplate;
 import java.time.LocalDateTime;
@@ -125,6 +128,14 @@ public class Mocks {
         standaloneLink.setId(2L);
         standaloneLink.markActive();
         return standaloneLink;
+    }
+
+    public static User createUser() {
+        User user =
+                new User(EmailAddress.of("test@springuni.com"), "Test", "test");
+        user.setId(2L);
+        user.grantRole(ADMIN);
+        return user;
     }
 
 }

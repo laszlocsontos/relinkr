@@ -11,6 +11,12 @@ class UserServiceImpl implements UserService {
             new NamedInheritableThreadLocal<>("currentUserThreadLocal");
 
     @Override
+    public Optional<User> findUser(long userId) {
+        // TODO
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<User> getCurrentUser() {
         return Optional.ofNullable(currentUserThreadLocal.get());
     }
@@ -18,6 +24,11 @@ class UserServiceImpl implements UserService {
     @Override
     public void setCurrentUser(User user) {
         currentUserThreadLocal.set(user);
+    }
+
+    @Override
+    public User login(String username, String password) {
+        return null;
     }
 
 }
