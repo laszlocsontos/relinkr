@@ -1,5 +1,6 @@
 package com.springuni.hermes.core.security.user;
 
+import static com.springuni.hermes.core.security.user.SignInFilter.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
@@ -21,7 +22,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LoginFilterTest extends BaseFilterTest {
+public class SignInFilterTest extends BaseFilterTest {
 
     @Mock
     private Authentication authentication;
@@ -43,15 +44,15 @@ public class LoginFilterTest extends BaseFilterTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        loginFilter = new LoginFilter("/login", objectMapper);
+        loginFilter = new SignInFilter(objectMapper);
 
         loginFilter.setAuthenticationManager(authenticationManager);
         loginFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
         loginFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
 
-        request.setContent(objectMapper.writeValueAsBytes(new LoginRequest("test", "test")));
-        request.setMethod("POST");
-        request.setPathInfo("/login");
+        request.setContent(objectMapper.writeValueAsBytes(new SignInRequest("test", "test")));
+        request.setMethod(SIGNIN_HTTP_METHOD);
+        request.setPathInfo(SIGNIN_PROCESSES_URL);
     }
 
     @Test

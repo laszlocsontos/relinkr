@@ -43,15 +43,15 @@ import org.springframework.security.web.authentication.www.NonceExpiredException
 /**
  * Created by lcsontos on 5/17/17.
  */
-class JwtTokenServiceImpl implements JwtTokenService {
+public class JwtTokenServiceImpl implements JwtTokenService {
 
     private static final String AUTHORITIES = "authorities";
 
-    private final byte[] secretkey;
+    private final byte[] secretKey;
     private final IdentityGenerator identityGenerator;
 
-    public JwtTokenServiceImpl(String secretkey, IdentityGenerator identityGenerator) {
-        this.secretkey = Base64.getDecoder().decode(secretkey);
+    public JwtTokenServiceImpl(byte[] secretKey, IdentityGenerator identityGenerator) {
+        this.secretKey = secretKey;
         this.identityGenerator = identityGenerator;
     }
 
@@ -73,7 +73,7 @@ class JwtTokenServiceImpl implements JwtTokenService {
 
         return Jwts.builder()
                 .setClaims(claims)
-                .signWith(HS512, secretkey)
+                .signWith(HS512, secretKey)
                 .compact();
     }
 
@@ -81,7 +81,7 @@ class JwtTokenServiceImpl implements JwtTokenService {
     public Authentication parseJwtToken(String jwtToken) throws AuthenticationException {
         try {
             Claims claims = Jwts.parser()
-                    .setSigningKey(secretkey)
+                    .setSigningKey(secretKey)
                     .parseClaimsJws(jwtToken)
                     .getBody();
 

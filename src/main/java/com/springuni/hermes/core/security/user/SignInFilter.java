@@ -35,53 +35,55 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 /**
  * Processes login requests and delegates deciding the decision to {@link AuthenticationManager}.
  */
-public class LoginFilter extends AbstractAuthenticationProcessingFilter {
+public class SignInFilter extends AbstractAuthenticationProcessingFilter {
+
+    public static final String SIGNIN_PROCESSES_URL = "/signin";
+    public static final String SIGNIN_HTTP_METHOD = "POST";
 
     private final ObjectMapper objectMapper;
 
     /**
      * Create a login filter.
      *
-     * @param filterProcessesUrl filter's URL
      * @param objectMapper a ObjectMapper instance
      */
-    public LoginFilter(String filterProcessesUrl, ObjectMapper objectMapper) {
-        super(new AntPathRequestMatcher(filterProcessesUrl, "POST"));
+    public SignInFilter(ObjectMapper objectMapper) {
+        super(new AntPathRequestMatcher(SIGNIN_PROCESSES_URL, SIGNIN_HTTP_METHOD));
         this.objectMapper = objectMapper;
     }
 
     public Authentication attemptAuthentication(HttpServletRequest request,
             HttpServletResponse response) throws AuthenticationException {
 
-        if (!request.getMethod().equals("POST")) {
+        if (!request.getMethod().equals(SIGNIN_HTTP_METHOD)) {
             throw new AuthenticationServiceException(
                     "Authentication method not supported: " + request.getMethod());
         }
 
-        LoginRequest loginRequest = obtainLoginRequest(request);
-        Authentication authRequest = createAuthenticationRequest(loginRequest);
+        SignInRequest signInRequest = obtainLoginRequest(request);
+        Authentication authRequest = createAuthenticationRequest(signInRequest);
         return getAuthenticationManager().authenticate(authRequest);
     }
 
-    private Authentication createAuthenticationRequest(LoginRequest loginRequest) {
+    private Authentication createAuthenticationRequest(SignInRequest signInRequest) {
         String username = Optional
-                .ofNullable(loginRequest.getUsername())
+                .ofNullable(signInRequest.getUsername())
                 .map(String::trim)
                 .map(String::toLowerCase)
                 .orElse("");
 
         String password = Optional
-                .ofNullable(loginRequest.getPassword())
+                .ofNullable(signInRequest.getPassword())
                 .orElse("");
 
         return new UsernamePasswordAuthenticationToken(username, password);
     }
 
-    private LoginRequest obtainLoginRequest(HttpServletRequest request)
+    private SignInRequest obtainLoginRequest(HttpServletRequest request)
             throws AuthenticationException {
 
         try {
-            return objectMapper.readValue(request.getInputStream(), LoginRequest.class);
+            return objectMapper.readValue(request.getInputStream(), SignInRequest.class);
         } catch (IOException e) {
             throw new AuthenticationServiceException(
                     "Authentication payload not supported: " + e.getMessage(), e);

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.springuni.hermes.core.util.IdentityGenerator;
 import java.util.Arrays;
+import java.util.Base64;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -42,7 +43,9 @@ public class JwtTokenServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        jwtTokenService = new JwtTokenServiceImpl(SECRET_KEY, IdentityGenerator.getInstance());
+        jwtTokenService = new JwtTokenServiceImpl(
+                Base64.getDecoder().decode(SECRET_KEY), IdentityGenerator.getInstance()
+        );
     }
 
     @Test(expected = BadCredentialsException.class)
