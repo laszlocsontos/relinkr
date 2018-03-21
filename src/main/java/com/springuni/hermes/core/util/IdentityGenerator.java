@@ -14,9 +14,11 @@ import java.time.LocalDateTime;
  *
  * <p>Going to the most to the least significant bits
  * <ul>
- * <li>the first bit (sign) is always zero
- * <li>the next 43 bits represent the elapsed milliseconds from a custom Epoch (2017-12-21)
- * <li>the next 20 bits represent a serial number XOR-ed with a per-thread random number
+ * <li>the first bit (sign) is always zero</li>
+ * <li>the next three bit are reserved for future use (currently zero)</li>
+ * <li>the next 40 bits represent the elapsed milliseconds from a custom Epoch (2018-03-01).
+ * This one would overflow on 2053-01-01.</li>
+ * <li>the next 20 bits represent a per-thread serial XOR-ed with a per-thread random number</li>
  * </ul>
  *
  * <p>With this technique 1.048.576 unique IDs can be generated per millisecond.
@@ -53,12 +55,12 @@ public final class IdentityGenerator {
      * @return an {@link Instant}
      */
     public static Instant extractInstant(long id) {
-        long time = (id & 0x7ffffffffff00000L) >>> 20;
+        long time = (id & 0x0ffffffffff00000L) >>> 20;
         return EPOCH.plusMillis(time);
     }
 
-    private static long doGenerate(long time, int serial) {
-        return (time & 0x7ffffffffffL) << 20 | (serial & 0xfffff);
+    static long doGenerate(long time, int serial) {
+        return (time & 0x0ffffffffffL) << 20 | (serial & 0xfffff);
     }
 
     /**
