@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springuni.hermes.core.security.SecurityConfig;
 import com.springuni.hermes.link.model.StandaloneLink;
 import com.springuni.hermes.link.service.LinkService;
 import com.springuni.hermes.link.web.LinkControllerTest.TestConfig;
@@ -35,20 +34,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-@Import({SecurityConfig.class, TestConfig.class})
 @RunWith(SpringRunner.class)
-@WebMvcTest(controllers = LinkController.class)
-@WithMockUser
+@ContextConfiguration(classes = TestConfig.class)
+@WebMvcTest(controllers = LinkController.class, secure = false)
 public class LinkControllerTest {
 
     @Autowired
