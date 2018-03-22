@@ -14,8 +14,6 @@ import static com.springuni.hermes.utm.model.UtmParameters.UTM_TERM;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import com.springuni.hermes.utm.model.MissingUtmParameterException;
-import com.springuni.hermes.utm.model.UtmParameters;
 import java.util.Map;
 import org.hamcrest.collection.IsMapContaining;
 import org.junit.Test;

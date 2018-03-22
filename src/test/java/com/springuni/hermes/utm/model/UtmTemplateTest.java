@@ -11,7 +11,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import com.springuni.hermes.utm.model.UtmTemplate;
 import org.junit.Test;
 
 public class UtmTemplateTest {

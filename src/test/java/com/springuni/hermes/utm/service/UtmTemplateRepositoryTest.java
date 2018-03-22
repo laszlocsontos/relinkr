@@ -6,7 +6,6 @@ import static com.springuni.hermes.Mocks.UTM_TEMPLATE_NAME;
 
 import com.springuni.hermes.core.BaseRepositoryTest;
 import com.springuni.hermes.utm.model.UtmTemplate;
-import com.springuni.hermes.utm.service.UtmTemplateRepository;
 
 public class UtmTemplateRepositoryTest extends
         BaseRepositoryTest<UtmTemplate, Long, UtmTemplateRepository> {

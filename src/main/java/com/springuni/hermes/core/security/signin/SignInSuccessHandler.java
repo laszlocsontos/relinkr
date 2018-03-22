@@ -20,7 +20,6 @@
 package com.springuni.hermes.core.security.signin;
 
 import com.springuni.hermes.core.security.jwt.JwtTokenService;
-import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;

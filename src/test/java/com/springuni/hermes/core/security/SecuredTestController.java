@@ -4,7 +4,6 @@ import static com.springuni.hermes.Mocks.ROOT_PATH;
 import static com.springuni.hermes.Mocks.TEST_API_PATH;
 import static com.springuni.hermes.Mocks.TEST_SHORT_LINK_PATH;
 
-import com.springuni.hermes.Mocks;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

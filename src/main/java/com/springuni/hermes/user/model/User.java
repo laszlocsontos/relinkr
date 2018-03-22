@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.Set;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 

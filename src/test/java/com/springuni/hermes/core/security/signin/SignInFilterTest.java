@@ -1,6 +1,7 @@
 package com.springuni.hermes.core.security.signin;
 
-import static com.springuni.hermes.core.security.signin.SignInFilter.*;
+import static com.springuni.hermes.core.security.signin.SignInFilter.SIGNIN_HTTP_METHOD;
+import static com.springuni.hermes.core.security.signin.SignInFilter.SIGNIN_PROCESSES_URL;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
@@ -8,8 +9,6 @@ import static org.mockito.BDDMockito.then;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springuni.hermes.core.BaseFilterTest;
-import com.springuni.hermes.core.security.signin.SignInFilter;
-import com.springuni.hermes.core.security.signin.SignInRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
