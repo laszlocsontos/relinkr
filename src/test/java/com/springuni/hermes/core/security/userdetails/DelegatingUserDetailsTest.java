@@ -1,5 +1,6 @@
 package com.springuni.hermes.core.security.userdetails;
 
+import static com.springuni.hermes.Mocks.*;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -21,7 +22,7 @@ public class DelegatingUserDetailsTest {
 
     @Before
     public void setUp() {
-        user = Mocks.createUser();
+        user = createUser();
         userDetails = new DelegatingUserDetails(user);
     }
 
@@ -37,7 +38,7 @@ public class DelegatingUserDetailsTest {
 
     @Test
     public void getPassword() {
-        assertNull(userDetails.getPassword());
+        assertEquals(user.getEncryptedPassword().get(), userDetails.getPassword());
     }
 
     @Test
@@ -47,7 +48,7 @@ public class DelegatingUserDetailsTest {
 
     @Test
     public void isAccountNonExpired() {
-        assertFalse(userDetails.isAccountNonExpired());
+        assertTrue(userDetails.isAccountNonExpired());
     }
 
     @Test
