@@ -17,7 +17,7 @@
  * along with springuni-particles.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.springuni.hermes.core.security;
+package com.springuni.hermes.core.security.signin;
 
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -37,11 +37,11 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
  * General authentication failure handler.
  */
 @Slf4j
-public class DefaultAuthenticationFailureHandler implements AuthenticationFailureHandler {
+public class SignInFailureHandler implements AuthenticationFailureHandler {
 
     private final ObjectMapper objectMapper;
 
-    public DefaultAuthenticationFailureHandler(ObjectMapper objectMapper) {
+    public SignInFailureHandler(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 

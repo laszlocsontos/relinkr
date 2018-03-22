@@ -1,5 +1,9 @@
 package com.springuni.hermes.core.security.jwt;
 
+import static com.springuni.hermes.Mocks.JWT_SECRET_KEY;
+import static com.springuni.hermes.Mocks.JWT_TOKEN_EXPIRED;
+import static com.springuni.hermes.Mocks.JWT_TOKEN_INVALID;
+import static com.springuni.hermes.Mocks.JWT_TOKEN_VALID;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -18,33 +22,12 @@ import org.springframework.security.web.authentication.www.NonceExpiredException
 
 public class JwtTokenServiceTest {
 
-    private static final String JWT_TOKEN_VALID =
-            "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzNDU0MzUzMjQ1MzQ1MyIsInN1YiI6IjUzMjQ1"
-                    + "MzQ1MzQ1MzQ1IiwiZXhwIjoyNTM0MDIyMTQ0MDAsImlhdCI6MTUxNjIzOTAyMiwiYXV0aG9yaXR"
-                    + "pZXMiOiJVU0VSIn0.xTT81NHZdRdo-Enk5Dfl-v90wYcbF5sbHCKmda5yTB8n5kZ3Y-VhykVGXn"
-                    + "VmfgsPXPgO6QmmpIky1vPQYRUHsw";
-
-    private static final String JWT_TOKEN_INVALID =
-            "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzNDU0MzUzMjQ1MzQ1MyIsInN1YiI6IjUzMjQ1"
-                    + "MzQ1MzQ1MzQ1IiwiZXhwIjoyNTM0MDIyMTQ0MDAsImlhdCI6MTUxNjIzOTAyMiwiYXV0aG9yaXR"
-                    + "pZXMiOiJVU0VSIn0.B_m-1j9SqmjrcyHwyMMKsxdBi9qLe2akpfZXq4VPG73ppuJXCuB6GPvDvH"
-                    + "GeMqLQkCA1Al7iBu1oGU7i5QHc5A";
-
-    private static final String JWT_TOKEN_EXPIRED =
-            "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzNDU0MzUzMjQ1MzQ1MyIsInN1YiI6IjUzMjQ1"
-                    + "MzQ1MzQ1MzQ1IiwiZXhwIjoxNTE0Njc4NDAwLCJpYXQiOjE1MTYyMzkwMjIsImF1dGhvcml0aWV"
-                    + "zIjoiVVNFUiJ9.tJYq8hIbSc2gSKNU2F4c29Nn6X1L4HgEPnqS8MIEDEMN0nCnYLNqo_yWStemV"
-                    + "vcOV0YVKWvZCey3KspAhEXQKA";
-
-    private static final String SECRET_KEY =
-            "cFZJY3VpV2RMZHZMQTdVNzRAMVUqc2RFWTJoSlNpJk5MNzE2TkghI1FqKnEmKjk2TjY4TnZ5MG9t";
-
     private JwtTokenService jwtTokenService;
 
     @Before
     public void setUp() throws Exception {
         jwtTokenService = new JwtTokenServiceImpl(
-                Base64.getDecoder().decode(SECRET_KEY), IdentityGenerator.getInstance()
+                Base64.getDecoder().decode(JWT_SECRET_KEY), IdentityGenerator.getInstance()
         );
     }
 

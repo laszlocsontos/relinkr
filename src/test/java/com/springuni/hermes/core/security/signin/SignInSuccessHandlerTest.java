@@ -1,7 +1,7 @@
-package com.springuni.hermes.core.security;
+package com.springuni.hermes.core.security.signin;
 
-import static com.springuni.hermes.core.security.DefaultAuthenticationSuccessHandler.ONE_DAY_MINUTES;
-import static com.springuni.hermes.core.security.DefaultAuthenticationSuccessHandler.X_SET_AUTHORIZATION_BEARER_HEADER;
+import static com.springuni.hermes.core.security.signin.SignInSuccessHandler.ONE_DAY_MINUTES;
+import static com.springuni.hermes.core.security.signin.SignInSuccessHandler.X_SET_AUTHORIZATION_BEARER_HEADER;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 
@@ -16,7 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DefaultAuthenticationSuccessHandlerTest extends BaseServletTest {
+public class SignInSuccessHandlerTest extends BaseServletTest {
 
     @Mock
     private Authentication authentication;
@@ -30,7 +30,7 @@ public class DefaultAuthenticationSuccessHandlerTest extends BaseServletTest {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        handler = new DefaultAuthenticationSuccessHandler(jwtTokenService);
+        handler = new SignInSuccessHandler(jwtTokenService);
     }
 
     @Test

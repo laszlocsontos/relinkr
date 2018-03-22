@@ -29,7 +29,7 @@ public class UserRepositoryTest extends BaseRepositoryTest<User, Long, UserRepos
 
     @Override
     protected User createEntity() {
-        return new User(EMAIL_ADDRESS, "Test", "test");
+        return new User(EMAIL_ADDRESS, "Secret", "Test", "test");
     }
 
     @Override

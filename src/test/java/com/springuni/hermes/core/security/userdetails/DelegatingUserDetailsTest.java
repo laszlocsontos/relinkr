@@ -1,4 +1,4 @@
-package com.springuni.hermes.core.security.user;
+package com.springuni.hermes.core.security.userdetails;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;

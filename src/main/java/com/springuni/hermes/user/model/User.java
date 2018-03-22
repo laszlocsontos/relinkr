@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
@@ -17,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 public class User extends AbstractEntity<Long> {
 
     private EmailAddress emailAddress;
+    private String encryptedPassword;
     private String name;
     private String twitterHandle;
 
@@ -32,13 +34,21 @@ public class User extends AbstractEntity<Long> {
         roles.add(USER);
     }
 
-    public User(EmailAddress emailAddress, String name, String twitterHandle) {
+    public User(
+            EmailAddress emailAddress, String encryptedPassword, String name,
+            String twitterHandle) {
         this();
+        // TODO
+        this.encryptedPassword = encryptedPassword;
         update(emailAddress, name, twitterHandle);
     }
 
     public boolean isConfirmed() {
         return confirmed;
+    }
+
+    public void confirm() {
+        confirmed = true;
     }
 
     public void lock() {
@@ -74,6 +84,10 @@ public class User extends AbstractEntity<Long> {
 
     public Optional<EmailAddress> geEmailAddress() {
         return Optional.ofNullable(emailAddress);
+    }
+
+    public Optional<String> getEncryptedPassword() {
+        return Optional.ofNullable(encryptedPassword);
     }
 
     public Optional<String> getName() {

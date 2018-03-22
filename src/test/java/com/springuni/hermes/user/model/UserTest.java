@@ -1,12 +1,11 @@
 package com.springuni.hermes.user.model;
 
+import static com.springuni.hermes.Mocks.createUser;
 import static com.springuni.hermes.user.model.Role.ADMIN;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import com.springuni.hermes.user.model.EmailAddress;
-import com.springuni.hermes.user.model.User;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +16,7 @@ public class UserTest {
     @Before
     public void setUp() {
         EmailAddress emailAddress = new EmailAddress("test@springuni.com");
-        user = new User(emailAddress, "Test", "test");
+        user = createUser();
     }
 
     @Test

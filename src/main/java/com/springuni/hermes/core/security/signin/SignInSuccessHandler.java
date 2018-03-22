@@ -17,7 +17,7 @@
  * along with springuni-particles.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.springuni.hermes.core.security;
+package com.springuni.hermes.core.security.signin;
 
 import com.springuni.hermes.core.security.jwt.JwtTokenService;
 import java.io.IOException;
@@ -31,21 +31,21 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
  * Created by lcsontos on 5/17/17.
  */
 @Slf4j
-public class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+public class SignInSuccessHandler implements AuthenticationSuccessHandler {
 
     static final int ONE_DAY_MINUTES = 24 * 60;
     static final String X_SET_AUTHORIZATION_BEARER_HEADER = "X-Set-Authorization-Bearer";
 
     private final JwtTokenService jwtTokenService;
 
-    public DefaultAuthenticationSuccessHandler(JwtTokenService jwtTokenService) {
+    public SignInSuccessHandler(JwtTokenService jwtTokenService) {
         this.jwtTokenService = jwtTokenService;
     }
 
     @Override
     public void onAuthenticationSuccess(
-            HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException {
+            HttpServletRequest request, HttpServletResponse response,
+            Authentication authentication) {
 
         if (response.containsHeader(X_SET_AUTHORIZATION_BEARER_HEADER)) {
             log.debug("{} has already been set.", X_SET_AUTHORIZATION_BEARER_HEADER);

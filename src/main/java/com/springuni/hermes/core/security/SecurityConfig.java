@@ -1,24 +1,23 @@
 package com.springuni.hermes.core.security;
 
-import static com.springuni.hermes.core.security.user.SignInFilter.SIGNIN_HTTP_METHOD;
-import static com.springuni.hermes.core.security.user.SignInFilter.SIGNIN_PROCESSES_URL;
+import static com.springuni.hermes.core.security.signin.SignInFilter.SIGNIN_HTTP_METHOD;
+import static com.springuni.hermes.core.security.signin.SignInFilter.SIGNIN_PROCESSES_URL;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springuni.hermes.core.security.jwt.JwtAuthenticationEntryPoint;
 import com.springuni.hermes.core.security.jwt.JwtAuthenticationFilter;
 import com.springuni.hermes.core.security.jwt.JwtAuthenticationProvider;
+import com.springuni.hermes.core.security.jwt.JwtProperties;
 import com.springuni.hermes.core.security.jwt.JwtTokenService;
 import com.springuni.hermes.core.security.jwt.JwtTokenServiceImpl;
-import com.springuni.hermes.core.security.user.DelegatingUserDetailsService;
-import com.springuni.hermes.core.security.user.SignInFilter;
-import com.springuni.hermes.core.security.user.UsernamePasswordAuthenticationProvider;
+import com.springuni.hermes.core.security.signin.SignInFailureHandler;
+import com.springuni.hermes.core.security.signin.SignInSuccessHandler;
+import com.springuni.hermes.core.security.signin.SignInFilter;
 import com.springuni.hermes.core.util.IdentityGenerator;
-import com.springuni.hermes.user.service.UserService;
 import java.util.Base64;
-import javax.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -37,19 +36,17 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity
-@ConfigurationProperties("jwt")
+@EnableConfigurationProperties(JwtProperties.class)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final JwtProperties jwtProperties;
     private final ObjectMapper objectMapper;
-    private final UserService userService;
-
-    @NotBlank
-    private String secretKey;
+    private final UserDetailsService userDetailsService;
 
     @Bean
     public JwtTokenService jwtTokenService() {
-        byte[] secretKey = Base64.getDecoder().decode(this.secretKey);
+        byte[] secretKey = Base64.getDecoder().decode(jwtProperties.getSecretKey());
         return new JwtTokenServiceImpl(secretKey, IdentityGenerator.getInstance());
     }
 
@@ -76,12 +73,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new DefaultAuthenticationSuccessHandler(jwtTokenService());
+        return new SignInSuccessHandler(jwtTokenService());
     }
 
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new DefaultAuthenticationFailureHandler(objectMapper);
+        return new SignInFailureHandler(objectMapper);
     }
 
     @Bean
@@ -96,20 +93,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected UserDetailsService userDetailsService() {
-        return new DelegatingUserDetailsService(userService);
-    }
-
-    @Override
     public void configure(WebSecurity webSecurity) {
         webSecurity.debug(true);
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .authenticationProvider(jwtAuthenticationProvider())
-                .authenticationProvider(new UsernamePasswordAuthenticationProvider(userService));
+    protected void configure(AuthenticationManagerBuilder auth) {
+        auth.authenticationProvider(jwtAuthenticationProvider());
     }
 
     @Override
@@ -128,6 +118,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .regexMatchers("/api/.*").hasAuthority("ROLE_USER")
                 .anyRequest().denyAll()
                 .and()
+                .userDetailsService(userDetailsService)
                 .addFilterAt(signInFilter(), UsernamePasswordAuthenticationFilter.class)
                 // JwtAuthenticationFilter must precede LogoutFilter, otherwise LogoutHandler
                 // wouldn't know who logs out.

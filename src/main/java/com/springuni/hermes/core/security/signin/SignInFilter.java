@@ -17,7 +17,7 @@
  * along with springuni-particles.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.springuni.hermes.core.security.user;
+package com.springuni.hermes.core.security.signin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -66,8 +66,8 @@ public class SignInFilter extends AbstractAuthenticationProcessingFilter {
     }
 
     private Authentication createAuthenticationRequest(SignInRequest signInRequest) {
-        String username = Optional
-                .ofNullable(signInRequest.getUsername())
+        String emailAddress = Optional
+                .ofNullable(signInRequest.getEmailAddress())
                 .map(String::trim)
                 .map(String::toLowerCase)
                 .orElse("");
@@ -76,7 +76,7 @@ public class SignInFilter extends AbstractAuthenticationProcessingFilter {
                 .ofNullable(signInRequest.getPassword())
                 .orElse("");
 
-        return new UsernamePasswordAuthenticationToken(username, password);
+        return new UsernamePasswordAuthenticationToken(emailAddress, password);
     }
 
     private SignInRequest obtainLoginRequest(HttpServletRequest request)

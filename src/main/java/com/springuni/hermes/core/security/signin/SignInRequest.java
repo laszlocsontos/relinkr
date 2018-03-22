@@ -17,7 +17,7 @@
  * along with springuni-particles.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.springuni.hermes.core.security.user;
+package com.springuni.hermes.core.security.signin;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +31,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SignInRequest {
 
-    private String username;
+    private String emailAddress;
     private String password;
 
 }

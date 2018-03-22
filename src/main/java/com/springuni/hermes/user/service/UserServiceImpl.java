@@ -1,5 +1,6 @@
 package com.springuni.hermes.user.service;
 
+import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.User;
 import java.util.Optional;
 import org.springframework.core.NamedInheritableThreadLocal;
@@ -14,6 +15,11 @@ class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findUser(long userId) {
         // TODO
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> findUser(EmailAddress emailAddress) {
         return Optional.empty();
     }
 

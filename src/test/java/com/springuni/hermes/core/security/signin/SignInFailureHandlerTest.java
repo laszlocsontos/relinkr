@@ -1,4 +1,4 @@
-package com.springuni.hermes.core.security;
+package com.springuni.hermes.core.security.signin;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
@@ -15,7 +15,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DefaultAuthenticationFailureHandlerTest extends BaseServletTest {
+public class SignInFailureHandlerTest extends BaseServletTest {
 
     private ObjectMapper objectMapper;
     private AuthenticationFailureHandler handler;
@@ -24,7 +24,7 @@ public class DefaultAuthenticationFailureHandlerTest extends BaseServletTest {
     public void setUp() throws Exception {
         super.setUp();
         objectMapper = new ObjectMapper();
-        handler = new DefaultAuthenticationFailureHandler(objectMapper);
+        handler = new SignInFailureHandler(objectMapper);
     }
 
     @Test

@@ -41,8 +41,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    static final String AUTHORIZATION_HEADER = "Authorization";
-    static final String TOKEN_PREFIX = "Bearer";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String TOKEN_PREFIX = "Bearer";
 
     private final JwtTokenService jwtTokenService;
 

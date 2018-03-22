@@ -1,4 +1,4 @@
-package com.springuni.hermes.core.security.user;
+package com.springuni.hermes.core.security.userdetails;
 
 import static java.util.stream.Collectors.toList;
 
@@ -29,7 +29,7 @@ public class DelegatingUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return delegate.getEncryptedPassword().orElse(null);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class DelegatingUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override

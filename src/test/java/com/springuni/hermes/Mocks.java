@@ -5,6 +5,7 @@ import static java.util.Collections.unmodifiableSet;
 
 import com.springuni.hermes.click.IpAddress;
 import com.springuni.hermes.core.model.ApplicationException;
+import com.springuni.hermes.core.security.signin.SignInRequest;
 import com.springuni.hermes.link.model.EmbeddedLink;
 import com.springuni.hermes.link.model.InvalidUrlException;
 import com.springuni.hermes.link.model.LinkSet;
@@ -69,6 +70,36 @@ public class Mocks {
 
     public static final Pageable PAGEABLE = PageRequest.of(0, 10);
 
+    public static final String JWT_TOKEN_VALID =
+            "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzNDU0MzUzMjQ1MzQ1MyIsInN1YiI6IjUzMjQ1"
+                    + "MzQ1MzQ1MzQ1IiwiZXhwIjoyNTM0MDIyMTQ0MDAsImlhdCI6MTUxNjIzOTAyMiwiYXV0aG9yaXR"
+                    + "pZXMiOiJVU0VSIn0.xTT81NHZdRdo-Enk5Dfl-v90wYcbF5sbHCKmda5yTB8n5kZ3Y-VhykVGXn"
+                    + "VmfgsPXPgO6QmmpIky1vPQYRUHsw";
+
+    public static final String JWT_TOKEN_INVALID =
+            "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzNDU0MzUzMjQ1MzQ1MyIsInN1YiI6IjUzMjQ1"
+                    + "MzQ1MzQ1MzQ1IiwiZXhwIjoyNTM0MDIyMTQ0MDAsImlhdCI6MTUxNjIzOTAyMiwiYXV0aG9yaXR"
+                    + "pZXMiOiJVU0VSIn0.B_m-1j9SqmjrcyHwyMMKsxdBi9qLe2akpfZXq4VPG73ppuJXCuB6GPvDvH"
+                    + "GeMqLQkCA1Al7iBu1oGU7i5QHc5A";
+
+    public static final String JWT_TOKEN_EXPIRED =
+            "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzNDU0MzUzMjQ1MzQ1MyIsInN1YiI6IjUzMjQ1"
+                    + "MzQ1MzQ1MzQ1IiwiZXhwIjoxNTE0Njc4NDAwLCJpYXQiOjE1MTYyMzkwMjIsImF1dGhvcml0aWV"
+                    + "zIjoiVVNFUiJ9.tJYq8hIbSc2gSKNU2F4c29Nn6X1L4HgEPnqS8MIEDEMN0nCnYLNqo_yWStemV"
+                    + "vcOV0YVKWvZCey3KspAhEXQKA";
+
+    public static final String JWT_SECRET_KEY =
+            "cFZJY3VpV2RMZHZMQTdVNzRAMVUqc2RFWTJoSlNpJk5MNzE2TkghI1FqKnEmKjk2TjY4TnZ5MG9t";
+
+    public static final String CLEARTEXT_PASSWORD = "password";
+
+    public static final String ENCRYPTED_PASSWORD =
+            "{bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG";
+
+    public static final String ROOT_PATH = "/";
+    public static final String TEST_SHORT_LINK_PATH = "/lAjKWlW4eJk";
+    public static final String TEST_API_PATH = "/api/links/2";
+
     static {
         try {
             LONG_URL_BASE = new LongUrl(LONG_URL_BASE_S);
@@ -130,11 +161,14 @@ public class Mocks {
     }
 
     public static User createUser() {
-        User user =
-                new User(EmailAddress.of("test@springuni.com"), "Test", "test");
+        User user = new User(EMAIL_ADDRESS, ENCRYPTED_PASSWORD, "Test", "test");
         user.setId(2L);
         user.grantRole(ADMIN);
         return user;
+    }
+
+    public static SignInRequest createSignInRequest() {
+        return new SignInRequest(EMAIL_ADDRESS.getValue(), CLEARTEXT_PASSWORD);
     }
 
 }
