@@ -14,7 +14,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 @Entity
-public class User extends AbstractEntity<Long> {
+public class User extends AbstractEntity<Long, User> {
 
     private EmailAddress emailAddress;
     private String encryptedPassword;

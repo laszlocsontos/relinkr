@@ -5,7 +5,6 @@ import com.springuni.hermes.user.model.Role;
 import com.springuni.hermes.user.model.User;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Optional<User> findUser(long userId) {

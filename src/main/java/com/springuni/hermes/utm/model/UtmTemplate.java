@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Assert;
 
 @Entity
-public class UtmTemplate extends AbstractEntity<Long> implements Ownable {
+public class UtmTemplate extends AbstractEntity<Long, UtmTemplate> implements Ownable {
 
     private String name;
 

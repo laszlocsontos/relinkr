@@ -19,7 +19,7 @@ import org.springframework.util.Assert;
 
 @MappedSuperclass
 public abstract class LinkBase<PK extends Serializable>
-        extends AbstractEntity<PK> implements Ownable {
+        extends AbstractEntity<PK, LinkBase<PK>> implements Ownable {
 
     private Long userId;
 
