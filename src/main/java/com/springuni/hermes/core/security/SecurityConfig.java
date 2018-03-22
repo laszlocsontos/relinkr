@@ -115,7 +115,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .regexMatchers(HttpMethod.valueOf(SIGNIN_HTTP_METHOD), SIGNIN_PROCESSES_URL)
                 .permitAll()
                 .regexMatchers("/[a-zA-Z0-9_-]{11}").permitAll()
-                .regexMatchers("/api/.*").hasAuthority("ROLE_USER")
+                .regexMatchers("/api/.*").hasAuthority("USER")
                 .anyRequest().denyAll()
                 .and()
                 .userDetailsService(userDetailsService)
