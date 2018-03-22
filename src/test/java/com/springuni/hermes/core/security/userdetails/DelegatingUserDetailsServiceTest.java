@@ -1,9 +1,10 @@
 package com.springuni.hermes.core.security.userdetails;
 
+import static com.springuni.hermes.Mocks.createUser;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 
-import com.springuni.hermes.Mocks;
+import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.User;
 import com.springuni.hermes.user.service.UserService;
 import java.util.Optional;
@@ -26,17 +27,17 @@ public class DelegatingUserDetailsServiceTest {
     private UserDetailsService userDetailsService;
 
     @Before
-    public void setUp() throws Exception {
-        user = Mocks.createUser();
+    public void setUp() {
+        user = createUser();
         userDetailsService = new DelegatingUserDetailsService(userService);
     }
 
     @Test
     public void loadUserByUsername() {
-        given(userService.findUser(user.getId())).willReturn(Optional.of(user));
+        EmailAddress emailAddress = user.getEmailAddress().get();
+        given(userService.findUser(emailAddress)).willReturn(Optional.of(user));
 
-        UserDetails userDetails =
-                userDetailsService.loadUserByUsername(String.valueOf(user.getId()));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(emailAddress.getValue());
 
         assertEquals(String.valueOf(user.getId()), userDetails.getUsername());
     }
@@ -53,8 +54,9 @@ public class DelegatingUserDetailsServiceTest {
 
     @Test(expected = UsernameNotFoundException.class)
     public void loadUserByUsername_withNonExistentUser() {
-        given(userService.findUser(user.getId())).willReturn(Optional.empty());
-        userDetailsService.loadUserByUsername(String.valueOf(user.getId()));
+        EmailAddress emailAddress = user.getEmailAddress().get();
+        given(userService.findUser(emailAddress)).willReturn(Optional.empty());
+        userDetailsService.loadUserByUsername(emailAddress.getValue());
     }
 
 }

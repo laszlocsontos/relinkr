@@ -1,14 +1,11 @@
 package com.springuni.hermes.core.security.userdetails;
 
-import static com.springuni.hermes.Mocks.*;
+import static com.springuni.hermes.Mocks.createUser;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import com.springuni.hermes.Mocks;
 import com.springuni.hermes.user.model.User;
 import org.junit.Before;
 import org.junit.Test;

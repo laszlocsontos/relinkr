@@ -49,7 +49,7 @@ public class UserTest {
     public void update() {
         EmailAddress emailAddress = new EmailAddress("test2@springuni.com");
         user.update(emailAddress, "Test2", "test2");
-        assertEquals("test2@springuni.com", user.geEmailAddress().get().getValue());
+        assertEquals("test2@springuni.com", user.getEmailAddress().get().getValue());
         assertEquals("Test2", user.getName().get());
         assertEquals("test2", user.getTwitterHandle().get());
     }

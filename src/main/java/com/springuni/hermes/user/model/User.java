@@ -82,7 +82,7 @@ public class User extends AbstractEntity<Long> {
         roles.remove(role);
     }
 
-    public Optional<EmailAddress> geEmailAddress() {
+    public Optional<EmailAddress> getEmailAddress() {
         return Optional.ofNullable(emailAddress);
     }
 
