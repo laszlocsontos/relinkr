@@ -68,12 +68,17 @@
             <artifactId>spring-boot-starter-hateoas</artifactId>
         </dependency>
 
-        <!--
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-social-twitter</artifactId>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-client</artifactId>
         </dependency>
-        -->
+
+        <!-- OpenID Connect Authentication Provider -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>

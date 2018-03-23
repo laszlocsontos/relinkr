@@ -102,6 +102,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(jwtAuthenticationProvider());
     }
 
+    /*
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -123,6 +124,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // JwtAuthenticationFilter must precede LogoutFilter, otherwise LogoutHandler
                 // wouldn't know who logs out.
                 .addFilterBefore(jwtAuthenticationFilter(), LogoutFilter.class);
+    }
+    */
+
+    @Override
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .csrf().disable()
+                .oauth2Login()
+                .and()
+                .authorizeRequests()
+                .regexMatchers("/").permitAll()
+                .regexMatchers(HttpMethod.valueOf(SIGNIN_HTTP_METHOD), SIGNIN_PROCESSES_URL)
+                .permitAll()
+                .regexMatchers("/[a-zA-Z0-9_-]{11}").permitAll()
+                .regexMatchers("/api/.*").hasAuthority("USER")
+                .anyRequest().denyAll()
+                .and();
     }
 
 }
