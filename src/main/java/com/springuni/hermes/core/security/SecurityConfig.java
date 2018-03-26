@@ -131,14 +131,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf().disable()
-                .oauth2Login()
+                .oauth2Login().defaultSuccessUrl("/pages/dashboard")
                 .and()
                 .authorizeRequests()
-                .regexMatchers("/").permitAll()
-                .regexMatchers(HttpMethod.valueOf(SIGNIN_HTTP_METHOD), SIGNIN_PROCESSES_URL)
-                .permitAll()
+                // .regexMatchers("/").permitAll()
+                .regexMatchers(HttpMethod.valueOf(SIGNIN_HTTP_METHOD), SIGNIN_PROCESSES_URL).permitAll()
                 .regexMatchers("/[a-zA-Z0-9_-]{11}").permitAll()
-                .regexMatchers("/api/.*").hasAuthority("USER")
+                .regexMatchers("/vendor/.*").permitAll()
+                .regexMatchers("/dist/.*").permitAll()
+                .regexMatchers("/api/.*").hasAuthority("ROLE_USER")
+                .regexMatchers("/pages/.*").hasAuthority("ROLE_USER")
                 .anyRequest().denyAll()
                 .and();
     }
