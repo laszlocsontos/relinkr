@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springuni.hermes.link.model.StandaloneLink;
 import com.springuni.hermes.link.service.LinkService;
-import com.springuni.hermes.link.web.LinkControllerTest.TestConfig;
+import com.springuni.hermes.link.web.LinkResourceControllerTest.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,8 +45,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@WebMvcTest(controllers = LinkController.class, secure = false)
-public class LinkControllerTest {
+@WebMvcTest(controllers = LinkResourceController.class, secure = false)
+public class LinkResourceControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

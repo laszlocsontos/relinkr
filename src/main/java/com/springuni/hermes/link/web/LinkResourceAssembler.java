@@ -15,7 +15,7 @@ public class LinkResourceAssembler
         extends IdentifiableResourceAssemblerSupport<Link, LinkResource> {
 
     public LinkResourceAssembler() {
-        super(LinkController.class, LinkResource.class);
+        super(LinkResourceController.class, LinkResource.class);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class LinkResourceAssembler
 
     private void addUserLinkStatus(LinkResource linkResource, Long linkId, LinkStatus linkStatus) {
         linkResource.add(
-                linkTo(methodOn(LinkController.class).updateLinkStatus(linkId, linkStatus))
+                linkTo(methodOn(LinkResourceController.class).updateLinkStatus(linkId, linkStatus))
                         .withRel("userLinkStatuses"));
     }
 

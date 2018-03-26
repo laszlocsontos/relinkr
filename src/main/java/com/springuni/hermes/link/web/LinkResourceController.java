@@ -29,14 +29,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/links")
-public class LinkController {
+public class LinkResourceController {
 
     private final LinkService linkService;
     private final LinkResourceAssembler linkResourceAssembler;
     private final PagedResourcesAssembler pagedResourcesAssembler =
             new PagedResourcesAssembler(null, null);
 
-    public LinkController(LinkService linkService, LinkResourceAssembler linkResourceAssembler) {
+    public LinkResourceController(LinkService linkService, LinkResourceAssembler linkResourceAssembler) {
         this.linkService = linkService;
         this.linkResourceAssembler = linkResourceAssembler;
     }
