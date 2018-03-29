@@ -60,25 +60,25 @@ public class LongUrlTest {
     @Test
     public void apply_withLongUrlBase() {
         assertEquals(UTM_PARAMETERS_FULL,
-                LONG_URL_BASE.apply(UTM_PARAMETERS_FULL).getUtmParameters());
+                LONG_URL_BASE.apply(UTM_PARAMETERS_FULL).getUtmParameters().get());
     }
 
     @Test
     public void apply_withLongUrlWithoutUtm() {
         assertEquals(UTM_PARAMETERS_FULL,
-                LONG_URL_WITHOUT_UTM.apply(UTM_PARAMETERS_FULL).getUtmParameters());
+                LONG_URL_WITHOUT_UTM.apply(UTM_PARAMETERS_FULL).getUtmParameters().get());
     }
 
     @Test
     public void apply_withLongUrlInvalidUtm() {
         assertEquals(UTM_PARAMETERS_FULL,
-                LONG_URL_INVALID_UTM.apply(UTM_PARAMETERS_FULL).getUtmParameters());
+                LONG_URL_INVALID_UTM.apply(UTM_PARAMETERS_FULL).getUtmParameters().get());
     }
 
     @Test
     public void apply_withLongUrlValidUtm() {
         assertEquals(UTM_PARAMETERS_FULL,
-                LONG_URL_VALID_UTM.apply(UTM_PARAMETERS_FULL).getUtmParameters());
+                LONG_URL_VALID_UTM.apply(UTM_PARAMETERS_FULL).getUtmParameters().get());
     }
 
 }

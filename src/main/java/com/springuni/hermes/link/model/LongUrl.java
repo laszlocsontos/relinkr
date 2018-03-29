@@ -109,8 +109,8 @@ public class LongUrl {
         return targetUrl;
     }
 
-    public UtmParameters getUtmParameters() {
-        return utmParameters;
+    public Optional<UtmParameters> getUtmParameters() {
+        return Optional.ofNullable(utmParameters);
     }
 
     public boolean hasUtmParameters() {

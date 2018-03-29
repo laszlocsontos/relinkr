@@ -24,7 +24,10 @@ public class LinkResource extends LinkBaseResource {
 
     public LinkResource(Link link) {
         super(link);
-        utmParametersResource = new UtmParametersResource(link.getUtmParameters());
+
+        utmParametersResource =
+                link.getUtmParameters().map(UtmParametersResource::new).orElse(null);
+
         path = link.getPath();
         targetUrl = link.getTargetUrl().toString();
     }

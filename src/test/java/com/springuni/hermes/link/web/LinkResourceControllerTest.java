@@ -81,7 +81,7 @@ public class LinkResourceControllerTest {
     public void addLink() throws Exception {
         LinkResource linkResource = new LinkResource(
                 standaloneLink.getLongUrl().toString(),
-                standaloneLink.getUtmParameters()
+                standaloneLink.getUtmParameters().orElse(null)
         );
 
         given(linkService.addLink(
@@ -101,7 +101,7 @@ public class LinkResourceControllerTest {
     public void updateLink() throws Exception {
         LinkResource linkResource = new LinkResource(
                 standaloneLink.getLongUrl().toString(),
-                standaloneLink.getUtmParameters()
+                standaloneLink.getUtmParameters().orElse(null)
         );
 
         given(linkService.updateLink(
@@ -188,15 +188,15 @@ public class LinkResourceControllerTest {
                 .andExpect(jsonPath(path + ".linkStatus", is(ACTIVE.name())))
                 .andExpect(jsonPath(path + ".path", is(standaloneLink.getPath())))
                 .andExpect(jsonPath(path + ".utmParameters.utmSource",
-                        is(standaloneLink.getUtmParameters().getUtmSource())))
+                        is(standaloneLink.getUtmParameters().get().getUtmSource())))
                 .andExpect(jsonPath(path + ".utmParameters.utmMedium",
-                        is(standaloneLink.getUtmParameters().getUtmMedium())))
+                        is(standaloneLink.getUtmParameters().get().getUtmMedium())))
                 .andExpect(jsonPath(path + ".utmParameters.utmCampaign",
-                        is(standaloneLink.getUtmParameters().getUtmCampaign())))
+                        is(standaloneLink.getUtmParameters().get().getUtmCampaign())))
                 .andExpect(jsonPath(path + ".utmParameters.utmTerm",
-                        is(standaloneLink.getUtmParameters().getUtmTerm().orElse(null))))
+                        is(standaloneLink.getUtmParameters().get().getUtmTerm().orElse(null))))
                 .andExpect(jsonPath(path + ".utmParameters.utmContent",
-                        is(standaloneLink.getUtmParameters().getUtmContent().orElse(null))))
+                        is(standaloneLink.getUtmParameters().get().getUtmContent().orElse(null))))
                 .andExpect(jsonPath(path + "._links.self.href",
                         is("http://localhost/api/links/" + standaloneLink.getId())))
                 .andExpect(jsonPath(path + "._links.userLinkStatuses.href",
