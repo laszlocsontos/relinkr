@@ -29,13 +29,42 @@ import org.springframework.web.util.UriComponentsBuilder;
 @EqualsAndHashCode
 public class LongUrl {
 
+    // https://gist.github.com/dperini/729294
     private static final Pattern HTTP_URL_PATTERN = Pattern.compile(
-            "^(https?:\\/\\/)?" + // protocol
-                    "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|" + // domain name
-                    "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-                    "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-                    "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-                    "(\\#[-a-z\\d_]*)?$",
+            "^" +
+                    // protocol identifier
+                    "(?:(?:https?)://)" +
+                    // user:pass authentication
+                    "(?:\\S+(?::\\S*)?@)?" +
+                    "(?:" +
+                        // IP address exclusion
+                        // private & local networks
+                        "(?!(?:10|127)(?:\\.\\d{1,3}){3})" +
+                        "(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})" +
+                        "(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})" +
+                        // IP address dotted notation octets
+                        // excludes loopback network 0.0.0.0
+                        // excludes reserved space >= 224.0.0.0
+                        // excludes network & broacast addresses
+                        // (first & last IP address of each class)
+                        "(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])" +
+                        "(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}" +
+                        "(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))" +
+                        "|" +
+                        // host name
+                        "(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)" +
+                        // domain name
+                        "(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*" +
+                        // TLD identifier
+                        "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" +
+                        // TLD may end with dot
+                        "\\.?" +
+                    ")" +
+                    // port number
+                    "(?::\\d{2,5})?" +
+                    // resource path
+                    "(?:[/?#]\\S*)?" +
+                    "$",
             CASE_INSENSITIVE
     );
 
@@ -90,6 +119,25 @@ public class LongUrl {
         } catch (InvalidUrlException e) {
             // This should never happen as url itself is a valid java.net.URL.
             throw new AssertionError("Internal error: longUrl=" + uri, e);
+        }
+    }
+
+    static UriComponents parseUrl(String url) throws InvalidUrlException {
+        if (StringUtils.isEmpty(url)) {
+            throw new InvalidUrlException("Invalid URL: empty");
+        }
+
+        // This workaround is required as UriComponentsBuilder.fromHttpUrl() doesn't accept URLs
+        // with fragments.
+        Matcher matcher = HTTP_URL_PATTERN.matcher(url);
+        if (!matcher.matches()) {
+            throw new InvalidUrlException("Invalid URL: " + url);
+        }
+
+        try {
+            return UriComponentsBuilder.fromUriString(url).build();
+        } catch (IllegalArgumentException e) {
+            throw new InvalidUrlException(e);
         }
     }
 
@@ -149,25 +197,6 @@ public class LongUrl {
             return UtmParameters.of(utmParameterMap);
         } catch (MissingUtmParameterException e) {
             return null;
-        }
-    }
-
-    private UriComponents parseUrl(String url) throws InvalidUrlException {
-        if (StringUtils.isEmpty(url)) {
-            throw new InvalidUrlException("Invalid URL: empty");
-        }
-
-        // This workaround is required as UriComponentsBuilder.fromHttpUrl() doesn't accept URLs
-        // with fragments.
-        Matcher matcher = HTTP_URL_PATTERN.matcher(url);
-        if (!matcher.matches()) {
-            throw new InvalidUrlException("Invalid URL: " + url);
-        }
-
-        try {
-            return UriComponentsBuilder.fromUriString(url).build();
-        } catch (IllegalArgumentException e) {
-            throw new InvalidUrlException(e);
         }
     }
 

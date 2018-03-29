@@ -14,6 +14,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
 import org.junit.Test;
+import org.springframework.web.util.UriComponents;
 
 public class LongUrlTest {
 
@@ -79,6 +80,45 @@ public class LongUrlTest {
     public void apply_withLongUrlValidUtm() {
         assertEquals(UTM_PARAMETERS_FULL,
                 LONG_URL_VALID_UTM.apply(UTM_PARAMETERS_FULL).getUtmParameters().get());
+    }
+
+    @Test(expected = InvalidUrlException.class)
+    public void parseUrl_withLocalIpAddress() {
+        LongUrl.parseUrl("http://10.20.53.1");
+    }
+
+    @Test
+    public void parseUrl_withPublicIpAddress() {
+        UriComponents uriComponents = LongUrl.parseUrl("http://216.58.214.238");
+        assertEquals(uriComponents.getScheme(), "http");
+        assertEquals(uriComponents.getHost(), "216.58.214.238");
+    }
+
+    @Test(expected = InvalidUrlException.class)
+    public void parseUrl_withFtpUrl() {
+        LongUrl.parseUrl("ftp://google.com");
+    }
+
+    @Test
+    public void parseUrl_withHttpUrl() {
+        UriComponents uriComponents = LongUrl.parseUrl("http://google.com");
+        assertEquals(uriComponents.getScheme(), "http");
+        assertEquals(uriComponents.getHost(), "google.com");
+    }
+
+    @Test
+    public void parseUrl_withHttpsUrl() {
+        UriComponents uriComponents = LongUrl.parseUrl("https://google.com");
+        assertEquals(uriComponents.getScheme(), "https");
+        assertEquals(uriComponents.getHost(), "google.com");
+    }
+
+    @Test
+    public void parseUrl_withUrlFragment() {
+        UriComponents uriComponents = LongUrl.parseUrl("https://google.com#test");
+        assertEquals(uriComponents.getScheme(), "https");
+        assertEquals(uriComponents.getHost(), "google.com");
+        assertEquals(uriComponents.getFragment(), "test");
     }
 
 }

@@ -35,7 +35,7 @@ public class StandaloneLinkTest {
     @Test
     public void apply() {
         link.apply(UTM_PARAMETERS_MINIMAL);
-        assertEquals(UTM_PARAMETERS_MINIMAL, link.longUrl.getUtmParameters());
+        assertEquals(UTM_PARAMETERS_MINIMAL, link.longUrl.getUtmParameters().get());
     }
 
     @Test
