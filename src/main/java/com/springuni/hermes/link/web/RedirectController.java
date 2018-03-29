@@ -7,7 +7,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.link.service.LinkService;
 import java.net.URI;
-import java.net.URL;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,9 +29,8 @@ public class RedirectController {
             return notFound().build();
         }
 
-        URL url = linkService.getTargetUrl(path);
-        return ResponseEntity.status(MOVED_PERMANENTLY).location(URI.create(url.toString()))
-                .build();
+        URI targetUri = linkService.getTargetUrl(path);
+        return ResponseEntity.status(MOVED_PERMANENTLY).location(targetUri).build();
     }
 
 }

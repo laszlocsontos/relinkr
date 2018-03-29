@@ -7,6 +7,7 @@ import static javax.persistence.EnumType.STRING;
 
 import com.springuni.hermes.utm.model.UtmParameters;
 import com.springuni.hermes.utm.model.UtmTemplate;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -26,7 +27,7 @@ import org.springframework.util.Assert;
 @Entity
 public class LinkSet extends LinkBase<Long> {
 
-    private URL longUrl;
+    private URI longUrl;
 
     @Enumerated(STRING)
     private LinkStatus linkStatus = PENDING;
@@ -62,7 +63,7 @@ public class LinkSet extends LinkBase<Long> {
     LinkSet() {
     }
 
-    public URL getLongUrl() {
+    public URI getLongUrl() {
         return longUrl;
     }
 

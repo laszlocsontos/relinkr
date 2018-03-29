@@ -8,15 +8,14 @@ import static com.springuni.hermes.utm.model.UtmParameters.UTM_TERM;
 
 import com.springuni.hermes.utm.model.MissingUtmParameterException;
 import com.springuni.hermes.utm.model.UtmParameters;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import lombok.EqualsAndHashCode;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -24,27 +23,36 @@ import org.springframework.web.util.UriComponentsBuilder;
 @EqualsAndHashCode
 public class LongUrl {
 
-    private URL longUrl;
+    private URI longUrl;
 
     // @Transient
-    private URL targetUrl;
+    private URI targetUrl;
 
     @Embedded
     private UtmParameters utmParameters;
 
-    public LongUrl(String url) throws InvalidUrlException {
-        this(url, null);
+    public LongUrl(String uriString) throws InvalidUrlException {
+        this(uriString, null);
     }
 
-    public LongUrl(String url, UtmParameters utmParameters) throws InvalidUrlException {
+    public LongUrl(String uriString, UtmParameters utmParameters) throws InvalidUrlException {
+        if (uriString == null) {
+            throw new InvalidUrlException("URI is null");
+        }
+
         URI uri;
         try {
-            uri = new URI(url);
-        } catch (URISyntaxException | NullPointerException e) {
+            uri = new URI(uriString);
+        } catch (URISyntaxException e) {
             throw new InvalidUrlException(e);
         }
 
-        UriComponents uriComponents = UriComponentsBuilder.fromUri(uri).build();
+        String scheme = uri.getScheme();
+        if (scheme == null || !StringUtils.startsWithIgnoreCase(scheme, "http")) {
+            throw new InvalidUrlException("Invalid scheme: " + scheme);
+        }
+
+        UriComponents uriComponents= UriComponentsBuilder.fromUri(uri).build();
 
         MultiValueMap<String, String> queryParams =
                 new LinkedMultiValueMap<>(uriComponents.getQueryParams());
@@ -77,8 +85,8 @@ public class LongUrl {
                 .build();
 
         try {
-            longUrl = baseUriComponents.toUri().toURL();
-        } catch (MalformedURLException | IllegalArgumentException e) {
+            longUrl = baseUriComponents.toUri();
+        } catch (IllegalStateException | IllegalArgumentException e) {
             throw new InvalidUrlException("Couldn't build longUrl", e);
         }
 
@@ -92,9 +100,8 @@ public class LongUrl {
                     .uriComponents(baseUriComponents)
                     .queryParams(queryParams)
                     .build()
-                    .toUri()
-                    .toURL();
-        } catch (MalformedURLException | IllegalArgumentException e) {
+                    .toUri();
+        } catch (IllegalStateException | IllegalArgumentException e) {
             throw new InvalidUrlException("Couldn't build longUrl", e);
         }
     }
@@ -105,12 +112,12 @@ public class LongUrl {
     LongUrl() {
     }
 
-    public static LongUrl from(URL url, UtmParameters utmParameters) {
+    public static LongUrl from(URI uri, UtmParameters utmParameters) {
         try {
-            return new LongUrl(url.toString(), utmParameters);
+            return new LongUrl(uri.toString(), utmParameters);
         } catch (InvalidUrlException e) {
             // This should never happen as url itself is a valid java.net.URL.
-            throw new AssertionError("Internal error: longUrl=" + url, e);
+            throw new AssertionError("Internal error: longUrl=" + uri, e);
         }
     }
 
@@ -118,11 +125,11 @@ public class LongUrl {
         return from(longUrl, utmParameters);
     }
 
-    public URL getLongUrl() {
+    public URI getLongUrl() {
         return longUrl;
     }
 
-    public URL getTargetUrl() {
+    public URI getTargetUri() {
         return targetUrl;
     }
 
@@ -136,7 +143,7 @@ public class LongUrl {
 
     @Override
     public String toString() {
-        return getTargetUrl().toString();
+        return getTargetUri().toString();
     }
 
 }

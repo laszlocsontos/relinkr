@@ -17,7 +17,7 @@ import com.springuni.hermes.link.model.EmbeddedLink;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.StandaloneLink;
 import com.springuni.hermes.link.model.UnsupportedLinkOperationException;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -81,8 +81,8 @@ public class LinkServiceTest extends
     public void getTargetUrl() throws ApplicationException {
         String path = standaloneLink.getPath();
         given(linkRepository.findByPath(path)).willReturn(Optional.of(standaloneLink));
-        URL targetUrl = linkService.getTargetUrl(path);
-        assertEquals(standaloneLink.getTargetUrl(), targetUrl);
+        URI targetUri = linkService.getTargetUrl(path);
+        assertEquals(standaloneLink.getTargetUrl(), targetUri);
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -101,25 +101,25 @@ public class LinkServiceTest extends
     }
 
     @Test
-    public void addLink() throws Exception {
+    public void addLink() {
         linkService.addLink(LONG_URL_BASE_S, UTM_PARAMETERS_FULL, USER_ID);
 
         Link standaloneLink = captureSavedStandaloneLink();
 
         assertEquals(USER_ID, standaloneLink.getUserId());
-        assertEquals(new URL(LONG_URL_BASE_S), standaloneLink.getLongUrl());
+        assertEquals(URI.create(LONG_URL_BASE_S), standaloneLink.getLongUrl());
         assertEquals(UTM_PARAMETERS_FULL, standaloneLink.getUtmParameters());
     }
 
     @Test
-    public void updateLink() throws Exception {
+    public void updateLink() {
         given(linkRepository.findById(LINK_ID)).willReturn(Optional.of(standaloneLink));
         linkService.updateLink(LINK_ID, LONG_URL_VALID_UTM_S, UTM_PARAMETERS_MINIMAL);
 
         StandaloneLink standaloneLink = captureSavedStandaloneLink();
 
         assertEquals(USER_ID, standaloneLink.getUserId());
-        assertEquals(new URL(LONG_URL_VALID_UTM_S), standaloneLink.getTargetUrl());
+        assertEquals(URI.create(LONG_URL_VALID_UTM_S), standaloneLink.getTargetUrl());
         assertEquals(UTM_PARAMETERS_MINIMAL, standaloneLink.getUtmParameters());
 
     }

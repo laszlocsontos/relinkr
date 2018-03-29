@@ -11,7 +11,7 @@ import com.springuni.hermes.link.model.LinkType;
 import com.springuni.hermes.link.model.StandaloneLink;
 import com.springuni.hermes.link.model.UnsupportedLinkOperationException;
 import com.springuni.hermes.utm.model.UtmParameters;
-import java.net.URL;
+import java.net.URI;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,7 +30,7 @@ class LinkServiceImpl
     }
 
     @Override
-    public URL getTargetUrl(String path) throws EntityNotFoundException {
+    public URI getTargetUrl(String path) throws EntityNotFoundException {
         Link link = linkRepository
                 .findByPath(path)
                 .orElseThrow(() -> new EntityNotFoundException("path", path));

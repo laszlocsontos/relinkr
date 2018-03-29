@@ -12,7 +12,7 @@ import static org.mockito.BDDMockito.given;
 import com.springuni.hermes.link.model.LinkSet;
 import com.springuni.hermes.utm.model.UtmTemplate;
 import com.springuni.hermes.utm.service.UtmTemplateService;
-import java.net.URL;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -77,7 +77,7 @@ public class LinkSetServiceTest extends
         LinkSet linkSet = captureSavedLink();
         assertEquals(USER_ID, linkSet.getUserId());
         assertEquals(utmTemplate, linkSet.getUtmTemplate());
-        assertEquals(new URL(LONG_URL_BASE_S), linkSet.getLongUrl());
+        assertEquals(URI.create(LONG_URL_BASE_S), linkSet.getLongUrl());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class LinkSetServiceTest extends
         LinkSet linkSet = captureSavedLink();
         assertEquals(USER_ID, linkSet.getUserId());
         assertEquals(utmTemplate, linkSet.getUtmTemplate());
-        assertEquals(new URL(LONG_URL_WITHOUT_UTM_S), linkSet.getLongUrl());
+        assertEquals(URI.create(LONG_URL_WITHOUT_UTM_S), linkSet.getLongUrl());
     }
 
 }

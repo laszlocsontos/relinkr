@@ -5,7 +5,7 @@ import static javax.persistence.InheritanceType.SINGLE_TABLE;
 
 import com.springuni.hermes.core.util.IdentityGenerator;
 import com.springuni.hermes.utm.model.UtmParameters;
-import java.net.URL;
+import java.net.URI;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
@@ -55,7 +55,7 @@ public abstract class Link extends LinkBase<Long> {
     Link() {
     }
 
-    public URL getLongUrl() {
+    public URI getLongUrl() {
         return longUrl.getLongUrl();
     }
 
@@ -67,8 +67,8 @@ public abstract class Link extends LinkBase<Long> {
         return longUrl.getUtmParameters();
     }
 
-    public URL getTargetUrl() {
-        return longUrl.getTargetUrl();
+    public URI getTargetUrl() {
+        return longUrl.getTargetUri();
     }
 
     public abstract LinkType getLinkType();

@@ -12,29 +12,29 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.net.URL;
+import java.net.URI;
 import org.junit.Test;
 
 public class LongUrlTest {
 
     @Test
-    public void create_withLongUrlBase() throws Exception {
-        assertEquals(new URL(LONG_URL_BASE_S), LONG_URL_BASE.getTargetUrl());
+    public void create_withLongUrlBase() {
+        assertEquals(URI.create(LONG_URL_BASE_S), LONG_URL_BASE.getTargetUri());
     }
 
     @Test
-    public void create_withLongUrlWithoutUtm() throws Exception {
-        assertEquals(new URL(LONG_URL_WITHOUT_UTM_S), LONG_URL_WITHOUT_UTM.getTargetUrl());
+    public void create_withLongUrlWithoutUtm() {
+        assertEquals(URI.create(LONG_URL_WITHOUT_UTM_S), LONG_URL_WITHOUT_UTM.getTargetUri());
     }
 
     @Test
-    public void create_withLongUrlInvalidUtm() throws Exception {
-        assertEquals(new URL(LONG_URL_WITHOUT_UTM_S), LONG_URL_WITHOUT_UTM.getTargetUrl());
+    public void create_withLongUrlInvalidUtm() {
+        assertEquals(URI.create(LONG_URL_WITHOUT_UTM_S), LONG_URL_WITHOUT_UTM.getTargetUri());
     }
 
     @Test
-    public void create_withLongUrlValidUtm() throws Exception {
-        assertEquals(new URL(LONG_URL_VALID_UTM_S), LONG_URL_VALID_UTM.getTargetUrl());
+    public void create_withLongUrlValidUtm() {
+        assertEquals(URI.create(LONG_URL_VALID_UTM_S), LONG_URL_VALID_UTM.getTargetUri());
     }
 
     @Test

@@ -9,7 +9,7 @@ import static java.util.Collections.emptySet;
 import com.springuni.hermes.core.orm.AbstractEntity;
 import com.springuni.hermes.user.model.Ownable;
 import java.io.Serializable;
-import java.net.URL;
+import java.net.URI;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,7 +39,7 @@ public abstract class LinkBase<PK extends Serializable>
         return userId;
     }
 
-    public abstract URL getLongUrl();
+    public abstract URI getLongUrl();
 
     public abstract void updateLongUrl(@NotNull String longUrl) throws InvalidUrlException;
 

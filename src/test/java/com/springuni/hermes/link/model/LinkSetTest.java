@@ -9,7 +9,7 @@ import static com.springuni.hermes.Mocks.UTM_TEMPLATE_NAME;
 import static org.junit.Assert.assertEquals;
 
 import com.springuni.hermes.utm.model.UtmTemplate;
-import java.net.URL;
+import java.net.URI;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,15 +19,15 @@ public class LinkSetTest {
     private UtmTemplate utmTemplate;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         utmTemplate = new UtmTemplate(UTM_TEMPLATE_NAME, USER_ID);
         utmTemplate.addUtmParameters(UTM_PARAMETERS_MINIMAL);
         linkSet = new LinkSet(LONG_URL_BASE_S, utmTemplate, USER_ID);
     }
 
     @Test
-    public void getLongUrl() throws Exception {
-        assertEquals(new URL(LONG_URL_BASE_S), linkSet.getLongUrl());
+    public void getLongUrl() {
+        assertEquals(URI.create(LONG_URL_BASE_S), linkSet.getLongUrl());
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -47,10 +47,10 @@ public class LinkSetTest {
     }
 
     @Test
-    public void updateLongUrl() throws Exception {
+    public void updateLongUrl() {
         linkSet.updateLongUrl(LONG_URL_WITHOUT_UTM_S);
-        assertEquals(new URL(LONG_URL_WITHOUT_UTM_S), linkSet.getLongUrl());
-        assertEquals(new URL(LONG_URL_WITHOUT_UTM_S),
+        assertEquals(URI.create(LONG_URL_WITHOUT_UTM_S), linkSet.getLongUrl());
+        assertEquals(URI.create(LONG_URL_WITHOUT_UTM_S),
                 linkSet.getEmbeddedLinks().get(0).getLongUrl());
     }
 
