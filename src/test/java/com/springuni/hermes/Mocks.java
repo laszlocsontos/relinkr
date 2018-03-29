@@ -27,9 +27,9 @@ public class Mocks {
     public static final EmailAddress EMAIL_ADDRESS = new EmailAddress("test@test.com");
 
     public static final String LONG_URL_BASE_S
-            = "https://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html";
+            = "https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/";
 
-    public static final String LONG_URL_FRAGMENT_S = "#append-java.lang.String-";
+    public static final String LONG_URL_FRAGMENT_S = "#howto-spring-mvc";
     public static final String LONG_URL_WITHOUT_UTM_S = LONG_URL_BASE_S + LONG_URL_FRAGMENT_S;
     public static final String LONG_URL_VALID_UTM_S =
             LONG_URL_BASE_S + "?utm_source=source&utm_medium=medium&utm_campaign=campaign" +

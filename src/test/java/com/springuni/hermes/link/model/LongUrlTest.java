@@ -19,22 +19,22 @@ public class LongUrlTest {
 
     @Test
     public void create_withLongUrlBase() {
-        assertEquals(URI.create(LONG_URL_BASE_S), LONG_URL_BASE.getTargetUri());
+        assertEquals(URI.create(LONG_URL_BASE_S), LONG_URL_BASE.getTargetUrl());
     }
 
     @Test
     public void create_withLongUrlWithoutUtm() {
-        assertEquals(URI.create(LONG_URL_WITHOUT_UTM_S), LONG_URL_WITHOUT_UTM.getTargetUri());
+        assertEquals(URI.create(LONG_URL_WITHOUT_UTM_S), LONG_URL_WITHOUT_UTM.getTargetUrl());
     }
 
     @Test
     public void create_withLongUrlInvalidUtm() {
-        assertEquals(URI.create(LONG_URL_WITHOUT_UTM_S), LONG_URL_WITHOUT_UTM.getTargetUri());
+        assertEquals(URI.create(LONG_URL_WITHOUT_UTM_S), LONG_URL_WITHOUT_UTM.getTargetUrl());
     }
 
     @Test
     public void create_withLongUrlValidUtm() {
-        assertEquals(URI.create(LONG_URL_VALID_UTM_S), LONG_URL_VALID_UTM.getTargetUri());
+        assertEquals(URI.create(LONG_URL_VALID_UTM_S), LONG_URL_VALID_UTM.getTargetUrl());
     }
 
     @Test

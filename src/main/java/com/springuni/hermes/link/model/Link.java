@@ -68,7 +68,7 @@ public abstract class Link extends LinkBase<Long> {
     }
 
     public URI getTargetUrl() {
-        return longUrl.getTargetUri();
+        return longUrl.getTargetUrl();
     }
 
     public abstract LinkType getLinkType();
