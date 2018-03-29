@@ -62,8 +62,8 @@ public class StandaloneLinkTest {
     }
 
     @Test
-    public void getBaseUrl() {
-        assertEquals(LONG_URL_WITHOUT_UTM_S, link.getBaseUrl().toString());
+    public void getLongUrl() {
+        assertEquals(LONG_URL_WITHOUT_UTM_S, link.getLongUrl().toString());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class StandaloneLinkTest {
     @Test
     public void updateLongUrl_withValidUrl() throws Exception {
         link.updateLongUrl(LONG_URL_BASE_S);
-        assertEquals(LONG_URL_BASE_S, link.getBaseUrl().toString());
+        assertEquals(LONG_URL_BASE_S, link.getLongUrl().toString());
         assertEquals(LONG_URL_BASE_S, link.getTargetUrl().toString());
     }
 

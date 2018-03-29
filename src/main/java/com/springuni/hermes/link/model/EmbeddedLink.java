@@ -21,13 +21,13 @@ public class EmbeddedLink extends Link {
     @JoinColumn(name = "linkset_id")
     private LinkSet linkSet;
 
-    public EmbeddedLink(String baseUrl, @NotNull Long userId) throws InvalidUrlException {
-        super(baseUrl, userId);
+    public EmbeddedLink(String longUrl, @NotNull Long userId) throws InvalidUrlException {
+        super(longUrl, userId);
     }
 
-    public EmbeddedLink(String baseUrl, UtmParameters utmParameters, @NotNull Long userId)
+    public EmbeddedLink(String longUrl, UtmParameters utmParameters, @NotNull Long userId)
             throws InvalidUrlException {
-        super(baseUrl, utmParameters, userId);
+        super(longUrl, utmParameters, userId);
     }
 
     public EmbeddedLink(@NotNull LongUrl longUrl, @NotNull LinkSet linkSet, @NotNull Long userId) {

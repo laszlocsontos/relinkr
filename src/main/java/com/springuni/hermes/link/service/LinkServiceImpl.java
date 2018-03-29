@@ -43,19 +43,19 @@ class LinkServiceImpl
     }
 
     @Override
-    public Link addLink(String baseUrl, UtmParameters utmParameters, Long userId)
+    public Link addLink(String longUrl, UtmParameters utmParameters, Long userId)
             throws InvalidUrlException {
-        StandaloneLink link = new StandaloneLink(baseUrl, utmParameters, userId);
+        StandaloneLink link = new StandaloneLink(longUrl, utmParameters, userId);
         return standaloneLinkRepository.save(link);
     }
 
     @Override
-    public Link updateLink(Long linkId, String baseUrl, UtmParameters utmParameters)
+    public Link updateLink(Long linkId, String longUrl, UtmParameters utmParameters)
             throws ApplicationException {
 
         Link link = getLink(linkId);
         verifyLinkBeforeUpdate(link);
-        link.updateLongUrl(baseUrl, utmParameters);
+        link.updateLongUrl(longUrl, utmParameters);
         return standaloneLinkRepository.save((StandaloneLink) link);
     }
 

@@ -14,7 +14,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
-import javax.persistence.Transient;
 import lombok.EqualsAndHashCode;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -25,7 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @EqualsAndHashCode
 public class LongUrl {
 
-    private URL baseUrl;
+    private URL longUrl;
 
     // @Transient
     private URL targetUrl;
@@ -78,9 +77,9 @@ public class LongUrl {
                 .build();
 
         try {
-            baseUrl = baseUriComponents.toUri().toURL();
+            longUrl = baseUriComponents.toUri().toURL();
         } catch (MalformedURLException | IllegalArgumentException e) {
-            throw new InvalidUrlException("Couldn't build baseUrl", e);
+            throw new InvalidUrlException("Couldn't build longUrl", e);
         }
 
         if (this.utmParameters != null) {
@@ -96,7 +95,7 @@ public class LongUrl {
                     .toUri()
                     .toURL();
         } catch (MalformedURLException | IllegalArgumentException e) {
-            throw new InvalidUrlException("Couldn't build baseUrl", e);
+            throw new InvalidUrlException("Couldn't build longUrl", e);
         }
     }
 
@@ -111,16 +110,16 @@ public class LongUrl {
             return new LongUrl(url.toString(), utmParameters);
         } catch (InvalidUrlException e) {
             // This should never happen as url itself is a valid java.net.URL.
-            throw new AssertionError("Internal error: baseUrl=" + url, e);
+            throw new AssertionError("Internal error: longUrl=" + url, e);
         }
     }
 
     public LongUrl apply(UtmParameters utmParameters) {
-        return from(baseUrl, utmParameters);
+        return from(longUrl, utmParameters);
     }
 
-    public URL getBaseUrl() {
-        return baseUrl;
+    public URL getLongUrl() {
+        return longUrl;
     }
 
     public URL getTargetUrl() {

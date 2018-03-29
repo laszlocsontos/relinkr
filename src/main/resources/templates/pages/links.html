@@ -44,7 +44,7 @@
                   <div id="collapseOne" class="panel-collapse collapse in">
                     <div class="panel-body">
                       <div class="input-group">
-                        <input type="text" class="form-control" aria-label="Long Url" aria-describedby="inputGroup-sizing-sm" v-model="link.baseUrl">
+                        <input type="text" class="form-control" aria-label="Long Url" aria-describedby="inputGroup-sizing-sm" v-model="link.longUrl">
                         <div class="input-group-append">
                         </div>
                       </div>
@@ -194,9 +194,9 @@
       updateLinkStatus: function (link) {
 
       },
-      updateLongUrl: function (link, baseUrl) {
+      updateLongUrl: function (link, longUrl) {
         var linkHref = link._links.self.href;
-        console.log(linkHref, baseUrl);
+        console.log(linkHref, longUrl);
       },
       updateUtmParameters: function (link, utmParameters) {
         var linkHref = link._links.self.href;
@@ -209,10 +209,10 @@
 
       },
       _attachLinkWatchers: function (link) {
-        // Watch baseUrl changes
+        // Watch longUrl changes
         this.$watch(
             function () {
-              return link.baseUrl;
+              return link.longUrl;
             },
             function (newVal, oldVal) {
               this.updateLongUrl(link, newVal);

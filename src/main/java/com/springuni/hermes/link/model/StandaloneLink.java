@@ -26,15 +26,15 @@ public class StandaloneLink extends Link implements Ownable {
     @ElementCollection
     private Set<Tag> tags = new LinkedHashSet<>();
 
-    public StandaloneLink(@NotNull String baseUrl, @NotNull Long userId)
+    public StandaloneLink(@NotNull String longUrl, @NotNull Long userId)
             throws InvalidUrlException {
-        super(baseUrl, userId);
+        super(longUrl, userId);
     }
 
-    public StandaloneLink(@NotNull String baseUrl, @Nullable UtmParameters utmParameters,
+    public StandaloneLink(@NotNull String longUrl, @Nullable UtmParameters utmParameters,
             @NotNull Long userId)
             throws InvalidUrlException {
-        super(baseUrl, utmParameters, userId);
+        super(longUrl, utmParameters, userId);
     }
 
     StandaloneLink() {

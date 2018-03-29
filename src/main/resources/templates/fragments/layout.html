@@ -127,7 +127,7 @@
                               <label>Long URL</label>
                               <span class="input-group-addon glyphicon glyphicon-link"></span>
                               <input class="form-control" placeholder="https://google.com"
-                                     v-model="baseUrl">
+                                     v-model="longUrl">
                             </div>
                             <div class="form-group input-group">
                               <label>UTM parameters</label>
@@ -230,7 +230,7 @@
       data: {
         errors: [],
         shortLink: '',
-        baseUrl: '',
+        longUrl: '',
         utmSource: '',
         utmMedium: '',
         utmCampaign: '',
@@ -247,8 +247,8 @@
         saveLink: function () {
           this.errors = [];
 
-          // Validate baseUrl
-          if (!this._isValidUrl(this.baseUrl)) {
+          // Validate longUrl
+          if (!this._isValidUrl(this.longUrl)) {
             this.errors.push("Base URL is empty or invalid");
           }
 
@@ -282,7 +282,7 @@
 
           // Create new link
           var body = {
-            baseUrl: this.baseUrl,
+            longUrl: this.longUrl,
             utmParameters: utmParameters
           };
 

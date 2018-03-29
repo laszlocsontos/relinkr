@@ -26,8 +26,8 @@ public class LinkSetTest {
     }
 
     @Test
-    public void getBaseUrl() throws Exception {
-        assertEquals(new URL(LONG_URL_BASE_S), linkSet.getBaseUrl());
+    public void getLongUrl() throws Exception {
+        assertEquals(new URL(LONG_URL_BASE_S), linkSet.getLongUrl());
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -47,11 +47,11 @@ public class LinkSetTest {
     }
 
     @Test
-    public void updateBaseUrl() throws Exception {
+    public void updateLongUrl() throws Exception {
         linkSet.updateLongUrl(LONG_URL_WITHOUT_UTM_S);
-        assertEquals(new URL(LONG_URL_WITHOUT_UTM_S), linkSet.getBaseUrl());
+        assertEquals(new URL(LONG_URL_WITHOUT_UTM_S), linkSet.getLongUrl());
         assertEquals(new URL(LONG_URL_WITHOUT_UTM_S),
-                linkSet.getEmbeddedLinks().get(0).getBaseUrl());
+                linkSet.getEmbeddedLinks().get(0).getLongUrl());
     }
 
     @Test

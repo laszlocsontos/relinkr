@@ -107,7 +107,7 @@ public class LinkServiceTest extends
         Link standaloneLink = captureSavedStandaloneLink();
 
         assertEquals(USER_ID, standaloneLink.getUserId());
-        assertEquals(new URL(LONG_URL_BASE_S), standaloneLink.getBaseUrl());
+        assertEquals(new URL(LONG_URL_BASE_S), standaloneLink.getLongUrl());
         assertEquals(UTM_PARAMETERS_FULL, standaloneLink.getUtmParameters());
     }
 

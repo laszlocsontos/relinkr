@@ -15,20 +15,20 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LinkBaseResource extends AbstractResource {
 
-    private String baseUrl;
+    private String longUrl;
     private Set<String> tags;
     private LinkStatus linkStatus;
 
     public LinkBaseResource(LinkBase linkBase) {
-        baseUrl = linkBase.getBaseUrl().toString();
+        longUrl = linkBase.getLongUrl().toString();
         // FIXME: Why?
         tags = (Set<String>) linkBase.getTags().stream().map(it -> ((Tag) it).getTagName())
                 .collect(Collectors.toSet());
         linkStatus = linkBase.getLinkStatus();
     }
 
-    LinkBaseResource(String baseUrl) {
-        this.baseUrl = baseUrl;
+    LinkBaseResource(String longUrl) {
+        this.longUrl = longUrl;
     }
 
 }

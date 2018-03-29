@@ -39,9 +39,9 @@ public abstract class LinkBase<PK extends Serializable>
         return userId;
     }
 
-    public abstract URL getBaseUrl();
+    public abstract URL getLongUrl();
 
-    public abstract void updateLongUrl(@NotNull String baseUrl) throws InvalidUrlException;
+    public abstract void updateLongUrl(@NotNull String longUrl) throws InvalidUrlException;
 
     public abstract Set<Tag> getTags();
 

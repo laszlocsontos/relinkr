@@ -34,13 +34,13 @@ public abstract class Link extends LinkBase<Long> {
 
     private String path;
 
-    Link(@NotNull String baseUrl, @NotNull Long userId) throws InvalidUrlException {
-        this(baseUrl, null, userId);
+    Link(@NotNull String longUrl, @NotNull Long userId) throws InvalidUrlException {
+        this(longUrl, null, userId);
     }
 
-    Link(@NotNull String baseUrl, @Nullable UtmParameters utmParameters,
+    Link(@NotNull String longUrl, @Nullable UtmParameters utmParameters,
             @NotNull Long userId) throws InvalidUrlException {
-        this(new LongUrl(baseUrl, utmParameters), userId);
+        this(new LongUrl(longUrl, utmParameters), userId);
     }
 
     Link(@NotNull LongUrl longUrl, @NotNull Long userId) {
@@ -55,8 +55,8 @@ public abstract class Link extends LinkBase<Long> {
     Link() {
     }
 
-    public URL getBaseUrl() {
-        return longUrl.getBaseUrl();
+    public URL getLongUrl() {
+        return longUrl.getLongUrl();
     }
 
     public String getPath() {
@@ -78,13 +78,13 @@ public abstract class Link extends LinkBase<Long> {
         return getTargetUrl().toString();
     }
 
-    public void updateLongUrl(@NotNull String baseUrl) throws InvalidUrlException {
-        updateLongUrl(baseUrl, longUrl.getUtmParameters());
+    public void updateLongUrl(@NotNull String longUrl) throws InvalidUrlException {
+        updateLongUrl(longUrl, this.longUrl.getUtmParameters());
     }
 
-    public void updateLongUrl(String baseUrl, UtmParameters utmParameters)
+    public void updateLongUrl(String longUrl, UtmParameters utmParameters)
             throws InvalidUrlException {
-        longUrl = new LongUrl(baseUrl, utmParameters);
+        this.longUrl = new LongUrl(longUrl, utmParameters);
     }
 
     private String generatePath() {

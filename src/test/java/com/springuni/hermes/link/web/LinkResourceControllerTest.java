@@ -80,12 +80,12 @@ public class LinkResourceControllerTest {
     @Test
     public void addLink() throws Exception {
         LinkResource linkResource = new LinkResource(
-                standaloneLink.getBaseUrl().toString(),
+                standaloneLink.getLongUrl().toString(),
                 standaloneLink.getUtmParameters()
         );
 
         given(linkService.addLink(
-                linkResource.getBaseUrl(), linkResource.getUtmParameters(), 1L)
+                linkResource.getLongUrl(), linkResource.getUtmParameters(), 1L)
         ).willReturn(standaloneLink);
 
         ResultActions resultActions = mockMvc
@@ -100,12 +100,12 @@ public class LinkResourceControllerTest {
     @Test
     public void updateLink() throws Exception {
         LinkResource linkResource = new LinkResource(
-                standaloneLink.getBaseUrl().toString(),
+                standaloneLink.getLongUrl().toString(),
                 standaloneLink.getUtmParameters()
         );
 
         given(linkService.updateLink(
-                standaloneLink.getId(), linkResource.getBaseUrl(), linkResource.getUtmParameters())
+                standaloneLink.getId(), linkResource.getLongUrl(), linkResource.getUtmParameters())
         ).willReturn(standaloneLink);
 
         ResultActions resultActions = mockMvc.perform(
@@ -181,7 +181,7 @@ public class LinkResourceControllerTest {
 
     private void assertStandaloneLink(String path, ResultActions resultActions) throws Exception {
         resultActions
-                .andExpect(jsonPath(path + ".baseUrl", is(standaloneLink.getBaseUrl().toString())))
+                .andExpect(jsonPath(path + ".longUrl", is(standaloneLink.getLongUrl().toString())))
                 .andExpect(
                         jsonPath(path + ".targetUrl", is(standaloneLink.getTargetUrl().toString())))
                 .andExpect(jsonPath(path + ".tags", hasSize(standaloneLink.getTags().size())))

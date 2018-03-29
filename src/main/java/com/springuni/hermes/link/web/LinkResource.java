@@ -29,8 +29,8 @@ public class LinkResource extends LinkBaseResource {
         targetUrl = link.getTargetUrl().toString();
     }
 
-    LinkResource(String baseUrl, UtmParameters utmParameters) {
-        super(baseUrl);
+    LinkResource(String longUrl, UtmParameters utmParameters) {
+        super(longUrl);
         this.utmParametersResource = new UtmParametersResource(utmParameters);
     }
 

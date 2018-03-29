@@ -77,7 +77,7 @@ public class LinkSetServiceTest extends
         LinkSet linkSet = captureSavedLink();
         assertEquals(USER_ID, linkSet.getUserId());
         assertEquals(utmTemplate, linkSet.getUtmTemplate());
-        assertEquals(new URL(LONG_URL_BASE_S), linkSet.getBaseUrl());
+        assertEquals(new URL(LONG_URL_BASE_S), linkSet.getLongUrl());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class LinkSetServiceTest extends
         LinkSet linkSet = captureSavedLink();
         assertEquals(USER_ID, linkSet.getUserId());
         assertEquals(utmTemplate, linkSet.getUtmTemplate());
-        assertEquals(new URL(LONG_URL_WITHOUT_UTM_S), linkSet.getBaseUrl());
+        assertEquals(new URL(LONG_URL_WITHOUT_UTM_S), linkSet.getLongUrl());
     }
 
 }

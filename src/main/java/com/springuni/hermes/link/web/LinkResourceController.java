@@ -52,7 +52,7 @@ public class LinkResourceController {
             throws ApplicationException {
 
         Link link = linkService.addLink(
-                linkResource.getBaseUrl(),
+                linkResource.getLongUrl(),
                 linkResource.getUtmParameters(),
                 1L // TODO
         );
@@ -67,7 +67,7 @@ public class LinkResourceController {
 
         Link link = linkService.updateLink(
                 linkId,
-                linkResource.getBaseUrl(),
+                linkResource.getLongUrl(),
                 linkResource.getUtmParameters()
         );
 

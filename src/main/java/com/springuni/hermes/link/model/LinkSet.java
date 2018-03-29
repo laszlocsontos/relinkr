@@ -26,7 +26,7 @@ import org.springframework.util.Assert;
 @Entity
 public class LinkSet extends LinkBase<Long> {
 
-    private URL baseUrl;
+    private URL longUrl;
 
     @Enumerated(STRING)
     private LinkStatus linkStatus = PENDING;
@@ -41,15 +41,15 @@ public class LinkSet extends LinkBase<Long> {
     @ElementCollection
     private Set<Tag> tags = new LinkedHashSet<>();
 
-    public LinkSet(@NotNull String baseUrl, @NotNull UtmTemplate utmTemplate, @NotNull Long userId)
+    public LinkSet(@NotNull String longUrl, @NotNull UtmTemplate utmTemplate, @NotNull Long userId)
             throws InvalidUrlException {
 
         super(userId);
 
-        Assert.notNull(baseUrl, "baseUrl cannot be null");
+        Assert.notNull(longUrl, "longUrl cannot be null");
         Assert.notNull(utmTemplate, "utmTemplate cannot be null");
 
-        setLongUrl(baseUrl);
+        setLongUrl(longUrl);
 
         this.utmTemplate = utmTemplate;
 
@@ -62,8 +62,8 @@ public class LinkSet extends LinkBase<Long> {
     LinkSet() {
     }
 
-    public URL getBaseUrl() {
-        return baseUrl;
+    public URL getLongUrl() {
+        return longUrl;
     }
 
     @Override
@@ -89,21 +89,20 @@ public class LinkSet extends LinkBase<Long> {
         Set<UtmParameters> utmParametersSet = utmTemplate.getUtmParametersSet();
         utmParametersSet.forEach(utmParameters -> {
             embeddedLinks
-                    .add(new EmbeddedLink(LongUrl.from(baseUrl, utmParameters), this, getUserId()));
+                    .add(new EmbeddedLink(LongUrl.from(longUrl, utmParameters), this, getUserId()));
         });
     }
 
-    public void updateLongUrl(@NotNull String baseUrl) throws InvalidUrlException {
-        setLongUrl(baseUrl);
+    public void updateLongUrl(@NotNull String longUrl) throws InvalidUrlException {
+        setLongUrl(longUrl);
 
         for (EmbeddedLink embeddedLink : embeddedLinks) {
-            embeddedLink.updateLongUrl(baseUrl);
+            embeddedLink.updateLongUrl(longUrl);
         }
     }
 
-    private void setLongUrl(@NotNull String baseUrl) {
-        LongUrl longUrl = new LongUrl(baseUrl);
-        this.baseUrl = longUrl.getBaseUrl();
+    private void setLongUrl(@NotNull String longUrl) {
+        this.longUrl = new LongUrl(longUrl).getLongUrl();
     }
 
     public void updateUtmTemplate(@NotNull UtmTemplate utmTemplate) {

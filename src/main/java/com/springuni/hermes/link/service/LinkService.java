@@ -9,10 +9,10 @@ public interface LinkService extends LinkBaseService<Long, Link> {
 
     URL getTargetUrl(String path) throws ApplicationException;
 
-    Link addLink(String baseUrl, UtmParameters utmParameters, Long userId)
+    Link addLink(String longUrl, UtmParameters utmParameters, Long userId)
             throws ApplicationException;
 
-    Link updateLink(Long linkId, String baseUrl, UtmParameters utmParameters)
+    Link updateLink(Long linkId, String longUrl, UtmParameters utmParameters)
             throws ApplicationException;
 
 }
