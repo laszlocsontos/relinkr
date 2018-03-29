@@ -2,7 +2,6 @@ package com.springuni.hermes.core.security;
 
 import static com.springuni.hermes.core.security.signin.SignInFilter.SIGNIN_HTTP_METHOD;
 import static com.springuni.hermes.core.security.signin.SignInFilter.SIGNIN_PROCESSES_URL;
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springuni.hermes.core.security.jwt.JwtAuthenticationEntryPoint;
@@ -31,8 +30,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -135,7 +132,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // .regexMatchers("/").permitAll()
-                .regexMatchers(HttpMethod.valueOf(SIGNIN_HTTP_METHOD), SIGNIN_PROCESSES_URL).permitAll()
+                .regexMatchers(HttpMethod.valueOf(SIGNIN_HTTP_METHOD), SIGNIN_PROCESSES_URL)
+                .permitAll()
                 .regexMatchers("/[a-zA-Z0-9_-]{11}").permitAll()
                 .regexMatchers("/vendor/.*").permitAll()
                 .regexMatchers("/dist/.*").permitAll()

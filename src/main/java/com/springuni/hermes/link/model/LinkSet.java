@@ -8,7 +8,6 @@ import static javax.persistence.EnumType.STRING;
 import com.springuni.hermes.utm.model.UtmParameters;
 import com.springuni.hermes.utm.model.UtmTemplate;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -67,6 +66,10 @@ public class LinkSet extends LinkBase<Long> {
         return longUrl;
     }
 
+    private void setLongUrl(@NotNull String longUrl) {
+        this.longUrl = new LongUrl(longUrl).getLongUrl();
+    }
+
     @Override
     public LinkStatus getLinkStatus() {
         return linkStatus;
@@ -100,10 +103,6 @@ public class LinkSet extends LinkBase<Long> {
         for (EmbeddedLink embeddedLink : embeddedLinks) {
             embeddedLink.updateLongUrl(longUrl);
         }
-    }
-
-    private void setLongUrl(@NotNull String longUrl) {
-        this.longUrl = new LongUrl(longUrl).getLongUrl();
     }
 
     public void updateUtmTemplate(@NotNull UtmTemplate utmTemplate) {

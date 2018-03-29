@@ -52,7 +52,7 @@ public class LongUrl {
             throw new InvalidUrlException("Invalid scheme: " + scheme);
         }
 
-        UriComponents uriComponents= UriComponentsBuilder.fromUri(uri).build();
+        UriComponents uriComponents = UriComponentsBuilder.fromUri(uri).build();
 
         MultiValueMap<String, String> queryParams =
                 new LinkedMultiValueMap<>(uriComponents.getQueryParams());

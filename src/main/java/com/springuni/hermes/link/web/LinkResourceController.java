@@ -36,7 +36,8 @@ public class LinkResourceController {
     private final PagedResourcesAssembler pagedResourcesAssembler =
             new PagedResourcesAssembler(null, null);
 
-    public LinkResourceController(LinkService linkService, LinkResourceAssembler linkResourceAssembler) {
+    public LinkResourceController(LinkService linkService,
+            LinkResourceAssembler linkResourceAssembler) {
         this.linkService = linkService;
         this.linkResourceAssembler = linkResourceAssembler;
     }
