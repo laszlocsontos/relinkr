@@ -5,342 +5,236 @@
 
 <body>
 
-    <div id="wrapper">
+<div id="wrapper">
 
-        <!-- Navigation -->
-        <nav th:replace="fragments/layout :: navigation"/>
+  <!-- Navigation -->
+  <nav th:replace="fragments/layout :: navigation"/>
 
-        <div id="page-wrapper">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">Panels and Wells</h1>
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Default Panel
-                        </div>
-                        <div class="panel-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                        </div>
-                        <div class="panel-footer">
-                            Panel Footer
-                        </div>
-                    </div>
-                </div>
-                <!-- /.col-lg-4 -->
-                <div class="col-lg-4">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            Primary Panel
-                        </div>
-                        <div class="panel-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                        </div>
-                        <div class="panel-footer">
-                            Panel Footer
-                        </div>
-                    </div>
-                </div>
-                <!-- /.col-lg-4 -->
-                <div class="col-lg-4">
-                    <div class="panel panel-success">
-                        <div class="panel-heading">
-                            Success Panel
-                        </div>
-                        <div class="panel-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                        </div>
-                        <div class="panel-footer">
-                            Panel Footer
-                        </div>
-                    </div>
-                </div>
-                <!-- /.col-lg-4 -->
-            </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            Info Panel
-                        </div>
-                        <div class="panel-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                        </div>
-                        <div class="panel-footer">
-                            Panel Footer
-                        </div>
-                    </div>
-                </div>
-                <!-- /.col-lg-4 -->
-                <div class="col-lg-4">
-                    <div class="panel panel-warning">
-                        <div class="panel-heading">
-                            Warning Panel
-                        </div>
-                        <div class="panel-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                        </div>
-                        <div class="panel-footer">
-                            Panel Footer
-                        </div>
-                    </div>
-                </div>
-                <!-- /.col-lg-4 -->
-                <div class="col-lg-4">
-                    <div class="panel panel-danger">
-                        <div class="panel-heading">
-                            Danger Panel
-                        </div>
-                        <div class="panel-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                        </div>
-                        <div class="panel-footer">
-                            Panel Footer
-                        </div>
-                    </div>
-                </div>
-                <!-- /.col-lg-4 -->
-            </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="panel panel-green">
-                        <div class="panel-heading">
-                            Green Panel
-                        </div>
-                        <div class="panel-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                        </div>
-                        <div class="panel-footer">
-                            Panel Footer
-                        </div>
-                    </div>
-                    <!-- /.col-lg-4 -->
-                </div>
-                <div class="col-lg-4">
-                    <div class="panel panel-yellow">
-                        <div class="panel-heading">
-                            Yellow Panel
-                        </div>
-                        <div class="panel-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                        </div>
-                        <div class="panel-footer">
-                            Panel Footer
-                        </div>
-                    </div>
-                    <!-- /.col-lg-4 -->
-                </div>
-                <div class="col-lg-4">
-                    <div class="panel panel-red">
-                        <div class="panel-heading">
-                            Red Panel
-                        </div>
-                        <div class="panel-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                        </div>
-                        <div class="panel-footer">
-                            Panel Footer
-                        </div>
-                    </div>
-                    <!-- /.col-lg-4 -->
-                </div>
-            </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Collapsible Accordion Panel Group
-                        </div>
-                        <!-- .panel-heading -->
-                        <div class="panel-body">
-                            <div class="panel-group" id="accordion">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Collapsible Group Item #1</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapseOne" class="panel-collapse collapse in">
-                                        <div class="panel-body">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Collapsible Group Item #2</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapseTwo" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Collapsible Group Item #3</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapseThree" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- .panel-body -->
-                    </div>
-                    <!-- /.panel -->
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Basic Tabs
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <!-- Nav tabs -->
-                            <ul class="nav nav-tabs">
-                                <li class="active"><a href="#home" data-toggle="tab">Home</a>
-                                </li>
-                                <li><a href="#profile" data-toggle="tab">Profile</a>
-                                </li>
-                                <li><a href="#messages" data-toggle="tab">Messages</a>
-                                </li>
-                                <li><a href="#settings" data-toggle="tab">Settings</a>
-                                </li>
-                            </ul>
+  <div id="page-wrapper">
+    <div id="link-list" v-cloak>
 
-                            <!-- Tab panes -->
-                            <div class="tab-content">
-                                <div class="tab-pane fade in active" id="home">
-                                    <h4>Home Tab</h4>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                </div>
-                                <div class="tab-pane fade" id="profile">
-                                    <h4>Profile Tab</h4>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                </div>
-                                <div class="tab-pane fade" id="messages">
-                                    <h4>Messages Tab</h4>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                </div>
-                                <div class="tab-pane fade" id="settings">
-                                    <h4>Settings Tab</h4>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-                    <!-- /.panel -->
-                </div>
-                <!-- /.col-lg-6 -->
-                <div class="col-lg-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Pill Tabs
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <!-- Nav tabs -->
-                            <ul class="nav nav-pills">
-                                <li class="active"><a href="#home-pills" data-toggle="tab">Home</a>
-                                </li>
-                                <li><a href="#profile-pills" data-toggle="tab">Profile</a>
-                                </li>
-                                <li><a href="#messages-pills" data-toggle="tab">Messages</a>
-                                </li>
-                                <li><a href="#settings-pills" data-toggle="tab">Settings</a>
-                                </li>
-                            </ul>
+      <!-- Links -->
+      <div class="row" v-for="link in links" :key="link._links.self.href">
 
-                            <!-- Tab panes -->
-                            <div class="tab-content">
-                                <div class="tab-pane fade in active" id="home-pills">
-                                    <h4>Home Tab</h4>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                </div>
-                                <div class="tab-pane fade" id="profile-pills">
-                                    <h4>Profile Tab</h4>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                </div>
-                                <div class="tab-pane fade" id="messages-pills">
-                                    <h4>Messages Tab</h4>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                </div>
-                                <div class="tab-pane fade" id="settings-pills">
-                                    <h4>Settings Tab</h4>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                </div>
-                            </div>
+        <!-- Link -->
+        <div class="col-lg-12">
+          <div class="panel panel-green">
+            <div class="panel-heading">{{ link._links.shortLink.href }}</div>
+            <!-- .panel-heading -->
+            <div class="panel-body">
+              <div class="panel-group" id="accordion">
+
+                <div class="alert alert-success alert-dismissible" role="alert" v-if="link.state.saved">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <span>Link has been successfully saved.</span>
+                </div>
+
+                <div class="alert alert-danger alert-dismissible" role="alert" v-if="!_.isEmpty(link.state.error)">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <span>{{ link.state.error }}</span>
+                </div>
+
+                <!-- Long Url -->
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Long Url</a>
+                    </h4>
+                  </div>
+                  <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                      <div class="input-group">
+                        <input type="text" class="form-control" aria-label="Long Url" aria-describedby="inputGroup-sizing-sm" v-model="link.baseUrl">
+                        <div class="input-group-append">
                         </div>
-                        <!-- /.panel-body -->
+                      </div>
                     </div>
-                    <!-- /.panel -->
+                  </div>
                 </div>
-                <!-- /.col-lg-6 -->
+
+                <!-- UTM Parameters -->
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">UTM
+                        Parameters</a>
+                    </h4>
+                  </div>
+                  <div id="collapseTwo" class="panel-collapse collapse">
+                    <div class="panel-body">
+                      <!-- UTM Source -->
+                      <div class="input-group">
+                        <label>UTM Source</label>
+                        <input type="text" class="form-control" aria-label="Long Url" aria-describedby="inputGroup-sizing-sm" v-model="link.utmParameters.utmSource">
+                      </div>
+
+                      <!-- UTM Medium -->
+                      <div class="input-group">
+                        <label>UTM Medium</label>
+                        <input type="text" class="form-control" aria-label="Long Url" aria-describedby="inputGroup-sizing-sm" v-model="link.utmParameters.utmMedium">
+                      </div>
+
+                      <!-- UTM Campaign -->
+                      <div class="input-group">
+                        <label>UTM Campaign</label>
+                        <input type="text" class="form-control" aria-label="Long Url" aria-describedby="inputGroup-sizing-sm" v-model="link.utmParameters.utmCampaign">
+                      </div>
+
+                      <!-- UTM Term -->
+                      <div class="input-group">
+                        <label>UTM Term</label>
+                        <input type="text" class="form-control" aria-label="Long Url" aria-describedby="inputGroup-sizing-sm" v-model="link.utmParameters.utmTerm">
+                      </div>
+
+                      <!-- UTM Content -->
+                      <div class="input-group">
+                        <label>UTM Content</label>
+                        <input type="text" class="form-control" aria-label="Long Url" aria-describedby="inputGroup-sizing-sm" v-model="link.utmParameters.utmContent">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Statistics</a>
+                    </h4>
+                  </div>
+                  <div id="collapseThree" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="well">
-                        <h4>Normal Well</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                    </div>
-                </div>
-                <!-- /.col-lg-4 -->
-                <div class="col-lg-4">
-                    <div class="well well-lg">
-                        <h4>Large Well</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                    </div>
-                </div>
-                <!-- /.col-lg-4 -->
-                <div class="col-lg-4">
-                    <div class="well well-sm">
-                        <h4>Small Well</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                    </div>
-                </div>
-                <!-- /.col-lg-4 -->
-            </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="jumbotron">
-                        <h1>Jumbotron</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing.</p>
-                        <p><a class="btn btn-primary btn-lg" role="button">Learn more</a>
-                        </p>
-                    </div>
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
+            <!-- .panel-body -->
+          </div>
+          <!-- /.panel -->
         </div>
-        <!-- /#page-wrapper -->
+        <!-- /.col-lg-12 -->
+      </div>
+      <!-- /.row -->
 
     </div>
-    <!-- /#wrapper -->
+    <!-- /#link-list -->
+  </div>
+  <!-- /#page-wrapper -->
 
-    <footer th:replace="fragments/layout :: footer"/>
+</div>
+<!-- /#wrapper -->
+
+<footer th:replace="fragments/layout :: footer"/>
+
+<script>
+  new Vue({
+    el: '#link-list',
+
+    data: {
+      links: [],
+      page: {
+        size: 10,
+        number: -1,
+        totalElements: 0,
+        totalPages: 0
+      }
+    },
+
+    computed: {
+      pageRequest: function () {
+        if (this.page.number < 0) {
+          return {size: this.page.size, page: 0};
+        }
+        if (this.page.number < this.page.totalPages) {
+          return {size: this.page.size, page: this.page.number + 1};
+        }
+        return {size: 0, page: 0};
+      }
+    },
+
+    mounted: function () {
+      this.listLinks();
+      console.log(this.$refs);
+    },
+
+    methods: {
+      listLinks: function () {
+        var config = {
+          params: this.pageRequest
+        };
+        this.$http.get("/api/links", config).then(
+            function (response) {
+              this.page = _.get(response, "body.page", {size: 0, number: 0, totalElements: 0, totalPages: 0});
+              this.links = _.concat(this.links, _.get(response, "body._embedded.links", []));
+
+              var vm = this;
+              _.forEach(this.links, function (link) {
+                // Attach link watchers
+                vm._attachLinkWatchers(link);
+
+                // Initialize view state
+                link.state = {
+                  saved: false,
+                  error: null
+                };
+              });
+              console.log(response);
+            },
+            function (response) {
+              console.error(response);
+            }
+        );
+      },
+      addTag: function (link) {
+
+      },
+      removeTag: function (link) {
+
+      },
+      updateLinkStatus: function (link) {
+
+      },
+      updateLongUrl: function (link, baseUrl) {
+        var linkHref = link._links.self.href;
+        console.log(linkHref, baseUrl);
+      },
+      updateUtmParameters: function (link, utmParameters) {
+        var linkHref = link._links.self.href;
+        console.log(linkHref, utmParameters);
+      },
+      archiveLink: function (link) {
+
+      },
+      activateLink: function (link) {
+
+      },
+      _attachLinkWatchers: function (link) {
+        // Watch baseUrl changes
+        this.$watch(
+            function () {
+              return link.baseUrl;
+            },
+            function (newVal, oldVal) {
+              this.updateLongUrl(link, newVal);
+            }
+        );
+
+        // Watch utmParameters' changes
+        this.$watch(
+            function () {
+              return link.utmParameters;
+            },
+            function (newVal, oldVal) {
+              this.updateUtmParameters(link, newVal);
+            },
+            {
+              deep: true
+            }
+        );
+      }
+    }
+  })
+</script>
 
 </body>
 

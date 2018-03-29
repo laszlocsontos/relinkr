@@ -27,7 +27,7 @@ public class LongUrl {
 
     private URL baseUrl;
 
-    @Transient
+    // @Transient
     private URL targetUrl;
 
     @Embedded

@@ -10,10 +10,12 @@ import java.util.Optional;
 import java.util.Set;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 @Entity
+@Table(name = "user_")
 public class User extends AbstractEntity<Long, User> {
 
     private EmailAddress emailAddress;
