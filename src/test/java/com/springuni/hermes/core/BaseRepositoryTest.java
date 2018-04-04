@@ -31,7 +31,7 @@ public abstract class BaseRepositoryTest<E extends Persistable<ID>, ID extends S
 
     @Test
     public void findById() {
-        entity = repository.save(entity);
+        saveEntity();
         Optional<E> entityOptional = repository.findById(entity.getId());
         assertTrue(entityOptional.isPresent());
     }
@@ -44,12 +44,16 @@ public abstract class BaseRepositoryTest<E extends Persistable<ID>, ID extends S
 
     @Test
     public void save() {
-        entity = repository.save(entity);
+        saveEntity();
         assertFalse(entity.isNew());
     }
 
     protected abstract E createEntity() throws Exception;
 
     protected abstract ID getNonExistentId();
+
+    protected void saveEntity() {
+        entity = repository.save(entity);
+    }
 
 }

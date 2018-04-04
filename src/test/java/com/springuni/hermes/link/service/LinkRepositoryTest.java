@@ -4,6 +4,7 @@ import static com.springuni.hermes.Mocks.USER_ID;
 import static com.springuni.hermes.Mocks.createLinkSet;
 import static com.springuni.hermes.Mocks.createStandaloneLink;
 import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import com.springuni.hermes.link.model.EmbeddedLink;
@@ -16,6 +17,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @DataJpaTest
@@ -45,6 +48,12 @@ public class LinkRepositoryTest {
     public void findByUserId() {
         List<Link> links = linkRepository.findByUserId(USER_ID);
         assertThat(links, contains(embeddedLink, standaloneLink));
+    }
+
+    @Test
+    public void findByUserId_withPageRequest() {
+        Page<Link> linkPage = linkRepository.findByUserId(USER_ID, PageRequest.of(0, 10));
+        assertEquals(2, linkPage.getTotalElements());
     }
 
 }
