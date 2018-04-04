@@ -62,7 +62,7 @@ public class UriUserType implements UserType, StringRepresentableType<URI> {
         String value = (String) STRING.nullSafeGet(rs, names, session, owner);
 
         try {
-            return Optional.ofNullable(value).map(URI::create);
+            return Optional.ofNullable(value).map(URI::create).orElse(null);
         } catch (IllegalArgumentException e) {
             throw translateException(e);
         }
