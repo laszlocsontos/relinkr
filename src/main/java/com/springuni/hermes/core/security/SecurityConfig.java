@@ -136,7 +136,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .regexMatchers("/[a-zA-Z0-9_-]{11}").permitAll()
                 .regexMatchers("/vendor/.*").permitAll()
-                .regexMatchers("/dist/.*").permitAll()
+                .regexMatchers("/app/.*").permitAll()
                 .regexMatchers("/api/.*").hasAuthority("ROLE_USER")
                 .regexMatchers("/pages/.*").hasAuthority("ROLE_USER")
                 .anyRequest().denyAll()

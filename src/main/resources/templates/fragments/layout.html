@@ -224,6 +224,9 @@
   <!-- Custom Theme JavaScript -->
   <script src="../vendor/sb-admin/js/sb-admin-2.js"></script>
 
+  <!-- Custom Theme JavaScript -->
+  <script src="../app/js/regex-weburl.js"></script>
+
   <script>
     new Vue({
       el: '#new_link_form',
@@ -302,14 +305,7 @@
           if (_.isEmpty(url)) {
             return false;
           }
-          var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-              '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
-              '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-              '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-              '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-              '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-
-          return pattern.test(url);
+          return RE_WEBURL.test(url);
         }
       }
     })

@@ -32,12 +32,12 @@
               <div class="panel-group" id="accordion">
 
                 <div class="alert alert-success alert-dismissible" role="alert" v-if="link.state.saved">
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <button type="button" class="close" aria-label="Close" v-on:click="link.state.saved = false"><span aria-hidden="true">&times;</span></button>
                   <span>Link has been successfully saved.</span>
                 </div>
 
                 <div class="alert alert-danger alert-dismissible" role="alert" v-if="!_.isEmpty(link.state.error)">
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <button type="button" class="close" aria-label="Close" v-on:click="link.state.error = null"><span aria-hidden="true">&times;</span></button>
                   <span>{{ link.state.error }}</span>
                 </div>
 
@@ -172,42 +172,52 @@
         this.$http.get("/api/links", config).then(
             function (response) {
               this.page = _.get(response, "body.page", {size: 0, number: 0, totalElements: 0, totalPages: 0});
-              this.links = _.concat(this.links, _.get(response, "body._embedded.links", []));
 
-              var vm = this;
-              _.forEach(this.links, function (link) {
-                // Attach link watchers
-                vm._attachLinkWatchers(link);
+              var links = _.get(response, "body._embedded.links", []);
 
-                // Initialize view state
+              // Initialize view state
+              _.forEach(links, function (link) {
                 link.state = {
                   saved: false,
                   error: null
                 };
               });
-              console.log(response);
+
+              // Update model
+              this.links = _.concat(this.links, links);
+
+              // Attach link watchers
+              var vm = this;
+              _.forEach(this.links, function (link) {
+                vm._attachLinkWatchers(link);
+              });
+
+              console.log(this.links);
             },
             function (response) {
               console.error(response);
             }
         );
       },
+
       addTag: function (link) {
 
       },
+
       removeTag: function (link) {
 
       },
+
       updateLinkStatus: function (link) {
 
       },
+
       updateLongUrl: function (link, longUrl) {
         var linkHref = link._links.self.href;
         console.log(linkHref, longUrl);
         this.$http.patch(linkHref, {longUrl: longUrl}).then(
             function (response) {
               this._setLinkSaved(link);
-              link = _.get(response, "body", {});
               console.log(link);
             },
             function (response) {
@@ -217,13 +227,13 @@
             }
         );
       },
+
       updateUtmParameters: function (link, utmParameters) {
         var linkHref = link._links.self.href;
         console.log(linkHref, utmParameters);
         this.$http.patch(linkHref, {utmParameters: utmParameters}).then(
             function (response) {
               this._setLinkSaved(link);
-              link = _.get(response, "body", {});
               console.log(link);
             },
             function (response) {
@@ -233,12 +243,15 @@
             }
         );
       },
+
       archiveLink: function (link) {
 
       },
+
       activateLink: function (link) {
 
       },
+
       _attachLinkWatchers: function (link) {
         // Watch longUrl changes
         this.$watch(
@@ -246,7 +259,11 @@
               return link.longUrl;
             },
             function (newVal, oldVal) {
-              this.updateLongUrl(link, newVal);
+              if (this._isValidUrl(newVal)) {
+                this.updateLongUrl(link, newVal);
+              } else {
+                this._setError(link, "Invalid URL");
+              }
             }
         );
 
@@ -263,12 +280,21 @@
             }
         );
       },
+
+      _isValidUrl: function(url) {
+        if (_.isEmpty(url)) {
+          return false;
+        }
+        return RE_WEBURL.test(url);
+      },
+
       _setError: function (link, error) {
         link.state = {
           saved: false,
           error: error
         };
       },
+
       _setLinkSaved: function (link) {
         link.state = {
           saved: true,
