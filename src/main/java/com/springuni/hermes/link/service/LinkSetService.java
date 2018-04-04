@@ -6,6 +6,4 @@ public interface LinkSetService extends LinkBaseService<Long, LinkSet> {
 
     LinkSet addLinkSet(String longUrl, Long utmTemplateId, Long userId);
 
-    LinkSet updateLinkSet(Long linkSetId, String longUrl);
-
 }

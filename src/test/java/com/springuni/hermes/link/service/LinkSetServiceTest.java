@@ -83,7 +83,7 @@ public class LinkSetServiceTest extends
     @Test
     public void updateLinkSet() throws Exception {
         given(linkSetRepository.findById(linkSet.getId())).willReturn(Optional.of(linkSet));
-        linkSetService.updateLinkSet(linkId, LONG_URL_VALID_UTM_S);
+        linkSetService.updateLongUrl(linkId, LONG_URL_VALID_UTM_S);
 
         LinkSet linkSet = captureSavedLink();
         assertEquals(USER_ID, linkSet.getUserId());

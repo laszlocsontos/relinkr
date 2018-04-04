@@ -19,4 +19,6 @@ public interface LinkBaseService<ID extends Serializable, L extends LinkBase<ID>
 
     void removeTag(ID linkId, String tagName);
 
+    L updateLongUrl(ID linkId, String longUrl);
+
 }

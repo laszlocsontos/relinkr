@@ -12,7 +12,8 @@ public interface LinkService extends LinkBaseService<Long, Link> {
     Link addLink(String longUrl, UtmParameters utmParameters, Long userId)
             throws ApplicationException;
 
-    Link updateLink(Long linkId, String longUrl, UtmParameters utmParameters)
-            throws ApplicationException;
+    Link updateLongUrl(Long linkId, String longUrl, UtmParameters utmParameters);
+
+    Link updateUtmParameters(Long linkId, UtmParameters utmParameters);
 
 }

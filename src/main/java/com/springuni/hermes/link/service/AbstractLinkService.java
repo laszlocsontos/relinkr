@@ -8,6 +8,7 @@ import com.springuni.hermes.link.model.Tag;
 import java.io.Serializable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.Assert;
 
 public abstract class AbstractLinkService<ID extends Serializable, L extends LinkBase<ID>, R extends OwnableRepository<L, ID>>
         implements LinkBaseService<ID, L> {
@@ -20,6 +21,8 @@ public abstract class AbstractLinkService<ID extends Serializable, L extends Lin
 
     @Override
     public L getLink(ID id) throws EntityNotFoundException {
+        Assert.notNull(id, "id cannot be null");
+
         return linkRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("id", id));
@@ -33,34 +36,57 @@ public abstract class AbstractLinkService<ID extends Serializable, L extends Lin
 
     @Override
     public void activateLink(ID id) throws ApplicationException {
+        Assert.notNull(id, "id cannot be null");
+
         L link = getLink(id);
         verifyLinkBeforeUpdate(link);
         link.markActive();
+
         linkRepository.save(link);
     }
 
     @Override
     public void archiveLink(ID id) throws ApplicationException {
+        Assert.notNull(id, "id cannot be null");
+
         L link = getLink(id);
         verifyLinkBeforeUpdate(link);
         link.markArchived();
+
         linkRepository.save(link);
     }
 
     @Override
     public void addTag(ID id, String tagName) throws ApplicationException {
+        Assert.notNull(id, "id cannot be null");
+        Assert.hasText(tagName, "tagName must contain text");
+
         L link = getLink(id);
         verifyLinkBeforeUpdate(link);
         link.addTag(new Tag(tagName));
+
         linkRepository.save(link);
     }
 
     @Override
     public void removeTag(ID id, String tagName) throws ApplicationException {
+        Assert.notNull(id, "id cannot be null");
+        Assert.hasText(tagName, "tagName must contain text");
+
         L link = getLink(id);
         verifyLinkBeforeUpdate(link);
         link.removeTag(new Tag(tagName));
         linkRepository.save(link);
+    }
+
+    @Override
+    public L updateLongUrl(ID id, String longUrl) {
+        Assert.notNull(id, "id cannot be null");
+        Assert.hasText(longUrl, "longUrl must contain text");
+
+        L link = getLink(id);
+        link.updateLongUrl(longUrl);
+        return linkRepository.save(link);
     }
 
     protected void verifyLinkBeforeUpdate(L link) {

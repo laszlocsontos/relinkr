@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class LinkBaseResource extends AbstractResource {
 
     private String longUrl;
+
     private Set<String> tags;
     private LinkStatus linkStatus;
 

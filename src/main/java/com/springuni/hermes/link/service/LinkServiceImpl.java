@@ -13,6 +13,7 @@ import com.springuni.hermes.link.model.UnsupportedLinkOperationException;
 import com.springuni.hermes.utm.model.UtmParameters;
 import java.net.URI;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 @Service
 class LinkServiceImpl
@@ -31,6 +32,8 @@ class LinkServiceImpl
 
     @Override
     public URI getTargetUrl(String path) throws EntityNotFoundException {
+        Assert.hasText(path, "path must contain text");
+
         Link link = linkRepository
                 .findByPath(path)
                 .orElseThrow(() -> new EntityNotFoundException("path", path));
@@ -45,17 +48,34 @@ class LinkServiceImpl
     @Override
     public Link addLink(String longUrl, UtmParameters utmParameters, Long userId)
             throws InvalidUrlException {
+
+        Assert.hasText(longUrl, "longUrl must contain text");
+        Assert.notNull(userId, "userId cannot be null");
+
         StandaloneLink link = new StandaloneLink(longUrl, utmParameters, userId);
         return standaloneLinkRepository.save(link);
     }
 
     @Override
-    public Link updateLink(Long linkId, String longUrl, UtmParameters utmParameters)
-            throws ApplicationException {
+    public Link updateLongUrl(Long linkId, String longUrl, UtmParameters utmParameters) {
+        Assert.notNull(linkId, "linkId cannot be null");
+        Assert.hasText(longUrl, "longUrl must contain text");
 
         Link link = getLink(linkId);
         verifyLinkBeforeUpdate(link);
         link.updateLongUrl(longUrl, utmParameters);
+        return standaloneLinkRepository.save((StandaloneLink) link);
+    }
+
+    @Override
+    public Link updateUtmParameters(Long linkId, UtmParameters utmParameters)
+            throws ApplicationException {
+
+        Assert.notNull(linkId, "linkId cannot be null");
+
+        Link link = getLink(linkId);
+        verifyLinkBeforeUpdate(link);
+        ((StandaloneLink) link).apply(utmParameters);
         return standaloneLinkRepository.save((StandaloneLink) link);
     }
 

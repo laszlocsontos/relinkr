@@ -7,6 +7,7 @@ import static com.springuni.hermes.Mocks.USER_ID;
 import static com.springuni.hermes.Mocks.UTM_PARAMETERS_FULL;
 import static com.springuni.hermes.Mocks.UTM_PARAMETERS_MINIMAL;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -21,6 +22,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.assertj.core.api.Assertions;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -108,26 +111,25 @@ public class LinkServiceTest extends
 
         assertEquals(USER_ID, standaloneLink.getUserId());
         assertEquals(URI.create(LONG_URL_BASE_S), standaloneLink.getLongUrl());
-        assertEquals(UTM_PARAMETERS_FULL, standaloneLink.getUtmParameters());
+        assertEquals(UTM_PARAMETERS_FULL, standaloneLink.getUtmParameters().get());
     }
 
     @Test
-    public void updateLink() {
+    public void updateUtmParameters() {
         given(linkRepository.findById(LINK_ID)).willReturn(Optional.of(standaloneLink));
-        linkService.updateLink(LINK_ID, LONG_URL_VALID_UTM_S, UTM_PARAMETERS_MINIMAL);
+        linkService.updateUtmParameters(LINK_ID, UTM_PARAMETERS_MINIMAL);
 
         StandaloneLink standaloneLink = captureSavedStandaloneLink();
 
         assertEquals(USER_ID, standaloneLink.getUserId());
         assertEquals(URI.create(LONG_URL_VALID_UTM_S), standaloneLink.getTargetUrl());
-        assertEquals(UTM_PARAMETERS_MINIMAL, standaloneLink.getUtmParameters());
-
+        assertEquals(UTM_PARAMETERS_MINIMAL, standaloneLink.getUtmParameters().get());
     }
 
     @Test(expected = UnsupportedLinkOperationException.class)
-    public void updateLink_withEmbeddedLink() throws ApplicationException {
+    public void updateUtmParameters_withEmbeddedLink() throws ApplicationException {
         given(linkRepository.findById(LINK_ID)).willReturn(Optional.of(embeddedLink));
-        linkService.updateLink(LINK_ID, LONG_URL_BASE_S, UTM_PARAMETERS_FULL);
+        linkService.updateUtmParameters(LINK_ID, UTM_PARAMETERS_FULL);
     }
 
     @Test(expected = UnsupportedLinkOperationException.class)

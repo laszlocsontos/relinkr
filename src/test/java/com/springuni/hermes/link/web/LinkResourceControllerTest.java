@@ -9,12 +9,14 @@ import static com.springuni.hermes.link.model.LinkStatus.ARCHIVED;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType.HAL;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springuni.hermes.link.model.StandaloneLink;
 import com.springuni.hermes.link.service.LinkService;
 import com.springuni.hermes.link.web.LinkResourceControllerTest.TestConfig;
+import com.springuni.hermes.utm.model.UtmParameters;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -84,8 +87,12 @@ public class LinkResourceControllerTest {
                 standaloneLink.getUtmParameters().orElse(null)
         );
 
-        given(linkService.addLink(
-                linkResource.getLongUrl(), linkResource.getUtmParameters(), 1L)
+        given(
+                linkService.addLink(
+                        linkResource.getLongUrl(),
+                        linkResource.getUtmParameters().orElse(null),
+                        1L
+                )
         ).willReturn(standaloneLink);
 
         ResultActions resultActions = mockMvc
@@ -98,24 +105,117 @@ public class LinkResourceControllerTest {
     }
 
     @Test
-    public void updateLink() throws Exception {
-        LinkResource linkResource = new LinkResource(
-                standaloneLink.getLongUrl().toString(),
-                standaloneLink.getUtmParameters().orElse(null)
-        );
+    public void replaceLink() throws Exception {
+        String longUrl = standaloneLink.getLongUrl().toString();
+        UtmParameters utmParameters = standaloneLink.getUtmParameters().get();
+        LinkResource linkResource = new LinkResource(longUrl, utmParameters);
 
-        given(linkService.updateLink(
-                standaloneLink.getId(), linkResource.getLongUrl(), linkResource.getUtmParameters())
+        long linkId = standaloneLink.getId();
+
+        given(
+                linkService.updateLongUrl(
+                        linkId,
+                        longUrl,
+                        utmParameters
+                )
         ).willReturn(standaloneLink);
 
         ResultActions resultActions = mockMvc.perform(
-                put("/api/links/{linkId}", standaloneLink.getId()).contentType(APPLICATION_JSON)
+                put("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(linkResource)))
                 .andExpect(status().isOk())
                 .andDo(print());
 
         assertStandaloneLink(resultActions);
+
+        then(linkService).should().updateLongUrl(linkId, longUrl, utmParameters);
     }
+
+    @Test
+    public void replaceLink_withoutLongUrl() throws Exception {
+        UtmParameters utmParameters = standaloneLink.getUtmParameters().get();
+        LinkResource linkResource = new LinkResource(null, utmParameters);
+
+        long linkId = standaloneLink.getId();
+
+        ResultActions resultActions = mockMvc.perform(
+                put("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(linkResource)))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+
+        assertError(400, "Validation failed", resultActions);
+
+        then(linkService).shouldHaveZeroInteractions();
+    }
+
+    @Test
+    public void updateLink_withLongUrl() throws Exception {
+        String longUrl = standaloneLink.getLongUrl().toString();
+        LinkResource linkResource = new LinkResource(longUrl);
+
+        long linkId = standaloneLink.getId();
+
+        given(
+                linkService.updateLongUrl(
+                        linkId,
+                        longUrl
+                )
+        ).willReturn(standaloneLink);
+
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(linkResource)))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        assertStandaloneLink(resultActions);
+
+        then(linkService).should().updateLongUrl(linkId, longUrl);
+    }
+
+    @Test
+    public void updateLink_withUtmParameters() throws Exception {
+        UtmParameters utmParameters = standaloneLink.getUtmParameters().orElse(null);
+        LinkResource linkResource = new LinkResource(utmParameters);
+
+        long linkId = standaloneLink.getId();
+
+        given(
+                linkService.updateUtmParameters(
+                        linkId,
+                        utmParameters
+                )
+        ).willReturn(standaloneLink);
+
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(linkResource)))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        assertStandaloneLink(resultActions);
+
+        then(linkService).should().updateUtmParameters(linkId, utmParameters);
+    }
+
+    @Test
+    public void updateLink_withoutParameters() throws Exception {
+        LinkResource linkResource = new LinkResource();
+
+        long linkId = standaloneLink.getId();
+
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(linkResource)))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+
+        assertError(400, "Validation failed", resultActions);
+
+        then(linkService).shouldHaveZeroInteractions();
+    }
+
 
     @Test
     public void listLinks() throws Exception {
@@ -173,6 +273,14 @@ public class LinkResourceControllerTest {
 
         then(linkService).should().removeTag(standaloneLink.getId(), TAG_A.getTagName());
         then(linkService).shouldHaveNoMoreInteractions();
+    }
+
+    private void assertError(int statusCode, String detailMessage, ResultActions resultActions)
+            throws Exception {
+
+        resultActions
+                .andExpect(jsonPath("$.statusCode", is(statusCode)))
+                .andExpect(jsonPath("$.detailMessage", startsWith(detailMessage)));
     }
 
     private void assertStandaloneLink(ResultActions resultActions) throws Exception {

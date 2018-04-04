@@ -3,6 +3,7 @@ package com.springuni.hermes.link.web;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.springuni.hermes.link.model.Link;
+import com.springuni.hermes.utm.model.MissingUtmParameterException;
 import com.springuni.hermes.utm.model.UtmParameters;
 import java.util.Optional;
 import lombok.Data;
@@ -32,16 +33,25 @@ public class LinkResource extends LinkBaseResource {
         targetUrl = link.getTargetUrl().toString();
     }
 
+    LinkResource(String longUrl) {
+        this(longUrl, null);
+    }
+
+    LinkResource(UtmParameters utmParameters) {
+        this(null, utmParameters);
+    }
+
     LinkResource(String longUrl, UtmParameters utmParameters) {
         super(longUrl);
-        this.utmParametersResource = new UtmParametersResource(utmParameters);
+        this.utmParametersResource = Optional.ofNullable(utmParameters)
+                .map(UtmParametersResource::new).orElse(null);
     }
 
     @JsonIgnore
-    public UtmParameters getUtmParameters() {
+    public Optional<UtmParameters> getUtmParameters() throws MissingUtmParameterException {
         return Optional.ofNullable(utmParametersResource)
                 .map(it -> new UtmParameters(it.getUtmSource(), it.getUtmMedium(),
-                        it.getUtmCampaign(), it.getUtmTerm(), it.getUtmContent())).orElse(null);
+                        it.getUtmCampaign(), it.getUtmTerm(), it.getUtmContent()));
     }
 
     @Data
