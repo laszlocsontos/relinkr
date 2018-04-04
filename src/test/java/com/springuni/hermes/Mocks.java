@@ -144,6 +144,7 @@ public class Mocks {
         LinkSet linkSet = new LinkSet(LONG_URL_BASE_S, utmTemplate, USER_ID);
         linkSet.markActive();
         linkSet.regenerateLinks();
+        linkSet.setId(1L);
         return linkSet;
     }
 

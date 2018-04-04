@@ -128,7 +128,6 @@ public abstract class AbstractLinkServiceTest<ID extends Serializable, L extends
 
     @Test(expected = IllegalArgumentException.class)
     public void updateLongUrl_withNull() throws ApplicationException {
-        given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
         linkService.updateLongUrl(linkId, null);
     }
 
