@@ -78,8 +78,7 @@ public class LinkResourceController {
     }
 
     @PostMapping(produces = HAL_JSON_VALUE)
-    HttpEntity<LinkResource> addLink(
-            @Validated(FullLinkValidator.class) @RequestBody LinkResource linkResource)
+    HttpEntity<LinkResource> addLink(@Validated @RequestBody LinkResource linkResource)
             throws ApplicationException {
 
         Link link = linkService.addLink(
@@ -93,8 +92,7 @@ public class LinkResourceController {
 
     @PutMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
     HttpEntity<LinkResource> replaceLink(
-            @PathVariable long linkId,
-            @Validated(FullLinkValidator.class) @RequestBody LinkResource linkResource)
+            @PathVariable long linkId, @Validated @RequestBody LinkResource linkResource)
             throws ApplicationException {
 
         String longUrl = linkResource.getLongUrl();
