@@ -63,10 +63,10 @@ public class LinkResourceController {
         switch (httpMethod) {
             case POST:
             case PUT:
-                binder.addValidators(new FullLinkValidator());
+                binder.setValidator(new FullLinkValidator());
                 break;
             case PATCH:
-                binder.addValidators(new PartialLinkValidator());
+                binder.setValidator(new PartialLinkValidator());
                 break;
         }
     }
