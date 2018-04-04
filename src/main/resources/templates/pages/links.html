@@ -20,7 +20,7 @@
     </div>
 
     <!-- Links -->
-    <div id="link-list" class="row" v-cloak>
+    <div id="link-list" v-cloak>
       <div class="row" v-for="link in links" :key="link._links.self.href">
 
         <!-- Link -->
@@ -45,10 +45,10 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h4 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion" v-bind:href="'#collapse-url-' + link._links.shortLink.href">Long Url</a>
+                      <a data-toggle="collapse" data-parent="#accordion" v-bind:href="'#collapse-url-' + link.path">Long Url</a>
                     </h4>
                   </div>
-                  <div v-bind:id="'collapse-url-' + link._links.shortLink.href" class="panel-collapse collapse in">
+                  <div v-bind:id="'collapse-url-' + link.path" class="panel-collapse collapse in">
                     <div class="panel-body">
                       <div class="input-group">
                         <input type="text" class="form-control" aria-label="Long Url" aria-describedby="inputGroup-sizing-sm" v-model="link.longUrl">
@@ -63,11 +63,11 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h4 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion" v-bind:href="'#collapse-utm-' + link._links.shortLink.href">UTM
+                      <a data-toggle="collapse" data-parent="#accordion" v-bind:href="'#collapse-utm-' + link.path">UTM
                         Parameters</a>
                     </h4>
                   </div>
-                  <div v-bind:id="'collapse-utm' + link._links.shortLink.href" class="panel-collapse collapse">
+                  <div v-bind:id="'collapse-utm-' + link.path" class="panel-collapse collapse">
                     <div class="panel-body">
                       <!-- UTM Source -->
                       <div class="input-group">
@@ -104,10 +104,10 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h4 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion" v-bind:href="'#collapse-stats-' + link._links.shortLink.href">Statistics</a>
+                      <a data-toggle="collapse" data-parent="#accordion" v-bind:href="'#collapse-stats-' + link.path">Statistics</a>
                     </h4>
                   </div>
-                  <div v-bind:id="'collapse-stats-' + link._links.shortLink.href" class="panel-collapse collapse">
+                  <div v-bind:id="'collapse-stats-' + link.path" class="panel-collapse collapse">
                     <div class="panel-body">
 
                     </div>
