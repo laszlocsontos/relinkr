@@ -41,6 +41,9 @@ import org.springframework.web.context.request.ServletWebRequest;
 @RequestMapping("/api/links")
 public class LinkResourceController {
 
+    private static Validator FULL_LINK_VALIDATOR = new FullLinkValidator();
+    private static Validator PARTIAL_LINK_VALIDATOR = new PartialLinkValidator();
+
     private final LinkService linkService;
     private final LinkResourceAssembler linkResourceAssembler;
     private final PagedResourcesAssembler pagedResourcesAssembler =
@@ -63,10 +66,10 @@ public class LinkResourceController {
         switch (httpMethod) {
             case POST:
             case PUT:
-                binder.setValidator(new FullLinkValidator());
+                binder.setValidator(FULL_LINK_VALIDATOR);
                 break;
             case PATCH:
-                binder.setValidator(new PartialLinkValidator());
+                binder.setValidator(PARTIAL_LINK_VALIDATOR);
                 break;
         }
     }
@@ -106,7 +109,7 @@ public class LinkResourceController {
     @PatchMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
     HttpEntity<LinkResource> updateLink(
             @PathVariable long linkId,
-            @Validated(PartialLinkValidator.class) @RequestBody LinkResource linkResource)
+            @Validated @RequestBody LinkResource linkResource)
             throws ApplicationException {
 
         Link link = null;
