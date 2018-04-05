@@ -289,6 +289,7 @@ public class LinkResourceControllerTest {
 
     private void assertStandaloneLink(String path, ResultActions resultActions) throws Exception {
         resultActions
+                .andExpect(jsonPath(path + ".id", is(standaloneLink.getId().toString())))
                 .andExpect(jsonPath(path + ".longUrl", is(standaloneLink.getLongUrl().toString())))
                 .andExpect(
                         jsonPath(path + ".targetUrl", is(standaloneLink.getTargetUrl().toString())))

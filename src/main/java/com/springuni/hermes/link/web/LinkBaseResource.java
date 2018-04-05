@@ -23,6 +23,8 @@ public class LinkBaseResource extends AbstractResource {
     private LinkStatus linkStatus;
 
     public LinkBaseResource(@NotNull LinkBase linkBase) {
+        super(linkBase);
+
         Assert.notNull(linkBase, "linkBase cannot be null");
         longUrl = linkBase.getLongUrl().toString();
         // FIXME: Why?
