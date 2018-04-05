@@ -2,6 +2,7 @@ package com.springuni.hermes.core.orm;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -12,14 +13,15 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.domain.Persistable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.hateoas.Identifiable;
 
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
-public class AbstractEntity<ID extends Serializable, E extends AbstractEntity<ID, E>>
-        extends AbstractAggregateRoot<E> implements Identifiable<ID>, Persistable<ID>,
-        Serializable {
+public class AbstractEntity<ID extends Serializable>
+        extends AbstractAggregateRoot implements Identifiable<ID>, Persistable<ID>, Serializable {
 
     @Id
     @GeneratedValue

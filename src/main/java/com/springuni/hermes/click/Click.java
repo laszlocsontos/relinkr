@@ -4,6 +4,7 @@ import static java.time.LocalDateTime.now;
 import static java.time.ZoneOffset.UTC;
 import static javax.persistence.EnumType.STRING;
 
+import com.springuni.hermes.core.orm.AbstractEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -16,7 +17,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.Assert;
 
 @Entity
-public class Click extends AbstractPersistable<Long> {
+public class Click extends AbstractEntity<Long> {
 
     private Long visitorId;
 
