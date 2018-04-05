@@ -55,7 +55,17 @@ public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extend
     public void save() {
         saveEntity();
         assertFalse(entity.isNew());
-        assertNotNull(entity.getCreatedDate());
+    }
+
+    @Test
+    public void createdDate() {
+        saveEntity();
+        assertNotNull(entity.getLastModifiedDate());
+    }
+
+    @Test
+    public void lastModifiedDate() {
+        saveEntity();
         assertNotNull(entity.getLastModifiedDate());
     }
 
