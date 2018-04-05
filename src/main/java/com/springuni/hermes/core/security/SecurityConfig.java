@@ -128,12 +128,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf().disable()
-                .oauth2Login().defaultSuccessUrl("/pages/dashboard")
+                .oauth2Login()
+                    .loginPage("/login/oauth2")
+                    .defaultSuccessUrl("/pages/dashboard", true)
                 .and()
                 .authorizeRequests()
                 // .regexMatchers("/").permitAll()
-                .regexMatchers(HttpMethod.valueOf(SIGNIN_HTTP_METHOD), SIGNIN_PROCESSES_URL)
-                .permitAll()
+                .regexMatchers(HttpMethod.valueOf(SIGNIN_HTTP_METHOD), SIGNIN_PROCESSES_URL).permitAll()
+                .regexMatchers(HttpMethod.GET, "/login/oauth2").permitAll()
                 .regexMatchers("/[a-zA-Z0-9_-]{11}").permitAll()
                 .regexMatchers("/vendor/.*").permitAll()
                 .regexMatchers("/app/.*").permitAll()
