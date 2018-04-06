@@ -7,9 +7,11 @@ import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.core.model.EntityNotFoundException;
 import com.springuni.hermes.link.model.InvalidUrlException;
 import com.springuni.hermes.link.model.Link;
+import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.link.model.LinkType;
 import com.springuni.hermes.link.model.StandaloneLink;
 import com.springuni.hermes.link.model.UnsupportedLinkOperationException;
+import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.utm.model.UtmParameters;
 import java.net.URI;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,7 @@ import org.springframework.util.Assert;
 
 @Service
 class LinkServiceImpl
-        extends AbstractLinkService<Long, Link, LinkRepository<Link>> implements LinkService {
+        extends AbstractLinkService<LinkId, Link, LinkRepository<Link>> implements LinkService {
 
     private final StandaloneLinkRepository standaloneLinkRepository;
 
@@ -46,7 +48,7 @@ class LinkServiceImpl
     }
 
     @Override
-    public Link addLink(String longUrl, UtmParameters utmParameters, Long userId)
+    public Link addLink(String longUrl, UtmParameters utmParameters, UserId userId)
             throws InvalidUrlException {
 
         Assert.hasText(longUrl, "longUrl must contain text");
@@ -57,7 +59,7 @@ class LinkServiceImpl
     }
 
     @Override
-    public Link updateLongUrl(Long linkId, String longUrl, UtmParameters utmParameters) {
+    public Link updateLongUrl(LinkId linkId, String longUrl, UtmParameters utmParameters) {
         Assert.notNull(linkId, "linkId cannot be null");
         Assert.hasText(longUrl, "longUrl must contain text");
 
@@ -68,7 +70,7 @@ class LinkServiceImpl
     }
 
     @Override
-    public Link updateUtmParameters(Long linkId, UtmParameters utmParameters)
+    public Link updateUtmParameters(LinkId linkId, UtmParameters utmParameters)
             throws ApplicationException {
 
         Assert.notNull(linkId, "linkId cannot be null");

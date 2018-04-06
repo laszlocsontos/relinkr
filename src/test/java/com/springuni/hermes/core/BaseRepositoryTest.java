@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.springuni.hermes.core.BaseRepositoryTest.TestConfig;
 import com.springuni.hermes.core.orm.AbstractEntity;
+import com.springuni.hermes.core.orm.AbstractId;
 import com.springuni.hermes.core.orm.BaseRepository;
 import com.springuni.hermes.core.orm.JpaConfig;
 import com.springuni.hermes.core.orm.UtcLocalDateTimeProvider;
@@ -26,7 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @DataJpaTest
 @RunWith(SpringRunner.class)
 @Import(TestConfig.class)
-public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extends Serializable, R extends BaseRepository<E, ID>> {
+public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extends AbstractId<? extends AbstractEntity<ID>>, R extends BaseRepository<E, ID>> {
 
     @Autowired
     protected R repository;

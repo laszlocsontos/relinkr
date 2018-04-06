@@ -5,6 +5,7 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.EnumType.STRING;
 
+import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.utm.model.UtmParameters;
 import com.springuni.hermes.utm.model.UtmTemplate;
 import java.net.URI;
@@ -24,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Assert;
 
 @Entity
-public class LinkSet extends LinkBase<Long> {
+public class LinkSet extends LinkBase<LinkSetId> {
 
     private URI longUrl;
 
@@ -41,7 +42,7 @@ public class LinkSet extends LinkBase<Long> {
     @ElementCollection
     private Set<Tag> tags = new LinkedHashSet<>();
 
-    public LinkSet(@NotNull String longUrl, @NotNull UtmTemplate utmTemplate, @NotNull Long userId)
+    public LinkSet(@NotNull String longUrl, @NotNull UtmTemplate utmTemplate, @NotNull UserId userId)
             throws InvalidUrlException {
 
         super(userId);

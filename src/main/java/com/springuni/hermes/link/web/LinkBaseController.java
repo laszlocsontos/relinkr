@@ -3,9 +3,10 @@ package com.springuni.hermes.link.web;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 
 import com.springuni.hermes.core.model.EntityNotFoundException;
+import com.springuni.hermes.core.orm.AbstractId;
 import com.springuni.hermes.link.model.LinkBase;
 import com.springuni.hermes.link.service.LinkBaseService;
-import java.io.Serializable;
+import com.springuni.hermes.user.model.UserId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 public class LinkBaseController<
-        ID extends Serializable,
+        ID extends AbstractId<L>,
         L extends LinkBase<ID>,
         S extends LinkBaseService<ID, L>,
         R extends LinkBaseResource
@@ -34,7 +35,7 @@ public class LinkBaseController<
     }
 
     @GetMapping(path = "/", produces = HAL_JSON_VALUE)
-    Page<R> listLinks(@RequestParam(required = false) long userId, Pageable pageable) {
+    Page<R> listLinks(@RequestParam(required = false) UserId userId, Pageable pageable) {
         Page<L> linkList = linkService.listLinks(userId, pageable);
 
         return null;

@@ -1,15 +1,16 @@
 package com.springuni.hermes.link.service;
 
+import com.springuni.hermes.core.orm.AbstractId;
 import com.springuni.hermes.link.model.LinkBase;
-import java.io.Serializable;
+import com.springuni.hermes.user.model.UserId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface LinkBaseService<ID extends Serializable, L extends LinkBase<ID>> {
+public interface LinkBaseService<ID extends AbstractId<L>, L extends LinkBase<ID>> {
 
     L getLink(ID linkId);
 
-    Page<L> listLinks(long userId, Pageable pageable);
+    Page<L> listLinks(UserId userId, Pageable pageable);
 
     void archiveLink(ID linkId);
 

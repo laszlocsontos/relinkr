@@ -2,15 +2,17 @@ package com.springuni.hermes.link.service;
 
 import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.core.model.EntityNotFoundException;
+import com.springuni.hermes.core.orm.AbstractId;
 import com.springuni.hermes.core.orm.OwnableRepository;
 import com.springuni.hermes.link.model.LinkBase;
 import com.springuni.hermes.link.model.Tag;
+import com.springuni.hermes.user.model.UserId;
 import java.io.Serializable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.Assert;
 
-public abstract class AbstractLinkService<ID extends Serializable, L extends LinkBase<ID>, R extends OwnableRepository<L, ID>>
+public abstract class AbstractLinkService<ID extends AbstractId<L>, L extends LinkBase<ID>, R extends OwnableRepository<L, ID>>
         implements LinkBaseService<ID, L> {
 
     final R linkRepository;
@@ -30,7 +32,7 @@ public abstract class AbstractLinkService<ID extends Serializable, L extends Lin
     }
 
     @Override
-    public Page<L> listLinks(long userId, Pageable pageable) {
+    public Page<L> listLinks(UserId userId, Pageable pageable) {
         return linkRepository.findByUserId(userId, pageable);
     }
 

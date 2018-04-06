@@ -2,6 +2,7 @@ package com.springuni.hermes.link.model;
 
 import static com.springuni.hermes.link.model.LinkType.EMBEDDED;
 
+import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.utm.model.UtmParameters;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -21,16 +22,17 @@ public class EmbeddedLink extends Link {
     @JoinColumn(name = "linkset_id")
     private LinkSet linkSet;
 
-    public EmbeddedLink(String longUrl, @NotNull Long userId) throws InvalidUrlException {
+    public EmbeddedLink(String longUrl, @NotNull UserId userId) throws InvalidUrlException {
         super(longUrl, userId);
     }
 
-    public EmbeddedLink(String longUrl, UtmParameters utmParameters, @NotNull Long userId)
+    public EmbeddedLink(String longUrl, UtmParameters utmParameters, @NotNull UserId userId)
             throws InvalidUrlException {
         super(longUrl, utmParameters, userId);
     }
 
-    public EmbeddedLink(@NotNull LongUrl longUrl, @NotNull LinkSet linkSet, @NotNull Long userId) {
+    public EmbeddedLink(@NotNull LongUrl longUrl, @NotNull LinkSet linkSet,
+            @NotNull UserId userId) {
         super(longUrl, userId);
         this.linkSet = linkSet;
     }

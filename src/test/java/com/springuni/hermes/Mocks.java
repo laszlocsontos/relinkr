@@ -3,19 +3,25 @@ package com.springuni.hermes;
 import static com.springuni.hermes.user.model.Role.ADMIN;
 import static java.util.Collections.unmodifiableSet;
 
+import com.springuni.hermes.click.ClickId;
 import com.springuni.hermes.click.IpAddress;
 import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.core.security.signin.SignInRequest;
 import com.springuni.hermes.link.model.EmbeddedLink;
 import com.springuni.hermes.link.model.InvalidUrlException;
+import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.link.model.LinkSet;
+import com.springuni.hermes.link.model.LinkSetId;
 import com.springuni.hermes.link.model.LongUrl;
 import com.springuni.hermes.link.model.StandaloneLink;
 import com.springuni.hermes.link.model.Tag;
 import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.User;
+import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.utm.model.UtmParameters;
 import com.springuni.hermes.utm.model.UtmTemplate;
+import com.springuni.hermes.utm.model.UtmTemplateId;
+import com.springuni.hermes.visitor.model.VisitorId;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -53,18 +59,32 @@ public class Mocks {
     public static final UtmParameters UTM_PARAMETERS_FULL;
     public static final Set<UtmParameters> UTM_PARAMETERS_SET;
 
-    public static final Long USER_ID = 1L;
+    public static final UserId USER_ID = UserId.of(1L);
+    public static final UserId USER_ID_ZERO = UserId.of(0L);
+
+    public static final UtmTemplateId UTM_TEMPLATE_ID = UtmTemplateId.of(1L);
+    public static final UtmTemplateId UTM_TEMPLATE_ID_ZERO = UtmTemplateId.of(0L);
+
     public static final String UTM_TEMPLATE_NAME = "template";
 
     public static final Tag TAG_A = new Tag("A");
     public static final Tag TAG_B = new Tag("B");
 
+    public static final ClickId CLICK_ID = ClickId.of(1L);
+    public static final ClickId CLICK_ID_ZERO = ClickId.of(0L);
+
     public static final String IPV4_ADDRESS = "184.52.70.179";
     public static final String IPV6_ADDRESS = "2001:db8:85a3:0:0:8a2e:370:7334";
 
-    public static final Long LINK_ID = 1L;
-    public static final Long LINK_SET_ID = 1L;
-    public static final Long VISITOR_ID = 1L;
+    public static final LinkId LINK_ID = LinkId.of(1L);
+    public static final LinkId LINK_ID_ZERO = LinkId.of(0L);
+
+    public static final LinkSetId LINK_SET_ID = LinkSetId.of(1L);
+    public static final LinkSetId LINK_SET_ID_ZERO = LinkSetId.of(0L);
+
+    public static final VisitorId VISITOR_ID = VisitorId.of(1L);
+    public static final VisitorId VISITOR_ID_ZERO = VisitorId.of(0L);
+
     public static final IpAddress VISITOR_IP;
     public static final LocalDateTime TIMESTAMP = LocalDateTime.of(2018, 02, 28, 19, 52);
 
@@ -144,7 +164,7 @@ public class Mocks {
         LinkSet linkSet = new LinkSet(LONG_URL_BASE_S, utmTemplate, USER_ID);
         linkSet.markActive();
         linkSet.regenerateLinks();
-        linkSet.setId(1L);
+        linkSet.setId(LINK_SET_ID);
         return linkSet;
     }
 
@@ -156,14 +176,14 @@ public class Mocks {
     public static StandaloneLink createStandaloneLink() throws ApplicationException {
         StandaloneLink standaloneLink =
                 new StandaloneLink(LONG_URL_WITHOUT_UTM_S, UTM_PARAMETERS_FULL, USER_ID);
-        standaloneLink.setId(2L);
+        standaloneLink.setId(LINK_ID);
         standaloneLink.markActive();
         return standaloneLink;
     }
 
     public static User createUser() {
         User user = new User(EMAIL_ADDRESS, ENCRYPTED_PASSWORD, "Test", "test");
-        user.setId(2L);
+        user.setId(USER_ID);
         user.grantRole(ADMIN);
         return user;
     }

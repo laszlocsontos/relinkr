@@ -1,14 +1,18 @@
 package com.springuni.hermes.link.service;
 
 import com.springuni.hermes.link.model.LinkSet;
+import com.springuni.hermes.link.model.LinkSetId;
+import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.utm.model.UtmTemplate;
+import com.springuni.hermes.utm.model.UtmTemplateId;
 import com.springuni.hermes.utm.service.UtmTemplateService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 @Service
 class LinkSetServiceImpl
-        extends AbstractLinkService<Long, LinkSet, LinkSetRepository> implements LinkSetService {
+        extends AbstractLinkService<LinkSetId, LinkSet, LinkSetRepository>
+        implements LinkSetService {
 
     private final UtmTemplateService utmTemplateService;
 
@@ -21,7 +25,7 @@ class LinkSetServiceImpl
     }
 
     @Override
-    public LinkSet addLinkSet(String longUrl, Long utmTemplateId, Long userId) {
+    public LinkSet addLinkSet(String longUrl, UtmTemplateId utmTemplateId, UserId userId) {
         Assert.hasText(longUrl, "longUrl must contain text");
         Assert.notNull(userId, "userId cannot be null");
 

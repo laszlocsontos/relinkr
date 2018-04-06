@@ -4,6 +4,7 @@ import static javax.persistence.DiscriminatorType.CHAR;
 import static javax.persistence.InheritanceType.SINGLE_TABLE;
 
 import com.springuni.hermes.core.util.IdentityGenerator;
+import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.utm.model.UtmParameters;
 import java.net.URI;
 import java.util.Optional;
@@ -20,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @Inheritance(strategy = SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = CHAR, name = "link_type")
 @DiscriminatorValue("L")
-public abstract class Link extends LinkBase<Long> {
+public abstract class Link extends LinkBase<LinkId> {
 
     static final int HASHIDS_LENGTH = 11;
     private static final String HASHIDS_SALT = "6cY$S!08HpP$pWRpEErhGp7H3307a^67";
@@ -35,16 +36,16 @@ public abstract class Link extends LinkBase<Long> {
 
     private String path;
 
-    Link(@NotNull String longUrl, @NotNull Long userId) throws InvalidUrlException {
+    Link(@NotNull String longUrl, @NotNull UserId userId) throws InvalidUrlException {
         this(longUrl, null, userId);
     }
 
     Link(@NotNull String longUrl, @Nullable UtmParameters utmParameters,
-            @NotNull Long userId) throws InvalidUrlException {
+            @NotNull UserId userId) throws InvalidUrlException {
         this(new LongUrl(longUrl, utmParameters), userId);
     }
 
-    Link(@NotNull LongUrl longUrl, @NotNull Long userId) {
+    Link(@NotNull LongUrl longUrl, @NotNull UserId userId) {
         super(userId);
         this.longUrl = longUrl;
         path = generatePath();

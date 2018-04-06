@@ -5,6 +5,7 @@ import static java.util.Collections.unmodifiableSet;
 
 import com.springuni.hermes.core.orm.AbstractEntity;
 import com.springuni.hermes.user.model.Ownable;
+import com.springuni.hermes.user.model.UserId;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.ElementCollection;
@@ -13,20 +14,20 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Assert;
 
 @Entity
-public class UtmTemplate extends AbstractEntity<Long> implements Ownable {
+public class UtmTemplate extends AbstractEntity<UtmTemplateId> implements Ownable {
 
     private String name;
 
-    private Long userId;
+    private UserId userId;
 
     @ElementCollection
     private Set<UtmParameters> utmParametersSet = new LinkedHashSet<>();
 
-    public UtmTemplate(@NotNull String name, @NotNull Long userId) {
+    public UtmTemplate(@NotNull String name, @NotNull UserId userId) {
         this(name, userId, emptySet());
     }
 
-    public UtmTemplate(@NotNull String name, @NotNull Long userId,
+    public UtmTemplate(@NotNull String name, @NotNull UserId userId,
             @NotNull Set<UtmParameters> utmParametersSet) {
         Assert.hasText(name, "name cannot be null");
         Assert.notNull(userId, "userId cannot be null");
@@ -53,11 +54,11 @@ public class UtmTemplate extends AbstractEntity<Long> implements Ownable {
     }
 
     @Override
-    public Long getUserId() {
+    public UserId getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UserId userId) {
         this.userId = userId;
     }
 

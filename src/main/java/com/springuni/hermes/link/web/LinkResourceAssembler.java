@@ -4,6 +4,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import com.springuni.hermes.link.model.Link;
+import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.link.model.LinkStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.mvc.IdentifiableResourceAssemblerSupport;
@@ -36,7 +37,7 @@ public class LinkResourceAssembler
         return new LinkResource(link);
     }
 
-    private void addUserLinkStatus(LinkResource linkResource, Long linkId, LinkStatus linkStatus) {
+    private void addUserLinkStatus(LinkResource linkResource, LinkId linkId, LinkStatus linkStatus) {
         linkResource.add(
                 linkTo(methodOn(LinkResourceController.class).updateLinkStatus(linkId, linkStatus))
                         .withRel("userLinkStatuses"));

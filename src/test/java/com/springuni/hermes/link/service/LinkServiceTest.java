@@ -16,6 +16,7 @@ import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.core.model.EntityNotFoundException;
 import com.springuni.hermes.link.model.EmbeddedLink;
 import com.springuni.hermes.link.model.Link;
+import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.link.model.StandaloneLink;
 import com.springuni.hermes.link.model.UnsupportedLinkOperationException;
 import java.net.URI;
@@ -33,7 +34,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LinkServiceTest extends
-        AbstractLinkServiceTest<Long, Link, LinkRepository<Link>, LinkService> {
+        AbstractLinkServiceTest<LinkId, Link, LinkRepository<Link>, LinkService> {
 
     @Mock
     private LinkRepository<Link> linkRepository;
@@ -53,7 +54,7 @@ public class LinkServiceTest extends
     }
 
     @Override
-    protected Long createLinkId() {
+    protected LinkId createLinkId() {
         return standaloneLink.getId();
     }
 

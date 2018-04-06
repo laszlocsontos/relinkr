@@ -6,6 +6,7 @@ import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.EnumType.STRING;
 
 import com.springuni.hermes.user.model.Ownable;
+import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.utm.model.UtmParameters;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Entity
 @DiscriminatorValue("S")
-public class StandaloneLink extends Link implements Ownable {
+public class StandaloneLink extends Link {
 
     @Enumerated(STRING)
     private LinkStatus linkStatus = PENDING;
@@ -26,13 +27,13 @@ public class StandaloneLink extends Link implements Ownable {
     @ElementCollection
     private Set<Tag> tags = new LinkedHashSet<>();
 
-    public StandaloneLink(@NotNull String longUrl, @NotNull Long userId)
+    public StandaloneLink(@NotNull String longUrl, @NotNull UserId userId)
             throws InvalidUrlException {
         super(longUrl, userId);
     }
 
     public StandaloneLink(@NotNull String longUrl, @Nullable UtmParameters utmParameters,
-            @NotNull Long userId)
+            @NotNull UserId userId)
             throws InvalidUrlException {
         super(longUrl, utmParameters, userId);
     }
@@ -41,7 +42,7 @@ public class StandaloneLink extends Link implements Ownable {
         super();
     }
 
-    StandaloneLink(@NotNull LongUrl longUrl, @NotNull Long userId) {
+    StandaloneLink(@NotNull LongUrl longUrl, @NotNull UserId userId) {
         super(longUrl, userId);
     }
 

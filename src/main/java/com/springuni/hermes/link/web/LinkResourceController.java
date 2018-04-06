@@ -8,8 +8,10 @@ import static org.springframework.http.ResponseEntity.ok;
 import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.link.model.InvalidLinkStatusException;
 import com.springuni.hermes.link.model.Link;
+import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.link.model.LinkStatus;
 import com.springuni.hermes.link.service.LinkService;
+import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.utm.model.UtmParameters;
 import java.util.EnumSet;
 import java.util.Optional;
@@ -75,7 +77,7 @@ public class LinkResourceController {
     }
 
     @GetMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
-    HttpEntity<LinkResource> getLink(@PathVariable long linkId) throws ApplicationException {
+    HttpEntity<LinkResource> getLink(@PathVariable LinkId linkId) throws ApplicationException {
         Link link = linkService.getLink(linkId);
         return ok(linkResourceAssembler.toResource(link));
     }
@@ -87,7 +89,7 @@ public class LinkResourceController {
         Link link = linkService.addLink(
                 linkResource.getLongUrl(),
                 linkResource.getUtmParameters().orElse(null),
-                1L // TODO
+                UserId.of(1L) // TODO
         );
 
         return ok(linkResourceAssembler.toResource(link));
@@ -95,7 +97,7 @@ public class LinkResourceController {
 
     @PutMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
     HttpEntity<LinkResource> replaceLink(
-            @PathVariable long linkId, @Validated @RequestBody LinkResource linkResource)
+            @PathVariable LinkId linkId, @Validated @RequestBody LinkResource linkResource)
             throws ApplicationException {
 
         String longUrl = linkResource.getLongUrl();
@@ -108,7 +110,7 @@ public class LinkResourceController {
 
     @PatchMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
     HttpEntity<LinkResource> updateLink(
-            @PathVariable long linkId,
+            @PathVariable LinkId linkId,
             @Validated @RequestBody LinkResource linkResource)
             throws ApplicationException {
 
@@ -131,12 +133,13 @@ public class LinkResourceController {
     HttpEntity<PagedResources<LinkResource>> listLinks(
             @RequestParam(required = false) Long userId, Pageable pageable) {
 
-        Page<Link> linkPage = linkService.listLinks(1L, pageable);
+        // TOOD: work against the actual userId
+        Page<Link> linkPage = linkService.listLinks(UserId.of(1L), pageable);
         return ok(pagedResourcesAssembler.toResource(linkPage, linkResourceAssembler));
     }
 
     @PutMapping(path = "/{linkId}/linkStatuses/{linkStatus}")
-    HttpEntity updateLinkStatus(@PathVariable long linkId, @PathVariable LinkStatus linkStatus)
+    HttpEntity updateLinkStatus(@PathVariable LinkId linkId, @PathVariable LinkStatus linkStatus)
             throws ApplicationException {
 
         switch (linkStatus) {
@@ -156,7 +159,7 @@ public class LinkResourceController {
     }
 
     @PostMapping(path = "/{linkId}/tags/{tagName}")
-    HttpEntity addTag(@PathVariable long linkId, @PathVariable String tagName)
+    HttpEntity addTag(@PathVariable LinkId linkId, @PathVariable String tagName)
             throws ApplicationException {
 
         linkService.addTag(linkId, tagName);
@@ -165,7 +168,7 @@ public class LinkResourceController {
     }
 
     @DeleteMapping(path = "/{linkId}/tags/{tagName}")
-    HttpEntity removeTag(@PathVariable long linkId, @PathVariable String tagName)
+    HttpEntity removeTag(@PathVariable LinkId linkId, @PathVariable String tagName)
             throws ApplicationException {
         linkService.removeTag(linkId, tagName);
 

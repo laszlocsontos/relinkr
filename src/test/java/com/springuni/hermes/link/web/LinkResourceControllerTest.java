@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.link.model.StandaloneLink;
 import com.springuni.hermes.link.service.LinkService;
 import com.springuni.hermes.link.web.LinkResourceControllerTest.TestConfig;
@@ -91,7 +92,7 @@ public class LinkResourceControllerTest {
                 linkService.addLink(
                         linkResource.getLongUrl(),
                         linkResource.getUtmParameters().orElse(null),
-                        1L
+                        USER_ID
                 )
         ).willReturn(standaloneLink);
 
@@ -110,7 +111,7 @@ public class LinkResourceControllerTest {
         UtmParameters utmParameters = standaloneLink.getUtmParameters().get();
         LinkResource linkResource = new LinkResource(longUrl, utmParameters);
 
-        long linkId = standaloneLink.getId();
+        LinkId linkId = standaloneLink.getId();
 
         given(
                 linkService.updateLongUrl(
@@ -136,7 +137,7 @@ public class LinkResourceControllerTest {
         UtmParameters utmParameters = standaloneLink.getUtmParameters().get();
         LinkResource linkResource = new LinkResource(null, utmParameters);
 
-        long linkId = standaloneLink.getId();
+        LinkId linkId = standaloneLink.getId();
 
         ResultActions resultActions = mockMvc.perform(
                 put("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
@@ -154,7 +155,7 @@ public class LinkResourceControllerTest {
         String longUrl = standaloneLink.getLongUrl().toString();
         LinkResource linkResource = new LinkResource(longUrl);
 
-        long linkId = standaloneLink.getId();
+        LinkId linkId = standaloneLink.getId();
 
         given(
                 linkService.updateLongUrl(
@@ -179,7 +180,7 @@ public class LinkResourceControllerTest {
         UtmParameters utmParameters = standaloneLink.getUtmParameters().orElse(null);
         LinkResource linkResource = new LinkResource(utmParameters);
 
-        long linkId = standaloneLink.getId();
+        LinkId linkId = standaloneLink.getId();
 
         given(
                 linkService.updateUtmParameters(
@@ -203,7 +204,7 @@ public class LinkResourceControllerTest {
     public void updateLink_withoutParameters() throws Exception {
         LinkResource linkResource = new LinkResource();
 
-        long linkId = standaloneLink.getId();
+        LinkId linkId = standaloneLink.getId();
 
         ResultActions resultActions = mockMvc.perform(
                 patch("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)

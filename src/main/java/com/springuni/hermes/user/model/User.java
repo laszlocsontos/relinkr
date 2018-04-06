@@ -16,7 +16,7 @@ import org.springframework.util.CollectionUtils;
 
 @Entity
 @Table(name = "user_")
-public class User extends AbstractEntity<Long> {
+public class User extends AbstractEntity<UserId> {
 
     private EmailAddress emailAddress;
     private String encryptedPassword;

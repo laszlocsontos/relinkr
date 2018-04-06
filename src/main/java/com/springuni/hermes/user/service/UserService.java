@@ -3,26 +3,27 @@ package com.springuni.hermes.user.service;
 import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.Role;
 import com.springuni.hermes.user.model.User;
+import com.springuni.hermes.user.model.UserId;
 import java.util.Optional;
 
 public interface UserService {
 
-    Optional<User> findUser(long userId);
+    Optional<User> findUser(UserId userId);
 
     Optional<User> findUser(EmailAddress emailAddress);
 
     User addUser(String emailAddress, CharSequence rawPassword, String name, String twitterHandle);
 
-    void deleteUser(long userId);
+    void deleteUser(UserId userId);
 
-    void confirmUser(long userId);
+    void confirmUser(UserId userId);
 
-    void lockUser(long userId);
+    void lockUser(UserId userId);
 
-    void unlockUser(long userId);
+    void unlockUser(UserId userId);
 
-    void grantRole(long userId, Role role);
+    void grantRole(UserId userId, Role role);
 
-    void revokeRole(long userId, Role role);
+    void revokeRole(UserId userId, Role role);
 
 }

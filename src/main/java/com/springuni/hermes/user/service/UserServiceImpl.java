@@ -3,6 +3,7 @@ package com.springuni.hermes.user.service;
 import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.Role;
 import com.springuni.hermes.user.model.User;
+import com.springuni.hermes.user.model.UserId;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public Optional<User> findUser(long userId) {
+    public Optional<User> findUser(UserId userId) {
         // TODO
         return Optional.empty();
     }
@@ -32,32 +33,32 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(long userId) {
+    public void deleteUser(UserId userId) {
 
     }
 
     @Override
-    public void confirmUser(long userId) {
+    public void confirmUser(UserId userId) {
 
     }
 
     @Override
-    public void lockUser(long userId) {
+    public void lockUser(UserId userId) {
 
     }
 
     @Override
-    public void unlockUser(long userId) {
+    public void unlockUser(UserId userId) {
 
     }
 
     @Override
-    public void grantRole(long userId, Role role) {
+    public void grantRole(UserId userId, Role role) {
 
     }
 
     @Override
-    public void revokeRole(long userId, Role role) {
+    public void revokeRole(UserId userId, Role role) {
 
     }
 

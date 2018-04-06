@@ -10,6 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 
 import com.springuni.hermes.link.model.LinkSet;
+import com.springuni.hermes.link.model.LinkSetId;
 import com.springuni.hermes.utm.model.UtmTemplate;
 import com.springuni.hermes.utm.service.UtmTemplateService;
 import java.net.URI;
@@ -24,7 +25,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LinkSetServiceTest extends
-        AbstractLinkServiceTest<Long, LinkSet, LinkSetRepository, LinkSetService> {
+        AbstractLinkServiceTest<LinkSetId, LinkSet, LinkSetRepository, LinkSetService> {
 
     @Mock
     private LinkSetRepository linkSetRepository;
@@ -45,7 +46,7 @@ public class LinkSetServiceTest extends
     }
 
     @Override
-    protected Long createLinkId() {
+    protected LinkSetId createLinkId() {
         return linkSet.getId();
     }
 

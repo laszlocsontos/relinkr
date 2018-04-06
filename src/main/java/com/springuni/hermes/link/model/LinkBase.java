@@ -7,8 +7,9 @@ import static com.springuni.hermes.link.model.LinkStatus.PENDING;
 import static java.util.Collections.emptySet;
 
 import com.springuni.hermes.core.orm.AbstractEntity;
+import com.springuni.hermes.core.orm.AbstractId;
 import com.springuni.hermes.user.model.Ownable;
-import java.io.Serializable;
+import com.springuni.hermes.user.model.UserId;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Set;
@@ -18,12 +19,12 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Assert;
 
 @MappedSuperclass
-public abstract class LinkBase<PK extends Serializable>
-        extends AbstractEntity<PK> implements Ownable {
+public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
+        extends AbstractEntity<ID> implements Ownable {
 
-    private Long userId;
+    private UserId userId;
 
-    LinkBase(@NotNull Long userId) {
+    LinkBase(@NotNull UserId userId) {
         Assert.notNull(userId, "userId cannot be null");
         this.userId = userId;
     }
@@ -35,7 +36,7 @@ public abstract class LinkBase<PK extends Serializable>
     }
 
     @Override
-    public Long getUserId() {
+    public UserId getUserId() {
         return userId;
     }
 

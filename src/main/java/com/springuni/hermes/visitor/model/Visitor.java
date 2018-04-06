@@ -4,6 +4,6 @@ import com.springuni.hermes.core.orm.AbstractEntity;
 import javax.persistence.Entity;
 
 @Entity
-public class Visitor extends AbstractEntity<Long> {
+public class Visitor extends AbstractEntity<VisitorId> {
 
 }

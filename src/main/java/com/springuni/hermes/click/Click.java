@@ -5,6 +5,8 @@ import static java.time.ZoneOffset.UTC;
 import static javax.persistence.EnumType.STRING;
 
 import com.springuni.hermes.core.orm.AbstractEntity;
+import com.springuni.hermes.link.model.LinkId;
+import com.springuni.hermes.visitor.model.VisitorId;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -17,9 +19,9 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.Assert;
 
 @Entity
-public class Click extends AbstractEntity<Long> {
+public class Click extends AbstractEntity<ClickId> {
 
-    private Long visitorId;
+    private VisitorId visitorId;
 
     @Embedded
     private IpAddress visitorIp;
@@ -27,7 +29,7 @@ public class Click extends AbstractEntity<Long> {
     @Enumerated(STRING)
     private Country country;
 
-    private Long linkId;
+    private LinkId linkId;
 
     private LocalDateTime visitTimestamp;
     private LocalDate visitDate;
@@ -38,13 +40,13 @@ public class Click extends AbstractEntity<Long> {
     private int visitMonth;
 
     public Click(
-            @NotNull Long visitorId, @NotNull Long linkId, @NotNull IpAddress visitorIp) {
+            @NotNull VisitorId visitorId, @NotNull LinkId linkId, @NotNull IpAddress visitorIp) {
 
         this(visitorId, linkId, visitorIp, null);
     }
 
     public Click(
-            @NotNull Long visitorId, @NotNull Long linkId, @NotNull IpAddress visitorIp,
+            @NotNull VisitorId visitorId, @NotNull LinkId linkId, @NotNull IpAddress visitorIp,
             @Nullable LocalDateTime visitTimestamp) {
 
         Assert.notNull(visitorId, "visitorId cannot be null");
@@ -71,7 +73,7 @@ public class Click extends AbstractEntity<Long> {
         this.country = country;
     }
 
-    public Long getVisitorId() {
+    public VisitorId getVisitorId() {
         return visitorId;
     }
 
@@ -79,7 +81,7 @@ public class Click extends AbstractEntity<Long> {
         return visitorIp;
     }
 
-    public Long getLinkId() {
+    public LinkId getLinkId() {
         return linkId;
     }
 

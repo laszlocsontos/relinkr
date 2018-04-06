@@ -11,6 +11,7 @@ import static org.springframework.data.domain.Pageable.unpaged;
 
 import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.core.model.EntityNotFoundException;
+import com.springuni.hermes.core.orm.AbstractId;
 import com.springuni.hermes.core.orm.OwnableRepository;
 import com.springuni.hermes.link.model.LinkBase;
 import java.io.Serializable;
@@ -22,7 +23,7 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
-public abstract class AbstractLinkServiceTest<ID extends Serializable, L extends LinkBase<ID>, R extends OwnableRepository<L, ID>, S extends LinkBaseService<ID, L>> {
+public abstract class AbstractLinkServiceTest<ID extends AbstractId<L>, L extends LinkBase<ID>, R extends OwnableRepository<L, ID>, S extends LinkBaseService<ID, L>> {
 
     protected ID linkId;
     protected L link;
