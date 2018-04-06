@@ -15,6 +15,11 @@ public class ClickRepositoryTest extends BaseRepositoryTest<Click, Long, ClickRe
     }
 
     @Override
+    protected Long getId() {
+        return 1L;
+    }
+
+    @Override
     protected Long getNonExistentId() {
         return 0L;
     }

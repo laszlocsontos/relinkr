@@ -9,6 +9,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
@@ -24,7 +25,11 @@ public class AbstractEntity<ID extends Serializable>
         extends AbstractAggregateRoot implements Identifiable<ID>, Persistable<ID>, Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "time-based")
+    @GenericGenerator(
+            name = "time-based",
+            strategy = "com.springuni.hermes.core.orm.TimeBasedIdentifierGenerator"
+    )
     private ID id;
 
     @CreatedDate

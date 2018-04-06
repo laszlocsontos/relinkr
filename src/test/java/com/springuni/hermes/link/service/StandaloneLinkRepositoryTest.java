@@ -27,6 +27,11 @@ public class StandaloneLinkRepositoryTest extends
     }
 
     @Override
+    protected Long getId() {
+        return 1L;
+    }
+
+    @Override
     protected Long getNonExistentId() {
         return 0L;
     }

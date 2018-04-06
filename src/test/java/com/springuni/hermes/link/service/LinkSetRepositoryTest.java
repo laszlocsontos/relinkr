@@ -21,6 +21,11 @@ public class LinkSetRepositoryTest extends BaseRepositoryTest<LinkSet, Long, Lin
     }
 
     @Override
+    protected Long getId() {
+        return 1L;
+    }
+
+    @Override
     protected Long getNonExistentId() {
         return 0L;
     }

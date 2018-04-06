@@ -1,5 +1,6 @@
 package com.springuni.hermes.core;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -52,7 +53,17 @@ public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extend
     }
 
     @Test
-    public void save() {
+    public void save_withAssignedId() {
+        ID id = getId();
+        entity.setId(id);
+        saveEntity();
+        assertEquals(id, entity.getId());
+        assertFalse(entity.isNew());
+    }
+
+    @Test
+    public void save_withGeneratedId() {
+        entity.setId(null);
         saveEntity();
         assertFalse(entity.isNew());
     }
@@ -70,6 +81,8 @@ public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extend
     }
 
     protected abstract E createEntity() throws Exception;
+
+    protected abstract ID getId();
 
     protected abstract ID getNonExistentId();
 
