@@ -14,6 +14,9 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Assert;
@@ -22,6 +25,8 @@ import org.springframework.util.Assert;
 public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
         extends AbstractEntity<ID> implements Ownable {
 
+    @Embedded
+    @AttributeOverride(name = "id", column = @Column(name = "user_id"))
     private UserId userId;
 
     LinkBase(@NotNull UserId userId) {

@@ -1,5 +1,6 @@
 package com.springuni.hermes.core.orm;
 
+import com.springuni.hermes.core.convert.LongToEntityClassAwareIdConverter;
 import com.springuni.hermes.core.util.IdentityGenerator;
 import java.io.Serializable;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import org.hibernate.id.IdentifierGenerator;
 import org.hibernate.persister.entity.EntityPersister;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.type.Type;
+import org.springframework.core.convert.converter.Converter;
 
 public class TimeBasedIdentifierGenerator implements Configurable, IdentifierGenerator {
 
@@ -21,11 +23,23 @@ public class TimeBasedIdentifierGenerator implements Configurable, IdentifierGen
 
     private final IdentityGenerator IDENTITY_GENERATOR = IdentityGenerator.getInstance();
 
+    private Converter<Long, ? extends Serializable> conversionStrategy;
     private String entityName;
 
     @Override
     public void configure(Type type, Properties params, ServiceRegistry serviceRegistry)
             throws MappingException {
+
+        Class<?> idClass = type.getReturnedClass();
+        if (EntityClassAwareId.class.isAssignableFrom(idClass)) {
+            conversionStrategy = new LongToEntityClassAwareIdConverter(idClass);
+        } else if (Long.class.equals(idClass)) {
+            conversionStrategy = (it -> it);
+        } else if (long.class.equals(idClass)) {
+            conversionStrategy = Long::valueOf;
+        } else {
+            throw new MappingException("unsupported class: " + idClass.getName());
+        }
 
         entityName = Optional
                 .ofNullable(params.getProperty(ENTITY_NAME))
@@ -41,7 +55,9 @@ public class TimeBasedIdentifierGenerator implements Configurable, IdentifierGen
 
         Serializable id = entityPersister.getIdentifier(object, session);
 
-        return Optional.ofNullable(id).orElseGet(IDENTITY_GENERATOR::generate);
+        return Optional
+                .ofNullable(id)
+                .orElseGet(() -> conversionStrategy.convert(IDENTITY_GENERATOR.generate()));
     }
 
 }

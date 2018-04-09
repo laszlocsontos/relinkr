@@ -10,17 +10,20 @@ import com.springuni.hermes.visitor.model.VisitorId;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.Assert;
 
 @Entity
 public class Click extends AbstractEntity<ClickId> {
 
+    @Embedded
+    @AttributeOverride(name = "id", column = @Column(name = "visitor_id"))
     private VisitorId visitorId;
 
     @Embedded
@@ -29,6 +32,8 @@ public class Click extends AbstractEntity<ClickId> {
     @Enumerated(STRING)
     private Country country;
 
+    @Embedded
+    @AttributeOverride(name = "id", column = @Column(name = "link_id"))
     private LinkId linkId;
 
     private LocalDateTime visitTimestamp;
@@ -62,6 +67,12 @@ public class Click extends AbstractEntity<ClickId> {
         } else {
             setVisitTimestamp(now(UTC));
         }
+    }
+
+    /*
+     * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
+     */
+    Click() {
     }
 
     public Optional<Country> getCountry() {

@@ -1,16 +1,14 @@
 package com.springuni.hermes.link.model;
 
-import com.springuni.hermes.core.orm.AbstractId;
+import static lombok.AccessLevel.PROTECTED;
 
+import com.springuni.hermes.core.orm.AbstractId;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = PROTECTED)
 public class LinkId extends AbstractId<Link> {
 
-    /*
-     * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
-     */
-    LinkId() {
-    }
-
-    private LinkId(long id) {
+    public LinkId(long id) {
         super(id);
     }
 

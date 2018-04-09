@@ -3,7 +3,7 @@ package com.springuni.hermes.link.service;
 import static com.springuni.hermes.Mocks.USER_ID;
 import static com.springuni.hermes.Mocks.createLinkSet;
 import static com.springuni.hermes.Mocks.createStandaloneLink;
-import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -47,7 +47,7 @@ public class LinkRepositoryTest {
     @Test
     public void findByUserId() {
         List<Link> links = linkRepository.findByUserId(USER_ID);
-        assertThat(links, contains(embeddedLink, standaloneLink));
+        assertThat(links, containsInAnyOrder(embeddedLink, standaloneLink));
     }
 
     @Test

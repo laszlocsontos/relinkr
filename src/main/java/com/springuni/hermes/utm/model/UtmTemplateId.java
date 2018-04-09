@@ -1,16 +1,14 @@
 package com.springuni.hermes.utm.model;
 
-import com.springuni.hermes.core.orm.AbstractId;
+import static lombok.AccessLevel.PROTECTED;
 
+import com.springuni.hermes.core.orm.AbstractId;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = PROTECTED)
 public class UtmTemplateId extends AbstractId<UtmTemplate> {
 
-    /*
-     * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
-     */
-    UtmTemplateId() {
-    }
-
-    private UtmTemplateId(long id) {
+    public UtmTemplateId(long id) {
         super(id);
     }
 

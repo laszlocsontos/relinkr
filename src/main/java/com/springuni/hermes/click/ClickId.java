@@ -1,16 +1,16 @@
 package com.springuni.hermes.click;
 
-import com.springuni.hermes.core.orm.AbstractId;
+import static lombok.AccessLevel.PACKAGE;
 
+import com.springuni.hermes.core.orm.AbstractId;
+import javax.persistence.Embeddable;
+import lombok.NoArgsConstructor;
+
+@Embeddable
+@NoArgsConstructor(access = PACKAGE)
 public class ClickId extends AbstractId<Click> {
 
-    /*
-     * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
-     */
-    ClickId() {
-    }
-
-    private ClickId(long id) {
+    public ClickId(long id) {
         super(id);
     }
 

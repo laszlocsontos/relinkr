@@ -1,16 +1,14 @@
 package com.springuni.hermes.user.model;
 
-import com.springuni.hermes.core.orm.AbstractId;
+import static lombok.AccessLevel.PROTECTED;
 
+import com.springuni.hermes.core.orm.AbstractId;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = PROTECTED)
 public class UserId extends AbstractId<User> {
 
-    /*
-     * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
-     */
-    UserId() {
-    }
-
-    private UserId(long id) {
+    public UserId(long id) {
         super(id);
     }
 

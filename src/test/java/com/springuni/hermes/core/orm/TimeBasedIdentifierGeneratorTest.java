@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
+import com.springuni.hermes.click.ClickId;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.Properties;
@@ -13,6 +14,7 @@ import org.hibernate.MappingException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
 import org.hibernate.persister.entity.EntityPersister;
+import org.hibernate.type.Type;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +34,9 @@ public class TimeBasedIdentifierGeneratorTest {
     @Mock
     private EntityPersister entityPersister;
 
+    @Mock
+    private Type type;
+
     private TimeBasedIdentifierGenerator timeBasedIdentifierGenerator;
 
     @Before
@@ -46,6 +51,13 @@ public class TimeBasedIdentifierGeneratorTest {
         timeBasedIdentifierGenerator.generate(session, OBJECT);
 
         then(session).should().getEntityPersister(ENTITY_NAME, OBJECT);
+    }
+
+    @Test(expected = MappingException.class)
+    public void configure_withWrongIdClass() {
+        given(type.getReturnedClass()).willReturn(Object.class);
+
+        timeBasedIdentifierGenerator.configure(type, getProperties(ENTITY_NAME), null);
     }
 
     @Test(expected = MappingException.class)
@@ -73,12 +85,11 @@ public class TimeBasedIdentifierGeneratorTest {
     }
 
     private void configureWithEntityName(String entityName) {
-        Properties properties = new Properties();
+        Properties properties = getProperties(entityName);
 
-        Optional.ofNullable(entityName)
-                .ifPresent(it -> properties.put(IdentifierGenerator.ENTITY_NAME, entityName));
+        given(type.getReturnedClass()).willReturn(ClickId.class);
 
-        timeBasedIdentifierGenerator.configure(null, properties, null);
+        timeBasedIdentifierGenerator.configure(type, properties, null);
     }
 
     private void givenIdAssigned(Long id) {
@@ -89,6 +100,15 @@ public class TimeBasedIdentifierGeneratorTest {
 
     private void givenNoIdAssigned() {
         givenIdAssigned(null);
+    }
+
+    private Properties getProperties(String entityName) {
+        Properties properties = new Properties();
+
+        Optional.ofNullable(entityName)
+                .ifPresent(it -> properties.put(IdentifierGenerator.ENTITY_NAME, entityName));
+
+        return properties;
     }
 
 }

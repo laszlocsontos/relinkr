@@ -2,9 +2,9 @@ package com.springuni.hermes.core.orm;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.persistence.EmbeddedId;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 import lombok.EqualsAndHashCode;
@@ -24,7 +24,7 @@ import org.springframework.hateoas.Identifiable;
 public class AbstractEntity<ID extends AbstractId<? extends AbstractEntity<ID>>>
         extends AbstractAggregateRoot implements Identifiable<ID>, Persistable<ID>, Serializable {
 
-    @Id
+    @EmbeddedId
     @GeneratedValue(generator = "time-based")
     @GenericGenerator(
             name = "time-based",
