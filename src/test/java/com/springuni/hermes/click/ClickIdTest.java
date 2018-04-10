@@ -35,4 +35,8 @@ public class ClickIdTest {
         assertEquals(cid1.hashCode(), cid2.hashCode());
     }
 
+    public void testToString() {
+        assertEquals("1", ClickId.of(1L).toString());
+    }
+
 }
