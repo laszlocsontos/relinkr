@@ -7,7 +7,6 @@ import com.springuni.hermes.core.orm.OwnableRepository;
 import com.springuni.hermes.link.model.LinkBase;
 import com.springuni.hermes.link.model.Tag;
 import com.springuni.hermes.user.model.UserId;
-import java.io.Serializable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.Assert;

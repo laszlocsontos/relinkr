@@ -12,13 +12,13 @@ public class UtmTemplateId extends AbstractId<UtmTemplate> {
         super(id);
     }
 
+    public static UtmTemplateId of(long id) {
+        return new UtmTemplateId(id);
+    }
+
     @Override
     public Class<UtmTemplate> getEntityClass() {
         return UtmTemplate.class;
-    }
-
-    public static UtmTemplateId of(long id) {
-        return new UtmTemplateId(id);
     }
 
 }

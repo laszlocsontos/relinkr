@@ -14,13 +14,13 @@ public class ClickId extends AbstractId<Click> {
         super(id);
     }
 
+    public static ClickId of(long id) {
+        return new ClickId(id);
+    }
+
     @Override
     public Class<Click> getEntityClass() {
         return Click.class;
-    }
-
-    public static ClickId of(long id) {
-        return new ClickId(id);
     }
 
 }

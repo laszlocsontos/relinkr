@@ -12,13 +12,13 @@ public class VisitorId extends AbstractId<Visitor> {
         super(id);
     }
 
+    public static VisitorId of(long id) {
+        return new VisitorId(id);
+    }
+
     @Override
     public Class<Visitor> getEntityClass() {
         return Visitor.class;
-    }
-
-    public static VisitorId of(long id) {
-        return new VisitorId(id);
     }
 
 }

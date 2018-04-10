@@ -37,7 +37,8 @@ public class LinkResourceAssembler
         return new LinkResource(link);
     }
 
-    private void addUserLinkStatus(LinkResource linkResource, LinkId linkId, LinkStatus linkStatus) {
+    private void addUserLinkStatus(LinkResource linkResource, LinkId linkId,
+            LinkStatus linkStatus) {
         linkResource.add(
                 linkTo(methodOn(LinkResourceController.class).updateLinkStatus(linkId, linkStatus))
                         .withRel("userLinkStatuses"));

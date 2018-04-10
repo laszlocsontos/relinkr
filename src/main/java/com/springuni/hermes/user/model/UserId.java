@@ -12,13 +12,13 @@ public class UserId extends AbstractId<User> {
         super(id);
     }
 
+    public static UserId of(long id) {
+        return new UserId(id);
+    }
+
     @Override
     public Class<User> getEntityClass() {
         return User.class;
-    }
-
-    public static UserId of(long id) {
-        return new UserId(id);
     }
 
 }

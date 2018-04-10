@@ -12,13 +12,13 @@ public class LinkSetId extends AbstractId<LinkSet> {
         super(id);
     }
 
+    public static LinkSetId of(long id) {
+        return new LinkSetId(id);
+    }
+
     @Override
     public Class<LinkSet> getEntityClass() {
         return LinkSet.class;
-    }
-
-    public static LinkSetId of(long id) {
-        return new LinkSetId(id);
     }
 
 }

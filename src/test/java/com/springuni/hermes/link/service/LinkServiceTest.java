@@ -7,7 +7,6 @@ import static com.springuni.hermes.Mocks.USER_ID;
 import static com.springuni.hermes.Mocks.UTM_PARAMETERS_FULL;
 import static com.springuni.hermes.Mocks.UTM_PARAMETERS_MINIMAL;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -23,8 +22,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,7 +1,6 @@
 package com.springuni.hermes.link.service;
 
 import com.springuni.hermes.link.model.EmbeddedLink;
-import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.link.model.LinkSetId;
 import java.util.List;
 

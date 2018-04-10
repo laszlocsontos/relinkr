@@ -14,7 +14,6 @@ import com.springuni.hermes.core.model.EntityNotFoundException;
 import com.springuni.hermes.core.orm.AbstractId;
 import com.springuni.hermes.core.orm.OwnableRepository;
 import com.springuni.hermes.link.model.LinkBase;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import org.junit.Before;

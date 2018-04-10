@@ -11,7 +11,6 @@ import com.springuni.hermes.core.orm.AbstractId;
 import com.springuni.hermes.core.orm.BaseRepository;
 import com.springuni.hermes.core.orm.JpaConfig;
 import com.springuni.hermes.core.orm.UtcLocalDateTimeProvider;
-import java.io.Serializable;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;

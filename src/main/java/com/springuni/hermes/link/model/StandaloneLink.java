@@ -5,7 +5,6 @@ import static com.springuni.hermes.link.model.LinkType.STANDALONE;
 import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.EnumType.STRING;
 
-import com.springuni.hermes.user.model.Ownable;
 import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.utm.model.UtmParameters;
 import java.util.LinkedHashSet;

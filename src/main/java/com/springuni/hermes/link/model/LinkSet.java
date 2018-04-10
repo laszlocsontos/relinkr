@@ -42,7 +42,8 @@ public class LinkSet extends LinkBase<LinkSetId> {
     @ElementCollection
     private Set<Tag> tags = new LinkedHashSet<>();
 
-    public LinkSet(@NotNull String longUrl, @NotNull UtmTemplate utmTemplate, @NotNull UserId userId)
+    public LinkSet(@NotNull String longUrl, @NotNull UtmTemplate utmTemplate,
+            @NotNull UserId userId)
             throws InvalidUrlException {
 
         super(userId);
