@@ -1,6 +1,9 @@
 package com.springuni.hermes.core.web;
 
 import static java.lang.reflect.Modifier.FINAL;
+import static org.springframework.util.ReflectionUtils.findField;
+import static org.springframework.util.ReflectionUtils.makeAccessible;
+import static org.springframework.util.ReflectionUtils.setField;
 
 import com.springuni.hermes.click.ClickId;
 import com.springuni.hermes.core.convert.EntityClassAwareIdToStringConverter;
@@ -68,17 +71,14 @@ public class WebMvcConfig implements InitializingBean, WebMvcConfigurer {
     }
 
     private void setValue(Field field, Object value) {
-        field.setAccessible(true);
+        // Remove final modifier
+        Field modifiersField = findField(Field.class, "modifiers");
+        makeAccessible(modifiersField);
+        setField(modifiersField, field, field.getModifiers() & ~FINAL);
 
-        try {
-            Field modifiersField = Field.class.getDeclaredField("modifiers");
-            modifiersField.setAccessible(true);
-            modifiersField.setInt(field, field.getModifiers() & ~FINAL);
-
-            field.set(null, value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        // Set field value
+        makeAccessible(field);
+        setField(field, null, value);
     }
 
 }
