@@ -8,8 +8,13 @@ import com.springuni.hermes.user.model.Ownable;
 import com.springuni.hermes.user.model.UserId;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.persistence.AttributeOverride;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Assert;
 
@@ -18,9 +23,12 @@ public class UtmTemplate extends AbstractEntity<UtmTemplateId> implements Ownabl
 
     private String name;
 
+    @Embedded
+    @AttributeOverride(name = "id", column = @Column(name = "user_id"))
     private UserId userId;
 
     @ElementCollection
+    @CollectionTable(name = "utm_template_parameters", joinColumns = @JoinColumn(name = "utm_template_id"))
     private Set<UtmParameters> utmParametersSet = new LinkedHashSet<>();
 
     public UtmTemplate(@NotNull String name, @NotNull UserId userId) {

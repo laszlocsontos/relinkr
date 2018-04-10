@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.regex.Pattern;
 import javax.persistence.Embeddable;
+import javax.persistence.Enumerated;
 import lombok.Getter;
 import org.springframework.util.Assert;
 
@@ -21,7 +22,10 @@ public class IpAddress {
             Pattern.compile("([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4}|(\\d{1,3}\\.){3}\\d{1,3}");
     private String ipAddress;
     private BigInteger ipAddressDecimal;
+
+    @Enumerated
     private IpAddressType ipAddressType;
+
     private boolean localAddress;
     private boolean multicastAddress;
 

@@ -8,6 +8,7 @@ import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.utm.model.UtmParameters;
 import java.net.URI;
 import java.util.Optional;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
@@ -34,6 +35,7 @@ public abstract class Link extends LinkBase<LinkId> {
     @Embedded
     protected LongUrl longUrl;
 
+    @Column(name = "path_")
     private String path;
 
     Link(@NotNull String longUrl, @NotNull UserId userId) throws InvalidUrlException {

@@ -2,6 +2,7 @@ package com.springuni.hermes.core.orm;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -39,6 +40,7 @@ public class AbstractEntity<ID extends AbstractId<? extends AbstractEntity<ID>>>
     private LocalDateTime lastModifiedDate;
 
     @Version
+    @Column(name = "version_")
     private Integer version;
 
     @Override

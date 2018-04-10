@@ -3,13 +3,19 @@ package com.springuni.hermes.user.model;
 import static com.springuni.hermes.user.model.Role.ADMIN;
 import static com.springuni.hermes.user.model.Role.USER;
 import static java.util.Collections.unmodifiableSet;
+import static javax.persistence.EnumType.STRING;
 
 import com.springuni.hermes.core.orm.AbstractEntity;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -18,12 +24,17 @@ import org.springframework.util.CollectionUtils;
 @Table(name = "user_")
 public class User extends AbstractEntity<UserId> {
 
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "email_address"))
     private EmailAddress emailAddress;
+
     private String encryptedPassword;
     private String name;
     private String twitterHandle;
 
     @ElementCollection
+    @Enumerated(STRING)
+    @Column(name = "role")
     private Set<Role> roles;
 
     private boolean confirmed;
