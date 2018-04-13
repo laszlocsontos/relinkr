@@ -1,6 +1,5 @@
 package com.springuni.hermes.core.web;
 
-import static com.springuni.hermes.Mocks.USER_ID;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -24,7 +23,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RunWith(SpringRunner.class)
@@ -37,57 +35,29 @@ public class CurrentUserArgumentResolverTest {
 
     @Test
     @WithMockUser(username = "1") // USER_ID
-    public void givenCurrentUserIsPresent_withAuthenticatedUser_thenOk() throws Exception {
+    public void givenAuthenticatedUser_whenResolveUserId_thenOk() throws Exception {
         mockMvc.perform(
-                get("/getWithCurrentUser").contentType(APPLICATION_JSON))
+                get("/").contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
     @Test
     @WithMockUser(username = "a") // USER_ID
-    public void givenCurrentUserIsPresent_withNonNumericUserId_thenError() throws Exception {
+    public void givenNonNumericUserId_whenResolveUserId_thenError() throws Exception {
         mockMvc.perform(
-                get("/getWithCurrentUser").contentType(APPLICATION_JSON))
+                get("/").contentType(APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())
                 .andDo(print());
     }
 
     @Test
-    public void givenCurrentUserIsPresent_withoutAuthenticatedUser_thenNoContent()
+    public void givenNoAuthenticatedUser_whenResolveUserId_thenNoContent()
             throws Exception {
 
         mockMvc.perform(
-                get("/getWithCurrentUser").contentType(APPLICATION_JSON))
+                get("/").contentType(APPLICATION_JSON))
                 .andExpect(status().isNoContent())
-                .andDo(print());
-    }
-
-    @Test
-    @WithMockUser(username = "1") // USER_ID
-    public void givenPathVariableIsPresent_withAuthenticatedUser_thenOk() throws Exception {
-        mockMvc.perform(
-                get("/getWithPathVariable/{userId}", USER_ID).contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(print());
-    }
-
-    @Test
-    @WithMockUser(username = "a") // USER_ID
-    public void givenPathVariableIsPresent_withNonNumericUserId_thenOk() throws Exception {
-        mockMvc.perform(
-                get("/getWithPathVariable/{userId}", USER_ID).contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(print());
-    }
-
-    @Test
-    public void givenPathVariableIsPresent_withoutAuthenticatedUser_thenOk()
-            throws Exception {
-
-        mockMvc.perform(
-                get("/getWithPathVariable/{userId}", USER_ID).contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
                 .andDo(print());
     }
 
@@ -100,17 +70,8 @@ public class CurrentUserArgumentResolverTest {
     @RestController
     public static class TestController {
 
-        @GetMapping("/getWithCurrentUser")
-        public HttpEntity getWithCurrentUser(@CurrentUser UserId userId) {
-            return handleRequest(userId);
-        }
-
-        @GetMapping("/getWithPathVariable/{userId}")
-        public HttpEntity getWithPathVariable(@PathVariable UserId userId) {
-            return handleRequest(userId);
-        }
-
-        private HttpEntity handleRequest(UserId userId) {
+        @GetMapping("/")
+        public HttpEntity get(@CurrentUser UserId userId) {
             return Optional.ofNullable(userId)
                     .map(UserId::getId)
                     .map(ResponseEntity::ok)
