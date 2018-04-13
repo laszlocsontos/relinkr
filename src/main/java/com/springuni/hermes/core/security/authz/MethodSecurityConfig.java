@@ -2,10 +2,6 @@ package com.springuni.hermes.core.security.authz;
 
 import static java.util.Collections.singletonList;
 
-import com.springuni.hermes.core.security.authz.AuthorizeOwnerVerifier;
-import com.springuni.hermes.core.security.authz.AuthorizeOwnerVerifierImpl;
-import com.springuni.hermes.core.security.authz.AuthorizeOwnerVoter;
-import com.springuni.hermes.core.security.authz.AuthorizeRolesOrOwnerSecurityMetadataSource;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
