@@ -13,12 +13,14 @@ import com.springuni.hermes.link.model.LinkSetId;
 import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.visitor.model.VisitorId;
 import java.lang.reflect.Field;
+import java.util.List;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -56,6 +58,11 @@ public class WebMvcConfig implements InitializingBean, WebMvcConfigurer {
         registry.addConverter(String.class, VisitorId.class,
                 new StringToEntityClassAwareIdConverter<>(VisitorId.class));
         registry.addConverter(new EntityClassAwareIdToStringConverter<VisitorId>());
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(new CurrentUserArgumentResolver());
     }
 
     @Override
