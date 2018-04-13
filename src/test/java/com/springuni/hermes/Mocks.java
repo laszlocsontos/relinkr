@@ -6,7 +6,7 @@ import static java.util.Collections.unmodifiableSet;
 import com.springuni.hermes.click.ClickId;
 import com.springuni.hermes.click.IpAddress;
 import com.springuni.hermes.core.model.ApplicationException;
-import com.springuni.hermes.core.security.signin.SignInRequest;
+import com.springuni.hermes.core.security.authn.signin.SignInRequest;
 import com.springuni.hermes.link.model.EmbeddedLink;
 import com.springuni.hermes.link.model.InvalidUrlException;
 import com.springuni.hermes.link.model.LinkId;
