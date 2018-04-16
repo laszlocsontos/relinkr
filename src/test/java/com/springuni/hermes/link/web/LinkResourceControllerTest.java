@@ -42,6 +42,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -82,6 +83,7 @@ public class LinkResourceControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "1") // USER_ID
     public void addLink() throws Exception {
         LinkResource linkResource = new LinkResource(
                 standaloneLink.getLongUrl().toString(),
@@ -219,6 +221,7 @@ public class LinkResourceControllerTest {
 
 
     @Test
+    @WithMockUser(username = "1") // USER_ID
     public void listLinks() throws Exception {
         given(linkService.listLinks(USER_ID, PAGEABLE))
                 .willReturn(new PageImpl<>(asList(standaloneLink), PAGEABLE, 1));

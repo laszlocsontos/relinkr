@@ -1,8 +1,5 @@
 package com.springuni.hermes.core.security.authn;
 
-import static com.springuni.hermes.core.security.authn.signin.SignInFilter.SIGNIN_HTTP_METHOD;
-import static com.springuni.hermes.core.security.authn.signin.SignInFilter.SIGNIN_PROCESSES_URL;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationEntryPoint;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationFilter;

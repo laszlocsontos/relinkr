@@ -6,6 +6,7 @@ import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
 import com.springuni.hermes.core.model.ApplicationException;
+import com.springuni.hermes.core.security.authn.CurrentUser;
 import com.springuni.hermes.link.model.InvalidLinkStatusException;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;
@@ -35,7 +36,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
 
@@ -83,13 +83,14 @@ public class LinkResourceController {
     }
 
     @PostMapping(produces = HAL_JSON_VALUE)
-    HttpEntity<LinkResource> addLink(@Validated @RequestBody LinkResource linkResource)
+    HttpEntity<LinkResource> addLink(@CurrentUser UserId userId,
+            @Validated @RequestBody LinkResource linkResource)
             throws ApplicationException {
 
         Link link = linkService.addLink(
                 linkResource.getLongUrl(),
                 linkResource.getUtmParameters().orElse(null),
-                UserId.of(1L) // TODO
+                userId
         );
 
         return ok(linkResourceAssembler.toResource(link));
@@ -131,10 +132,9 @@ public class LinkResourceController {
 
     @GetMapping(produces = HAL_JSON_VALUE)
     HttpEntity<PagedResources<LinkResource>> listLinks(
-            @RequestParam(required = false) Long userId, Pageable pageable) {
+            @CurrentUser UserId userId, Pageable pageable) {
 
-        // TOOD: work against the actual userId
-        Page<Link> linkPage = linkService.listLinks(UserId.of(1L), pageable);
+        Page<Link> linkPage = linkService.listLinks(userId, pageable);
         return ok(pagedResourcesAssembler.toResource(linkPage, linkResourceAssembler));
     }
 

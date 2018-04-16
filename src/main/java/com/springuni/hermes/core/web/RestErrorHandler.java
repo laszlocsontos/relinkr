@@ -30,6 +30,7 @@ import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.core.model.EntityAlreadyExistsException;
 import com.springuni.hermes.core.model.EntityConflictsException;
 import com.springuni.hermes.core.model.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +44,7 @@ import org.springframework.web.util.WebUtils;
 /**
  * Created by lcsontos on 5/10/17.
  */
+@Slf4j
 @RestControllerAdvice
 public class RestErrorHandler extends ResponseEntityExceptionHandler {
 
@@ -75,6 +77,7 @@ public class RestErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(final Exception ex) {
+        log.error(ex.getMessage(), ex);
         return handleExceptionInternal(ex, INTERNAL_SERVER_ERROR);
     }
 
