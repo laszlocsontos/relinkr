@@ -1,7 +1,11 @@
 package com.springuni.hermes;
 
+import static com.springuni.hermes.core.model.TimeZone.EUROPE_BUDAPEST;
+import static com.springuni.hermes.user.model.Gender.MALE;
 import static com.springuni.hermes.user.model.Role.ADMIN;
+import static com.springuni.hermes.user.model.UserProfileType.GOOGLE;
 import static java.util.Collections.unmodifiableSet;
+import static java.util.Locale.ENGLISH;
 
 import com.springuni.hermes.click.ClickId;
 import com.springuni.hermes.click.IpAddress;
@@ -18,6 +22,7 @@ import com.springuni.hermes.link.model.Tag;
 import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.User;
 import com.springuni.hermes.user.model.UserId;
+import com.springuni.hermes.user.model.UserProfile;
 import com.springuni.hermes.utm.model.UtmParameters;
 import com.springuni.hermes.utm.model.UtmTemplate;
 import com.springuni.hermes.utm.model.UtmTemplateId;
@@ -182,10 +187,17 @@ public class Mocks {
     }
 
     public static User createUser() {
-        User user = new User(EMAIL_ADDRESS, ENCRYPTED_PASSWORD, "Test", "test");
+        User user = new User(EMAIL_ADDRESS, ENCRYPTED_PASSWORD);
         user.setId(USER_ID);
         user.grantRole(ADMIN);
         return user;
+    }
+
+    public static UserProfile createUserProfile() {
+        return UserProfile.of(
+                GOOGLE, "Laszlo Csontos", "Laszlo", null,
+                "Csontos", null, null, MALE, null
+        );
     }
 
     public static SignInRequest createSignInRequest() {

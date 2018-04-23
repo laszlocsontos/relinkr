@@ -90,9 +90,9 @@ CREATE TABLE standalone_link_tags (
 CREATE TABLE user_ (
   id bigint NOT NULL,
   email_address varchar(255) NULL,
-  name varchar(255) NULL,
-  twitter_handle varchar(255) NULL,
   encrypted_password varchar(255) NULL,
+  time_zone VARCHAR(30),
+  locale VARCHAR(5),
   confirmed boolean NOT NULL,
   locked boolean NOT NULL,
   created_date timestamp NULL,
@@ -101,9 +101,25 @@ CREATE TABLE user_ (
   CONSTRAINT user_pk PRIMARY KEY (id)
 );
 
+CREATE TABLE user_profile (
+  user_id bigint NOT NULL,
+  user_profile_type VARCHAR(10) NOT NULL,
+  full_name VARCHAR(150),
+  given_name VARCHAR(50),
+  middle_name VARCHAR(50),
+  family_name VARCHAR(50),
+  profile_url VARCHAR(255),
+  picture_url VARCHAR(255),
+  gender VARCHAR(10),
+  birth_date DATE,
+  CONSTRAINT user_profile_pk PRIMARY KEY (user_id, user_profile_type),
+  CONSTRAINT user_profile_user_id_fk FOREIGN KEY (user_id) REFERENCES user_(id)
+);
+
 CREATE TABLE user_roles (
   user_id bigint NOT NULL,
   role VARCHAR(255) NOT NULL,
+  CONSTRAINT user_roles_pk PRIMARY KEY (user_id, role),
   CONSTRAINT user_roles_user_id_fk FOREIGN KEY (user_id) REFERENCES user_(id)
 );
 

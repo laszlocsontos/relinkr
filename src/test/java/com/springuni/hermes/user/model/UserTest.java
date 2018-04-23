@@ -1,6 +1,7 @@
 package com.springuni.hermes.user.model;
 
 import static com.springuni.hermes.Mocks.createUser;
+import static com.springuni.hermes.Mocks.createUserProfile;
 import static com.springuni.hermes.user.model.Role.ADMIN;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -20,38 +21,36 @@ public class UserTest {
     }
 
     @Test
-    public void lock() {
+    public void givenUnlockedUser_whenLock_thenLocked() {
         user.lock();
         assertTrue(user.isLocked());
     }
 
     @Test
-    public void unlock() {
+    public void givenLockedUser_withUnlock_thenUnlocked() {
         user.lock();
         user.unlock();
         assertFalse(user.isLocked());
     }
 
     @Test
-    public void grantRole() {
+    public void givenNormal_whenGrantRole_thenGranted() {
         user.grantRole(ADMIN);
         assertTrue(user.isAdmin());
     }
 
     @Test
-    public void revokeRole() {
+    public void givenAdminRole_whenRevokeRole_thenRevoked() {
         user.grantRole(ADMIN);
         user.revokeRole(ADMIN);
         assertFalse(user.isAdmin());
     }
 
     @Test
-    public void update() {
-        EmailAddress emailAddress = new EmailAddress("test2@springuni.com");
-        user.update(emailAddress, "Test2", "test2");
-        assertEquals("test2@springuni.com", user.getEmailAddress().get().getValue());
-        assertEquals("Test2", user.getName().get());
-        assertEquals("test2", user.getTwitterHandle().get());
+    public void givenNoUserProfiles_whenAddUserProfile_thenProfileAdded() {
+        UserProfile userProfile = createUserProfile();
+        user.addUserProfile(userProfile);
+        assertEquals(userProfile, user.getUserProfile(userProfile.getUserProfileType()).get());
     }
 
 }

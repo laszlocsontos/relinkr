@@ -73,7 +73,8 @@ public class UriUserType implements UserType, StringRepresentableType<URI> {
             PreparedStatement st, Object value, int index,
             SharedSessionContractImplementor session) throws HibernateException, SQLException {
 
-        STRING.nullSafeSet(st, value.toString(), index, session);
+        String stringValue = Optional.ofNullable(value).map(Object::toString).orElse(null);
+        STRING.nullSafeSet(st, stringValue, index, session);
     }
 
     @Override

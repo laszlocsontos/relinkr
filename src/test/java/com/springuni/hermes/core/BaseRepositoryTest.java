@@ -12,6 +12,8 @@ import com.springuni.hermes.core.orm.BaseRepository;
 import com.springuni.hermes.core.orm.JpaConfig;
 import com.springuni.hermes.core.orm.UtcLocalDateTimeProvider;
 import java.util.Optional;
+import javax.persistence.EntityManager;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +23,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.auditing.DateTimeProvider;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @DataJpaTest
@@ -33,6 +36,9 @@ public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extend
 
     protected E entity;
 
+    @Autowired
+    private EntityManager entityManager;
+
     @Before
     public void setUp() throws Exception {
         entity = createEntity();
@@ -40,20 +46,20 @@ public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extend
     }
 
     @Test
-    public void findById() {
+    public void givenSavedEntity_whenFindById_thenFound() {
         saveEntity();
         Optional<E> entityOptional = repository.findById(entity.getId());
         assertTrue(entityOptional.isPresent());
     }
 
     @Test
-    public void findById_withNonExistent() {
+    public void givenNonExistentId_whenFindById_thenNotFound() {
         Optional<E> entityOptional = repository.findById(getNonExistentId());
         assertFalse(entityOptional.isPresent());
     }
 
     @Test
-    public void save_withAssignedId() {
+    public void givenEntityWithAssignedId_whenSave_thenAssignedIdUsed() {
         ID id = getId();
         entity.setId(id);
         saveEntity();
@@ -62,20 +68,20 @@ public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extend
     }
 
     @Test
-    public void save_withGeneratedId() {
+    public void givenEntityWithoutId_whenSave_thenIdGenerated() {
         entity.setId(null);
         saveEntity();
         assertFalse(entity.isNew());
     }
 
     @Test
-    public void createdDate() {
+    public void givenNewEntity_whenSave_thenCreatedDateSet() {
         saveEntity();
         assertNotNull(entity.getLastModifiedDate());
     }
 
     @Test
-    public void lastModifiedDate() {
+    public void givenNewEntity_whenSave_thenLastModifiedDateSet() {
         saveEntity();
         assertNotNull(entity.getLastModifiedDate());
     }
@@ -88,6 +94,7 @@ public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extend
 
     protected void saveEntity() {
         entity = repository.save(entity);
+        entityManager.flush();
     }
 
     @TestConfiguration

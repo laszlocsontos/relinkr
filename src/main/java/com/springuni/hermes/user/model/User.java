@@ -2,19 +2,25 @@ package com.springuni.hermes.user.model;
 
 import static com.springuni.hermes.user.model.Role.ADMIN;
 import static com.springuni.hermes.user.model.Role.USER;
+import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.EnumType.STRING;
 
 import com.springuni.hermes.core.orm.AbstractEntity;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.persistence.AttributeOverride;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.MapKeyEnumerated;
 import javax.persistence.Table;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -28,8 +34,6 @@ public class User extends AbstractEntity<UserId> {
     private EmailAddress emailAddress;
 
     private String encryptedPassword;
-    private String name;
-    private String twitterHandle;
 
     @ElementCollection
     @Enumerated(STRING)
@@ -39,19 +43,27 @@ public class User extends AbstractEntity<UserId> {
     private boolean confirmed;
     private boolean locked;
 
+    @ElementCollection
+    @CollectionTable(name = "user_profile")
+    @MapKeyColumn(name = "user_profile_type", insertable = false, updatable = false)
+    @MapKeyEnumerated(STRING)
+    private Map<UserProfileType, UserProfile> userProfiles;
+
+    @Embedded
+    private UserPreferences userPreferences;
 
     public User() {
         roles = new LinkedHashSet<>();
         roles.add(USER);
+
+        userProfiles = new LinkedHashMap<>();
+        userPreferences = new UserPreferences();
     }
 
-    public User(
-            EmailAddress emailAddress, String encryptedPassword, String name,
-            String twitterHandle) {
+    public User(EmailAddress emailAddress, String encryptedPassword) {
         this();
-        // TODO
+        this.emailAddress = emailAddress;
         this.encryptedPassword = encryptedPassword;
-        update(emailAddress, name, twitterHandle);
     }
 
     public boolean isConfirmed() {
@@ -101,22 +113,25 @@ public class User extends AbstractEntity<UserId> {
         return Optional.ofNullable(encryptedPassword);
     }
 
-    public Optional<String> getName() {
-        return Optional.ofNullable(name);
+    public void addUserProfile(UserProfile userProfile) {
+        userProfiles.put(userProfile.getUserProfileType(), userProfile);
     }
 
-    public Optional<String> getTwitterHandle() {
-        return Optional.ofNullable(twitterHandle);
+    public Optional<UserProfile> getUserProfile(UserProfileType userProfileType) {
+        return Optional.ofNullable(userProfiles.get(userProfileType));
     }
 
-    public void update(EmailAddress emailAddress, String name, String twitterHandle) {
-        Assert.notNull(emailAddress, "email cannot be null");
-        Assert.hasText(name, "eame cannot be empty");
-        Assert.hasText(twitterHandle, "twitterHandle cannot be empty");
+    public Map<UserProfileType, UserProfile> getUserProfiles() {
+        return unmodifiableMap(userProfiles);
+    }
 
-        this.emailAddress = emailAddress;
-        this.name = name;
-        this.twitterHandle = twitterHandle;
+    public UserPreferences getUserPreferences() {
+        return userPreferences;
+    }
+
+    public void setUserPreferences(UserPreferences userPreferences) {
+        Assert.notNull(userPreferences, "userPreferences cannot be null");
+        this.userPreferences = userPreferences;
     }
 
 }

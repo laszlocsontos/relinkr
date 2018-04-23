@@ -10,6 +10,4 @@ interface UserRepository extends BaseRepository<User, UserId> {
 
     Optional<User> findByEmailAddress(EmailAddress emailAddress);
 
-    Optional<User> findByTwitterHandle(String twitterHandle);
-
 }
