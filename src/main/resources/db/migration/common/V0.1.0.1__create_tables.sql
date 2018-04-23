@@ -98,7 +98,8 @@ CREATE TABLE user_ (
   created_date timestamp NULL,
   last_modified_date timestamp NULL,
   version_ integer not null,
-  CONSTRAINT user_pk PRIMARY KEY (id)
+  CONSTRAINT user_pk PRIMARY KEY (id),
+  CONSTRAINT user_uk UNIQUE (email_address)
 );
 
 CREATE TABLE user_profile (

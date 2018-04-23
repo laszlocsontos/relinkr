@@ -4,9 +4,12 @@ import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.Role;
 import com.springuni.hermes.user.model.User;
 import com.springuni.hermes.user.model.UserId;
+import com.springuni.hermes.user.model.UserProfile;
 import java.util.Optional;
 
 public interface UserService {
+
+    User ensureUser(EmailAddress emailAddress, UserProfile userProfile);
 
     Optional<User> findUser(UserId userId);
 

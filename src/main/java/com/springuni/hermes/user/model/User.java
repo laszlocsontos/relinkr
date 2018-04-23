@@ -2,6 +2,7 @@ package com.springuni.hermes.user.model;
 
 import static com.springuni.hermes.user.model.Role.ADMIN;
 import static com.springuni.hermes.user.model.Role.USER;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.EnumType.STRING;
@@ -64,6 +65,10 @@ public class User extends AbstractEntity<UserId> {
         this();
         this.emailAddress = emailAddress;
         this.encryptedPassword = encryptedPassword;
+    }
+
+    public static User of(EmailAddress emailAddress) {
+        return new User(emailAddress, null);
     }
 
     public boolean isConfirmed() {

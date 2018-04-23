@@ -4,15 +4,56 @@ import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.Role;
 import com.springuni.hermes.user.model.User;
 import com.springuni.hermes.user.model.UserId;
+import com.springuni.hermes.user.model.UserProfile;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    @Override
+    public User ensureUser(EmailAddress emailAddress, UserProfile userProfile) {
+        Optional<User> userOptional = findUser(emailAddress);
+
+        User user = null;
+
+        if (userOptional.isPresent()) {
+            user = userOptional.get();
+        } else {
+            user = User.of(emailAddress);
+
+            try {
+                user = userRepository.save(user);
+            } catch (DuplicateKeyException e) {
+                // User might have been created by another concurrent process
+                log.warn(e.getMessage(), e);
+                user = findUser(emailAddress).get();
+            }
+        }
+
+        while (true) {
+            user.addUserProfile(userProfile);
+
+            try {
+                user = userRepository.save(user);
+                break;
+            } catch (OptimisticLockingFailureException e) {
+                // User might have been altered by another concurrent process
+                log.warn(e.getMessage(), e);
+                user = findUser(emailAddress).get();
+            }
+        }
+
+        return user;
+    }
 
     @Override
     public Optional<User> findUser(UserId userId) {
