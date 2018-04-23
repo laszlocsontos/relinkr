@@ -3,10 +3,8 @@ package com.springuni.hermes.user.model;
 import static javax.persistence.EnumType.STRING;
 import static lombok.AccessLevel.PACKAGE;
 
-import com.springuni.hermes.core.model.TimeZone;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.Locale;
 import java.util.Optional;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

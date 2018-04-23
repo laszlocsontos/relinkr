@@ -1,11 +1,9 @@
 package com.springuni.hermes;
 
-import static com.springuni.hermes.core.model.TimeZone.EUROPE_BUDAPEST;
 import static com.springuni.hermes.user.model.Gender.MALE;
 import static com.springuni.hermes.user.model.Role.ADMIN;
 import static com.springuni.hermes.user.model.UserProfileType.GOOGLE;
 import static java.util.Collections.unmodifiableSet;
-import static java.util.Locale.ENGLISH;
 
 import com.springuni.hermes.click.ClickId;
 import com.springuni.hermes.click.IpAddress;

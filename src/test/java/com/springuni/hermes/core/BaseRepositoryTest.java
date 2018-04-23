@@ -13,7 +13,6 @@ import com.springuni.hermes.core.orm.JpaConfig;
 import com.springuni.hermes.core.orm.UtcLocalDateTimeProvider;
 import java.util.Optional;
 import javax.persistence.EntityManager;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +22,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.auditing.DateTimeProvider;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @DataJpaTest
