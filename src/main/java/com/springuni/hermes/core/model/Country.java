@@ -1,4 +1,4 @@
-package com.springuni.hermes.click;
+package com.springuni.hermes.core.model;
 
 import lombok.Getter;
 
@@ -9,7 +9,7 @@ import lombok.Getter;
  * Officially assigned code elements</a>
  */
 @Getter
-enum Country {
+public enum Country {
 
     AD("Andorra", "AND", 16),
     AE("United Arab Emirates", "ARE", 784),

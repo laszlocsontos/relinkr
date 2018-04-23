@@ -4,6 +4,7 @@ import static java.time.LocalDateTime.now;
 import static java.time.ZoneOffset.UTC;
 import static javax.persistence.EnumType.STRING;
 
+import com.springuni.hermes.core.model.Country;
 import com.springuni.hermes.core.orm.AbstractEntity;
 import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.visitor.model.VisitorId;
