@@ -59,14 +59,15 @@ public class UserProfileFactoryImpl implements UserProfileFactory {
         UserProfile create(Map<String, Object> userAttributes) {
             return UserProfile.of(
                     userProfileType,
-                    getString(userAttributes, fieldNames[0]), // fullName
-                    getString(userAttributes, fieldNames[1]), // givenName
-                    getString(userAttributes, fieldNames[2]), // middleName,
-                    getString(userAttributes, fieldNames[3]), // familyName,
-                    getURI(userAttributes, fieldNames[4]), // profileUrl
-                    getURI(userAttributes, fieldNames[5]), // pictureUrl
-                    getGender(userAttributes, fieldNames[6]), // gender
-                    getBirthDate(userAttributes, fieldNames[7]) // birthDate,
+                    getString(userAttributes, fieldNames[0]), // userProfileId
+                    getString(userAttributes, fieldNames[1]), // fullName
+                    getString(userAttributes, fieldNames[2]), // givenName
+                    getString(userAttributes, fieldNames[3]), // middleName,
+                    getString(userAttributes, fieldNames[4]), // familyName,
+                    getURI(userAttributes, fieldNames[5]), // profileUrl
+                    getURI(userAttributes, fieldNames[6]), // pictureUrl
+                    getGender(userAttributes, fieldNames[7]), // gender
+                    getBirthDate(userAttributes, fieldNames[8]) // birthDate,
             );
         }
 
@@ -98,7 +99,7 @@ public class UserProfileFactoryImpl implements UserProfileFactory {
     private static class GoogleUserProfileCreator extends UserProfileCreator {
 
         private static final String[] FIELD_NAMES = {
-                "name", "given_name", null, "family_name", "link", "picture", null, null
+                "id", "name", "given_name", null, "family_name", "link", "picture", null, null
         };
 
         GoogleUserProfileCreator() {
@@ -128,8 +129,8 @@ public class UserProfileFactoryImpl implements UserProfileFactory {
                 it -> it.isSupported(DAY_OF_MONTH) ? it.get(DAY_OF_MONTH) : 1;
 
         private static final String[] FIELD_NAMES = {
-                "name", "first_name", "middle_name", "last_name", "link", "profile_pic", "gender",
-                "birthday"
+                "id", "name", "first_name", "middle_name", "last_name", "link", "profile_pic",
+                "gender", "birthday"
         };
 
         FacebookUserProfileCreator() {

@@ -22,6 +22,7 @@ public class UserProfileFactoryTest {
     @Test
     public void givenGoogleUserInfo_whenCreate_thenOk() {
         Map<String, Object> userAttributes = new HashMap<>();
+        userAttributes.put("id", "12345789");
         userAttributes.put("name", "László Csontos");
         userAttributes.put("given_name", "László");
         userAttributes.put("family_name", "Csontos");
@@ -31,6 +32,7 @@ public class UserProfileFactoryTest {
 
         UserProfile userProfile = userProfileFactory.create(GOOGLE, userAttributes);
 
+        assertEquals("12345789", userProfile.getUserProfileId());
         assertEquals("László Csontos", userProfile.getFullName().get());
         assertEquals("László", userProfile.getGivenName().get());
         assertEquals("Csontos", userProfile.getFamilyName().get());
@@ -44,6 +46,7 @@ public class UserProfileFactoryTest {
     @Test
     public void givenFacebookUserInfo_whenCreate_thenOk() {
         Map<String, Object> userAttributes = new HashMap<>();
+        userAttributes.put("id", "12345789");
         userAttributes.put("name", "László Csontos");
         userAttributes.put("first_name", "László");
         userAttributes.put("last_name", "Csontos");
@@ -54,6 +57,7 @@ public class UserProfileFactoryTest {
 
         UserProfile userProfile = userProfileFactory.create(FACEBOOK, userAttributes);
 
+        assertEquals("12345789", userProfile.getUserProfileId());
         assertEquals("László Csontos", userProfile.getFullName().get());
         assertEquals("László", userProfile.getGivenName().get());
         assertEquals("Csontos", userProfile.getFamilyName().get());

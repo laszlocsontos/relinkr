@@ -12,18 +12,25 @@ import javax.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Embeddable
 @NoArgsConstructor(access = PACKAGE)
 @AllArgsConstructor(staticName = "of")
+@RequiredArgsConstructor(staticName = "of")
 @EqualsAndHashCode
 @ToString(of = {"userProfileType", "fullName"})
 public class UserProfile {
 
+    @NonNull
     @Enumerated(STRING)
     @Column(name = "user_profile_type")
     private UserProfileType userProfileType;
+
+    @NonNull
+    private String userProfileId;
 
     private String fullName;
     private String givenName;
@@ -40,6 +47,10 @@ public class UserProfile {
 
     public UserProfileType getUserProfileType() {
         return userProfileType;
+    }
+
+    public String getUserProfileId() {
+        return userProfileId;
     }
 
     public Optional<String> getFullName() {

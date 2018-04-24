@@ -194,8 +194,9 @@ public class Mocks {
 
     public static UserProfile createUserProfile() {
         return UserProfile.of(
-                GOOGLE, "Laszlo Csontos", "Laszlo", null,
-                "Csontos", null, null, MALE, null
+                GOOGLE, "123456789", "Laszlo Csontos", "Laszlo",
+                null, "Csontos", null, null, MALE,
+                null
         );
     }
 

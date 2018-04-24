@@ -105,6 +105,7 @@ CREATE TABLE user_ (
 CREATE TABLE user_profile (
   user_id bigint NOT NULL,
   user_profile_type VARCHAR(10) NOT NULL,
+  user_profile_id VARCHAR(50) NOT NULL,
   full_name VARCHAR(150),
   given_name VARCHAR(50),
   middle_name VARCHAR(50),
@@ -114,6 +115,7 @@ CREATE TABLE user_profile (
   gender VARCHAR(10),
   birth_date DATE,
   CONSTRAINT user_profile_pk PRIMARY KEY (user_id, user_profile_type),
+  CONSTRAINT user_profile_uk UNIQUE (user_profile_type, user_profile_id),
   CONSTRAINT user_profile_user_id_fk FOREIGN KEY (user_id) REFERENCES user_(id)
 );
 
