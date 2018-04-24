@@ -1,5 +1,7 @@
 package com.springuni.hermes.core.security.authn.oauth2;
 
+import static java.util.stream.Collectors.toSet;
+
 import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.Role;
 import com.springuni.hermes.user.model.User;
@@ -10,7 +12,6 @@ import com.springuni.hermes.user.service.UserService;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -19,10 +20,11 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-public class PersistentOAuth2UserService implements
-        OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+public class PersistentOAuth2UserService
+        implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     static final String USER_ID = "_user_id";
+    static final String USER_PROFILE_TYPE = "_user_profile_type";
 
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> defaultUserService;
     private final UserProfileFactory userProfileFactory;
@@ -55,10 +57,12 @@ public class PersistentOAuth2UserService implements
                 .map(Role::name)
                 .map("ROLE_"::concat)
                 .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toSet());
+                .collect(toSet());
 
         Map<String, Object> userAttributes = new HashMap<>(oAuth2User.getAttributes());
+
         userAttributes.put(USER_ID, user.getId().getId());
+        userAttributes.put(USER_PROFILE_TYPE, userProfileType);
 
         return new DefaultOAuth2User(authorities, userAttributes, USER_ID);
     }
