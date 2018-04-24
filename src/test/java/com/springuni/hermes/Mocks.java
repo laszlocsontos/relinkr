@@ -122,6 +122,7 @@ public class Mocks {
     public static final String ROOT_PATH = "/";
     public static final String TEST_SHORT_LINK_PATH = "/lAjKWlW4eJk";
     public static final String TEST_API_PATH = "/api/links/2";
+    public static final String TEST_DASHBOARD_PATH = "/pages/dashboard";
 
     static {
         try {

@@ -1,89 +1,55 @@
 package com.springuni.hermes.core.security.authn;
 
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationEntryPoint;
-import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationFilter;
-import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationProvider;
-import com.springuni.hermes.core.security.authn.jwt.JwtProperties;
-import com.springuni.hermes.core.security.authn.jwt.JwtTokenService;
-import com.springuni.hermes.core.security.authn.jwt.JwtTokenServiceImpl;
-import com.springuni.hermes.core.security.authn.signin.SignInFailureHandler;
-import com.springuni.hermes.core.security.authn.signin.SignInFilter;
-import com.springuni.hermes.core.security.authn.signin.SignInSuccessHandler;
-import com.springuni.hermes.core.util.IdentityGenerator;
-import java.util.Base64;
+import com.springuni.hermes.core.security.authn.oauth2.PersistentOAuth2UserService;
+import com.springuni.hermes.user.service.UserProfileFactory;
+import com.springuni.hermes.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.oauth2.client.endpoint.NimbusAuthorizationCodeTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.AnyRequestMatcher;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@EnableConfigurationProperties(JwtProperties.class)
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final JwtProperties jwtProperties;
     private final ObjectMapper objectMapper;
-    private final UserDetailsService userDetailsService;
+    private final UserProfileFactory userProfileFactory;
+    private final UserService userService;
 
     @Bean
-    public JwtTokenService jwtTokenService() {
-        byte[] secretKey = Base64.getDecoder().decode(jwtProperties.getSecretKey());
-        return new JwtTokenServiceImpl(secretKey, IdentityGenerator.getInstance());
+    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
+        return new NimbusAuthorizationCodeTokenResponseClient();
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtTokenService());
+    public OAuth2UserService<OAuth2UserRequest, OAuth2User> defaultOAuth2UserService() {
+        return new DefaultOAuth2UserService();
     }
 
     @Bean
-    public JwtAuthenticationProvider jwtAuthenticationProvider() {
-        return new JwtAuthenticationProvider();
-    }
-
-    @Bean
-    public JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint() {
-        return new JwtAuthenticationEntryPoint(objectMapper);
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new SignInSuccessHandler(jwtTokenService());
-    }
-
-    @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new SignInFailureHandler(objectMapper);
-    }
-
-    @Bean
-    public AbstractAuthenticationProcessingFilter signInFilter() throws Exception {
-        AbstractAuthenticationProcessingFilter signInFilter = new SignInFilter(objectMapper);
-
-        signInFilter.setAuthenticationManager(authenticationManagerBean());
-        signInFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
-        signInFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
-
-        return signInFilter;
+    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService() {
+        return new PersistentOAuth2UserService(
+                defaultOAuth2UserService(), userProfileFactory, userService
+        );
     }
 
     @Override
@@ -92,54 +58,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(jwtAuthenticationProvider());
-    }
-
-    /*
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint())
-                .and()
-                .sessionManagement().sessionCreationPolicy(STATELESS)
-                .and()
-                .authorizeRequests()
-                .regexMatchers("/").permitAll()
-                .regexMatchers(HttpMethod.valueOf(SIGNIN_HTTP_METHOD), SIGNIN_PROCESSES_URL)
-                .permitAll()
-                .regexMatchers("/[a-zA-Z0-9_-]{11}").permitAll()
-                .regexMatchers("/api/.*").hasAuthority("USER")
-                .anyRequest().denyAll()
-                .and()
-                .userDetailsService(userDetailsService)
-                .addFilterAt(signInFilter(), UsernamePasswordAuthenticationFilter.class)
-                // JwtAuthenticationFilter must precede LogoutFilter, otherwise LogoutHandler
-                // wouldn't know who logs out.
-                .addFilterBefore(jwtAuthenticationFilter(), LogoutFilter.class);
-    }
-    */
-
-    @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf().disable()
                 .oauth2Login()
+                .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient()).and()
+                .userInfoEndpoint().userService(oauth2UserService()).and()
                 .loginPage("/login/oauth2")
                 .defaultSuccessUrl("/pages/dashboard", true)
                 .and()
+                .exceptionHandling()
+                .defaultAuthenticationEntryPointFor(
+                        new HttpStatusEntryPoint(UNAUTHORIZED),
+                        new RegexRequestMatcher("/api/.*", null)
+                )
+                .defaultAuthenticationEntryPointFor(
+                        new LoginUrlAuthenticationEntryPoint("/login/oauth2"),
+                        AnyRequestMatcher.INSTANCE
+                )
+                .and()
                 .authorizeRequests()
-                // .regexMatchers("/").permitAll()
-                .regexMatchers(HttpMethod.valueOf(
-                        SignInFilter.SIGNIN_HTTP_METHOD), SignInFilter.SIGNIN_PROCESSES_URL)
-                .permitAll()
-                .regexMatchers(HttpMethod.GET, "/login/oauth2").permitAll()
-                .regexMatchers("/[a-zA-Z0-9_-]{11}").permitAll()
-                .regexMatchers("/vendor/.*").permitAll()
-                .regexMatchers("/app/.*").permitAll()
+                .regexMatchers(GET, "/").permitAll()
+                .regexMatchers(GET, "/login/oauth2").permitAll()
+                .regexMatchers(GET, "/[a-zA-Z0-9_-]{11}").permitAll()
+                .regexMatchers(GET, "/vendor/.*").permitAll()
+                .regexMatchers(GET, "/app/.*").permitAll()
+                .regexMatchers(GET, "/pages/.*").hasAuthority("ROLE_USER")
                 .regexMatchers("/api/.*").hasAuthority("ROLE_USER")
-                .regexMatchers("/pages/.*").hasAuthority("ROLE_USER")
                 .anyRequest().denyAll()
                 .and();
     }
