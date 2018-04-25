@@ -20,6 +20,9 @@ import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCo
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
+import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -38,6 +41,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
         return new NimbusAuthorizationCodeTokenResponseClient();
+    }
+
+    @Bean
+    public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
+        return new HttpSessionOAuth2AuthorizationRequestRepository();
     }
 
     @Bean
@@ -62,7 +70,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf().disable()
                 .oauth2Login()
-                .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient()).and()
+                .authorizationEndpoint()
+                .authorizationRequestRepository(authorizationRequestRepository())
+                .and()
+                .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
+                .and()
                 .userInfoEndpoint().userService(oauth2UserService()).and()
                 .loginPage("/login/oauth2")
                 .defaultSuccessUrl("/pages/dashboard", true)

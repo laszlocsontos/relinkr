@@ -4,49 +4,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.springuni.hermes.core.security.authn.WebRequestAuthorizationTest.TestConfig;
 import com.springuni.hermes.core.security.authn.WebRequestAuthorizationTest.TestController;
-import com.springuni.hermes.user.service.UserProfileFactory;
-import com.springuni.hermes.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
 @WebMvcTest(controllers = TestController.class)
-public class WebRequestAuthorizationTest {
+public class WebRequestAuthorizationTest extends AbstractWebSecurityTest {
 
     private static final String ROOT_PATH = "/";
     private static final String TEST_SHORT_LINK_PATH = "/lAjKWlW4eJk";
     private static final String TEST_API_PATH = "/api/links/2";
     private static final String TEST_DASHBOARD_PATH = "/pages/dashboard";
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private UserProfileFactory userProfileFactory;
-
-    @MockBean
-    private UserService userService;
-
-    @MockBean
-    private ClientRegistrationRepository clientRegistrationRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -110,12 +84,6 @@ public class WebRequestAuthorizationTest {
         mockMvc.perform(get(TEST_DASHBOARD_PATH))
                 .andExpect(status().isOk())
                 .andDo(print());
-    }
-
-    @TestConfiguration
-    @Import(WebSecurityConfig.class)
-    public static class TestConfig {
-
     }
 
     @RestController
