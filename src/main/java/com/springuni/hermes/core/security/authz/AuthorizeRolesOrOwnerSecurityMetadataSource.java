@@ -1,11 +1,13 @@
 package com.springuni.hermes.core.security.authz;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 import com.springuni.hermes.core.orm.EntityClassAwareId;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Optional;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -29,14 +31,16 @@ public class AuthorizeRolesOrOwnerSecurityMetadataSource
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Method method, Class<?> targetClass) {
-        Collection<ConfigAttribute> configAttributes = new LinkedList<>();
-
         AuthorizeRolesOrOwner authorizeRolesOrOwner =
                 AnnotatedElementUtils.findMergedAnnotation(method, AuthorizeRolesOrOwner.class);
 
-        Optional.ofNullable(authorizeRolesOrOwner)
-                .map(this::createRoleAttributes)
-                .ifPresent(configAttributes::addAll);
+        if (authorizeRolesOrOwner == null) {
+            return emptyList();
+        }
+
+        Collection<ConfigAttribute> configAttributes = new LinkedList<>();
+
+        configAttributes.addAll(createRoleAttributes(authorizeRolesOrOwner));
 
         if (hasEntityClassParameter(method)) {
             configAttributes.add(IS_OWNER_CONFIG_ATTRIBUTE);

@@ -45,7 +45,7 @@ public class MethodSecurityConfigTest {
         given(entityManager.find(TestOwnable.class, TEST_ID, NONE)).willReturn(TEST_OWNABLE);
 
         mockMvc.perform(
-                get("/{testId}", TEST_ID).contentType(APPLICATION_JSON))
+                get("/{testId}/with-annotation", TEST_ID).contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -56,7 +56,7 @@ public class MethodSecurityConfigTest {
         given(entityManager.find(TestOwnable.class, TEST_ID, NONE)).willReturn(TEST_OWNABLE);
 
         mockMvc.perform(
-                get("/{testId}", TEST_ID).contentType(APPLICATION_JSON))
+                get("/{testId}/with-annotation", TEST_ID).contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -67,8 +67,17 @@ public class MethodSecurityConfigTest {
         given(entityManager.find(TestOwnable.class, TEST_ID, NONE)).willReturn(TEST_OWNABLE);
 
         mockMvc.perform(
-                get("/{testId}", TEST_ID).contentType(APPLICATION_JSON))
+                get("/{testId}/with-annotation", TEST_ID).contentType(APPLICATION_JSON))
                 .andExpect(status().isForbidden())
+                .andDo(print());
+    }
+
+    @Test
+    @WithMockUser(username = "0") // USER_ID_ZERO
+    public void givenMethodSecurityIsNotEnforced_thenAccessGranted() throws Exception {
+        mockMvc.perform(
+                get("/{testId}/without-annotation", TEST_ID).contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 
