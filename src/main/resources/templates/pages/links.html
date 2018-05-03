@@ -175,12 +175,15 @@
 
               var links = _.get(response, "body._embedded.links", []);
 
-              // Initialize view state
               _.forEach(links, function (link) {
+                // Initialize view state
                 link.state = {
                   saved: false,
                   error: null
                 };
+
+                // Initialize UTM parameters when missing
+                link.utmParameters = _.defaultTo(link.utmParameters, {});
               });
 
               // Update model
