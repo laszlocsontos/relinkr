@@ -109,8 +109,8 @@ public class User extends AbstractEntity<UserId> {
         roles.remove(role);
     }
 
-    public Optional<EmailAddress> getEmailAddress() {
-        return Optional.ofNullable(emailAddress);
+    public EmailAddress getEmailAddress() {
+        return emailAddress;
     }
 
     public Optional<String> getEncryptedPassword() {

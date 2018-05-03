@@ -9,17 +9,13 @@ import java.util.Optional;
 
 public interface UserService {
 
-    User ensureUser(EmailAddress emailAddress, UserProfile userProfile);
+    User saveUser(EmailAddress emailAddress, UserProfile userProfile);
 
-    Optional<User> findUser(UserId userId);
+    User getUser(UserId userId);
 
     Optional<User> findUser(EmailAddress emailAddress);
 
-    User addUser(String emailAddress, CharSequence rawPassword, String name, String twitterHandle);
-
     void deleteUser(UserId userId);
-
-    void confirmUser(UserId userId);
 
     void lockUser(UserId userId);
 

@@ -10,4 +10,6 @@ interface UserRepository extends BaseRepository<User, UserId> {
 
     Optional<User> findByEmailAddress(EmailAddress emailAddress);
 
+    void deleteById(UserId userId);
+
 }

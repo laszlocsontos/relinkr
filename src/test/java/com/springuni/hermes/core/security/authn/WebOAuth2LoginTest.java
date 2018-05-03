@@ -113,7 +113,7 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
 
         user = createUser();
 
-        given(userService.ensureUser(any(EmailAddress.class), any(UserProfile.class)))
+        given(userService.saveUser(any(EmailAddress.class), any(UserProfile.class)))
                 .willReturn(user);
 
         userProfile = createUserProfile();
@@ -125,8 +125,8 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
     }
 
     @Test
-    public void givenSuccessfulOAuth2Login_thenUserPersisted() throws Exception {
-        then(userService).should().ensureUser(EMAIL_ADDRESS, userProfile);
+    public void givenSuccessfulOAuth2Login_thenUserSaved() throws Exception {
+        then(userService).should().saveUser(EMAIL_ADDRESS, userProfile);
     }
 
     @Test

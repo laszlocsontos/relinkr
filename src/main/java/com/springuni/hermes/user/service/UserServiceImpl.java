@@ -1,11 +1,13 @@
 package com.springuni.hermes.user.service;
 
+import com.springuni.hermes.core.model.EntityNotFoundException;
 import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.Role;
 import com.springuni.hermes.user.model.User;
 import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.user.model.UserProfile;
 import java.util.Optional;
+import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -20,25 +22,69 @@ class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public User ensureUser(EmailAddress emailAddress, UserProfile userProfile) {
-        Optional<User> userOptional = findUser(emailAddress);
+    public User saveUser(EmailAddress emailAddress, UserProfile userProfile) {
+        User user = findUser(emailAddress).orElseGet(() -> createUser(emailAddress));
+        return updateUser(user, userProfile);
+    }
 
-        User user = null;
+    @Override
+    public User getUser(UserId userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("id", userId));
+    }
 
-        if (userOptional.isPresent()) {
-            user = userOptional.get();
-        } else {
-            user = User.of(emailAddress);
+    @Override
+    public Optional<User> findUser(EmailAddress emailAddress) {
+        return userRepository.findByEmailAddress(emailAddress);
+    }
 
-            try {
-                user = userRepository.save(user);
-            } catch (DuplicateKeyException e) {
-                // User might have been created by another concurrent process
-                log.warn(e.getMessage(), e);
-                user = findUser(emailAddress).get();
-            }
+    @Override
+    public void deleteUser(UserId userId) {
+        userRepository.deleteById(userId);
+    }
+
+    @Override
+    public void lockUser(UserId userId) {
+        updateUser(userId, User::lock);
+    }
+
+    @Override
+    public void unlockUser(UserId userId) {
+        updateUser(userId, User::unlock);
+    }
+
+    @Override
+    public void grantRole(UserId userId, Role role) {
+        updateUser(userId, user -> user.grantRole(role));
+    }
+
+    @Override
+    public void revokeRole(UserId userId, Role role) {
+        updateUser(userId, user -> user.revokeRole(role));
+    }
+
+    User getUser(EmailAddress emailAddress) {
+        return userRepository.findByEmailAddress(emailAddress)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("emailAddress", emailAddress.getValue())
+                );
+    }
+
+    User createUser(EmailAddress emailAddress) {
+        User user = User.of(emailAddress);
+
+        try {
+            user = userRepository.save(user);
+        } catch (DuplicateKeyException e) {
+            // User might have been created by another concurrent process
+            log.warn(e.getMessage(), e);
+            user = getUser(emailAddress);
         }
 
+        return user;
+    }
+
+    User updateUser(User user, UserProfile userProfile) {
         while (true) {
             user.addUserProfile(userProfile);
 
@@ -48,59 +94,17 @@ class UserServiceImpl implements UserService {
             } catch (OptimisticLockingFailureException e) {
                 // User might have been altered by another concurrent process
                 log.warn(e.getMessage(), e);
-                user = findUser(emailAddress).get();
+                user = getUser(user.getId());
             }
         }
 
         return user;
     }
 
-    @Override
-    public Optional<User> findUser(UserId userId) {
-        // TODO
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<User> findUser(EmailAddress emailAddress) {
-        return Optional.empty();
-    }
-
-    @Override
-    public User addUser(
-            String emailAddress, CharSequence rawPassword, String name, String twitterHandle) {
-
-        return null;
-    }
-
-    @Override
-    public void deleteUser(UserId userId) {
-
-    }
-
-    @Override
-    public void confirmUser(UserId userId) {
-
-    }
-
-    @Override
-    public void lockUser(UserId userId) {
-
-    }
-
-    @Override
-    public void unlockUser(UserId userId) {
-
-    }
-
-    @Override
-    public void grantRole(UserId userId, Role role) {
-
-    }
-
-    @Override
-    public void revokeRole(UserId userId, Role role) {
-
+    void updateUser(UserId userId, Consumer<User> updater) {
+        User user = getUser(userId);
+        updater.accept(user);
+        userRepository.save(user);
     }
 
 }

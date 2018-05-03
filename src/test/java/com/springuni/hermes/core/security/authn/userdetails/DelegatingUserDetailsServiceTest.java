@@ -34,7 +34,7 @@ public class DelegatingUserDetailsServiceTest {
 
     @Test
     public void loadUserByUsername() {
-        EmailAddress emailAddress = user.getEmailAddress().get();
+        EmailAddress emailAddress = user.getEmailAddress();
         given(userService.findUser(emailAddress)).willReturn(Optional.of(user));
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(emailAddress.getValue());
@@ -54,7 +54,7 @@ public class DelegatingUserDetailsServiceTest {
 
     @Test(expected = UsernameNotFoundException.class)
     public void loadUserByUsername_withNonExistentUser() {
-        EmailAddress emailAddress = user.getEmailAddress().get();
+        EmailAddress emailAddress = user.getEmailAddress();
         given(userService.findUser(emailAddress)).willReturn(Optional.empty());
         userDetailsService.loadUserByUsername(emailAddress.getValue());
     }

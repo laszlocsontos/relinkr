@@ -51,7 +51,7 @@ public class PersistentOAuth2UserService
         UserProfile userProfile = userProfileFactory
                 .create(userProfileType, oAuth2User.getAttributes());
 
-        User user = userService.ensureUser(EmailAddress.of(oAuth2User.getName()), userProfile);
+        User user = userService.saveUser(EmailAddress.of(oAuth2User.getName()), userProfile);
 
         Set<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(Role::name)
