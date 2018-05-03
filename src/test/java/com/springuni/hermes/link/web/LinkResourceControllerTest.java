@@ -38,6 +38,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.hateoas.MediaTypes;
@@ -325,8 +326,8 @@ public class LinkResourceControllerTest {
     public static class TestConfig {
 
         @Bean
-        LinkResourceAssembler linkResourceAssembler() {
-            return new LinkResourceAssembler();
+        LinkResourceAssembler linkResourceAssembler(Environment environment) {
+            return new LinkResourceAssembler(environment);
         }
 
     }

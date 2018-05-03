@@ -6,17 +6,26 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.link.model.LinkStatus;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.hateoas.mvc.IdentifiableResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 @Component
 public class LinkResourceAssembler
         extends IdentifiableResourceAssemblerSupport<Link, LinkResource> {
 
-    public LinkResourceAssembler() {
+    static final String SHORT_LINK_SCHEME = "relinkr.shortLink.scheme";
+    static final String SHORT_LINK_DOMAIN = "relinkr.shortLink.domain";
+
+    private final Environment environment;
+
+    public LinkResourceAssembler(Environment environment) {
         super(LinkResourceController.class, LinkResource.class);
+        this.environment = environment;
     }
 
     @Override
@@ -37,16 +46,38 @@ public class LinkResourceAssembler
         return new LinkResource(link);
     }
 
-    private void addUserLinkStatus(LinkResource linkResource, LinkId linkId,
-            LinkStatus linkStatus) {
+    void addUserLinkStatus(
+            LinkResource linkResource, LinkId linkId, LinkStatus linkStatus) {
+
         linkResource.add(
                 linkTo(methodOn(LinkResourceController.class).updateLinkStatus(linkId, linkStatus))
                         .withRel("userLinkStatuses"));
     }
 
-    private void addShortLink(LinkResource linkResource, String path) {
-        linkResource.add(linkTo(methodOn(RedirectController.class).redirectLink(path))
-                .withRel("shortLink"));
+    void addShortLink(LinkResource linkResource, String path) {
+        UriComponentsBuilder uriComponentsBuilder =
+                linkTo(methodOn(RedirectController.class).redirectLink(path))
+                        .toUriComponentsBuilder();
+
+        getShortLinkScheme().ifPresent(uriComponentsBuilder::scheme);
+
+        getShortLinkDomain().ifPresent((domain) -> {
+            uriComponentsBuilder.host(domain);
+            uriComponentsBuilder.port(-1);
+        });
+
+        linkResource.add(
+                new org.springframework.hateoas.Link(uriComponentsBuilder.toUriString(),
+                        "shortLink")
+        );
+    }
+
+    private Optional<String> getShortLinkScheme() {
+        return Optional.ofNullable(environment.getProperty(SHORT_LINK_SCHEME));
+    }
+
+    private Optional<String> getShortLinkDomain() {
+        return Optional.ofNullable(environment.getProperty(SHORT_LINK_DOMAIN));
     }
 
 }
