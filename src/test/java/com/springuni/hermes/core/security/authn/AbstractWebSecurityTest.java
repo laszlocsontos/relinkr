@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-public class AbstractWebSecurityTest {
+public abstract class AbstractWebSecurityTest {
 
     @Autowired
     protected MockMvc mockMvc;
