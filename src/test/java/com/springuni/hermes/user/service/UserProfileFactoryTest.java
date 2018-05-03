@@ -5,7 +5,6 @@ import static com.springuni.hermes.user.model.UserProfileType.FACEBOOK;
 import static com.springuni.hermes.user.model.UserProfileType.GOOGLE;
 import static org.junit.Assert.assertEquals;
 
-import com.springuni.hermes.Mocks;
 import com.springuni.hermes.user.model.UserProfile;
 import java.net.URI;
 import java.util.HashMap;

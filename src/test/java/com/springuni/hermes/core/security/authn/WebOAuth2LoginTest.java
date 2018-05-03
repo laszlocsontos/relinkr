@@ -130,7 +130,8 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
     }
 
     @Test
-    public void givenSuccessfulOAuth2Login_thenAuthenticationNameIsInternalUserId() throws Exception {
+    public void givenSuccessfulOAuth2Login_thenAuthenticationNameIsInternalUserId()
+            throws Exception {
         resultActions.andExpect(authenticated().withAuthenticationName(String.valueOf(USER_ID)));
     }
 
