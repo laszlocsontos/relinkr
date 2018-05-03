@@ -13,10 +13,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -28,12 +30,14 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getUser(UserId userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("id", userId));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<User> findUser(EmailAddress emailAddress) {
         return userRepository.findByEmailAddress(emailAddress);
     }

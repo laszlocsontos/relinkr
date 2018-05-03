@@ -5,6 +5,7 @@ import static com.springuni.hermes.user.model.Role.USER;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.EnumType.STRING;
+import static javax.persistence.FetchType.EAGER;
 
 import com.springuni.hermes.core.orm.AbstractEntity;
 import java.util.LinkedHashMap;
@@ -19,6 +20,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.MapKeyEnumerated;
 import javax.persistence.Table;
@@ -35,7 +37,7 @@ public class User extends AbstractEntity<UserId> {
 
     private String encryptedPassword;
 
-    @ElementCollection
+    @ElementCollection(fetch = EAGER)
     @Enumerated(STRING)
     @Column(name = "role")
     private Set<Role> roles;
