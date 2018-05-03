@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.endpoint.NimbusAuthorizationCodeTokenResponseClient;
@@ -58,11 +57,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new PersistentOAuth2UserService(
                 defaultOAuth2UserService(), userProfileFactory, userService
         );
-    }
-
-    @Override
-    public void configure(WebSecurity webSecurity) {
-        webSecurity.debug(true);
     }
 
     @Override
