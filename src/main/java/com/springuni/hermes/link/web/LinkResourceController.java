@@ -7,6 +7,7 @@ import static org.springframework.http.ResponseEntity.ok;
 
 import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.core.security.authn.CurrentUser;
+import com.springuni.hermes.core.security.authz.AuthorizeRolesOrOwner;
 import com.springuni.hermes.link.model.InvalidLinkStatusException;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;
@@ -76,12 +77,14 @@ public class LinkResourceController {
         }
     }
 
+    @AuthorizeRolesOrOwner
     @GetMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
     HttpEntity<LinkResource> getLink(@PathVariable LinkId linkId) throws ApplicationException {
         Link link = linkService.getLink(linkId);
         return ok(linkResourceAssembler.toResource(link));
     }
 
+    @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
     @PostMapping(produces = HAL_JSON_VALUE)
     HttpEntity<LinkResource> addLink(@CurrentUser UserId userId,
             @Validated @RequestBody LinkResource linkResource)
@@ -96,6 +99,7 @@ public class LinkResourceController {
         return ok(linkResourceAssembler.toResource(link));
     }
 
+    @AuthorizeRolesOrOwner
     @PutMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
     HttpEntity<LinkResource> replaceLink(
             @PathVariable LinkId linkId, @Validated @RequestBody LinkResource linkResource)
@@ -109,6 +113,7 @@ public class LinkResourceController {
         return ok(linkResourceAssembler.toResource(link));
     }
 
+    @AuthorizeRolesOrOwner
     @PatchMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
     HttpEntity<LinkResource> updateLink(
             @PathVariable LinkId linkId,
@@ -130,6 +135,7 @@ public class LinkResourceController {
         return ok(linkResourceAssembler.toResource(link));
     }
 
+    @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
     @GetMapping(produces = HAL_JSON_VALUE)
     HttpEntity<PagedResources<LinkResource>> listLinks(
             @CurrentUser UserId userId, Pageable pageable) {
@@ -138,6 +144,7 @@ public class LinkResourceController {
         return ok(pagedResourcesAssembler.toResource(linkPage, linkResourceAssembler));
     }
 
+    @AuthorizeRolesOrOwner
     @PutMapping(path = "/{linkId}/linkStatuses/{linkStatus}")
     HttpEntity updateLinkStatus(@PathVariable LinkId linkId, @PathVariable LinkStatus linkStatus)
             throws ApplicationException {
@@ -158,6 +165,7 @@ public class LinkResourceController {
         return ok().build();
     }
 
+    @AuthorizeRolesOrOwner
     @PostMapping(path = "/{linkId}/tags/{tagName}")
     HttpEntity addTag(@PathVariable LinkId linkId, @PathVariable String tagName)
             throws ApplicationException {
@@ -167,6 +175,7 @@ public class LinkResourceController {
         return ok().build();
     }
 
+    @AuthorizeRolesOrOwner
     @DeleteMapping(path = "/{linkId}/tags/{tagName}")
     HttpEntity removeTag(@PathVariable LinkId linkId, @PathVariable String tagName)
             throws ApplicationException {
