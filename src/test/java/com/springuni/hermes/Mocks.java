@@ -3,6 +3,7 @@ package com.springuni.hermes;
 import static com.springuni.hermes.user.model.Gender.MALE;
 import static com.springuni.hermes.user.model.Role.ADMIN;
 import static com.springuni.hermes.user.model.UserProfileType.GOOGLE;
+import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 
 import com.springuni.hermes.click.ClickId;
@@ -26,7 +27,9 @@ import com.springuni.hermes.utm.model.UtmTemplate;
 import com.springuni.hermes.utm.model.UtmTemplateId;
 import com.springuni.hermes.visitor.model.VisitorId;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -119,6 +122,8 @@ public class Mocks {
     public static final String ENCRYPTED_PASSWORD =
             "{bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG";
 
+    public static final Map<String, Object> GOOGLE_USER_ATTRIBUTES;
+
     static {
         try {
             LONG_URL_BASE = new LongUrl(LONG_URL_BASE_S);
@@ -146,6 +151,18 @@ public class Mocks {
             UTM_PARAMETERS_SET = unmodifiableSet(utmParametersSet);
 
             VISITOR_IP = new IpAddress(IPV4_ADDRESS);
+
+            Map<String, Object> googleUserAttributes = new HashMap<>();
+
+            googleUserAttributes.put("sub", "12345789");
+            googleUserAttributes.put("name", "László Csontos");
+            googleUserAttributes.put("given_name", "László");
+            googleUserAttributes.put("family_name", "Csontos");
+            googleUserAttributes.put("link", "https://plus.google.com/104401221461109262503");
+            googleUserAttributes.put("picture",
+                    "https://lh3.googleusercontent.com/-7EVTpxqEgj8/AAAAAAAAAAI/AAAAAAAAAAA/Qo9wrOAoxPU/photo.jpg");
+
+            GOOGLE_USER_ATTRIBUTES = unmodifiableMap(googleUserAttributes);
         } catch (Exception e) {
             // This shouldn't happen, if it does, make test cases fail.
             throw new AssertionError(e);

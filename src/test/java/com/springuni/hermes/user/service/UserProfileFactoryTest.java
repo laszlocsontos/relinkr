@@ -1,9 +1,11 @@
 package com.springuni.hermes.user.service;
 
+import static com.springuni.hermes.Mocks.GOOGLE_USER_ATTRIBUTES;
 import static com.springuni.hermes.user.model.UserProfileType.FACEBOOK;
 import static com.springuni.hermes.user.model.UserProfileType.GOOGLE;
 import static org.junit.Assert.assertEquals;
 
+import com.springuni.hermes.Mocks;
 import com.springuni.hermes.user.model.UserProfile;
 import java.net.URI;
 import java.util.HashMap;
@@ -21,16 +23,7 @@ public class UserProfileFactoryTest {
 
     @Test
     public void givenGoogleUserInfo_whenCreate_thenOk() {
-        Map<String, Object> userAttributes = new HashMap<>();
-        userAttributes.put("id", "12345789");
-        userAttributes.put("name", "László Csontos");
-        userAttributes.put("given_name", "László");
-        userAttributes.put("family_name", "Csontos");
-        userAttributes.put("link", "https://plus.google.com/104401221461109262503");
-        userAttributes.put("picture",
-                "https://lh3.googleusercontent.com/-7EVTpxqEgj8/AAAAAAAAAAI/AAAAAAAAAAA/Qo9wrOAoxPU/photo.jpg");
-
-        UserProfile userProfile = userProfileFactory.create(GOOGLE, userAttributes);
+        UserProfile userProfile = userProfileFactory.create(GOOGLE, GOOGLE_USER_ATTRIBUTES);
 
         assertEquals("12345789", userProfile.getUserProfileId());
         assertEquals("László Csontos", userProfile.getFullName().get());
