@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 
@@ -53,6 +53,9 @@
             <i class="fa fa-facebook"></i>
             <span>Sign in with Facebook</span>
           </a>
+          <div class="btn-block alert alert-danger" th:if="${!#strings.isEmpty(errorMsg)}">
+            <span th:text="${'Login unsuccessful; reason: ' + errorMsg}">Login unsuccessful; reason: error.</span>
+          </div>
         </div>
       </div>
     </div>

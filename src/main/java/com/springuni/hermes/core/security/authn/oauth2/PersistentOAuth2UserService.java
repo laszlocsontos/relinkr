@@ -56,7 +56,13 @@ public class PersistentOAuth2UserService
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User oAuth2User = defaultUserService.loadUser(userRequest);
+        OAuth2User oAuth2User;
+        try {
+            oAuth2User = defaultUserService.loadUser(userRequest);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
+            throw new OAuth2AuthenticationException(new OAuth2Error(INVALID_EMAIL_ADDRESS), e);
+        }
 
         EmailAddress emailAddress = extractEmailAddress(oAuth2User.getName());
 
