@@ -14,8 +14,7 @@ import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.visitor.model.VisitorId;
 import java.lang.reflect.Field;
 import java.util.List;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.format.FormatterRegistry;
@@ -23,19 +22,14 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+@Slf4j
 @Configuration
-public class WebMvcConfig implements InitializingBean, WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
 
     private static final String APPA$BMP_CLASS =
             "org.springframework.hateoas.mvc.AnnotatedParametersParameterAccessor$BoundMethodParameter";
 
     private static final String APPA$BMP_CONVERSION_SERVICE = "CONVERSION_SERVICE";
-
-    private final ApplicationContext applicationContext;
-
-    public WebMvcConfig(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
@@ -58,6 +52,8 @@ public class WebMvcConfig implements InitializingBean, WebMvcConfigurer {
         registry.addConverter(String.class, VisitorId.class,
                 new StringToEntityClassAwareIdConverter<>(VisitorId.class));
         registry.addConverter(new EntityClassAwareIdToStringConverter<VisitorId>());
+
+        workaround((ConversionService) registry);
     }
 
     @Override
@@ -65,16 +61,19 @@ public class WebMvcConfig implements InitializingBean, WebMvcConfigurer {
         resolvers.add(new CurrentUserArgumentResolver());
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        ConversionService conversionService = applicationContext.getBean(ConversionService.class);
-
-        // Workaround for https://github.com/spring-projects/spring-hateoas/issues/118
-        ReflectionUtils.doWithFields(
-                Class.forName(APPA$BMP_CLASS),
-                it -> setValue(it, conversionService),
-                it -> APPA$BMP_CONVERSION_SERVICE.equals(it.getName())
-        );
+    /*
+     * Workaround for https://github.com/spring-projects/spring-hateoas/issues/118
+     */
+    private void workaround(ConversionService conversionService) {
+        try {
+            ReflectionUtils.doWithFields(
+                    Class.forName(APPA$BMP_CLASS),
+                    it -> setValue(it, conversionService),
+                    it -> APPA$BMP_CONVERSION_SERVICE.equals(it.getName())
+            );
+        } catch (ClassNotFoundException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     private void setValue(Field field, Object value) {
