@@ -38,10 +38,10 @@ CREATE TABLE link (
 );
 
 -- TODO: define tag as a standalone ownable entity
-CREATE TABLE standalone_link_tags (
-  standalone_link_id bigint NOT NULL,
+CREATE TABLE link_tags (
+  link_id bigint NOT NULL,
   tag_name varchar(255) NULL,
-  CONSTRAINT fksdwsrgxw30a5puih4f61vwv7q FOREIGN KEY (standalone_link_id) REFERENCES link(id)
+  CONSTRAINT link_tags_link_id_fk FOREIGN KEY (link_id) REFERENCES link(id)
 );
 
 CREATE TABLE user_ (
