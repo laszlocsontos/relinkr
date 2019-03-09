@@ -40,7 +40,7 @@ public class LinkRepositoryTest {
     @Test
     public void findByUserId_withPageRequest() {
         Page<Link> linkPage = linkRepository.findByUserId(USER_ID, PageRequest.of(0, 10));
-        assertEquals(2, linkPage.getTotalElements());
+        assertEquals(1, linkPage.getTotalElements());
     }
 
 }
