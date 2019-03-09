@@ -10,7 +10,6 @@ import com.springuni.hermes.click.ClickId;
 import com.springuni.hermes.click.IpAddress;
 import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.core.security.authn.signin.SignInRequest;
-import com.springuni.hermes.link.model.EmbeddedLink;
 import com.springuni.hermes.link.model.InvalidUrlException;
 import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.link.model.LinkSet;
@@ -179,14 +178,8 @@ public class Mocks {
         UtmTemplate utmTemplate = createUtmTemplate();
         LinkSet linkSet = new LinkSet(LONG_URL_BASE_S, utmTemplate, USER_ID);
         linkSet.markActive();
-        linkSet.regenerateLinks();
         linkSet.setId(LINK_SET_ID);
         return linkSet;
-    }
-
-    public static EmbeddedLink createEmbeddedLink() throws InvalidUrlException {
-        LinkSet linkSet = createLinkSet();
-        return linkSet.getEmbeddedLinks().get(0);
     }
 
     public static StandaloneLink createStandaloneLink() throws ApplicationException {

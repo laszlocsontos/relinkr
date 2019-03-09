@@ -1,12 +1,10 @@
 package com.springuni.hermes.link.model;
 
 import static com.springuni.hermes.link.model.LinkStatus.PENDING;
-import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.EnumType.STRING;
 
 import com.springuni.hermes.user.model.UserId;
-import com.springuni.hermes.utm.model.UtmParameters;
 import com.springuni.hermes.utm.model.UtmTemplate;
 import java.net.URI;
 import java.util.ArrayList;
@@ -36,9 +34,6 @@ public class LinkSet extends LinkBase<LinkSetId> {
     @JoinColumn(name = "template_id")
     private UtmTemplate utmTemplate;
 
-    @OneToMany(mappedBy = "linkSet", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EmbeddedLink> embeddedLinks = new ArrayList<>();
-
     @ElementCollection
     private Set<Tag> tags = new LinkedHashSet<>();
 
@@ -54,8 +49,6 @@ public class LinkSet extends LinkBase<LinkSetId> {
         setLongUrl(longUrl);
 
         this.utmTemplate = utmTemplate;
-
-        regenerateLinks();
     }
 
     /*
@@ -86,32 +79,9 @@ public class LinkSet extends LinkBase<LinkSetId> {
         return utmTemplate;
     }
 
-    public List<EmbeddedLink> getEmbeddedLinks() {
-        return unmodifiableList(embeddedLinks);
-    }
-
-    public void regenerateLinks() {
-        embeddedLinks.clear();
-        Set<UtmParameters> utmParametersSet = utmTemplate.getUtmParametersSet();
-        utmParametersSet.forEach(utmParameters -> {
-            embeddedLinks
-                    .add(new EmbeddedLink(LongUrl.from(longUrl, utmParameters), this, getUserId()));
-        });
-    }
-
     public void updateLongUrl(@NotNull String longUrl) throws InvalidUrlException {
         setLongUrl(longUrl);
 
-        for (EmbeddedLink embeddedLink : embeddedLinks) {
-            embeddedLink.updateLongUrl(longUrl);
-        }
-    }
-
-    public void updateUtmTemplate(@NotNull UtmTemplate utmTemplate) {
-        this.utmTemplate = utmTemplate;
-        if (!embeddedLinks.isEmpty()) {
-            regenerateLinks();
-        }
     }
 
     public Set<Tag> getTags() {
