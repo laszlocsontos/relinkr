@@ -2,10 +2,15 @@ package com.springuni.hermes.link.web;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.springuni.hermes.core.web.AbstractResource;
 import com.springuni.hermes.link.model.Link;
+import com.springuni.hermes.link.model.LinkStatus;
+import com.springuni.hermes.link.model.Tag;
 import com.springuni.hermes.utm.model.MissingUtmParameterException;
 import com.springuni.hermes.utm.model.UtmParameters;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +21,12 @@ import org.springframework.hateoas.core.Relation;
 @Setter
 @NoArgsConstructor
 @Relation(value = "link", collectionRelation = "links")
-public class LinkResource extends LinkBaseResource {
+public class LinkResource extends AbstractResource {
+
+    private String longUrl;
+
+    private Set<String> tags;
+    private LinkStatus linkStatus;
 
     @JsonProperty("utmParameters")
     private UtmParametersResource utmParametersResource;
@@ -25,6 +35,12 @@ public class LinkResource extends LinkBaseResource {
 
     public LinkResource(Link link) {
         super(link);
+
+        longUrl = link.getLongUrl().toString();
+
+        tags = link.getTags().stream().map(Tag::getTagName).collect(Collectors.toSet());
+
+        linkStatus = link.getLinkStatus();
 
         utmParametersResource =
                 link.getUtmParameters().map(UtmParametersResource::new).orElse(null);
@@ -42,7 +58,7 @@ public class LinkResource extends LinkBaseResource {
     }
 
     LinkResource(String longUrl, UtmParameters utmParameters) {
-        super(longUrl);
+        this.longUrl = longUrl;
         this.utmParametersResource = Optional.ofNullable(utmParameters)
                 .map(UtmParametersResource::new).orElse(null);
     }
