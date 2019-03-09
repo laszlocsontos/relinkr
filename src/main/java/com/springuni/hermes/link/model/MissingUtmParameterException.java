@@ -1,4 +1,4 @@
-package com.springuni.hermes.utm.model;
+package com.springuni.hermes.link.model;
 
 import com.springuni.hermes.core.model.ApplicationException;
 

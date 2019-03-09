@@ -14,7 +14,7 @@ import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.link.model.LinkStatus;
 import com.springuni.hermes.link.service.LinkService;
 import com.springuni.hermes.user.model.UserId;
-import com.springuni.hermes.utm.model.UtmParameters;
+import com.springuni.hermes.link.model.UtmParameters;
 import java.util.EnumSet;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

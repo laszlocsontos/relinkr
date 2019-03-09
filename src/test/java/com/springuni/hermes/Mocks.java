@@ -18,7 +18,7 @@ import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.User;
 import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.user.model.UserProfile;
-import com.springuni.hermes.utm.model.UtmParameters;
+import com.springuni.hermes.link.model.UtmParameters;
 import com.springuni.hermes.visitor.model.VisitorId;
 import java.time.LocalDateTime;
 import java.util.HashMap;

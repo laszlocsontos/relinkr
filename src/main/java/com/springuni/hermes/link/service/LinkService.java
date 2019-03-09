@@ -4,7 +4,7 @@ import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.user.model.UserId;
-import com.springuni.hermes.utm.model.UtmParameters;
+import com.springuni.hermes.link.model.UtmParameters;
 import java.net.URI;
 
 public interface LinkService extends LinkBaseService<LinkId, Link> {

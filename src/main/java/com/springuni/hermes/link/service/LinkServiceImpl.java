@@ -8,7 +8,7 @@ import com.springuni.hermes.link.model.InvalidUrlException;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.user.model.UserId;
-import com.springuni.hermes.utm.model.UtmParameters;
+import com.springuni.hermes.link.model.UtmParameters;
 import java.net.URI;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;

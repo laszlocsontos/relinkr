@@ -6,7 +6,6 @@ import static javax.persistence.EnumType.STRING;
 
 import com.springuni.hermes.core.util.IdentityGenerator;
 import com.springuni.hermes.user.model.UserId;
-import com.springuni.hermes.utm.model.UtmParameters;
 import java.net.URI;
 import java.util.LinkedHashSet;
 import java.util.Optional;

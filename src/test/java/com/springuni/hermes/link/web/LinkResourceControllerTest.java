@@ -29,7 +29,7 @@ import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.link.service.LinkService;
 import com.springuni.hermes.link.web.LinkResourceControllerTest.TestConfig;
-import com.springuni.hermes.utm.model.UtmParameters;
+import com.springuni.hermes.link.model.UtmParameters;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

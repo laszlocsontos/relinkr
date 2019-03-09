@@ -1,4 +1,4 @@
-package com.springuni.hermes.utm.model;
+package com.springuni.hermes.link.model;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;

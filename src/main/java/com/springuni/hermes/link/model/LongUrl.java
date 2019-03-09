@@ -1,14 +1,12 @@
 package com.springuni.hermes.link.model;
 
-import static com.springuni.hermes.utm.model.UtmParameters.UTM_CAMPAIGN;
-import static com.springuni.hermes.utm.model.UtmParameters.UTM_CONTENT;
-import static com.springuni.hermes.utm.model.UtmParameters.UTM_MEDIUM;
-import static com.springuni.hermes.utm.model.UtmParameters.UTM_SOURCE;
-import static com.springuni.hermes.utm.model.UtmParameters.UTM_TERM;
+import static com.springuni.hermes.link.model.UtmParameters.UTM_CAMPAIGN;
+import static com.springuni.hermes.link.model.UtmParameters.UTM_CONTENT;
+import static com.springuni.hermes.link.model.UtmParameters.UTM_MEDIUM;
+import static com.springuni.hermes.link.model.UtmParameters.UTM_SOURCE;
+import static com.springuni.hermes.link.model.UtmParameters.UTM_TERM;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
-import com.springuni.hermes.utm.model.MissingUtmParameterException;
-import com.springuni.hermes.utm.model.UtmParameters;
 import io.jsonwebtoken.lang.Assert;
 import java.net.URI;
 import java.util.Map;
