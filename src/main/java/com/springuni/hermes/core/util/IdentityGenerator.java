@@ -12,23 +12,26 @@ import java.time.LocalDateTime;
  * <a href="https://engineering.instagram.com/sharding-ids-at-instagram-1cf5a71e5a5c">
  * Sharding & IDs at Instagram</a>
  *
+ * The maximum value generated is 2^53 - 1 in order to maintain compatibility with hashids.
+ * <a href="https://github.com/10cella/hashids-java#limitations">Hashids's limitations</a>
+ *
  * <p>Going to the most to the least significant bits
  * <ul>
  * <li>the first bit (sign) is always zero</li>
- * <li>the next three bit are reserved for future use (currently zero)</li>
- * <li>the next 40 bits represent the elapsed milliseconds from a custom Epoch (2018-03-01).
- * This one would overflow on 2053-01-01.</li>
- * <li>the next 20 bits represent a per-thread serial XOR-ed with a per-thread random number</li>
+ * <li>the next nine bits are zero</li>
+ * <li>the next 40 bits represent the elapsed milliseconds from a custom Epoch (2019-03-01).
+ * This one would overflow on 2054-01-01 19:53:47.775</li>
+ * <li>the next 14 bits represent a per-thread serial XOR-ed with a per-thread random number</li>
  * </ul>
  *
- * <p>With this technique 1.048.576 unique IDs can be generated per millisecond.
+ * <p>With this technique 16.384 unique IDs can be generated per millisecond.
  */
 public final class IdentityGenerator {
 
     /**
      * Custom Epoch (2018-03-01).
      */
-    public static final Instant EPOCH = LocalDateTime.of(2018, 03, 01, 0, 0, 0, 0).toInstant(UTC);
+    public static final Instant EPOCH = LocalDateTime.of(2019, 3, 1, 0, 0, 0, 0).toInstant(UTC);
 
     private static final IdentityGenerator INSTANCE = new IdentityGenerator();
 
@@ -55,12 +58,12 @@ public final class IdentityGenerator {
      * @return an {@link Instant}
      */
     public static Instant extractInstant(long id) {
-        long time = (id & 0x0ffffffffff00000L) >>> 20;
+        long time = (id & 0x7ffffffffc000L) >>> 14;
         return EPOCH.plusMillis(time);
     }
 
     static long doGenerate(long time, int serial) {
-        return (time & 0x0ffffffffffL) << 20 | (serial & 0xfffff);
+        return (time & 0xffffffffffL) << 14 | (serial & 0x3fff);
     }
 
     /**

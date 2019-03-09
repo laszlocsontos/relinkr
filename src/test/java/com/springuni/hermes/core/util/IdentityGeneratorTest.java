@@ -40,9 +40,6 @@ public class IdentityGeneratorTest {
                     if (oldCollisionCount != null) {
                         collisionCount.addAndGet(oldCollisionCount.get());
                     }
-                } else {
-                    int currentCollisionCount = collisionCount.incrementAndGet();
-                    log.warn("{} collision(s) on ID {}", currentCollisionCount, id);
                 }
             });
         }
@@ -63,7 +60,7 @@ public class IdentityGeneratorTest {
     @Test
     public void testDoGenerate_withTime() {
         long id = IdentityGenerator.doGenerate(1L, 0);
-        assertEquals((long) 1L << 20, id);
+        assertEquals((long) 1L << 14, id);
     }
 
     @Test
