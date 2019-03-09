@@ -40,24 +40,10 @@ CREATE TABLE utm_template_parameters (
   CONSTRAINT utm_template_parameters_utm_template_id_fk FOREIGN KEY (utm_template_id) REFERENCES utm_template(id)
 );
 
-CREATE TABLE link_set (
-  id bigint NOT NULL,
-  user_id bigint NULL,
-  link_status varchar(255) NULL,
-  long_url varchar(255) NULL,
-  template_id bigint NULL,
-  created_date timestamp NULL,
-  last_modified_date timestamp NULL,
-  version_ integer not null,
-  CONSTRAINT link_set_pk PRIMARY KEY (id),
-  CONSTRAINT link_set_template_id_fk FOREIGN KEY (template_id) REFERENCES utm_template(id)
-);
-
 CREATE TABLE link (
   id bigint NOT NULL,
   link_type char(1) NOT NULL,
   link_status varchar(255) NULL,
-  linkset_id bigint NULL,
   long_url varchar(255) NULL,
   utm_campaign varchar(255) NULL,
   utm_content varchar(255) NULL,
@@ -69,15 +55,7 @@ CREATE TABLE link (
   created_date timestamp NULL,
   last_modified_date timestamp NULL,
   version_ integer not null,
-  CONSTRAINT link_pk PRIMARY KEY (id),
-  CONSTRAINT link_linkset_id_fk FOREIGN KEY (linkset_id) REFERENCES link_set(id)
-);
-
--- TODO: define tag as a standalone ownable entity
-CREATE TABLE link_set_tags (
-  link_set_id bigint NOT NULL,
-  tag_name varchar(255) NULL,
-  CONSTRAINT fk4xv5vbke63h6ak3narjdi8s99 FOREIGN KEY (link_set_id) REFERENCES link_set(id)
+  CONSTRAINT link_pk PRIMARY KEY (id)
 );
 
 -- TODO: define tag as a standalone ownable entity

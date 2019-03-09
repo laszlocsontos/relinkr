@@ -9,7 +9,6 @@ import com.springuni.hermes.click.ClickId;
 import com.springuni.hermes.core.convert.EntityClassAwareIdToStringConverter;
 import com.springuni.hermes.core.convert.StringToEntityClassAwareIdConverter;
 import com.springuni.hermes.link.model.LinkId;
-import com.springuni.hermes.link.model.LinkSetId;
 import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.visitor.model.VisitorId;
 import java.lang.reflect.Field;
@@ -40,10 +39,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addConverter(String.class, LinkId.class,
                 new StringToEntityClassAwareIdConverter<>(LinkId.class));
         registry.addConverter(new EntityClassAwareIdToStringConverter<LinkId>());
-
-        registry.addConverter(String.class, LinkSetId.class,
-                new StringToEntityClassAwareIdConverter<>(LinkSetId.class));
-        registry.addConverter(new EntityClassAwareIdToStringConverter<LinkSetId>());
 
         registry.addConverter(String.class, UserId.class,
                 new StringToEntityClassAwareIdConverter<>(UserId.class));

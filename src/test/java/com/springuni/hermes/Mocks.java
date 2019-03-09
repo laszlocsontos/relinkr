@@ -10,10 +10,7 @@ import com.springuni.hermes.click.ClickId;
 import com.springuni.hermes.click.IpAddress;
 import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.core.security.authn.signin.SignInRequest;
-import com.springuni.hermes.link.model.InvalidUrlException;
 import com.springuni.hermes.link.model.LinkId;
-import com.springuni.hermes.link.model.LinkSet;
-import com.springuni.hermes.link.model.LinkSetId;
 import com.springuni.hermes.link.model.LongUrl;
 import com.springuni.hermes.link.model.StandaloneLink;
 import com.springuni.hermes.link.model.Tag;
@@ -83,9 +80,6 @@ public class Mocks {
 
     public static final LinkId LINK_ID = LinkId.of(1L);
     public static final LinkId LINK_ID_ZERO = LinkId.of(0L);
-
-    public static final LinkSetId LINK_SET_ID = LinkSetId.of(1L);
-    public static final LinkSetId LINK_SET_ID_ZERO = LinkSetId.of(0L);
 
     public static final VisitorId VISITOR_ID = VisitorId.of(1L);
     public static final VisitorId VISITOR_ID_ZERO = VisitorId.of(0L);
@@ -172,14 +166,6 @@ public class Mocks {
         UtmTemplate utmTemplate = new UtmTemplate(UTM_TEMPLATE_NAME, USER_ID);
         utmTemplate.addUtmParameters(UTM_PARAMETERS_FULL);
         return utmTemplate;
-    }
-
-    public static LinkSet createLinkSet() throws InvalidUrlException {
-        UtmTemplate utmTemplate = createUtmTemplate();
-        LinkSet linkSet = new LinkSet(LONG_URL_BASE_S, utmTemplate, USER_ID);
-        linkSet.markActive();
-        linkSet.setId(LINK_SET_ID);
-        return linkSet;
     }
 
     public static StandaloneLink createStandaloneLink() throws ApplicationException {
