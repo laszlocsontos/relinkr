@@ -27,9 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;
+import com.springuni.hermes.link.model.UtmParameters;
 import com.springuni.hermes.link.service.LinkService;
 import com.springuni.hermes.link.web.LinkResourceControllerTest.TestConfig;
-import com.springuni.hermes.link.model.UtmParameters;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,6 +62,9 @@ public class LinkResourceControllerTest {
 
     @MockBean
     private LinkService linkService;
+
+    @Autowired
+    LinkResourceAssembler linkResourceAssembler;
 
     private Link link;
 
@@ -293,6 +296,9 @@ public class LinkResourceControllerTest {
     }
 
     private void assertLink(String path, ResultActions resultActions) throws Exception {
+        String shortLinkScheme = linkResourceAssembler.getShortLinkScheme().orElse("http");
+        String shortLinkDomain = linkResourceAssembler.getShortLinkDomain().orElse("localhost");
+
         resultActions
                 .andExpect(jsonPath(path + ".id", is(link.getId().toString())))
                 .andExpect(jsonPath(path + ".longUrl", is(link.getLongUrl().toString())))
@@ -317,7 +323,7 @@ public class LinkResourceControllerTest {
                         is("http://localhost/api/links/" + link.getId()
                                 + "/linkStatuses/ARCHIVED")))
                 .andExpect(jsonPath(path + "._links.shortLink.href",
-                        is("http://localhost/" + link.getPath())));
+                        is(shortLinkScheme + "://" + shortLinkDomain + "/" + link.getPath())));
     }
 
     @TestConfiguration

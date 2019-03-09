@@ -72,11 +72,11 @@ public class LinkResourceAssembler
         );
     }
 
-    private Optional<String> getShortLinkScheme() {
+    Optional<String> getShortLinkScheme() {
         return Optional.ofNullable(environment.getProperty(SHORT_LINK_SCHEME));
     }
 
-    private Optional<String> getShortLinkDomain() {
+    Optional<String> getShortLinkDomain() {
         return Optional.ofNullable(environment.getProperty(SHORT_LINK_DOMAIN));
     }
 
