@@ -7,18 +7,90 @@ import com.springuni.hermes.core.model.EntityNotFoundException;
 import com.springuni.hermes.link.model.InvalidUrlException;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;
+import com.springuni.hermes.link.model.Tag;
 import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.link.model.UtmParameters;
 import java.net.URI;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 @Service
-class LinkServiceImpl
-        extends AbstractLinkService<LinkId, Link, LinkRepository> implements LinkService {
+@RequiredArgsConstructor
+class LinkServiceImpl implements LinkService {
 
-    public LinkServiceImpl(LinkRepository linkRepository) {
-        super(linkRepository);
+    private final LinkRepository linkRepository;
+
+    @Override
+    public Link getLink(LinkId id) throws EntityNotFoundException {
+        Assert.notNull(id, "id cannot be null");
+
+        return linkRepository
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("id", id));
+
+    }
+
+    @Override
+    public Page<Link> listLinks(UserId userId, Pageable pageable) {
+        return linkRepository.findByUserId(userId, pageable);
+    }
+
+    @Override
+    public void activateLink(LinkId id) throws ApplicationException {
+        Assert.notNull(id, "id cannot be null");
+
+        Link link = getLink(id);
+        verifyLinkBeforeUpdate(link);
+        link.markActive();
+
+        linkRepository.save(link);
+    }
+
+    @Override
+    public void archiveLink(LinkId id) throws ApplicationException {
+        Assert.notNull(id, "id cannot be null");
+
+        Link link = getLink(id);
+        verifyLinkBeforeUpdate(link);
+        link.markArchived();
+
+        linkRepository.save(link);
+    }
+
+    @Override
+    public void addTag(LinkId id, String tagName) throws ApplicationException {
+        Assert.notNull(id, "id cannot be null");
+        Assert.hasText(tagName, "tagName must contain text");
+
+        Link link = getLink(id);
+        verifyLinkBeforeUpdate(link);
+        link.addTag(new Tag(tagName));
+
+        linkRepository.save(link);
+    }
+
+    @Override
+    public void removeTag(LinkId id, String tagName) throws ApplicationException {
+        Assert.notNull(id, "id cannot be null");
+        Assert.hasText(tagName, "tagName must contain text");
+
+        Link link = getLink(id);
+        verifyLinkBeforeUpdate(link);
+        link.removeTag(new Tag(tagName));
+        linkRepository.save(link);
+    }
+
+    @Override
+    public Link updateLongUrl(LinkId id, String longUrl) {
+        Assert.notNull(id, "id cannot be null");
+        Assert.hasText(longUrl, "longUrl must contain text");
+
+        Link link = getLink(id);
+        link.updateLongUrl(longUrl);
+        return linkRepository.save(link);
     }
 
     @Override
@@ -70,7 +142,6 @@ class LinkServiceImpl
         return linkRepository.save(link);
     }
 
-    @Override
     protected void verifyLinkBeforeUpdate(Link link) {
         // TODO: I don't remember what this was supposed to be doing
     }
