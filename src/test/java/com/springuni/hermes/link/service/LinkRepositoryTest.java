@@ -1,13 +1,12 @@
 package com.springuni.hermes.link.service;
 
 import static com.springuni.hermes.Mocks.USER_ID;
-import static com.springuni.hermes.Mocks.createStandaloneLink;
+import static com.springuni.hermes.Mocks.createLink;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import com.springuni.hermes.link.model.Link;
-import com.springuni.hermes.link.model.StandaloneLink;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,20 +24,17 @@ public class LinkRepositoryTest {
     @Autowired
     private LinkRepository linkRepository;
 
-    @Autowired
-    private StandaloneLinkRepository standaloneLinkRepository;
-
-    private StandaloneLink standaloneLink;
+    private Link link;
 
     @Before
     public void setUp() throws Exception {
-        standaloneLink = standaloneLinkRepository.save(createStandaloneLink());
+        link = linkRepository.save(createLink());
     }
 
     @Test
     public void findByUserId() {
         List<Link> links = linkRepository.findByUserId(USER_ID);
-        assertThat(links, contains(standaloneLink));
+        assertThat(links, contains(link));
     }
 
     @Test

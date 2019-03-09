@@ -6,19 +6,21 @@ import static com.springuni.hermes.Mocks.LONG_URL_VALID_UTM_S;
 import static com.springuni.hermes.Mocks.USER_ID;
 import static com.springuni.hermes.Mocks.UTM_PARAMETERS_FULL;
 import static com.springuni.hermes.Mocks.UTM_PARAMETERS_MINIMAL;
+import static com.springuni.hermes.link.model.LinkStatus.ACTIVE;
+import static com.springuni.hermes.link.model.LinkStatus.ARCHIVED;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.springframework.data.domain.Pageable.unpaged;
 
 import com.springuni.hermes.Mocks;
 import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.core.model.EntityNotFoundException;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;
-import com.springuni.hermes.link.model.StandaloneLink;
-
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
@@ -27,59 +29,115 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LinkServiceTest extends
-        AbstractLinkServiceTest<LinkId, Link, LinkRepository<Link>, LinkService> {
+public class LinkServiceTest {
+
+    protected LinkId linkId;
+    protected Link link;
+    protected List<Link> links;
 
     @Mock
-    private LinkRepository<Link> linkRepository;
+    protected LinkRepository linkRepository;
 
-    @Mock
-    private StandaloneLinkRepository standaloneLinkRepository;
-
-    private StandaloneLink standaloneLink;
+    protected LinkService linkService;
 
     @Before
     public void setUp() throws Exception {
-        linkService = new LinkServiceImpl(linkRepository, standaloneLinkRepository);
-        standaloneLink = Mocks.createStandaloneLink();
-        super.setUp();
+        link = Mocks.createLink();
+        linkId = link.getId();
+        links = singletonList(link);
+        linkService = new LinkServiceImpl(linkRepository);
     }
 
-    @Override
-    protected LinkId createLinkId() {
-        return standaloneLink.getId();
+    @Test
+    public void getLink() throws ApplicationException {
+        given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
+        Link link = linkService.getLink(linkId);
+        assertSame(this.link, link);
     }
 
-    @Override
-    protected StandaloneLink createLink() {
-        return standaloneLink;
+    @Test(expected = EntityNotFoundException.class)
+    public void getLink_withNonExistent() throws ApplicationException {
+        given(linkRepository.findById(linkId)).willReturn(Optional.empty());
+        linkService.getLink(linkId);
     }
 
-    @Override
-    protected LinkService createLinkService() {
-        return linkService;
+    @Test
+    public void listLinks() {
+        Page<Link> linkPage = new PageImpl<>(links);
+        given(linkRepository.findByUserId(USER_ID, unpaged())).willReturn(linkPage);
+        assertEquals(linkPage, linkService.listLinks(USER_ID, unpaged()));
     }
 
-    @Override
-    protected LinkRepository<Link> createLinkRepository() {
-        return linkRepository;
+    @Test
+    public void activateLink() throws ApplicationException {
+        link.markArchived();
+        given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
+        linkService.activateLink(linkId);
+
+        Link link = captureSavedLink();
+        assertEquals(ACTIVE, link.getLinkStatus());
     }
 
-    @Override
-    protected List<Link> createLinkList() {
-        links = new ArrayList<>(2);
-        links.add(standaloneLink);
-        return links;
+    @Test(expected = EntityNotFoundException.class)
+    public void activateLink_withNonExistent() throws ApplicationException {
+        given(linkRepository.findById(linkId)).willReturn(Optional.empty());
+        linkService.activateLink(linkId);
+    }
+
+    @Test
+    public void archiveLink() throws ApplicationException {
+        given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
+        linkService.archiveLink(linkId);
+
+        Link link = captureSavedLink();
+        assertEquals(ARCHIVED, link.getLinkStatus());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void archiveLink_withNonExistent() throws ApplicationException {
+        given(linkRepository.findById(linkId)).willReturn(Optional.empty());
+        linkService.archiveLink(linkId);
+    }
+
+    @Test
+    public void addTag() throws ApplicationException {
+        given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
+        linkService.addTag(linkId, "test");
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void addTag_withNonExistent() throws ApplicationException {
+        given(linkRepository.findById(linkId)).willReturn(Optional.empty());
+        linkService.addTag(linkId, "test");
+    }
+
+    @Test
+    public void removeTag() {
+        given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
+        linkService.removeTag(linkId, "test");
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void removeTag_withNonExistent() throws ApplicationException {
+        given(linkRepository.findById(linkId)).willReturn(Optional.empty());
+        linkService.removeTag(linkId, "test");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void updateLongUrl_withNull() throws ApplicationException {
+        linkService.updateLongUrl(linkId, null);
     }
 
     @Test
     public void getTargetUrl() throws ApplicationException {
-        String path = standaloneLink.getPath();
-        given(linkRepository.findByPath(path)).willReturn(Optional.of(standaloneLink));
+        String path = link.getPath();
+        given(linkRepository.findByPath(path)).willReturn(Optional.of(link));
         URI targetUri = linkService.getTargetUrl(path);
-        assertEquals(standaloneLink.getTargetUrl(), targetUri);
+        assertEquals(link.getTargetUrl(), targetUri);
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -91,9 +149,9 @@ public class LinkServiceTest extends
 
     @Test(expected = EntityNotFoundException.class)
     public void getTargetUrl_withArchived() throws ApplicationException {
-        standaloneLink.markArchived();
-        String path = standaloneLink.getPath();
-        given(linkRepository.findByPath(path)).willReturn(Optional.of(standaloneLink));
+        link.markArchived();
+        String path = link.getPath();
+        given(linkRepository.findByPath(path)).willReturn(Optional.of(link));
         linkService.getTargetUrl(path);
     }
 
@@ -101,30 +159,29 @@ public class LinkServiceTest extends
     public void addLink() {
         linkService.addLink(LONG_URL_BASE_S, UTM_PARAMETERS_FULL, USER_ID);
 
-        Link standaloneLink = captureSavedStandaloneLink();
+        Link link = captureSavedLink();
 
-        assertEquals(USER_ID, standaloneLink.getUserId());
-        assertEquals(URI.create(LONG_URL_BASE_S), standaloneLink.getLongUrl());
-        assertEquals(UTM_PARAMETERS_FULL, standaloneLink.getUtmParameters().get());
+        assertEquals(USER_ID, link.getUserId());
+        assertEquals(URI.create(LONG_URL_BASE_S), link.getLongUrl());
+        assertEquals(UTM_PARAMETERS_FULL, link.getUtmParameters().get());
     }
 
     @Test
     public void updateUtmParameters() {
-        given(linkRepository.findById(LINK_ID)).willReturn(Optional.of(standaloneLink));
+        given(linkRepository.findById(LINK_ID)).willReturn(Optional.of(link));
         linkService.updateUtmParameters(LINK_ID, UTM_PARAMETERS_MINIMAL);
 
-        StandaloneLink standaloneLink = captureSavedStandaloneLink();
+        Link link = captureSavedLink();
 
-        assertEquals(USER_ID, standaloneLink.getUserId());
-        assertEquals(URI.create(LONG_URL_VALID_UTM_S), standaloneLink.getTargetUrl());
-        assertEquals(UTM_PARAMETERS_MINIMAL, standaloneLink.getUtmParameters().get());
+        assertEquals(USER_ID, link.getUserId());
+        assertEquals(URI.create(LONG_URL_VALID_UTM_S), link.getTargetUrl());
+        assertEquals(UTM_PARAMETERS_MINIMAL, link.getUtmParameters().get());
     }
 
-    private StandaloneLink captureSavedStandaloneLink() {
-        ArgumentCaptor<StandaloneLink> standaloneLinkCaptor = ArgumentCaptor
-                .forClass(StandaloneLink.class);
-        then(standaloneLinkRepository).should().save(standaloneLinkCaptor.capture());
-        return standaloneLinkCaptor.getValue();
+    private Link captureSavedLink() {
+        ArgumentCaptor<Link> linkCaptor = ArgumentCaptor.forClass(Link.class);
+        then(linkRepository).should().save(linkCaptor.capture());
+        return linkCaptor.getValue();
     }
 
 }

@@ -1,28 +1,27 @@
 package com.springuni.hermes.link.model;
 
-import static javax.persistence.DiscriminatorType.CHAR;
-import static javax.persistence.InheritanceType.SINGLE_TABLE;
+import static com.springuni.hermes.link.model.LinkStatus.PENDING;
+import static java.util.Collections.unmodifiableSet;
+import static javax.persistence.EnumType.STRING;
 
 import com.springuni.hermes.core.util.IdentityGenerator;
 import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.utm.model.UtmParameters;
 import java.net.URI;
+import java.util.LinkedHashSet;
 import java.util.Optional;
+import java.util.Set;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorValue;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
+import javax.persistence.Enumerated;
 import org.hashids.Hashids;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Entity
-@Inheritance(strategy = SINGLE_TABLE)
-@DiscriminatorColumn(discriminatorType = CHAR, name = "link_type")
-@DiscriminatorValue("L")
-public abstract class Link extends LinkBase<LinkId> {
+public class Link extends LinkBase<LinkId> {
 
     static final int HASHIDS_LENGTH = 11;
     private static final String HASHIDS_SALT = "6cY$S!08HpP$pWRpEErhGp7H3307a^67";
@@ -38,13 +37,20 @@ public abstract class Link extends LinkBase<LinkId> {
     @Column(name = "path_")
     private String path;
 
-    Link(@NotNull String longUrl, @NotNull UserId userId) throws InvalidUrlException {
-        this(longUrl, null, userId);
+    @Enumerated(STRING)
+    private LinkStatus linkStatus = PENDING;
+
+    @ElementCollection
+    private Set<Tag> tags = new LinkedHashSet<>();
+
+    public Link(@NotNull String longUrl, @Nullable UtmParameters utmParameters,
+            @NotNull UserId userId) throws InvalidUrlException {
+
+        this(new LongUrl(longUrl, utmParameters), userId);
     }
 
-    Link(@NotNull String longUrl, @Nullable UtmParameters utmParameters,
-            @NotNull UserId userId) throws InvalidUrlException {
-        this(new LongUrl(longUrl, utmParameters), userId);
+    public Link(@NotNull String longUrl, @NotNull UserId userId) throws InvalidUrlException {
+        this(longUrl, null, userId);
     }
 
     Link(@NotNull LongUrl longUrl, @NotNull UserId userId) {
@@ -75,7 +81,31 @@ public abstract class Link extends LinkBase<LinkId> {
         return longUrl.getTargetUrl();
     }
 
-    public abstract LinkType getLinkType();
+    @Override
+    public LinkStatus getLinkStatus() {
+        return linkStatus;
+    }
+
+    @Override
+    protected void setLinkStatus(LinkStatus linkStatus) {
+        this.linkStatus = linkStatus;
+    }
+
+    public void apply(UtmParameters utmParameters) {
+        longUrl = longUrl.apply(utmParameters);
+    }
+
+    public Set<Tag> getTags() {
+        return unmodifiableSet(tags);
+    }
+
+    public void addTag(Tag tag) {
+        tags.add(tag);
+    }
+
+    public void removeTag(Tag tag) {
+        tags.remove(tag);
+    }
 
     @Override
     public String toString() {

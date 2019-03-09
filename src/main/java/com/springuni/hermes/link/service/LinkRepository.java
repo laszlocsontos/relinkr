@@ -5,8 +5,8 @@ import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;
 import java.util.Optional;
 
-interface LinkRepository<E extends Link> extends OwnableRepository<E, LinkId> {
+interface LinkRepository extends OwnableRepository<Link, LinkId> {
 
-    Optional<E> findByPath(String path);
+    Optional<Link> findByPath(String path);
 
 }

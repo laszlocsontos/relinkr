@@ -3,7 +3,7 @@ package com.springuni.hermes.link.web;
 import static com.springuni.hermes.Mocks.PAGEABLE;
 import static com.springuni.hermes.Mocks.TAG_A;
 import static com.springuni.hermes.Mocks.USER_ID;
-import static com.springuni.hermes.Mocks.createStandaloneLink;
+import static com.springuni.hermes.Mocks.createLink;
 import static com.springuni.hermes.link.model.LinkStatus.ACTIVE;
 import static com.springuni.hermes.link.model.LinkStatus.ARCHIVED;
 import static java.util.Arrays.asList;
@@ -25,8 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;
-import com.springuni.hermes.link.model.StandaloneLink;
 import com.springuni.hermes.link.service.LinkService;
 import com.springuni.hermes.link.web.LinkResourceControllerTest.TestConfig;
 import com.springuni.hermes.utm.model.UtmParameters;
@@ -63,32 +63,32 @@ public class LinkResourceControllerTest {
     @MockBean
     private LinkService linkService;
 
-    private StandaloneLink standaloneLink;
+    private Link link;
 
     @Before
     public void setUp() throws Exception {
-        standaloneLink = createStandaloneLink();
+        link = createLink();
     }
 
     @Test
     public void getLink() throws Exception {
-        given(linkService.getLink(standaloneLink.getId())).willReturn(standaloneLink);
+        given(linkService.getLink(link.getId())).willReturn(link);
 
         ResultActions resultActions = mockMvc
-                .perform(get("/api/links/{linkId}", standaloneLink.getId()))
+                .perform(get("/api/links/{linkId}", link.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_VALUE))
                 .andDo(print());
 
-        assertStandaloneLink(resultActions);
+        assertLink(resultActions);
     }
 
     @Test
     @WithMockUser(username = "1") // USER_ID
     public void addLink() throws Exception {
         LinkResource linkResource = new LinkResource(
-                standaloneLink.getLongUrl().toString(),
-                standaloneLink.getUtmParameters().orElse(null)
+                link.getLongUrl().toString(),
+                link.getUtmParameters().orElse(null)
         );
 
         given(
@@ -97,7 +97,7 @@ public class LinkResourceControllerTest {
                         linkResource.getUtmParameters().orElse(null),
                         USER_ID
                 )
-        ).willReturn(standaloneLink);
+        ).willReturn(link);
 
         ResultActions resultActions = mockMvc
                 .perform(post("/api/links").contentType(APPLICATION_JSON)
@@ -105,16 +105,16 @@ public class LinkResourceControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        assertStandaloneLink(resultActions);
+        assertLink(resultActions);
     }
 
     @Test
     public void replaceLink() throws Exception {
-        String longUrl = standaloneLink.getLongUrl().toString();
-        UtmParameters utmParameters = standaloneLink.getUtmParameters().get();
+        String longUrl = link.getLongUrl().toString();
+        UtmParameters utmParameters = link.getUtmParameters().get();
         LinkResource linkResource = new LinkResource(longUrl, utmParameters);
 
-        LinkId linkId = standaloneLink.getId();
+        LinkId linkId = link.getId();
 
         given(
                 linkService.updateLongUrl(
@@ -122,7 +122,7 @@ public class LinkResourceControllerTest {
                         longUrl,
                         utmParameters
                 )
-        ).willReturn(standaloneLink);
+        ).willReturn(link);
 
         ResultActions resultActions = mockMvc.perform(
                 put("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
@@ -130,17 +130,17 @@ public class LinkResourceControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        assertStandaloneLink(resultActions);
+        assertLink(resultActions);
 
         then(linkService).should().updateLongUrl(linkId, longUrl, utmParameters);
     }
 
     @Test
     public void replaceLink_withoutLongUrl() throws Exception {
-        UtmParameters utmParameters = standaloneLink.getUtmParameters().get();
+        UtmParameters utmParameters = link.getUtmParameters().get();
         LinkResource linkResource = new LinkResource(null, utmParameters);
 
-        LinkId linkId = standaloneLink.getId();
+        LinkId linkId = link.getId();
 
         ResultActions resultActions = mockMvc.perform(
                 put("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
@@ -155,17 +155,17 @@ public class LinkResourceControllerTest {
 
     @Test
     public void updateLink_withLongUrl() throws Exception {
-        String longUrl = standaloneLink.getLongUrl().toString();
+        String longUrl = link.getLongUrl().toString();
         LinkResource linkResource = new LinkResource(longUrl);
 
-        LinkId linkId = standaloneLink.getId();
+        LinkId linkId = link.getId();
 
         given(
                 linkService.updateLongUrl(
                         linkId,
                         longUrl
                 )
-        ).willReturn(standaloneLink);
+        ).willReturn(link);
 
         ResultActions resultActions = mockMvc.perform(
                 patch("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
@@ -173,24 +173,24 @@ public class LinkResourceControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        assertStandaloneLink(resultActions);
+        assertLink(resultActions);
 
         then(linkService).should().updateLongUrl(linkId, longUrl);
     }
 
     @Test
     public void updateLink_withUtmParameters() throws Exception {
-        UtmParameters utmParameters = standaloneLink.getUtmParameters().orElse(null);
+        UtmParameters utmParameters = link.getUtmParameters().orElse(null);
         LinkResource linkResource = new LinkResource(utmParameters);
 
-        LinkId linkId = standaloneLink.getId();
+        LinkId linkId = link.getId();
 
         given(
                 linkService.updateUtmParameters(
                         linkId,
                         utmParameters
                 )
-        ).willReturn(standaloneLink);
+        ).willReturn(link);
 
         ResultActions resultActions = mockMvc.perform(
                 patch("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
@@ -198,7 +198,7 @@ public class LinkResourceControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        assertStandaloneLink(resultActions);
+        assertLink(resultActions);
 
         then(linkService).should().updateUtmParameters(linkId, utmParameters);
     }
@@ -207,7 +207,7 @@ public class LinkResourceControllerTest {
     public void updateLink_withoutParameters() throws Exception {
         LinkResource linkResource = new LinkResource();
 
-        LinkId linkId = standaloneLink.getId();
+        LinkId linkId = link.getId();
 
         ResultActions resultActions = mockMvc.perform(
                 patch("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
@@ -225,7 +225,7 @@ public class LinkResourceControllerTest {
     @WithMockUser(username = "1") // USER_ID
     public void listLinks() throws Exception {
         given(linkService.listLinks(USER_ID, PAGEABLE))
-                .willReturn(new PageImpl<>(asList(standaloneLink), PAGEABLE, 1));
+                .willReturn(new PageImpl<>(asList(link), PAGEABLE, 1));
 
         ResultActions resultActions = mockMvc.perform(get("/api/links")
                 .param("page", String.valueOf(PAGEABLE.getPageNumber()))
@@ -233,50 +233,50 @@ public class LinkResourceControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        assertStandaloneLink("_embedded.links[0]", resultActions);
+        assertLink("_embedded.links[0]", resultActions);
     }
 
     @Test
     public void updateLinkStatus_withActive() throws Exception {
-        mockMvc.perform(put("/api/links/{linkId}/linkStatuses/{linkStatus}", standaloneLink.getId(),
+        mockMvc.perform(put("/api/links/{linkId}/linkStatuses/{linkStatus}", link.getId(),
                 ACTIVE.name()))
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        then(linkService).should().activateLink(standaloneLink.getId());
+        then(linkService).should().activateLink(link.getId());
         then(linkService).shouldHaveNoMoreInteractions();
     }
 
     @Test
     public void updateLinkStatus_withArchived() throws Exception {
-        mockMvc.perform(put("/api/links/{linkId}/linkStatuses/{linkStatus}", standaloneLink.getId(),
+        mockMvc.perform(put("/api/links/{linkId}/linkStatuses/{linkStatus}", link.getId(),
                 ARCHIVED.name()))
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        then(linkService).should().archiveLink(standaloneLink.getId());
+        then(linkService).should().archiveLink(link.getId());
         then(linkService).shouldHaveNoMoreInteractions();
     }
 
     @Test
     public void addTag() throws Exception {
-        mockMvc.perform(post("/api/links/{linkId}/tags/{tagName}", standaloneLink.getId(),
+        mockMvc.perform(post("/api/links/{linkId}/tags/{tagName}", link.getId(),
                 TAG_A.getTagName()))
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        then(linkService).should().addTag(standaloneLink.getId(), TAG_A.getTagName());
+        then(linkService).should().addTag(link.getId(), TAG_A.getTagName());
         then(linkService).shouldHaveNoMoreInteractions();
     }
 
     @Test
     public void removeTag() throws Exception {
-        mockMvc.perform(delete("/api/links/{linkId}/tags/{tagName}", standaloneLink.getId(),
+        mockMvc.perform(delete("/api/links/{linkId}/tags/{tagName}", link.getId(),
                 TAG_A.getTagName()))
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        then(linkService).should().removeTag(standaloneLink.getId(), TAG_A.getTagName());
+        then(linkService).should().removeTag(link.getId(), TAG_A.getTagName());
         then(linkService).shouldHaveNoMoreInteractions();
     }
 
@@ -288,36 +288,36 @@ public class LinkResourceControllerTest {
                 .andExpect(jsonPath("$.detailMessage", startsWith(detailMessage)));
     }
 
-    private void assertStandaloneLink(ResultActions resultActions) throws Exception {
-        assertStandaloneLink("$", resultActions);
+    private void assertLink(ResultActions resultActions) throws Exception {
+        assertLink("$", resultActions);
     }
 
-    private void assertStandaloneLink(String path, ResultActions resultActions) throws Exception {
+    private void assertLink(String path, ResultActions resultActions) throws Exception {
         resultActions
-                .andExpect(jsonPath(path + ".id", is(standaloneLink.getId().toString())))
-                .andExpect(jsonPath(path + ".longUrl", is(standaloneLink.getLongUrl().toString())))
+                .andExpect(jsonPath(path + ".id", is(link.getId().toString())))
+                .andExpect(jsonPath(path + ".longUrl", is(link.getLongUrl().toString())))
                 .andExpect(
-                        jsonPath(path + ".targetUrl", is(standaloneLink.getTargetUrl().toString())))
-                .andExpect(jsonPath(path + ".tags", hasSize(standaloneLink.getTags().size())))
+                        jsonPath(path + ".targetUrl", is(link.getTargetUrl().toString())))
+                .andExpect(jsonPath(path + ".tags", hasSize(link.getTags().size())))
                 .andExpect(jsonPath(path + ".linkStatus", is(ACTIVE.name())))
-                .andExpect(jsonPath(path + ".path", is(standaloneLink.getPath())))
+                .andExpect(jsonPath(path + ".path", is(link.getPath())))
                 .andExpect(jsonPath(path + ".utmParameters.utmSource",
-                        is(standaloneLink.getUtmParameters().get().getUtmSource())))
+                        is(link.getUtmParameters().get().getUtmSource())))
                 .andExpect(jsonPath(path + ".utmParameters.utmMedium",
-                        is(standaloneLink.getUtmParameters().get().getUtmMedium())))
+                        is(link.getUtmParameters().get().getUtmMedium())))
                 .andExpect(jsonPath(path + ".utmParameters.utmCampaign",
-                        is(standaloneLink.getUtmParameters().get().getUtmCampaign())))
+                        is(link.getUtmParameters().get().getUtmCampaign())))
                 .andExpect(jsonPath(path + ".utmParameters.utmTerm",
-                        is(standaloneLink.getUtmParameters().get().getUtmTerm().orElse(null))))
+                        is(link.getUtmParameters().get().getUtmTerm().orElse(null))))
                 .andExpect(jsonPath(path + ".utmParameters.utmContent",
-                        is(standaloneLink.getUtmParameters().get().getUtmContent().orElse(null))))
+                        is(link.getUtmParameters().get().getUtmContent().orElse(null))))
                 .andExpect(jsonPath(path + "._links.self.href",
-                        is("http://localhost/api/links/" + standaloneLink.getId())))
+                        is("http://localhost/api/links/" + link.getId())))
                 .andExpect(jsonPath(path + "._links.userLinkStatuses.href",
-                        is("http://localhost/api/links/" + standaloneLink.getId()
+                        is("http://localhost/api/links/" + link.getId()
                                 + "/linkStatuses/ARCHIVED")))
                 .andExpect(jsonPath(path + "._links.shortLink.href",
-                        is("http://localhost/" + standaloneLink.getPath())));
+                        is("http://localhost/" + link.getPath())));
     }
 
     @TestConfiguration

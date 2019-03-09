@@ -10,9 +10,9 @@ import com.springuni.hermes.click.ClickId;
 import com.springuni.hermes.click.IpAddress;
 import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.core.security.authn.signin.SignInRequest;
+import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.link.model.LongUrl;
-import com.springuni.hermes.link.model.StandaloneLink;
 import com.springuni.hermes.link.model.Tag;
 import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.User;
@@ -168,12 +168,11 @@ public class Mocks {
         return utmTemplate;
     }
 
-    public static StandaloneLink createStandaloneLink() throws ApplicationException {
-        StandaloneLink standaloneLink =
-                new StandaloneLink(LONG_URL_WITHOUT_UTM_S, UTM_PARAMETERS_FULL, USER_ID);
-        standaloneLink.setId(LINK_ID);
-        standaloneLink.markActive();
-        return standaloneLink;
+    public static Link createLink() throws ApplicationException {
+        Link link = new Link(LONG_URL_WITHOUT_UTM_S, UTM_PARAMETERS_FULL, USER_ID);
+        link.setId(LINK_ID);
+        link.markActive();
+        return link;
     }
 
     public static User createUser() {

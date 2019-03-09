@@ -11,7 +11,6 @@ import static com.springuni.hermes.link.model.Link.HASHIDS_LENGTH;
 import static com.springuni.hermes.link.model.LinkStatus.ACTIVE;
 import static com.springuni.hermes.link.model.LinkStatus.ARCHIVED;
 import static com.springuni.hermes.link.model.LinkStatus.BROKEN;
-import static com.springuni.hermes.link.model.LinkType.STANDALONE;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
@@ -23,13 +22,13 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-public class StandaloneLinkTest {
+public class LinkTest {
 
-    private StandaloneLink link;
+    private Link link;
 
     @Before
     public void setUp() throws Exception {
-        link = new StandaloneLink(LONG_URL_WITHOUT_UTM, USER_ID);
+        link = new Link(LONG_URL_WITHOUT_UTM, USER_ID);
     }
 
     @Test
@@ -86,11 +85,6 @@ public class StandaloneLinkTest {
         link.updateLongUrl(LONG_URL_BASE_S);
         assertEquals(LONG_URL_BASE_S, link.getLongUrl().toString());
         assertEquals(LONG_URL_BASE_S, link.getTargetUrl().toString());
-    }
-
-    @Test
-    public void getLinkType() {
-        assertEquals(STANDALONE, link.getLinkType());
     }
 
     @Test

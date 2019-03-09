@@ -1,16 +1,12 @@
 package com.springuni.hermes.link.service;
 
 import static com.springuni.hermes.link.model.LinkStatus.ACTIVE;
-import static com.springuni.hermes.link.model.LinkType.STANDALONE;
 
 import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.core.model.EntityNotFoundException;
 import com.springuni.hermes.link.model.InvalidUrlException;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;
-import com.springuni.hermes.link.model.LinkType;
-import com.springuni.hermes.link.model.StandaloneLink;
-import com.springuni.hermes.link.model.UnsupportedLinkOperationException;
 import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.utm.model.UtmParameters;
 import java.net.URI;
@@ -19,17 +15,10 @@ import org.springframework.util.Assert;
 
 @Service
 class LinkServiceImpl
-        extends AbstractLinkService<LinkId, Link, LinkRepository<Link>> implements LinkService {
+        extends AbstractLinkService<LinkId, Link, LinkRepository> implements LinkService {
 
-    private final StandaloneLinkRepository standaloneLinkRepository;
-
-    public LinkServiceImpl(
-            LinkRepository<Link> linkRepository,
-            StandaloneLinkRepository standaloneLinkRepository) {
-
+    public LinkServiceImpl(LinkRepository linkRepository) {
         super(linkRepository);
-
-        this.standaloneLinkRepository = standaloneLinkRepository;
     }
 
     @Override
@@ -54,8 +43,8 @@ class LinkServiceImpl
         Assert.hasText(longUrl, "longUrl must contain text");
         Assert.notNull(userId, "userId cannot be null");
 
-        StandaloneLink link = new StandaloneLink(longUrl, utmParameters, userId);
-        return standaloneLinkRepository.save(link);
+        Link link = new Link(longUrl, utmParameters, userId);
+        return linkRepository.save(link);
     }
 
     @Override
@@ -66,7 +55,7 @@ class LinkServiceImpl
         Link link = getLink(linkId);
         verifyLinkBeforeUpdate(link);
         link.updateLongUrl(longUrl, utmParameters);
-        return standaloneLinkRepository.save((StandaloneLink) link);
+        return linkRepository.save(link);
     }
 
     @Override
@@ -77,16 +66,13 @@ class LinkServiceImpl
 
         Link link = getLink(linkId);
         verifyLinkBeforeUpdate(link);
-        ((StandaloneLink) link).apply(utmParameters);
-        return standaloneLinkRepository.save((StandaloneLink) link);
+        link.apply(utmParameters);
+        return linkRepository.save(link);
     }
 
     @Override
     protected void verifyLinkBeforeUpdate(Link link) {
-        LinkType linkType = link.getLinkType();
-        if (!STANDALONE.equals(linkType)) {
-            throw UnsupportedLinkOperationException.forLinkType(linkType);
-        }
+        // TODO: I don't remember what this was supposed to be doing
     }
 
 }

@@ -42,7 +42,6 @@ CREATE TABLE utm_template_parameters (
 
 CREATE TABLE link (
   id bigint NOT NULL,
-  link_type char(1) NOT NULL,
   link_status varchar(255) NULL,
   long_url varchar(255) NULL,
   utm_campaign varchar(255) NULL,
