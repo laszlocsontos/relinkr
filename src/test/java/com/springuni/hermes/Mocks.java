@@ -19,8 +19,6 @@ import com.springuni.hermes.user.model.User;
 import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.user.model.UserProfile;
 import com.springuni.hermes.utm.model.UtmParameters;
-import com.springuni.hermes.utm.model.UtmTemplate;
-import com.springuni.hermes.utm.model.UtmTemplateId;
 import com.springuni.hermes.visitor.model.VisitorId;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -63,9 +61,6 @@ public class Mocks {
 
     public static final UserId USER_ID = UserId.of(1L);
     public static final UserId USER_ID_ZERO = UserId.of(0L);
-
-    public static final UtmTemplateId UTM_TEMPLATE_ID = UtmTemplateId.of(1L);
-    public static final UtmTemplateId UTM_TEMPLATE_ID_ZERO = UtmTemplateId.of(0L);
 
     public static final String UTM_TEMPLATE_NAME = "template";
 
@@ -160,12 +155,6 @@ public class Mocks {
             // This shouldn't happen, if it does, make test cases fail.
             throw new AssertionError(e);
         }
-    }
-
-    public static UtmTemplate createUtmTemplate() {
-        UtmTemplate utmTemplate = new UtmTemplate(UTM_TEMPLATE_NAME, USER_ID);
-        utmTemplate.addUtmParameters(UTM_PARAMETERS_FULL);
-        return utmTemplate;
     }
 
     public static Link createLink() throws ApplicationException {

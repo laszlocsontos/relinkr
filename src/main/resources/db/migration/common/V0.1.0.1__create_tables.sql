@@ -20,26 +20,6 @@ CREATE TABLE click (
   CONSTRAINT click_pk PRIMARY KEY (id)
 );
 
-CREATE TABLE utm_template (
-  id bigint NOT NULL,
-  name varchar(255) NULL,
-  user_id bigint NULL,
-  created_date timestamp NULL,
-  last_modified_date timestamp NULL,
-  version_ integer not null,
-  CONSTRAINT utm_template_pk PRIMARY KEY (id)
-);
-
-CREATE TABLE utm_template_parameters (
-  utm_template_id bigint NOT NULL,
-  utm_campaign varchar(255) NULL,
-  utm_content varchar(255) NULL,
-  utm_medium varchar(255) NULL,
-  utm_source varchar(255) NULL,
-  utm_term varchar(255) NULL,
-  CONSTRAINT utm_template_parameters_utm_template_id_fk FOREIGN KEY (utm_template_id) REFERENCES utm_template(id)
-);
-
 CREATE TABLE link (
   id bigint NOT NULL,
   link_status varchar(255) NULL,
