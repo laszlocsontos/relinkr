@@ -13,77 +13,77 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Morris.js Charts</h1>
+                    <h1 class="page-header">Stats</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Area Chart Example
-                        </div>
+                        <div class="panel-heading">Date Range</div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <div id="morris-area-chart"></div>
+                            <!-- startDate -->
+                            <div class="form-group input-group">
+                                <label>Start Date</label>
+                                <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                                <input id="startDate" class="form-control" placeholder="2019-03-13" v-model="startDate">
+                            </div>
+                            <!-- endDate -->
+                            <div class="form-group input-group">
+                                <label>End Date</label>
+                                <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                                <input id="endDate" class="form-control" placeholder="2019-03-13" v-model="endDate">
+                            </div>
                         </div>
                         <!-- /.panel-body -->
                     </div>
                     <!-- /.panel -->
                 </div>
-                <!-- /.col-lg-6 -->
-                <div class="col-lg-6">
+                <!-- /.col-lg-4 -->
+                <div class="col-lg-4">
                     <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Bar Chart Example
-                        </div>
+                        <div class="panel-heading">Long URL</div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <div id="morris-bar-chart"></div>
+                            <div class="form-group input-group">
+                                <input class="form-control" placeholder="Domain" v-model="domain">
+                                <input class="form-control" placeholder="Path" v-model="path">
+                            </div>
                         </div>
                         <!-- /.panel-body -->
                     </div>
                     <!-- /.panel -->
                 </div>
-                <!-- /.col-lg-6 -->
-                <div class="col-lg-6">
+                <!-- /.col-lg-4 -->
+                <div class="col-lg-4">
                     <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Line Chart Example
-                        </div>
+                        <div class="panel-heading">UTM Parameters</div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <div id="morris-line-chart"></div>
+                            <div class="form-group input-group">
+                                <input class="form-control" placeholder="UTM Source" v-model="utmSource">
+                                <input class="form-control" placeholder="UTM Medium" v-model="utmMedium">
+                                <input class="form-control" placeholder="UTM Campaign" v-model="utmCampaign">
+                                <input class="form-control" placeholder="UTM Term" v-model="utmTerm">
+                                <input class="form-control" placeholder="UTM Content" v-model="utmContent">
+                            </div>
                         </div>
                         <!-- /.panel-body -->
                     </div>
                     <!-- /.panel -->
                 </div>
-                <!-- /.col-lg-6 -->
-                <div class="col-lg-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Donut Chart Example
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <div id="morris-donut-chart"></div>
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-                    <!-- /.panel -->
-                </div>
-                <!-- /.col-lg-6 -->
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Morris.js Usage
-                        </div>
+                        <div class="panel-heading">Aggregated Clicks</div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <p>Morris.js is a jQuery based charting plugin created by Olly Smith. In SB Admin, we are using the most recent version of Morris.js which includes the resize function, which makes the charts fully responsive. The documentation for Morris.js is available on their website, <a target="_blank" href="http://morrisjs.github.io/morris.js/stats.html">http://morrisjs.github.io/morris.js/</a>.</p>
-                            <a target="_blank" class="btn btn-default btn-lg btn-block" href="http://morrisjs.github.io/morris.js/stats.html">View Morris.js Documentation</a>
+                            <canvas id="chart-aggregated-clicks"></canvas>
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -99,6 +99,32 @@
     <!-- /#wrapper -->
 
     <footer th:replace="fragments/layout :: footer"/>
+
+    <script>
+      new Chart("chart-aggregated-clicks", {
+        type: 'line',
+        data: {
+          datasets: [{
+            label: "# of clicks",
+            data: [10, 20, 30, 40, 50, 60, 20, 50, 60, 70, 80, 10]
+          }],
+          labels: ['2018-03', '2018-04', '2018-05', '2018-06', '2018-07', '2018-08', '2018-09', '2018-10', '2018-11', '2018-12', '2019-01', '2019-02'],
+        },
+        options: {
+          responsive: true
+        }
+      });
+
+      new Pikaday({
+        field: $('#startDate')[0],
+        format: 'YYYY-MM-DD'
+      });
+
+      new Pikaday({
+        field: $('#endDate')[0],
+        format: 'YYYY-MM-DD'
+      });
+    </script>
 
 </body>
 
