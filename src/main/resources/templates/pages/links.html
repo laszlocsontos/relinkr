@@ -24,9 +24,9 @@
       <div class="row" v-for="link in links" :key="link._links.self.href">
 
         <!-- Link -->
-        <div class="col-lg-12">
+        <div class="col-lg-4">
           <div class="panel panel-green">
-            <div class="panel-heading">{{ link._links.shortLink.href }}</div>
+            <div class="panel-heading"><a v-bind:href="link.longUrl" target="_blank">{{ link._links.shortLink.href }}</a></div>
             <!-- .panel-heading -->
             <div class="panel-body">
               <div class="panel-group" id="accordion">
