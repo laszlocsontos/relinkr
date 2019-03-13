@@ -45,10 +45,10 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h4 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion" v-bind:href="'#collapse-url-' + link.path">Long Url</a>
+                      <a data-toggle="collapse" data-parent="#accordion" v-bind:href="'#collapse-url-' + link.id">Long Url</a>
                     </h4>
                   </div>
-                  <div v-bind:id="'collapse-url-' + link.path" class="panel-collapse collapse in">
+                  <div v-bind:id="'collapse-url-' + link.id" class="panel-collapse collapse in">
                     <div class="panel-body">
                       <div class="input-group">
                         <input type="text" class="form-control" aria-label="Long Url" aria-describedby="inputGroup-sizing-sm" v-model="link.longUrl">
@@ -63,11 +63,11 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h4 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion" v-bind:href="'#collapse-utm-' + link.path">UTM
+                      <a data-toggle="collapse" data-parent="#accordion" v-bind:href="'#collapse-utm-' + link.id">UTM
                         Parameters</a>
                     </h4>
                   </div>
-                  <div v-bind:id="'collapse-utm-' + link.path" class="panel-collapse collapse">
+                  <div v-bind:id="'collapse-utm-' + link.id" class="panel-collapse collapse">
                     <div class="panel-body">
                       <!-- UTM Source -->
                       <div class="input-group">
@@ -104,12 +104,12 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h4 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion" v-bind:href="'#collapse-stats-' + link.path">Statistics</a>
+                      <a data-toggle="collapse" data-parent="#accordion" v-bind:href="'#collapse-stats-' + link.id">Statistics</a>
                     </h4>
                   </div>
-                  <div v-bind:id="'collapse-stats-' + link.path" class="panel-collapse collapse">
+                  <div v-bind:id="'collapse-stats-' + link.id" class="panel-collapse collapse">
                     <div class="panel-body">
-
+                      <canvas v-bind:id="'link-stats-' + link.id"></canvas>
                     </div>
                   </div>
                 </div>
@@ -172,7 +172,6 @@
         this.$http.get("/api/links", config).then(
             function (response) {
               this.page = _.get(response, "body.page", {size: 0, number: 0, totalElements: 0, totalPages: 0});
-
               var links = _.get(response, "body._embedded.links", []);
 
               _.forEach(links, function (link) {
@@ -193,6 +192,22 @@
               var vm = this;
               _.forEach(this.links, function (link) {
                 vm._attachLinkWatchers(link);
+              });
+
+              // Render charts after the next DOM update cycle
+              this.$nextTick(function () {
+                _.forEach(vm.links, function (link) {
+                  new Chart("link-stats-" + link.id, {
+                    type: 'bar',
+                    data: {
+                      datasets: [{
+                        label: "# of clicks",
+                        data: [10, 20, 35, 20, 42, 25, 80]
+                      }],
+                      labels: ['2018-03-06', '2018-03-07', '2018-03-08', '2018-03-09', '2018-03-10', '2018-03-11', '2018-03-12'],
+                    }
+                  });
+                });
               });
 
               console.log(this.links);
