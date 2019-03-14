@@ -80,7 +80,7 @@
           <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-user">
-          <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+          <li><a href="#userProfileModal" data-toggle="modal" data-target="#userProfileModal"><i class="fa fa-user fa-fw"></i> User Profile</a>
           </li>
           <li class="divider"></li>
           <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i>Logout</a></li>
@@ -96,7 +96,7 @@
         <ul class="nav" id="side-menu">
           <li class="sidebar-search">
             <!-- New Link Dialog -->
-            <div id="new_link_form">
+            <div id="new-link-dialog">
               <button class="btn btn-primary" data-toggle="modal" data-target="#newLinkModal" v-on:click="onNewLink">New Link</button>
               <div class="modal fade" id="newLinkModal" tabindex="-1" role="dialog"
                    aria-labelledby="newLinkModalLabel" aria-hidden="true">
@@ -141,6 +141,57 @@
                     <div class="modal-footer">
                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                       <button type="button" class="btn btn-primary" v-on:click="onSaveLink">Save</button>
+                    </div>
+                  </div>
+                  <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+              </div>
+            </div>
+
+            <!-- User Profile Dialog -->
+            <div id="user-profile-dialog">
+              <div class="modal fade" id="userProfileModal" tabindex="-1" role="dialog" aria-labelledby="userProfileModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title" id="userProfileModalLabel">User Profile</h4>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row">
+                        <div class="col-lg-10">
+                          <form role="form">
+                            <div class="form-group input-group">
+                              <label for="userId">User ID</label>
+                              <input type="text" readonly class="form-control" v-model="userId" id="userId">
+                            </div>
+                            <div class="form-group input-group">
+                              <label for="userFullName">Full Name</label>
+                              <input type="text" readonly class="form-control" v-model="userFullName" id="userFullName">
+                            </div>
+                            <div class="form-group input-group">
+                              <label for="userProfileType">Profile Type</label>
+                              <input type="text" readonly class="form-control" v-model="userProfileType" id="userProfileType">
+                            </div>
+                            <div class="form-group input-group">
+                              <label for="userProfileUrl">Profile Url</label>
+                              <input type="text" readonly class="form-control" v-model="userProfileUrl" id="userProfileUrl">
+                            </div>
+                            <div class="form-group input-group">
+                              <label for="userProfileUrl">API Key</label>
+                              <input type="text" readonly class="form-control" v-model="userProfileUrl" id="apiKey">
+                              <div class="input-group-btn">
+                                <button type="button" class="btn btn-default" aria-expanded="false" v-on:click="onApiKeyReset">Reset</button>
+                              </div><!-- /btn-group -->
+                            </div>
+                          </form>
+                        </div>
+                        <!-- /.col-lg-6 (nested) -->
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
                     </div>
                   </div>
                   <!-- /.modal-content -->
