@@ -134,7 +134,7 @@ public class UserProfileFactoryImpl implements UserProfileFactory {
         };
 
         FacebookUserProfileCreator() {
-            super(GOOGLE, FIELD_NAMES);
+            super(FACEBOOK, FIELD_NAMES);
         }
 
         @Override

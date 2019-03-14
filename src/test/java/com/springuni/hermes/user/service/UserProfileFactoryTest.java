@@ -4,6 +4,7 @@ import static com.springuni.hermes.Mocks.GOOGLE_USER_ATTRIBUTES;
 import static com.springuni.hermes.user.model.UserProfileType.FACEBOOK;
 import static com.springuni.hermes.user.model.UserProfileType.GOOGLE;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import com.springuni.hermes.user.model.UserProfile;
 import java.net.URI;
@@ -24,6 +25,7 @@ public class UserProfileFactoryTest {
     public void givenGoogleUserInfo_whenCreate_thenOk() {
         UserProfile userProfile = userProfileFactory.create(GOOGLE, GOOGLE_USER_ATTRIBUTES);
 
+        assertEquals(GOOGLE, userProfile.getUserProfileType());
         assertEquals("12345789", userProfile.getUserProfileId());
         assertEquals("László Csontos", userProfile.getFullName().get());
         assertEquals("László", userProfile.getGivenName().get());
@@ -49,6 +51,7 @@ public class UserProfileFactoryTest {
 
         UserProfile userProfile = userProfileFactory.create(FACEBOOK, userAttributes);
 
+        assertEquals(FACEBOOK, userProfile.getUserProfileType());
         assertEquals("12345789", userProfile.getUserProfileId());
         assertEquals("László Csontos", userProfile.getFullName().get());
         assertEquals("László", userProfile.getGivenName().get());
