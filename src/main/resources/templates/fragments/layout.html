@@ -111,7 +111,7 @@
           <li class="sidebar-search">
             <!-- New Link Dialog -->
             <div id="new_link_form">
-              <button class="btn btn-primary" data-toggle="modal" data-target="#newLinkModal" v-on:click="newLink">New Link</button>
+              <button class="btn btn-primary" data-toggle="modal" data-target="#newLinkModal" v-on:click="onNewLink">New Link</button>
               <div class="modal fade" id="newLinkModal" tabindex="-1" role="dialog"
                    aria-labelledby="newLinkModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -126,20 +126,15 @@
                             <div class="form-group input-group">
                               <label>Long URL</label>
                               <span class="input-group-addon glyphicon glyphicon-link"></span>
-                              <input class="form-control" placeholder="https://google.com"
-                                     v-model="longUrl">
+                              <input class="form-control" placeholder="https://google.com" v-model="longUrl">
                             </div>
                             <div class="form-group input-group">
                               <label>UTM parameters</label>
-                              <input class="form-control" placeholder="UTM Source"
-                                     v-model="utmSource">
-                              <input class="form-control" placeholder="UTM Medium"
-                                     v-model="utmMedium">
-                              <input class="form-control" placeholder="UTM Campaign"
-                                     v-model="utmCampaign">
+                              <input class="form-control" placeholder="UTM Source" v-model="utmSource">
+                              <input class="form-control" placeholder="UTM Medium" v-model="utmMedium">
+                              <input class="form-control" placeholder="UTM Campaign" v-model="utmCampaign">
                               <input class="form-control" placeholder="UTM Term" v-model="utmTerm">
-                              <input class="form-control" placeholder="UTM Content"
-                                     v-model="utmContent">
+                              <input class="form-control" placeholder="UTM Content" v-model="utmContent">
                             </div>
                           </form>
                           <div class="alert alert-danger alert-dismissable" v-if="errors.length">
@@ -148,11 +143,8 @@
                               <li v-for="error in errors">{{ error }}</li>
                             </ul>
                           </div>
-                          <div class="alert alert-success alert-dismissable"
-                               v-if="!_.isEmpty(shortLink)">
-                            <button type="button" class="close" data-dismiss="alert"
-                                    aria-hidden="true">×
-                            </button>
+                          <div class="alert alert-success alert-dismissable" v-if="!_.isEmpty(shortLink)">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                             <span>{{ shortLink }}</span>
                             <a href="#" class="alert-link">Alert Link</a>.
                           </div>
@@ -161,10 +153,8 @@
                       </div>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close
-                      </button>
-                      <button type="button" class="btn btn-primary" v-on:click="saveLink">Save
-                      </button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary" v-on:click="onSaveLink">Save</button>
                     </div>
                   </div>
                   <!-- /.modal-content -->
@@ -242,13 +232,16 @@
         utmContent: ''
       },
 
+      mounted: function() {
+        this.newLinkModal = $("#newLinkModal");
+      },
+
       methods: {
-        newLink: function () {
-          this.errors = [];
-          this.shortLink = '';
+        onNewLink: function () {
+          this._reset();
         },
 
-        saveLink: function () {
+        onSaveLink: function () {
           this.errors = [];
 
           // Validate longUrl
@@ -294,6 +287,8 @@
               function (response) {
                 console.log(response);
                 this.shortLink = _.get(response, "body._links.shortLink.href");
+                this.newLinkModal.modal("hide");
+                this._reset();
               },
               function (response) {
                 console.error(response);
@@ -307,6 +302,17 @@
             return false;
           }
           return RE_WEBURL.test(url);
+        },
+
+        _reset: function() {
+          this.longUrl = '';
+          this.utmSource = '';
+          this.utmMedium = '';
+          this.utmCampaign = '';
+          this.utmTerm = '';
+          this.utmContent = '';
+          this.errors = [];
+          this.shortLink = '';
         }
       }
     })
