@@ -25,8 +25,14 @@
 
         <!-- Link -->
         <div class="col-lg-4">
-          <div class="panel panel-green">
-            <div class="panel-heading"><a v-bind:href="link.longUrl" target="_blank">{{ link._links.shortLink.href }}</a></div>
+          <div class="panel" v-bind:class="linkPanelColor(link)">
+            <div class="panel-heading">
+              <span>
+                <a v-bind:href="link.longUrl" target="_blank">{{ link._links.shortLink.href }}</a>
+              </span>
+              <span>&nbsp;</span>
+              <span class="pull-right">{{ '(' + link.linkStatus + ')'}}</span>
+            </div>
             <!-- .panel-heading -->
             <div class="panel-body">
               <div class="panel-group" id="accordion">
@@ -63,8 +69,7 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h4 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion" v-bind:href="'#collapse-utm-' + link.id">UTM
-                        Parameters</a>
+                      <a data-toggle="collapse" data-parent="#accordion" v-bind:href="'#collapse-utm-' + link.id">UTM Parameters</a>
                     </h4>
                   </div>
                   <div v-bind:id="'collapse-utm-' + link.id" class="panel-collapse collapse">
@@ -165,6 +170,15 @@
     },
 
     methods: {
+      linkPanelColor: function (link) {
+        return {
+          "panel-info": link.linkStatus == "PENDING",
+          "panel-success": link.linkStatus == "ACTIVE",
+          "panel-danger": link.linkStatus == "BROKEN",
+          "panel-warning": link.linkStatus == "ARCHIVED"
+        };
+      },
+
       listLinks: function () {
         var config = {
           params: this.pageRequest
