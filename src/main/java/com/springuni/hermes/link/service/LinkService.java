@@ -13,6 +13,8 @@ public interface LinkService {
 
     Link getLink(LinkId linkId);
 
+    Link getLink(String path);
+
     Link addLink(String longUrl, UtmParameters utmParameters, UserId userId)
             throws ApplicationException;
 

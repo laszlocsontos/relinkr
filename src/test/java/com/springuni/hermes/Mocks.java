@@ -3,6 +3,8 @@ package com.springuni.hermes;
 import static com.springuni.hermes.user.model.Gender.MALE;
 import static com.springuni.hermes.user.model.Role.ADMIN;
 import static com.springuni.hermes.user.model.UserProfileType.GOOGLE;
+import static java.time.Instant.ofEpochMilli;
+import static java.time.ZoneOffset.UTC;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 
@@ -19,6 +21,8 @@ import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.user.model.UserProfile;
 import com.springuni.hermes.link.model.UtmParameters;
 import com.springuni.hermes.visitor.model.VisitorId;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -27,9 +31,12 @@ import java.util.Set;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-public class Mocks {
+public final class Mocks {
 
     public static final EmailAddress EMAIL_ADDRESS = new EmailAddress("test@test.com");
+
+    public static final Instant FIXED_INSTANT = ofEpochMilli(1553091772);
+    public static final Clock FIXED_CLOCK = Clock.fixed(FIXED_INSTANT, UTC);
 
     public static final String LONG_URL_BASE_S
             = "https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/";
@@ -47,6 +54,8 @@ public class Mocks {
     public static final LongUrl LONG_URL_WITHOUT_UTM;
     public static final LongUrl LONG_URL_VALID_UTM;
     public static final LongUrl LONG_URL_INVALID_UTM;
+
+    public static final String NOT_FOUND_URL = "https://relinkr.io/not-found";
 
     public static final String UTM_SOURCE_V = "source";
     public static final String UTM_MEDIUM_V = "medium";
@@ -75,7 +84,7 @@ public class Mocks {
     public static final LinkId LINK_ID = LinkId.of(1L);
     public static final LinkId LINK_ID_ZERO = LinkId.of(0L);
 
-    public static final VisitorId VISITOR_ID = VisitorId.of(1L);
+    public static final VisitorId VISITOR_ID = VisitorId.of(27469143961212L);
     public static final VisitorId VISITOR_ID_ZERO = VisitorId.of(0L);
 
     public static final IpAddress VISITOR_IP;
@@ -104,12 +113,22 @@ public class Mocks {
     public static final String JWT_SECRET_KEY =
             "cFZJY3VpV2RMZHZMQTdVNzRAMVUqc2RFWTJoSlNpJk5MNzE2TkghI1FqKnEmKjk2TjY4TnZ5MG9t";
 
+    public static final String JWS_VISITOR_COOKIE =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.Mjc0NjkxNDM5NjEyMTI."
+                    + "KXzzdb2L4gqFgFOvv7S8vv3fh0Ckl6dZIL6mYWExGKA";
+
+    public static final String JWS_VISITOR_COOKIE_SECRET_KEY =
+            "zwFKUNGIH9U063sSLbrm7k1sAkHuXQlD";
+
     public static final String CLEARTEXT_PASSWORD = "password";
 
     public static final String ENCRYPTED_PASSWORD =
             "{bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG";
 
     public static final Map<String, Object> GOOGLE_USER_ATTRIBUTES;
+
+    private Mocks() {
+    }
 
     static {
         try {

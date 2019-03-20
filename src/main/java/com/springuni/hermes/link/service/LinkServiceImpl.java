@@ -34,6 +34,21 @@ class LinkServiceImpl implements LinkService {
     }
 
     @Override
+    public Link getLink(String path) {
+        Assert.hasText(path, "path must contain text");
+
+        Link link = linkRepository
+                .findByPath(path)
+                .orElseThrow(() -> new EntityNotFoundException("path", path));
+
+        if (!ACTIVE.equals(link.getLinkStatus())) {
+            throw new EntityNotFoundException("path", path);
+        }
+
+        return link;
+    }
+
+    @Override
     public Page<Link> listLinks(UserId userId, Pageable pageable) {
         return linkRepository.findByUserId(userId, pageable);
     }
@@ -95,17 +110,7 @@ class LinkServiceImpl implements LinkService {
 
     @Override
     public URI getTargetUrl(String path) throws EntityNotFoundException {
-        Assert.hasText(path, "path must contain text");
-
-        Link link = linkRepository
-                .findByPath(path)
-                .orElseThrow(() -> new EntityNotFoundException("path", path));
-
-        if (!ACTIVE.equals(link.getLinkStatus())) {
-            throw new EntityNotFoundException("path", path);
-        }
-
-        return link.getTargetUrl();
+        return getLink(path).getTargetUrl();
     }
 
     @Override
