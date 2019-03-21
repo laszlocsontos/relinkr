@@ -56,7 +56,7 @@ public class LinkResourceAssembler
 
     void addShortLink(LinkResource linkResource, String path) {
         UriComponentsBuilder uriComponentsBuilder =
-                linkTo(methodOn(RedirectController.class).redirectLink(path))
+                linkTo(methodOn(RedirectController.class).redirectLink(path, null))
                         .toUriComponentsBuilder();
 
         getShortLinkScheme().ifPresent(uriComponentsBuilder::scheme);

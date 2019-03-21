@@ -1,24 +1,32 @@
 package com.springuni.hermes.link.model;
 
+import com.springuni.hermes.core.model.GenericApplicationEvent;
 import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.visitor.model.VisitorId;
+import java.time.Instant;
+import lombok.Getter;
 
-public class RedirectedEvent {
+@Getter
+public class RedirectedEvent extends GenericApplicationEvent<LinkId> {
+
+    private final VisitorId visitorId;
+    private final UserId userId;
+
+    private RedirectedEvent(LinkId linkId, VisitorId visitorId, UserId userId, Instant instant) {
+        super(linkId, instant);
+
+        this.visitorId = visitorId;
+        this.userId = userId;
+    }
 
     public LinkId getLinkId() {
-        return null;
+        return getSource();
     }
 
-    public VisitorId getVisitorId() {
-        return null;
-    }
+    public static RedirectedEvent of(
+            LinkId linkId, VisitorId visitorId, UserId userId, Instant instant) {
 
-    public UserId getUserId() {
-        return null;
-    }
-
-    public long getTimestamp() {
-        return 0;
+        return new RedirectedEvent(linkId, visitorId, userId, instant);
     }
 
 }

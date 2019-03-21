@@ -1,6 +1,5 @@
 package com.springuni.hermes.visitor.web;
 
-import static java.time.temporal.ChronoUnit.YEARS;
 import static org.springframework.util.Assert.isTrue;
 
 import com.springuni.hermes.core.web.CookieManager;
@@ -13,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
+@Component
 public class VisitorIdResolverImpl implements VisitorIdResolver {
 
     static final String COOKIE_NAME = "vid";

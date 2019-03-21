@@ -3,7 +3,7 @@ package com.springuni.hermes;
 import static com.springuni.hermes.user.model.Gender.MALE;
 import static com.springuni.hermes.user.model.Role.ADMIN;
 import static com.springuni.hermes.user.model.UserProfileType.GOOGLE;
-import static java.time.Instant.ofEpochMilli;
+import static java.time.Instant.ofEpochSecond;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
@@ -15,11 +15,11 @@ import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.link.model.LongUrl;
 import com.springuni.hermes.link.model.Tag;
+import com.springuni.hermes.link.model.UtmParameters;
 import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.User;
 import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.user.model.UserProfile;
-import com.springuni.hermes.link.model.UtmParameters;
 import com.springuni.hermes.visitor.model.VisitorId;
 import java.time.Clock;
 import java.time.Instant;
@@ -35,7 +35,7 @@ public final class Mocks {
 
     public static final EmailAddress EMAIL_ADDRESS = new EmailAddress("test@test.com");
 
-    public static final Instant FIXED_INSTANT = ofEpochMilli(1553091772);
+    public static final Instant FIXED_INSTANT = ofEpochSecond(1553091772);
     public static final Clock FIXED_CLOCK = Clock.fixed(FIXED_INSTANT, UTC);
 
     public static final String LONG_URL_BASE_S
