@@ -1,13 +1,14 @@
 package com.springuni.hermes.visitor.web;
 
 import com.springuni.hermes.visitor.model.VisitorId;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public interface VisitorIdResolver {
 
-    VisitorId resolveVisitorId(HttpServletRequest request);
+    Optional<VisitorId> resolveVisitorId(HttpServletRequest request);
 
-    void setVisitorId(HttpServletRequest request, HttpServletResponse response, VisitorId visitorId);
+    void setVisitorId(HttpServletResponse response, VisitorId visitorId);
 
 }

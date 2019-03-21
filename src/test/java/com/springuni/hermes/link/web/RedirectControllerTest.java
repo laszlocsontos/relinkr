@@ -27,6 +27,7 @@ import com.springuni.hermes.link.service.LinkService;
 import com.springuni.hermes.visitor.model.VisitorId;
 import com.springuni.hermes.visitor.service.VisitorService;
 import com.springuni.hermes.visitor.web.VisitorIdResolver;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.Before;
@@ -76,14 +77,14 @@ public class RedirectControllerTest {
 
         given(linkService.getLink(link.getPath())).willReturn(link);
         //  VisitorIdResolver returns null when cookie value is missing or integrity check failed
-        given(visitorIdResolver.resolveVisitorId(any(HttpServletRequest.class))).willReturn(null);
+        given(visitorIdResolver.resolveVisitorId(any(HttpServletRequest.class)))
+                .willReturn(Optional.empty());
         given(visitorService.ensureVisitor(null, link.getUserId())).willReturn(VISITOR_ID);
 
         redirect(link);
 
         then(visitorService).should().ensureVisitor(null, link.getUserId());
         then(visitorIdResolver).should().setVisitorId(
-                any(HttpServletRequest.class),
                 any(HttpServletResponse.class),
                 eq(VISITOR_ID)
         );
@@ -98,7 +99,7 @@ public class RedirectControllerTest {
         given(linkService.getLink(link.getPath())).willReturn(link);
         //  VisitorIdResolver returns null when cookie value is missing or integrity check failed
         given(visitorIdResolver.resolveVisitorId(any(HttpServletRequest.class)))
-                .willReturn(VISITOR_ID_ZERO);
+                .willReturn(Optional.of(VISITOR_ID_ZERO));
         given(visitorService.ensureVisitor(VISITOR_ID_ZERO, link.getUserId()))
                 .willReturn(VISITOR_ID);
 
@@ -106,7 +107,6 @@ public class RedirectControllerTest {
 
         then(visitorService).should().ensureVisitor(null, link.getUserId());
         then(visitorIdResolver).should().setVisitorId(
-                any(HttpServletRequest.class),
                 any(HttpServletResponse.class),
                 eq(VISITOR_ID)
         );
@@ -120,14 +120,13 @@ public class RedirectControllerTest {
 
         given(linkService.getLink(link.getPath())).willReturn(link);
         given(visitorIdResolver.resolveVisitorId(any(HttpServletRequest.class)))
-                .willReturn(VISITOR_ID);
+                .willReturn(Optional.of(VISITOR_ID));
         given(visitorService.ensureVisitor(VISITOR_ID, link.getUserId())).willReturn(VISITOR_ID);
 
         redirect(link);
 
         then(visitorService).should().ensureVisitor(VISITOR_ID, link.getUserId());
         then(visitorIdResolver).should(never()).setVisitorId(
-                any(HttpServletRequest.class),
                 any(HttpServletResponse.class),
                 any(VisitorId.class)
         );

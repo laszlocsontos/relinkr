@@ -88,6 +88,7 @@ public final class Mocks {
     public static final VisitorId VISITOR_ID_ZERO = VisitorId.of(0L);
 
     public static final IpAddress VISITOR_IP;
+
     public static final LocalDateTime TIMESTAMP = LocalDateTime.of(2018, 02, 28, 19, 52);
 
     public static final Pageable PAGEABLE = PageRequest.of(0, 10);
@@ -113,12 +114,11 @@ public final class Mocks {
     public static final String JWT_SECRET_KEY =
             "cFZJY3VpV2RMZHZMQTdVNzRAMVUqc2RFWTJoSlNpJk5MNzE2TkghI1FqKnEmKjk2TjY4TnZ5MG9t";
 
-    public static final String JWS_VISITOR_COOKIE =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.Mjc0NjkxNDM5NjEyMTI."
-                    + "KXzzdb2L4gqFgFOvv7S8vv3fh0Ckl6dZIL6mYWExGKA";
+    public static final String JWS_VISITOR_COOKIE_VALUE =
+            "eyJhbGciOiJIUzI1NiJ9.Mjc0NjkxNDM5NjEyMTI.hW09QfpayfzkXZ_01tYyl5n-p2V8iseFcm9ecqJIf6Y";
 
     public static final String JWS_VISITOR_COOKIE_SECRET_KEY =
-            "zwFKUNGIH9U063sSLbrm7k1sAkHuXQlD";
+            "MGBDV!Wu*8G$f#CLK8rB!PgLTnSAaQXs";
 
     public static final String CLEARTEXT_PASSWORD = "password";
 
