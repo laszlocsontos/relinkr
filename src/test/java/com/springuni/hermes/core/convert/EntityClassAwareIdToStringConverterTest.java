@@ -3,7 +3,7 @@ package com.springuni.hermes.core.convert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import com.springuni.hermes.click.ClickId;
+import com.springuni.hermes.click.model.ClickId;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.convert.converter.Converter;

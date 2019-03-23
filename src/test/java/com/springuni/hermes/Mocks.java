@@ -8,8 +8,8 @@ import static java.time.ZoneOffset.UTC;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 
-import com.springuni.hermes.click.ClickId;
-import com.springuni.hermes.click.IpAddress;
+import com.springuni.hermes.click.model.ClickId;
+import com.springuni.hermes.click.model.IpAddress;
 import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;

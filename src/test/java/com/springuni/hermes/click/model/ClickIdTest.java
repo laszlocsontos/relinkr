@@ -1,8 +1,9 @@
-package com.springuni.hermes.click;
+package com.springuni.hermes.click.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.springuni.hermes.click.model.ClickId;
 import org.junit.Test;
 
 /**

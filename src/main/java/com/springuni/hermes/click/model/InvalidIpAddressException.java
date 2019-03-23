@@ -1,4 +1,4 @@
-package com.springuni.hermes.click;
+package com.springuni.hermes.click.model;
 
 public class InvalidIpAddressException extends Exception {
 

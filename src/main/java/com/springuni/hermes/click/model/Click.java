@@ -1,4 +1,4 @@
-package com.springuni.hermes.click;
+package com.springuni.hermes.click.model;
 
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneOffset.UTC;

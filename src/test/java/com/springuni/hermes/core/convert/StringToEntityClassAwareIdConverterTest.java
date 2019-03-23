@@ -1,6 +1,6 @@
 package com.springuni.hermes.core.convert;
 
-import com.springuni.hermes.click.ClickId;
+import com.springuni.hermes.click.model.ClickId;
 import com.springuni.hermes.core.orm.EntityClassAwareId;
 import org.junit.Test;
 import org.springframework.core.convert.converter.Converter;

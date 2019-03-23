@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-import com.springuni.hermes.click.ClickId;
+import com.springuni.hermes.click.model.ClickId;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.Properties;

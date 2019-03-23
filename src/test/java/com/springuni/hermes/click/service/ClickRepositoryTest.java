@@ -1,4 +1,4 @@
-package com.springuni.hermes.click;
+package com.springuni.hermes.click.service;
 
 import static com.springuni.hermes.Mocks.CLICK_ID;
 import static com.springuni.hermes.Mocks.CLICK_ID_ZERO;
@@ -7,6 +7,9 @@ import static com.springuni.hermes.Mocks.TIMESTAMP;
 import static com.springuni.hermes.Mocks.VISITOR_ID;
 import static com.springuni.hermes.Mocks.VISITOR_IP;
 
+import com.springuni.hermes.click.model.Click;
+import com.springuni.hermes.click.model.ClickId;
+import com.springuni.hermes.click.service.ClickRepository;
 import com.springuni.hermes.core.BaseRepositoryTest;
 
 public class ClickRepositoryTest extends BaseRepositoryTest<Click, ClickId, ClickRepository> {

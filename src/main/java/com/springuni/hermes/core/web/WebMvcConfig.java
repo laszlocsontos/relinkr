@@ -5,7 +5,7 @@ import static org.springframework.util.ReflectionUtils.findField;
 import static org.springframework.util.ReflectionUtils.makeAccessible;
 import static org.springframework.util.ReflectionUtils.setField;
 
-import com.springuni.hermes.click.ClickId;
+import com.springuni.hermes.click.model.ClickId;
 import com.springuni.hermes.core.convert.EntityClassAwareIdToStringConverter;
 import com.springuni.hermes.core.convert.StringToEntityClassAwareIdConverter;
 import com.springuni.hermes.link.model.LinkId;
