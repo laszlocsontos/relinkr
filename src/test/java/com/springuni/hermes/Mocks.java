@@ -157,7 +157,7 @@ public final class Mocks {
             utmParametersSet.add(UTM_PARAMETERS_MINIMAL);
             UTM_PARAMETERS_SET = unmodifiableSet(utmParametersSet);
 
-            VISITOR_IP = IpAddress.of(IPV4_ADDRESS);
+            VISITOR_IP = IpAddress.fromString(IPV4_ADDRESS);
 
             Map<String, Object> googleUserAttributes = new HashMap<>();
 

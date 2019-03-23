@@ -7,8 +7,6 @@ import static com.springuni.hermes.click.model.IpAddress.IpAddressType.IPV6;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import com.springuni.hermes.click.model.InvalidIpAddressException;
-import com.springuni.hermes.click.model.IpAddress;
 import java.math.BigInteger;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,14 +17,14 @@ public class IpAddressTest {
     private IpAddress ipv6Address;
 
     @Before
-    public void setUp() throws Exception {
-        ipv4Address = IpAddress.of(IPV4_ADDRESS);
-        ipv6Address = IpAddress.of(IPV6_ADDRESS);
+    public void setUp() {
+        ipv4Address = IpAddress.fromString(IPV4_ADDRESS);
+        ipv6Address = IpAddress.fromString(IPV6_ADDRESS);
     }
 
     @Test(expected = InvalidIpAddressException.class)
-    public void create_withInvalid() throws Exception {
-        IpAddress.of("bad");
+    public void create_withInvalid() {
+        IpAddress.fromString("bad");
     }
 
     @Test

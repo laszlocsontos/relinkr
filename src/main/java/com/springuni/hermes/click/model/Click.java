@@ -88,17 +88,6 @@ public class Click extends AbstractEntity<ClickId> implements Ownable {
         return new Click(linkId, visitorId, userId, visitorIp, visitTimestamp, null);
     }
 
-    public static Click from(RedirectedEvent redirectedEvent) throws InvalidIpAddressException {
-        return new Click(
-                redirectedEvent.getLinkId(),
-                redirectedEvent.getVisitorId(),
-                redirectedEvent.getUserId(),
-                IpAddress.of("0.0.0.0"), // TODO: Add IP address to RedirectedEvent
-                LocalDateTime.ofInstant(redirectedEvent.getInstant(), ZoneOffset.UTC),
-                null
-        );
-    }
-
     public Click with(Country country) {
         return new Click(this, country);
     }

@@ -1,9 +1,8 @@
 package com.springuni.hermes.click.model;
 
-public class InvalidIpAddressException extends Exception {
+import org.springframework.core.NestedRuntimeException;
 
-    public InvalidIpAddressException() {
-    }
+public class InvalidIpAddressException extends NestedRuntimeException {
 
     public InvalidIpAddressException(String message) {
         super(message);
@@ -11,10 +10,6 @@ public class InvalidIpAddressException extends Exception {
 
     public InvalidIpAddressException(String message, Throwable cause) {
         super(message, cause);
-    }
-
-    public InvalidIpAddressException(Throwable cause) {
-        super(cause);
     }
 
     static InvalidIpAddressException forIpAddress(String ipAddress) {

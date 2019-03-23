@@ -48,7 +48,7 @@ public class IpAddress {
         this.multicastAddress = multicastAddress;
     }
 
-    public static IpAddress of(String ipAddress) throws InvalidIpAddressException {
+    public static IpAddress fromString(String ipAddress) throws InvalidIpAddressException {
         Assert.notNull(ipAddress, "ipAddress cannot be null");
 
         if (!IPV4_AND_6_PATTERN.matcher(ipAddress).matches()) {
@@ -59,7 +59,7 @@ public class IpAddress {
         try {
             inetAddress = InetAddress.getByName(ipAddress);
         } catch (UnknownHostException e) {
-            throw new InvalidIpAddressException(e);
+            throw new InvalidIpAddressException(e.getMessage(), e);
         }
 
         IpAddressType ipAddressType = IpAddressType.of(inetAddress);
