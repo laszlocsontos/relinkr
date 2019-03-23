@@ -34,11 +34,12 @@ public class Click extends AbstractEntity<ClickId> implements Ownable {
     private VisitorId visitorId;
 
     @Embedded
+    private IpAddress visitorIp;
+
+    @Embedded
     @AttributeOverride(name = "id", column = @Column(name = "user_id"))
     private UserId userId;
 
-    @Embedded
-    private IpAddress visitorIp;
 
     @Enumerated(STRING)
     private Country country;

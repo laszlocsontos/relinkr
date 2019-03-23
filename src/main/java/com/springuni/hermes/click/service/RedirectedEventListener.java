@@ -26,8 +26,7 @@ public class RedirectedEventListener implements ApplicationListener<RedirectedEv
                 redirectedEvent.getLinkId(),
                 redirectedEvent.getVisitorId(),
                 redirectedEvent.getUserId(),
-                // TODO: Add IP address to RedirectedEvent
-                IpAddress.fromString("0.0.0.0"),
+                IpAddress.fromString(redirectedEvent.getIpAddress()),
                 LocalDateTime.ofInstant(redirectedEvent.getInstant(), UTC)
         );
 

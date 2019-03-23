@@ -5,7 +5,9 @@ import static com.springuni.hermes.Mocks.FIXED_INSTANT;
 import static com.springuni.hermes.Mocks.NOT_FOUND_URL;
 import static com.springuni.hermes.Mocks.VISITOR_ID;
 import static com.springuni.hermes.Mocks.VISITOR_ID_ZERO;
+import static com.springuni.hermes.Mocks.VISITOR_IP;
 import static com.springuni.hermes.Mocks.createLink;
+import static com.springuni.hermes.link.web.RedirectController.HEADER_XFF;
 import static com.springuni.hermes.link.web.RedirectController.REDIRECT_NOT_FOUND_URL_PROPERTY;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
@@ -164,6 +166,7 @@ public class RedirectControllerTest {
         RedirectedEvent redirectedEvent = redirectedEventListener.getEvent();
         assertEquals(link.getId(), redirectedEvent.getLinkId());
         assertEquals(VISITOR_ID, redirectedEvent.getVisitorId());
+        assertEquals(VISITOR_IP.getIpAddress(), redirectedEvent.getIpAddress());
         assertEquals(link.getUserId(), redirectedEvent.getUserId());
         assertEquals(FIXED_INSTANT, redirectedEvent.getInstant());
     }
@@ -173,7 +176,7 @@ public class RedirectControllerTest {
     }
 
     private void redirect(String path, String targetUrl) throws Exception {
-        mockMvc.perform(get("/" + path))
+        mockMvc.perform(get("/" + path).header(HEADER_XFF, VISITOR_IP.getIpAddress()))
                 .andDo(print())
                 .andExpect(status().isMovedPermanently())
                 .andExpect(header().string(CACHE_CONTROL,

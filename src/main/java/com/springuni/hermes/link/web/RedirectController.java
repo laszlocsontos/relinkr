@@ -2,6 +2,8 @@ package com.springuni.hermes.link.web;
 
 import static org.springframework.http.HttpHeaders.readOnlyHttpHeaders;
 import static org.springframework.http.HttpStatus.MOVED_PERMANENTLY;
+import static org.springframework.util.StringUtils.isEmpty;
+import static org.springframework.util.StringUtils.tokenizeToStringArray;
 import static org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST;
 
 import com.springuni.hermes.core.model.ApplicationException;
@@ -15,6 +17,7 @@ import com.springuni.hermes.visitor.service.VisitorService;
 import com.springuni.hermes.visitor.web.VisitorIdResolver;
 import java.net.URI;
 import java.time.Clock;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
@@ -31,6 +34,8 @@ public class RedirectController {
 
     static final String REDIRECT_NOT_FOUND_URL_PROPERTY =
             "craftingjava.relinkr.redirect.not-found-url";
+
+    static final String HEADER_XFF = "X-Forwarded-For";
 
     private static final String EMIT_REDIRECT_EVENT_CALLBACK = "EMIT_REDIRECT_EVENT";
     private static final HttpHeaders HTTP_HEADERS;
@@ -109,14 +114,30 @@ public class RedirectController {
             visitorIdResolver.setVisitorId(webRequest.getResponse(), visitorId);
         }
 
+        String ipAddress = extractRemoteAddr(webRequest.getRequest());
+
         RedirectedEvent redirectedEvent =
-                RedirectedEvent.of(link.getId(), visitorId, userId, clock.instant());
+                RedirectedEvent.of(link.getId(), visitorId, ipAddress, userId, clock.instant());
 
         webRequest.registerDestructionCallback(
                 EMIT_REDIRECT_EVENT_CALLBACK,
                 () -> eventPublisher.publishEvent(redirectedEvent),
                 SCOPE_REQUEST
         );
+    }
+
+    private String extractRemoteAddr(HttpServletRequest request) {
+        String xffHeaderValue = request.getHeader(HEADER_XFF);
+        if (isEmpty(xffHeaderValue)) {
+            return request.getRemoteAddr();
+        }
+
+        String[] xffAddresses = tokenizeToStringArray(xffHeaderValue, ",", true, true);
+        if (xffAddresses.length == 0) {
+            return request.getRemoteAddr();
+        }
+
+        return xffAddresses[0];
     }
 
 }
