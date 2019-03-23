@@ -20,6 +20,7 @@ import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.User;
 import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.user.model.UserProfile;
+import com.springuni.hermes.visitor.model.Visitor;
 import com.springuni.hermes.visitor.model.VisitorId;
 import java.time.Clock;
 import java.time.Instant;
@@ -187,6 +188,12 @@ public final class Mocks {
         user.setId(USER_ID);
         user.grantRole(ADMIN);
         return user;
+    }
+
+    public static Visitor createVisitor() {
+        Visitor visitor = Visitor.of(USER_ID);
+        visitor.setId(VISITOR_ID);
+        return visitor;
     }
 
     public static UserProfile createUserProfile() {

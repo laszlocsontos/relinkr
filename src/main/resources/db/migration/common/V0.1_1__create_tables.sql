@@ -85,6 +85,7 @@ CREATE TABLE user_roles (
 
 CREATE TABLE visitor (
   id bigint NOT NULL,
+  user_id bigint NULL,
   created_date timestamp NULL,
   last_modified_date timestamp NULL,
   version_ integer not null,

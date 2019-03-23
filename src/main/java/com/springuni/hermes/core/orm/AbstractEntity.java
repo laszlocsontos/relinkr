@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.hateoas.Identifiable;
 
+@Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(of = "id")
@@ -61,24 +63,12 @@ public class AbstractEntity<ID extends AbstractId<? extends AbstractEntity<ID>>>
         return createdDate;
     }
 
-    void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
     public LocalDateTime getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    void setLastModifiedDate(LocalDateTime lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
     public Integer getVersion() {
         return version;
-    }
-
-    void setVersion(Integer version) {
-        this.version = version;
     }
 
 }

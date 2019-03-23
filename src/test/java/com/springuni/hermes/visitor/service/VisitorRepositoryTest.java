@@ -1,5 +1,6 @@
 package com.springuni.hermes.visitor.service;
 
+import static com.springuni.hermes.Mocks.USER_ID;
 import static com.springuni.hermes.Mocks.VISITOR_ID;
 import static com.springuni.hermes.Mocks.VISITOR_ID_ZERO;
 
@@ -12,7 +13,7 @@ public class VisitorRepositoryTest extends
 
     @Override
     protected Visitor createEntity() {
-        return new Visitor();
+        return Visitor.of(USER_ID);
     }
 
     @Override
