@@ -20,13 +20,13 @@ public class IpAddressTest {
 
     @Before
     public void setUp() throws Exception {
-        ipv4Address = new IpAddress(IPV4_ADDRESS);
-        ipv6Address = new IpAddress(IPV6_ADDRESS);
+        ipv4Address = IpAddress.of(IPV4_ADDRESS);
+        ipv6Address = IpAddress.of(IPV6_ADDRESS);
     }
 
     @Test(expected = InvalidIpAddressException.class)
     public void create_withInvalid() throws Exception {
-        new IpAddress("bad");
+        IpAddress.of("bad");
     }
 
     @Test

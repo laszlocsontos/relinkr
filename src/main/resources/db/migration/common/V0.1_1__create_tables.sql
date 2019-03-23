@@ -8,6 +8,7 @@ CREATE TABLE click (
   visit_month smallint NOT NULL,
   visit_timestamp timestamp NULL,
   visitor_id bigint NULL,
+  user_id bigint NULL,
   ip_address varchar(255) NULL,
   ip_address_decimal numeric(19,2) NULL,
   ip_address_type smallint NULL,

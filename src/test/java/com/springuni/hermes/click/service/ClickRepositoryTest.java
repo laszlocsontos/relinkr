@@ -4,6 +4,7 @@ import static com.springuni.hermes.Mocks.CLICK_ID;
 import static com.springuni.hermes.Mocks.CLICK_ID_ZERO;
 import static com.springuni.hermes.Mocks.LINK_ID;
 import static com.springuni.hermes.Mocks.TIMESTAMP;
+import static com.springuni.hermes.Mocks.USER_ID;
 import static com.springuni.hermes.Mocks.VISITOR_ID;
 import static com.springuni.hermes.Mocks.VISITOR_IP;
 
@@ -16,7 +17,7 @@ public class ClickRepositoryTest extends BaseRepositoryTest<Click, ClickId, Clic
 
     @Override
     protected Click createEntity() {
-        return new Click(VISITOR_ID, LINK_ID, VISITOR_IP, TIMESTAMP);
+        return Click.of(LINK_ID, VISITOR_ID, USER_ID, VISITOR_IP, TIMESTAMP);
     }
 
     @Override

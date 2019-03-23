@@ -2,12 +2,15 @@ package com.springuni.hermes.click.model;
 
 import static com.springuni.hermes.Mocks.LINK_ID;
 import static com.springuni.hermes.Mocks.TIMESTAMP;
+import static com.springuni.hermes.Mocks.USER_ID;
 import static com.springuni.hermes.Mocks.VISITOR_ID;
 import static com.springuni.hermes.Mocks.VISITOR_IP;
+import static com.springuni.hermes.core.model.Country.US;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 import com.springuni.hermes.click.model.Click;
+import com.springuni.hermes.core.model.Country;
 import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,21 +21,21 @@ public class ClickTest {
 
     @Before
     public void setUp() throws Exception {
-        click = new Click(VISITOR_ID, LINK_ID, VISITOR_IP, TIMESTAMP);
+        click = Click.of(LINK_ID, VISITOR_ID, USER_ID, VISITOR_IP, TIMESTAMP);
     }
 
     @Test
-    public void getVisitDayOfMonth() {
+    public void shouldHaveVisitDayOfMonth() {
         assertEquals(TIMESTAMP.getDayOfMonth(), click.getVisitDayOfMonth());
     }
 
     @Test
-    public void getVisitDayOfWeek() {
+    public void shouldHaveVisitDayOfWeek() {
         assertEquals(TIMESTAMP.getDayOfWeek().getValue(), click.getVisitDayOfWeek());
     }
 
     @Test
-    public void getVisitHour() {
+    public void shouldHaveVisitHour() {
         assertEquals(TIMESTAMP.getHour(), click.getVisitHour());
     }
 
@@ -42,18 +45,13 @@ public class ClickTest {
     }
 
     @Test
-    public void getVisitTimestamp() {
+    public void shouldHaveVisitTimestamp() {
         assertEquals(TIMESTAMP, click.getVisitTimestamp());
     }
 
     @Test
-    public void setVisitTimestamp() {
-        click.setVisitTimestamp(LocalDateTime.MAX);
-        assertNotEquals(TIMESTAMP.getDayOfMonth(), click.getVisitDayOfMonth());
-        assertNotEquals(TIMESTAMP.getDayOfWeek().getValue(), click.getVisitDayOfWeek());
-        assertNotEquals(TIMESTAMP.getHour(), click.getVisitHour());
-        assertNotEquals(TIMESTAMP.getMonth(), click.getVisitMonth());
-        assertNotEquals(TIMESTAMP, click.getVisitTimestamp());
+    public void shouldHaveCountry() {
+        assertEquals(US, click.with(US).getCountry().get());
     }
 
 }
