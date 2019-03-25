@@ -1,8 +1,8 @@
 package com.springuni.hermes.visitor.service;
 
-import static com.springuni.hermes.Mocks.USER_ID;
-import static com.springuni.hermes.Mocks.VISITOR_ID_ZERO;
-import static com.springuni.hermes.Mocks.createVisitor;
+import static com.springuni.hermes.test.Mocks.USER_ID;
+import static com.springuni.hermes.test.Mocks.VISITOR_ID_ZERO;
+import static com.springuni.hermes.test.Mocks.createVisitor;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;

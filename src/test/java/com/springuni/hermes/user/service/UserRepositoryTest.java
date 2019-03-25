@@ -1,13 +1,13 @@
 package com.springuni.hermes.user.service;
 
-import static com.springuni.hermes.Mocks.EMAIL_ADDRESS;
-import static com.springuni.hermes.Mocks.USER_ID;
-import static com.springuni.hermes.Mocks.USER_ID_ZERO;
-import static com.springuni.hermes.Mocks.createUserProfile;
+import static com.springuni.hermes.test.Mocks.EMAIL_ADDRESS;
+import static com.springuni.hermes.test.Mocks.USER_ID;
+import static com.springuni.hermes.test.Mocks.USER_ID_ZERO;
+import static com.springuni.hermes.test.Mocks.createUserProfile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import com.springuni.hermes.core.BaseRepositoryTest;
+import com.springuni.hermes.test.orm.BaseRepositoryTest;
 import com.springuni.hermes.user.model.User;
 import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.user.model.UserProfile;

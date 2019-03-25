@@ -1,17 +1,16 @@
 package com.springuni.hermes.click.service;
 
-import static com.springuni.hermes.Mocks.CLICK_ID;
-import static com.springuni.hermes.Mocks.CLICK_ID_ZERO;
-import static com.springuni.hermes.Mocks.LINK_ID;
-import static com.springuni.hermes.Mocks.TIMESTAMP;
-import static com.springuni.hermes.Mocks.USER_ID;
-import static com.springuni.hermes.Mocks.VISITOR_ID;
-import static com.springuni.hermes.Mocks.VISITOR_IP;
+import static com.springuni.hermes.test.Mocks.CLICK_ID;
+import static com.springuni.hermes.test.Mocks.CLICK_ID_ZERO;
+import static com.springuni.hermes.test.Mocks.LINK_ID;
+import static com.springuni.hermes.test.Mocks.TIMESTAMP;
+import static com.springuni.hermes.test.Mocks.USER_ID;
+import static com.springuni.hermes.test.Mocks.VISITOR_ID;
+import static com.springuni.hermes.test.Mocks.VISITOR_IP;
 
 import com.springuni.hermes.click.model.Click;
 import com.springuni.hermes.click.model.ClickId;
-import com.springuni.hermes.click.service.ClickRepository;
-import com.springuni.hermes.core.BaseRepositoryTest;
+import com.springuni.hermes.test.orm.BaseRepositoryTest;
 
 public class ClickRepositoryTest extends BaseRepositoryTest<Click, ClickId, ClickRepository> {
 

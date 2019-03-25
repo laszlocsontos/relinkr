@@ -1,6 +1,6 @@
 package com.springuni.hermes.core.web;
 
-import static com.springuni.hermes.Mocks.JWS_VISITOR_COOKIE_SECRET_KEY;
+import static com.springuni.hermes.test.Mocks.JWS_VISITOR_COOKIE_SECRET_KEY;
 
 import java.time.Duration;
 

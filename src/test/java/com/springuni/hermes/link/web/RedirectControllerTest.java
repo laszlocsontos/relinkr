@@ -1,12 +1,12 @@
 package com.springuni.hermes.link.web;
 
-import static com.springuni.hermes.Mocks.FIXED_CLOCK;
-import static com.springuni.hermes.Mocks.FIXED_INSTANT;
-import static com.springuni.hermes.Mocks.NOT_FOUND_URL;
-import static com.springuni.hermes.Mocks.VISITOR_ID;
-import static com.springuni.hermes.Mocks.VISITOR_ID_ZERO;
-import static com.springuni.hermes.Mocks.VISITOR_IP;
-import static com.springuni.hermes.Mocks.createLink;
+import static com.springuni.hermes.test.Mocks.FIXED_CLOCK;
+import static com.springuni.hermes.test.Mocks.FIXED_INSTANT;
+import static com.springuni.hermes.test.Mocks.NOT_FOUND_URL;
+import static com.springuni.hermes.test.Mocks.VISITOR_ID;
+import static com.springuni.hermes.test.Mocks.VISITOR_ID_ZERO;
+import static com.springuni.hermes.test.Mocks.VISITOR_IP;
+import static com.springuni.hermes.test.Mocks.createLink;
 import static com.springuni.hermes.link.web.RedirectController.HEADER_XFF;
 import static com.springuni.hermes.link.web.RedirectController.REDIRECT_NOT_FOUND_URL_PROPERTY;
 import static java.util.concurrent.TimeUnit.SECONDS;

@@ -1,4 +1,4 @@
-package com.springuni.hermes;
+package com.springuni.hermes.test;
 
 import static com.springuni.hermes.user.model.Gender.MALE;
 import static com.springuni.hermes.user.model.Role.ADMIN;

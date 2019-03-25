@@ -1,6 +1,7 @@
-package com.springuni.hermes.core.security.authn;
+package com.springuni.hermes.test.security;
 
-import com.springuni.hermes.core.security.authn.AbstractWebSecurityTest.TestConfig;
+import com.springuni.hermes.core.security.authn.WebSecurityConfig;
+import com.springuni.hermes.test.security.AbstractWebSecurityTest.TestConfig;
 import com.springuni.hermes.user.service.UserProfileFactory;
 import com.springuni.hermes.user.service.UserService;
 import org.junit.runner.RunWith;

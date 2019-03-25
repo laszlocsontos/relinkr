@@ -1,6 +1,6 @@
 package com.springuni.hermes.core.security.authn.userdetails;
 
-import static com.springuni.hermes.Mocks.createUser;
+import static com.springuni.hermes.test.Mocks.createUser;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 

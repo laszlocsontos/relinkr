@@ -1,6 +1,6 @@
 package com.springuni.hermes.core.security.authz;
 
-import static com.springuni.hermes.Mocks.USER_ID;
+import static com.springuni.hermes.test.Mocks.USER_ID;
 import static javax.persistence.LockModeType.NONE;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;

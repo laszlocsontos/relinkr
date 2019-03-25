@@ -1,9 +1,9 @@
 package com.springuni.hermes.user.service;
 
-import static com.springuni.hermes.Mocks.EMAIL_ADDRESS;
-import static com.springuni.hermes.Mocks.USER_ID;
-import static com.springuni.hermes.Mocks.createUser;
-import static com.springuni.hermes.Mocks.createUserProfile;
+import static com.springuni.hermes.test.Mocks.EMAIL_ADDRESS;
+import static com.springuni.hermes.test.Mocks.USER_ID;
+import static com.springuni.hermes.test.Mocks.createUser;
+import static com.springuni.hermes.test.Mocks.createUserProfile;
 import static com.springuni.hermes.user.model.Role.ADMIN;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;

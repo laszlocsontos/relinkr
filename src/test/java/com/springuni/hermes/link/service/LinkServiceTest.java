@@ -1,11 +1,11 @@
 package com.springuni.hermes.link.service;
 
-import static com.springuni.hermes.Mocks.LINK_ID;
-import static com.springuni.hermes.Mocks.LONG_URL_BASE_S;
-import static com.springuni.hermes.Mocks.LONG_URL_VALID_UTM_S;
-import static com.springuni.hermes.Mocks.USER_ID;
-import static com.springuni.hermes.Mocks.UTM_PARAMETERS_FULL;
-import static com.springuni.hermes.Mocks.UTM_PARAMETERS_MINIMAL;
+import static com.springuni.hermes.test.Mocks.LINK_ID;
+import static com.springuni.hermes.test.Mocks.LONG_URL_BASE_S;
+import static com.springuni.hermes.test.Mocks.LONG_URL_VALID_UTM_S;
+import static com.springuni.hermes.test.Mocks.USER_ID;
+import static com.springuni.hermes.test.Mocks.UTM_PARAMETERS_FULL;
+import static com.springuni.hermes.test.Mocks.UTM_PARAMETERS_MINIMAL;
 import static com.springuni.hermes.link.model.LinkStatus.ACTIVE;
 import static com.springuni.hermes.link.model.LinkStatus.ARCHIVED;
 import static java.util.Collections.singletonList;
@@ -15,7 +15,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.data.domain.Pageable.unpaged;
 
-import com.springuni.hermes.Mocks;
+import com.springuni.hermes.test.Mocks;
 import com.springuni.hermes.core.model.ApplicationException;
 import com.springuni.hermes.core.model.EntityNotFoundException;
 import com.springuni.hermes.link.model.Link;

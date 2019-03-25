@@ -1,11 +1,11 @@
-package com.springuni.hermes.core;
+package com.springuni.hermes.test.orm;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.springuni.hermes.core.BaseRepositoryTest.TestConfig;
+import com.springuni.hermes.test.orm.BaseRepositoryTest.TestConfig;
 import com.springuni.hermes.core.orm.AbstractEntity;
 import com.springuni.hermes.core.orm.AbstractId;
 import com.springuni.hermes.core.orm.BaseRepository;

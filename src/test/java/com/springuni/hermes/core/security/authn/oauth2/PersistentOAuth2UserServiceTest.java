@@ -1,8 +1,8 @@
 package com.springuni.hermes.core.security.authn.oauth2;
 
-import static com.springuni.hermes.Mocks.EMAIL_ADDRESS;
-import static com.springuni.hermes.Mocks.GOOGLE_USER_ATTRIBUTES;
-import static com.springuni.hermes.Mocks.createUser;
+import static com.springuni.hermes.test.Mocks.EMAIL_ADDRESS;
+import static com.springuni.hermes.test.Mocks.GOOGLE_USER_ATTRIBUTES;
+import static com.springuni.hermes.test.Mocks.createUser;
 import static com.springuni.hermes.core.security.authn.oauth2.PersistentOAuth2UserService.INVALID_EMAIL_ADDRESS;
 import static com.springuni.hermes.core.security.authn.oauth2.PersistentOAuth2UserService.INVALID_PROFILE;
 import static com.springuni.hermes.core.security.authn.oauth2.PersistentOAuth2UserService.USER_ID_ATTRIBUTE;

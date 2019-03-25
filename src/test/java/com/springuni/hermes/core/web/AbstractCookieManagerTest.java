@@ -1,10 +1,9 @@
 package com.springuni.hermes.core.web;
 
-import static com.springuni.hermes.Mocks.VISITOR_ID;
+import static com.springuni.hermes.test.Mocks.VISITOR_ID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import com.springuni.hermes.Mocks;
 import java.time.Duration;
 import javax.servlet.http.Cookie;
 import org.junit.Before;

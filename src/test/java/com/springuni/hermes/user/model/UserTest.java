@@ -1,7 +1,7 @@
 package com.springuni.hermes.user.model;
 
-import static com.springuni.hermes.Mocks.createUser;
-import static com.springuni.hermes.Mocks.createUserProfile;
+import static com.springuni.hermes.test.Mocks.createUser;
+import static com.springuni.hermes.test.Mocks.createUserProfile;
 import static com.springuni.hermes.user.model.Role.ADMIN;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

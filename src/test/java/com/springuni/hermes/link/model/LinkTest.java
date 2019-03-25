@@ -1,12 +1,12 @@
 package com.springuni.hermes.link.model;
 
-import static com.springuni.hermes.Mocks.LONG_URL_BASE_S;
-import static com.springuni.hermes.Mocks.LONG_URL_WITHOUT_UTM;
-import static com.springuni.hermes.Mocks.LONG_URL_WITHOUT_UTM_S;
-import static com.springuni.hermes.Mocks.TAG_A;
-import static com.springuni.hermes.Mocks.TAG_B;
-import static com.springuni.hermes.Mocks.USER_ID;
-import static com.springuni.hermes.Mocks.UTM_PARAMETERS_MINIMAL;
+import static com.springuni.hermes.test.Mocks.LONG_URL_BASE_S;
+import static com.springuni.hermes.test.Mocks.LONG_URL_WITHOUT_UTM;
+import static com.springuni.hermes.test.Mocks.LONG_URL_WITHOUT_UTM_S;
+import static com.springuni.hermes.test.Mocks.TAG_A;
+import static com.springuni.hermes.test.Mocks.TAG_B;
+import static com.springuni.hermes.test.Mocks.USER_ID;
+import static com.springuni.hermes.test.Mocks.UTM_PARAMETERS_MINIMAL;
 import static com.springuni.hermes.link.model.Link.HASHIDS_LENGTH;
 import static com.springuni.hermes.link.model.LinkStatus.ACTIVE;
 import static com.springuni.hermes.link.model.LinkStatus.ARCHIVED;

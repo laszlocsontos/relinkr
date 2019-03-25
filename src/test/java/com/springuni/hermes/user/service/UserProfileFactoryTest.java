@@ -1,6 +1,6 @@
 package com.springuni.hermes.user.service;
 
-import static com.springuni.hermes.Mocks.GOOGLE_USER_ATTRIBUTES;
+import static com.springuni.hermes.test.Mocks.GOOGLE_USER_ATTRIBUTES;
 import static com.springuni.hermes.user.model.UserProfileType.FACEBOOK;
 import static com.springuni.hermes.user.model.UserProfileType.GOOGLE;
 import static org.junit.Assert.assertEquals;

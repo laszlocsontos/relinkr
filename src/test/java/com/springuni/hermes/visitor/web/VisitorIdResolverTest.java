@@ -1,8 +1,8 @@
 package com.springuni.hermes.visitor.web;
 
-import static com.springuni.hermes.Mocks.JWS_VISITOR_COOKIE_SECRET_KEY;
-import static com.springuni.hermes.Mocks.JWS_VISITOR_COOKIE_VALUE;
-import static com.springuni.hermes.Mocks.VISITOR_ID;
+import static com.springuni.hermes.test.Mocks.JWS_VISITOR_COOKIE_SECRET_KEY;
+import static com.springuni.hermes.test.Mocks.JWS_VISITOR_COOKIE_VALUE;
+import static com.springuni.hermes.test.Mocks.VISITOR_ID;
 import static com.springuni.hermes.visitor.web.VisitorIdResolverImpl.COOKIE_MAX_AGE;
 import static com.springuni.hermes.visitor.web.VisitorIdResolverImpl.COOKIE_NAME;
 import static com.springuni.hermes.visitor.web.VisitorIdResolverImpl.VISITOR_SECRET_KEY_PROPERTY;

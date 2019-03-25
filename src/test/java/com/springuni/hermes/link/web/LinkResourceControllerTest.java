@@ -1,9 +1,9 @@
 package com.springuni.hermes.link.web;
 
-import static com.springuni.hermes.Mocks.PAGEABLE;
-import static com.springuni.hermes.Mocks.TAG_A;
-import static com.springuni.hermes.Mocks.USER_ID;
-import static com.springuni.hermes.Mocks.createLink;
+import static com.springuni.hermes.test.Mocks.PAGEABLE;
+import static com.springuni.hermes.test.Mocks.TAG_A;
+import static com.springuni.hermes.test.Mocks.USER_ID;
+import static com.springuni.hermes.test.Mocks.createLink;
 import static com.springuni.hermes.link.model.LinkStatus.ACTIVE;
 import static com.springuni.hermes.link.model.LinkStatus.ARCHIVED;
 import static java.util.Arrays.asList;

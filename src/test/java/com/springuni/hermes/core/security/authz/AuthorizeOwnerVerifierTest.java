@@ -1,7 +1,7 @@
 package com.springuni.hermes.core.security.authz;
 
-import static com.springuni.hermes.Mocks.USER_ID;
-import static com.springuni.hermes.Mocks.USER_ID_ZERO;
+import static com.springuni.hermes.test.Mocks.USER_ID;
+import static com.springuni.hermes.test.Mocks.USER_ID_ZERO;
 import static javax.persistence.LockModeType.NONE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;

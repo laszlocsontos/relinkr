@@ -1,7 +1,7 @@
 package com.springuni.hermes.click.model;
 
-import static com.springuni.hermes.Mocks.IPV4_ADDRESS;
-import static com.springuni.hermes.Mocks.IPV6_ADDRESS;
+import static com.springuni.hermes.test.Mocks.IPV4_ADDRESS;
+import static com.springuni.hermes.test.Mocks.IPV6_ADDRESS;
 import static com.springuni.hermes.click.model.IpAddress.IpAddressType.IPV4;
 import static com.springuni.hermes.click.model.IpAddress.IpAddressType.IPV6;
 import static org.junit.Assert.assertEquals;

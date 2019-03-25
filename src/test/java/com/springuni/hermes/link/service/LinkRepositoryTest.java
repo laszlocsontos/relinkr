@@ -1,7 +1,7 @@
 package com.springuni.hermes.link.service;
 
-import static com.springuni.hermes.Mocks.USER_ID;
-import static com.springuni.hermes.Mocks.createLink;
+import static com.springuni.hermes.test.Mocks.USER_ID;
+import static com.springuni.hermes.test.Mocks.createLink;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;

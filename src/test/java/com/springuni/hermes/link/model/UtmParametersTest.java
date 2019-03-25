@@ -1,11 +1,11 @@
 package com.springuni.hermes.link.model;
 
-import static com.springuni.hermes.Mocks.UTM_CAMPAIGN_V;
-import static com.springuni.hermes.Mocks.UTM_CONTENT_V;
-import static com.springuni.hermes.Mocks.UTM_MEDIUM_V;
-import static com.springuni.hermes.Mocks.UTM_PARAMETERS_FULL;
-import static com.springuni.hermes.Mocks.UTM_SOURCE_V;
-import static com.springuni.hermes.Mocks.UTM_TERM_V;
+import static com.springuni.hermes.test.Mocks.UTM_CAMPAIGN_V;
+import static com.springuni.hermes.test.Mocks.UTM_CONTENT_V;
+import static com.springuni.hermes.test.Mocks.UTM_MEDIUM_V;
+import static com.springuni.hermes.test.Mocks.UTM_PARAMETERS_FULL;
+import static com.springuni.hermes.test.Mocks.UTM_SOURCE_V;
+import static com.springuni.hermes.test.Mocks.UTM_TERM_V;
 import static com.springuni.hermes.link.model.UtmParameters.UTM_CAMPAIGN;
 import static com.springuni.hermes.link.model.UtmParameters.UTM_CONTENT;
 import static com.springuni.hermes.link.model.UtmParameters.UTM_MEDIUM;
@@ -14,8 +14,6 @@ import static com.springuni.hermes.link.model.UtmParameters.UTM_TERM;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import com.springuni.hermes.link.model.MissingUtmParameterException;
-import com.springuni.hermes.link.model.UtmParameters;
 import java.util.Map;
 import org.hamcrest.collection.IsMapContaining;
 import org.junit.Test;

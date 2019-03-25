@@ -1,13 +1,13 @@
 package com.springuni.hermes.link.model;
 
-import static com.springuni.hermes.Mocks.LONG_URL_BASE;
-import static com.springuni.hermes.Mocks.LONG_URL_BASE_S;
-import static com.springuni.hermes.Mocks.LONG_URL_INVALID_UTM;
-import static com.springuni.hermes.Mocks.LONG_URL_VALID_UTM;
-import static com.springuni.hermes.Mocks.LONG_URL_VALID_UTM_S;
-import static com.springuni.hermes.Mocks.LONG_URL_WITHOUT_UTM;
-import static com.springuni.hermes.Mocks.LONG_URL_WITHOUT_UTM_S;
-import static com.springuni.hermes.Mocks.UTM_PARAMETERS_FULL;
+import static com.springuni.hermes.test.Mocks.LONG_URL_BASE;
+import static com.springuni.hermes.test.Mocks.LONG_URL_BASE_S;
+import static com.springuni.hermes.test.Mocks.LONG_URL_INVALID_UTM;
+import static com.springuni.hermes.test.Mocks.LONG_URL_VALID_UTM;
+import static com.springuni.hermes.test.Mocks.LONG_URL_VALID_UTM_S;
+import static com.springuni.hermes.test.Mocks.LONG_URL_WITHOUT_UTM;
+import static com.springuni.hermes.test.Mocks.LONG_URL_WITHOUT_UTM_S;
+import static com.springuni.hermes.test.Mocks.UTM_PARAMETERS_FULL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

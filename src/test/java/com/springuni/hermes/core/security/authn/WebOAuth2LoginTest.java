@@ -1,9 +1,9 @@
 package com.springuni.hermes.core.security.authn;
 
-import static com.springuni.hermes.Mocks.EMAIL_ADDRESS;
-import static com.springuni.hermes.Mocks.USER_ID;
-import static com.springuni.hermes.Mocks.createUser;
-import static com.springuni.hermes.Mocks.createUserProfile;
+import static com.springuni.hermes.test.Mocks.EMAIL_ADDRESS;
+import static com.springuni.hermes.test.Mocks.USER_ID;
+import static com.springuni.hermes.test.Mocks.createUser;
+import static com.springuni.hermes.test.Mocks.createUserProfile;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.springuni.hermes.core.security.authn.WebOAuth2LoginTest.TestController;
+import com.springuni.hermes.test.security.AbstractWebSecurityTest;
 import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.Role;
 import com.springuni.hermes.user.model.User;

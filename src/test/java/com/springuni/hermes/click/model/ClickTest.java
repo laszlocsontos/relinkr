@@ -1,17 +1,14 @@
 package com.springuni.hermes.click.model;
 
-import static com.springuni.hermes.Mocks.LINK_ID;
-import static com.springuni.hermes.Mocks.TIMESTAMP;
-import static com.springuni.hermes.Mocks.USER_ID;
-import static com.springuni.hermes.Mocks.VISITOR_ID;
-import static com.springuni.hermes.Mocks.VISITOR_IP;
+import static com.springuni.hermes.test.Mocks.LINK_ID;
+import static com.springuni.hermes.test.Mocks.TIMESTAMP;
+import static com.springuni.hermes.test.Mocks.USER_ID;
+import static com.springuni.hermes.test.Mocks.VISITOR_ID;
+import static com.springuni.hermes.test.Mocks.VISITOR_IP;
 import static com.springuni.hermes.core.model.Country.US;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-import com.springuni.hermes.click.model.Click;
-import com.springuni.hermes.core.model.Country;
-import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
