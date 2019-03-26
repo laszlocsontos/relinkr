@@ -1,0 +1,146 @@
+package com.springuni.hermes.click.service;
+
+import static com.springuni.hermes.click.service.GeoLocatorImpl.MAX_ATTEMPTS;
+import static com.springuni.hermes.test.Mocks.VISITOR_IP;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+
+import com.springuni.hermes.click.service.GeoLocatorTest.TestConfig;
+import com.springuni.hermes.core.model.Country;
+import com.springuni.hermes.core.retry.RetryConfig;
+import java.util.Optional;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestOperations;
+
+@RunWith(SpringRunner.class)
+@ContextConfiguration(classes = TestConfig.class)
+public class GeoLocatorTest {
+
+    private static final Exception IO_ERROR = new ResourceAccessException("IO Error");
+
+    private static final Exception SERVER_ERROR =
+            new HttpServerErrorException(INTERNAL_SERVER_ERROR);
+
+    private static final Exception CLIENT_ERROR =
+            new HttpClientErrorException(BAD_REQUEST);
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
+    @Autowired
+    private RestOperations restOperations;
+
+    @Autowired
+    private GeoLocator geoLocator;
+
+    @Before
+    public void setUp() throws Exception {
+    }
+
+    @After
+    public void tearDown() {
+        reset(restOperations);
+    }
+
+    @Test
+    public void givenNullIpAddress_whenLookupCountry_thenIllegalArgumentExceptionAndNotRetried() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("ipAddress is null");
+
+        try {
+            geoLocator.lookupCountry(null);
+        } finally {
+            then(restOperations).should(never())
+                    .getForObject(anyString(), any(), anyMap());
+        }
+    }
+
+    @Test
+    public void givenIllegalCountyCodeReceived_whenLookupCountry_thenEmpty() {
+        given(restOperations.getForObject(anyString(), any(), anyMap())).willReturn("bad");
+        Optional<Country> country = geoLocator.lookupCountry(VISITOR_IP);
+        assertFalse(country.isPresent());
+        then(restOperations).should().getForObject(anyString(), any(), anyMap());
+    }
+
+    @Test
+    public void givenUnknownCountyCodeReceived_whenLookupCountry_thenEmpty() {
+        given(restOperations.getForObject(anyString(), any(), anyMap())).willReturn("SU");
+        Optional<Country> country = geoLocator.lookupCountry(VISITOR_IP);
+        assertEquals(Country.ZZ, country.get());
+        then(restOperations).should().getForObject(anyString(), any(), anyMap());
+    }
+
+    @Test
+    public void givenIOError_whenLookupCountry_thenRetriedAndExceptionPropagated() {
+        assertRetried(IO_ERROR, MAX_ATTEMPTS);
+    }
+
+    @Test
+    public void givenServerError_whenLookupCountry_thenRetriedAndExceptionPropagated() {
+        assertRetried(SERVER_ERROR, MAX_ATTEMPTS);
+    }
+
+    @Test
+    public void givenClientError_whenLookupCountry_thenRetriedAndExceptionPropagated() {
+        assertRetried(CLIENT_ERROR, 1);
+    }
+
+    private void assertRetried(Exception retryableException, int expectedAttempts) {
+        given(restOperations.getForObject(anyString(), any(), anyMap()))
+                .willThrow(retryableException);
+
+        expectedException.expect(retryableException.getClass());
+        expectedException.expectMessage(retryableException.getMessage());
+
+        try {
+            geoLocator.lookupCountry(VISITOR_IP);
+        } finally {
+            then(restOperations).should(times(expectedAttempts)).getForObject(
+                    anyString(), any(), anyMap()
+            );
+        }
+    }
+
+    @Configuration
+    @Import(RetryConfig.class)
+    static class TestConfig {
+
+        @Bean
+        RestOperations restOperations() {
+            return mock(RestOperations.class);
+        }
+
+        @Bean
+        GeoLocator geoLocator(RestOperations restOperations) {
+            return new GeoLocatorImpl(restOperations);
+        }
+
+    }
+
+}

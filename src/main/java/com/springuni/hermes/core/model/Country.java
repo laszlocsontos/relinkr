@@ -1,6 +1,8 @@
 package com.springuni.hermes.core.model;
 
+import java.util.Optional;
 import lombok.Getter;
+import org.springframework.util.StringUtils;
 
 /**
  * List of the countries of the world.
@@ -262,8 +264,10 @@ public enum Country {
     ZM("Zambia", "ZMB", 894),
     ZW("Zimbabwe", "ZWE", 716),
 
-    // Non-standard country code for denoting an unknown country
-    XX("Unknown", "XXX", 999);
+    // User-assigned country code for capturing newly added countries in ISO 3166-1.
+    // The standard will never use this code in the updating process.
+    // See: https://en.wikipedia.org/wiki/ISO_3166-1#Reserved_and_user-assigned_code_elements
+    ZZ("Unknown", "ZZZ", 999);
 
     private final String shortName;
     private final String alpha3Code;
@@ -273,6 +277,24 @@ public enum Country {
         this.shortName = shortName;
         this.alpha3Code = alpha3Code;
         this.numericCode = numericCode;
+    }
+
+    public static Optional<Country> fromString(String countryCode) {
+        Optional<String> normalizedCountryCode = Optional.ofNullable(countryCode)
+                .map(String::trim)
+                .map(String::toUpperCase)
+                .filter(StringUtils::hasText)
+                .filter(it -> it.length() == 2);
+
+        if (!normalizedCountryCode.isPresent()) {
+            return Optional.empty();
+        }
+
+        try {
+            return normalizedCountryCode.map(Country::valueOf);
+        } catch (IllegalArgumentException e) {
+            return Optional.of(ZZ);
+        }
     }
 
 }
