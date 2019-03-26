@@ -2,12 +2,16 @@ package com.springuni.hermes.test;
 
 import static com.springuni.hermes.user.model.Gender.MALE;
 import static com.springuni.hermes.user.model.Role.ADMIN;
+import static com.springuni.hermes.user.model.Role.USER;
 import static com.springuni.hermes.user.model.UserProfileType.GOOGLE;
 import static java.time.Instant.ofEpochSecond;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
+import com.springuni.hermes.click.model.Click;
 import com.springuni.hermes.click.model.ClickId;
 import com.springuni.hermes.click.model.IpAddress;
 import com.springuni.hermes.core.model.ApplicationException;
@@ -31,12 +35,16 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 
 public final class Mocks {
 
     public static final EmailAddress EMAIL_ADDRESS = new EmailAddress("test@test.com");
 
     public static final Instant FIXED_INSTANT = ofEpochSecond(1553091772);
+    public static final LocalDateTime FIXED_TIMESTAMP = LocalDateTime.ofInstant(FIXED_INSTANT, UTC);
     public static final Clock FIXED_CLOCK = Clock.fixed(FIXED_INSTANT, UTC);
 
     public static final String LONG_URL_BASE_S
@@ -126,6 +134,14 @@ public final class Mocks {
     public static final String ENCRYPTED_PASSWORD =
             "{bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG";
 
+    public static final Exception REST_IO_ERROR = new ResourceAccessException("IO Error");
+
+    public static final Exception REST_SERVER_ERROR =
+            new HttpServerErrorException(INTERNAL_SERVER_ERROR);
+
+    public static final Exception REST_CLIENT_ERROR =
+            new HttpClientErrorException(BAD_REQUEST);
+
     public static final Map<String, Object> GOOGLE_USER_ATTRIBUTES;
 
     private Mocks() {
@@ -194,6 +210,10 @@ public final class Mocks {
         Visitor visitor = Visitor.of(USER_ID);
         visitor.setId(VISITOR_ID);
         return visitor;
+    }
+
+    public static Click createClick() {
+        return Click.of(LINK_ID, VISITOR_ID, USER_ID, VISITOR_IP, FIXED_TIMESTAMP);
     }
 
     public static UserProfile createUserProfile() {
