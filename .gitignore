@@ -1,5 +1,11 @@
+### Maven ###
 target/
 !.mvn/wrapper/maven-wrapper.jar
+
+### Node / NPM ###
+node_modules/
+dist/
+.DS_Store
 
 ### STS ###
 .apt_generated
@@ -14,6 +20,7 @@ target/
 *.iws
 *.iml
 *.ipr
+.attach*
 
 ### NetBeans ###
 nbproject/private/
@@ -22,4 +29,19 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
-.attach*
+
+### Others ###
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
+
+### VueJS local env files ###
+.env.local
+.env.*.local
+
+### Log Files ###
+*.log
+
