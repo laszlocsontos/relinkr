@@ -11,9 +11,9 @@
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
 import { AirplayIcon } from 'vue-feather-icons'
-import LineChart from '@/LineChart.js'
+import HelloWorld from '@/components/HelloWorld.vue'
+import LineChart from '@/components/LineChart.js'
 
 
 export default {
