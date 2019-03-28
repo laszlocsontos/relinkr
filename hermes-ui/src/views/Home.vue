@@ -5,21 +5,19 @@
     <airplay-icon class="custom-class"></airplay-icon>
     <b-button variant="success" @click="fillData()">Button</b-button>
     <line-chart :chart-data="datacollection"></line-chart>
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import { AirplayIcon } from 'vue-feather-icons'
-import HelloWorld from '@/components/HelloWorld.vue'
 import LineChart from '@/components/LineChart.js'
 
 
 export default {
   name: 'home',
   components: {
-    HelloWorld, AirplayIcon, LineChart
+    AirplayIcon, LineChart
   },
   data() {
     return {
