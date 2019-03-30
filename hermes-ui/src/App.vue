@@ -8,8 +8,8 @@
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
           <b-nav-item to="/">Dashboard</b-nav-item>
-          <b-nav-item to="/about">Links</b-nav-item>
-          <b-nav-item to="/about">Stats</b-nav-item>
+          <b-nav-item to="/links">Links</b-nav-item>
+          <b-nav-item to="/stats">Stats</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -28,9 +28,7 @@
       </b-collapse>
     </b-navbar>
 
-    <b-container fluid>
-      <router-view/>
-    </b-container>
+    <router-view/>
   </div>
 </template>
 
