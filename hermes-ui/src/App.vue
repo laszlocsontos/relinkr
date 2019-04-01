@@ -15,7 +15,7 @@
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-nav-form>
-            <b-button size="sm" class="my-2 my-sm-0">New Link</b-button>
+            <b-button size="sm" class="my-2 my-sm-0" v-b-modal.new-link-dialog>New Link</b-button>
           </b-nav-form>
 
           <b-nav-item-dropdown right>
@@ -27,6 +27,34 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
+
+    <!-- New Link Dialog -->
+    <b-modal id="new-link-dialog" title="Add New Link" ok-title="Save">
+      <b-form-group
+          id="long-url-group"
+          description="Let's shorten something"
+          label="Long Url"
+          label-for="long-url"
+          :invalid-feedback="invalidFeedback"
+          :valid-feedback="validFeedback"
+          :state="state">
+        <b-form-input id="long-url" v-model="name" :state="state" trim></b-form-input>
+      </b-form-group>
+      <b-form-group
+          id="utm-parameters-group"
+          description="Let's spice it up for tracking"
+          label="UTM Parameters"
+          label-for="input-1"
+          :invalid-feedback="invalidFeedback"
+          :valid-feedback="validFeedback"
+          :state="state">
+        <b-form-input id="utm-source" placeholder="UTM Source" v-model="name" :state="state" trim size="sm" class="my-2"></b-form-input>
+        <b-form-input id="utm-medium" placeholder="UTM Medium" v-model="name" :state="state" trim size="sm" class="my-2"></b-form-input>
+        <b-form-input id="utm-campaign" placeholder="UTM Campaign" v-model="name" :state="state" trim size="sm" class="my-2"></b-form-input>
+        <b-form-input id="utm-term" placeholder="UTM Term" v-model="name" :state="state" trim size="sm" class="my-2"></b-form-input>
+        <b-form-input id="utm-content" placeholder="UTM Content" v-model="name" :state="state" trim size="sm" class="my-2"></b-form-input>
+      </b-form-group>
+    </b-modal>
 
     <router-view/>
   </div>
