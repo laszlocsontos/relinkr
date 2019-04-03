@@ -1,10 +1,11 @@
 <template>
   <b-container fluid class="p-1 w-75">
-      <b-card-group class="p-3" columns>
+      <b-card-group class="p-3" deck>
         <b-card
             border-variant="primary"
             header-bg-variant="primary"
-            header-text-variant="white">
+            header-text-variant="white"
+            wid>
 
           <div slot="header" align="center">Date Range</div>
 
@@ -14,7 +15,7 @@
               <label for="start-date">Start Date:</label>
             </b-col>
             <b-col sm="6">
-              <b-form-input id="start-date" size="sm"></b-form-input>
+              <datepicker id="start-date" input-class="form-control form-control-sm"/>
             </b-col>
           </b-row>
 
@@ -24,7 +25,7 @@
               <label for="end-date">End Date:</label>
             </b-col>
             <b-col sm="6">
-              <b-form-input id="end-date" size="sm"></b-form-input>
+              <datepicker id="end-date" input-class="form-control form-control-sm"/>
             </b-col>
           </b-row>
         </b-card>
@@ -129,12 +130,12 @@
 </template>
 
 <script>
-  import { ChevronsDownIcon, ChevronsUpIcon } from 'vue-feather-icons'
+  import Datepicker from 'vuejs-datepicker';
   import LineChart from '@/components/LineChart.js'
 
   export default {
     components: {
-      LineChart, ChevronsDownIcon, ChevronsUpIcon
+      Datepicker, LineChart
     },
     data() {
       return {
