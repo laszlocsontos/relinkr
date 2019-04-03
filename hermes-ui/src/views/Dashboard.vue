@@ -27,12 +27,12 @@
           <em slot="footer">Total Links: <strong>26</strong></em>
         </b-card>
         <b-card
-            border-variant="secondary"
-            header-bg-variant="secondary"
+            border-variant="primary"
+            header-bg-variant="primary"
             header-text-variant="white"
             align="center">
           <div slot="header">
-            <b-dropdown text="Clicks" split dropright variant="secondary">
+            <b-dropdown text="Clicks" split dropright variant="primary">
               <b-dropdown-item active>Today</b-dropdown-item>
               <b-dropdown-item>Yesterday</b-dropdown-item>
               <b-dropdown-divider></b-dropdown-divider>
@@ -51,12 +51,12 @@
           <em slot="footer">Total Clicks: <strong>26</strong></em>
         </b-card>
         <b-card
-            border-variant="success"
-            header-bg-variant="success"
+            border-variant="primary"
+            header-bg-variant="primary"
             header-text-variant="white"
             align="center">
           <div slot="header">
-            <b-dropdown text="Visitors" split dropright variant="success">
+            <b-dropdown text="Visitors" split dropright variant="primary">
               <b-dropdown-item active>Today</b-dropdown-item>
               <b-dropdown-item>Yesterday</b-dropdown-item>
               <b-dropdown-divider></b-dropdown-divider>

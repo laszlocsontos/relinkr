@@ -18,12 +18,12 @@
         small striped borderless outlined>
 
       <template slot="show_details" slot-scope="row">
-        <chevrons-down-icon v-b-tooltip.hover title="Show Details" @click="row.toggleDetails" v-if="!row.detailsShowing"/>
-        <chevrons-up-icon v-b-tooltip.hover title="Hide Details" @click="row.toggleDetails" v-if="row.detailsShowing" />
+        <chevrons-down-icon v-b-tooltip.hover title="Show Details" @click="row.toggleDetails" v-if="!row.detailsShowing" class="btn-outline-primary"/>
+        <chevrons-up-icon v-b-tooltip.hover title="Hide Details" @click="row.toggleDetails" v-if="row.detailsShowing" class="btn-outline-primary"/>
         <a v-b-tooltip.hover title="View Target" target="_blank" :href="row.item.short_link">
-          <external-link-icon class="custom-class" />
+          <external-link-icon class="btn-outline-primary" />
         </a>
-        <trash-2-icon v-b-tooltip.hover title="Delete Link" />
+        <trash-2-icon v-b-tooltip.hover title="Delete Link" class="btn-outline-primary" />
       </template>
 
       <template slot="row-details" slot-scope="row">
