@@ -130,24 +130,24 @@
 </template>
 
 <script>
-  import Datepicker from 'vuejs-datepicker';
-  import LineChart from '@/components/LineChart.js'
+import Datepicker from 'vuejs-datepicker';
+import LineChart from '@/components/LineChart.js'
 
-  export default {
-    components: {
-      Datepicker, LineChart
-    },
-    data() {
-      return {
-        clicksData: {
-          datasets: [{
-            label: "# of clicks",
-            data: [10, 20, 35, 20, 42, 25, 80]
-          }],
-          labels: ['2018-03-06', '2018-03-07', '2018-03-08', '2018-03-09', '2018-03-10',
-            '2018-03-11', '2018-03-12'],
-        }
+export default {
+  components: {
+    Datepicker, LineChart
+  },
+  data() {
+    return {
+      clicksData: {
+        datasets: [{
+          label: "# of clicks",
+          data: [10, 20, 35, 20, 42, 25, 80]
+        }],
+        labels: ['2018-03-06', '2018-03-07', '2018-03-08', '2018-03-09', '2018-03-10',
+          '2018-03-11', '2018-03-12'],
       }
     }
   }
+}
 </script>
