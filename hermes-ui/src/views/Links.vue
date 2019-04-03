@@ -72,12 +72,6 @@
           </b-tabs>
         </b-card>
       </template>
-
-      <!-- A virtual composite column -->
-      <template slot="controls" slot-scope="data">
-
-      </template>
-
     </b-table>
   </b-container>
 </template>
