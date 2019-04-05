@@ -22,7 +22,7 @@
             </b-dropdown>
           </div>
           <b-card-body>
-            <line-chart :chart-data="datacollection"></line-chart>
+            <line-chart :chart-data="linksData"></line-chart>
           </b-card-body>
           <em slot="footer">Total Links: <strong>26</strong></em>
         </b-card>
@@ -46,9 +46,9 @@
             </b-dropdown>
           </div>
           <b-card-body>
-            <line-chart :chart-data="datacollection"></line-chart>
+            <line-chart :chart-data="clicksData"></line-chart>
           </b-card-body>
-          <em slot="footer">Total Clicks: <strong>26</strong></em>
+          <em slot="footer">Total Clicks: <strong>259</strong></em>
         </b-card>
         <b-card
             border-variant="primary"
@@ -70,9 +70,9 @@
             </b-dropdown>
           </div>
           <b-card-body>
-            <line-chart :chart-data="datacollection"></line-chart>
+            <doughnut-chart :chart-data="visitorsData"></doughnut-chart>
           </b-card-body>
-          <em slot="footer">Unique Visitors: <strong>26</strong></em>
+          <em slot="footer">Unique Visitors: <strong>50</strong></em>
         </b-card>
       </b-card-group>
     </b-row>
@@ -83,42 +83,65 @@
 </template>
 
 <script>
-  // @ is an alias to /src
-  import LineChart from '@/components/LineChart.js'
-  import BRow from "bootstrap-vue/src/components/layout/row";
+import DoughnutChart from '@/components/DoughnutChart.js'
+import LineChart from '@/components/LineChart.js'
+import BRow from "bootstrap-vue/src/components/layout/row";
 
-  export default {
-    name: 'home',
-    components: {
-      BRow,
-      LineChart
-    },
-    data() {
-      return {
-        datacollection: null
-      }
-    },
-    mounted() {
-      this.fillData()
-    },
-    methods: {
-      fillData() {
-        this.datacollection = {
-          labels: [this.getRandomInt(), this.getRandomInt()],
-          datasets: [
-            {
-              label: 'Data One',
-              data: [this.getRandomInt(), this.getRandomInt()]
-            }, {
-              label: 'Data One',
-              data: [this.getRandomInt(), this.getRandomInt()]
-            }
-          ]
-        }
+export default {
+  name: 'home',
+  components: {
+    DoughnutChart, LineChart
+  },
+  data() {
+    return {
+      linksData: {
+        datasets: [{
+          label: "# of links",
+          data: [1, 2, 3, 2, 4, 2, 6]
+        }],
+        labels: ['2018-03-06', '2018-03-07', '2018-03-08', '2018-03-09', '2018-03-10', '2018-03-11', '2018-03-12'],
       },
-      getRandomInt() {
-        return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+      clicksData: {
+        datasets: [{
+          label: "# of clicks",
+          data: [10, 20, 35, 20, 42, 25, 80]
+        }],
+        labels: ['2018-03-06', '2018-03-07', '2018-03-08', '2018-03-09', '2018-03-10', '2018-03-11', '2018-03-12'],
+      },
+      visitorsData: {
+        datasets: [{
+          data: [10, 30]
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: [
+          'New',
+          'Returning'
+        ]
       }
     }
+  },
+  mounted() {
+    this.fillData()
+  },
+  methods: {
+    fillData() {
+      this.datacollection = {
+        labels: [this.getRandomInt(), this.getRandomInt()],
+        datasets: [
+          {
+            label: 'Data One',
+            data: [this.getRandomInt(), this.getRandomInt()]
+          }, {
+            label: 'Data One',
+            data: [this.getRandomInt(), this.getRandomInt()]
+          }
+        ]
+      }
+    },
+    getRandomInt() {
+      return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+    }
   }
+}
 </script>
