@@ -115,11 +115,15 @@
 </template>
 
 <script>
+import { API_BASE_URL } from '@/config';
 import { FacebookIcon, UserIcon } from 'vue-feather-icons'
 
 export default {
   components: {
     UserIcon, FacebookIcon
+  },
+  mounted () {
+    console.log(API_BASE_URL);
   },
   methods: {
     login() {
