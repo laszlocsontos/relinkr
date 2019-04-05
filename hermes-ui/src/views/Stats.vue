@@ -43,7 +43,7 @@
               <label for="domain">Domain:</label>
             </b-col>
             <b-col sm="6">
-              <b-form-input id="domain" size="sm"></b-form-input>
+              <b-form-input id="domain" size="sm" data-lpignore="true"></b-form-input>
             </b-col>
           </b-row>
 
@@ -53,7 +53,7 @@
               <label for="path">Path:</label>
             </b-col>
             <b-col sm="6">
-              <b-form-input id="path" size="sm"></b-form-input>
+              <b-form-input id="path" size="sm" data-lpignore="true"></b-form-input>
             </b-col>
           </b-row>
         </b-card>
@@ -71,7 +71,7 @@
               <label for="utm-source">Source:</label>
             </b-col>
             <b-col sm="6">
-              <b-form-input id="utm-source" size="sm"></b-form-input>
+              <b-form-input id="utm-source" size="sm" data-lpignore="true"></b-form-input>
             </b-col>
           </b-row>
 
@@ -81,7 +81,7 @@
               <label for="utm-medium">Medium:</label>
             </b-col>
             <b-col sm="6">
-              <b-form-input id="utm-medium" size="sm"></b-form-input>
+              <b-form-input id="utm-medium" size="sm" data-lpignore="true"></b-form-input>
             </b-col>
           </b-row>
 
@@ -91,7 +91,7 @@
               <label for="utm-campaign">Campaign:</label>
             </b-col>
             <b-col sm="6">
-              <b-form-input id="utm-campaign" size="sm"></b-form-input>
+              <b-form-input id="utm-campaign" size="sm" data-lpignore="true"></b-form-input>
             </b-col>
           </b-row>
 
@@ -101,7 +101,7 @@
               <label for="utm-term">Term:</label>
             </b-col>
             <b-col sm="6">
-              <b-form-input id="utm-term" size="sm"></b-form-input>
+              <b-form-input id="utm-term" size="sm" data-lpignore="true"></b-form-input>
             </b-col>
           </b-row>
 
@@ -111,7 +111,7 @@
               <label for="utm-content">Content:</label>
             </b-col>
             <b-col sm="6">
-              <b-form-input id="utm-content" size="sm"></b-form-input>
+              <b-form-input id="utm-content" size="sm" data-lpignore="true"></b-form-input>
             </b-col>
           </b-row>
         </b-card>
