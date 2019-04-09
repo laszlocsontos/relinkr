@@ -7,8 +7,9 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.springframework.security.core.context.SecurityContextHolder.MODE_GLOBAL;
 
-import com.springuni.hermes.core.BaseFilterTest;
+import com.springuni.hermes.test.web.BaseFilterTest;
 import javax.servlet.Filter;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +26,10 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
 
     @Mock
     private Authentication authentication;
+
     @Mock
     private JwtTokenService jwtTokenService;
+
     @Mock
     private SecurityContext securityContext;
 
@@ -37,14 +40,14 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
     public void setUp() throws Exception {
         super.setUp();
 
-        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
+        SecurityContextHolder.setStrategyName(MODE_GLOBAL);
         SecurityContextHolder.setContext(securityContext);
 
         jwtTokenFilter = new JwtAuthenticationFilter(jwtTokenService);
     }
 
     @Test
-    public void doFilter_withValidJwtToken() throws Exception {
+    public void givenValidJwtToken_doFilter_thenOkAndContextSet() throws Exception {
         request.addHeader(AUTHORIZATION_HEADER, TOKEN_PREFIX + " valid");
         given(jwtTokenService.parseJwtToken(anyString())).willReturn(authentication);
 
@@ -55,7 +58,7 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
     }
 
     @Test
-    public void doFilter_withInvalidJwtToken() throws Exception {
+    public void givenInvalidJwtToken_whenDoFilter_thenOkAndNoContextSet() throws Exception {
         request.addHeader(AUTHORIZATION_HEADER, TOKEN_PREFIX + " invalid");
         given(jwtTokenService.parseJwtToken(anyString())).willThrow(BadCredentialsException.class);
 
@@ -66,7 +69,7 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
     }
 
     @Test
-    public void doFilter_withoutJwtToken() throws Exception {
+    public void givenNoJwtToken_whenDoFilter_thenOkAndNoContextSet() throws Exception {
         jwtTokenFilter.doFilter(request, response, filterChain);
 
         assertEquals(SC_OK, response.getStatus());

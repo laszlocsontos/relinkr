@@ -1,4 +1,4 @@
-package com.springuni.hermes.core;
+package com.springuni.hermes.test.web;
 
 import org.junit.Before;
 import org.springframework.mock.web.MockFilterChain;

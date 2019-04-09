@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springuni.hermes.core.BaseFilterTest;
+import com.springuni.hermes.test.web.BaseFilterTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

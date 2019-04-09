@@ -1,10 +1,15 @@
 package com.springuni.hermes.core.security.authn;
 
 import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationEntryPoint;
+import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationFilter;
+import com.springuni.hermes.core.security.authn.jwt.JwtTokenService;
 import com.springuni.hermes.core.security.authn.oauth2.PersistentOAuth2UserService;
+import com.springuni.hermes.core.security.authn.signin.DefaultAuthenticationFailureHandler;
+import com.springuni.hermes.core.security.authn.signin.DefaultAuthenticationSuccessHandler;
 import com.springuni.hermes.user.service.UserProfileFactory;
 import com.springuni.hermes.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +28,10 @@ import org.springframework.security.oauth2.client.web.AuthorizationRequestReposi
 import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
-import org.springframework.security.web.util.matcher.AnyRequestMatcher;
-import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -36,6 +41,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final ObjectMapper objectMapper;
     private final UserProfileFactory userProfileFactory;
     private final UserService userService;
+    private final JwtTokenService jwtTokenService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
@@ -59,37 +66,45 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         );
     }
 
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new DefaultAuthenticationSuccessHandler(jwtTokenService);
+    }
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new DefaultAuthenticationFailureHandler(objectMapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new JwtAuthenticationEntryPoint(objectMapper);
+    }
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(STATELESS)
+                .and()
                 .oauth2Login()
+                .successHandler(authenticationSuccessHandler())
+                .failureHandler(authenticationFailureHandler())
                 .authorizationEndpoint()
                 .authorizationRequestRepository(authorizationRequestRepository())
                 .and()
                 .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
                 .and()
                 .userInfoEndpoint().userService(oauth2UserService()).and()
-                .loginPage("/login/oauth2")
-                .defaultSuccessUrl("/pages/dashboard", true)
                 .and()
                 .exceptionHandling()
-                .defaultAuthenticationEntryPointFor(
-                        new HttpStatusEntryPoint(UNAUTHORIZED),
-                        new RegexRequestMatcher("/api/.*", null)
-                )
-                .defaultAuthenticationEntryPointFor(
-                        new LoginUrlAuthenticationEntryPoint("/login/oauth2"),
-                        AnyRequestMatcher.INSTANCE
-                )
+                .authenticationEntryPoint(authenticationEntryPoint())
                 .and()
+                .addFilterBefore(jwtAuthenticationFilter, LogoutFilter.class)
                 .authorizeRequests()
                 .regexMatchers(GET, "/").permitAll()
                 .regexMatchers(GET, "/login/oauth2").permitAll()
                 .regexMatchers(GET, "/[a-zA-Z0-9_-]{11}").permitAll()
-                .regexMatchers(GET, "/vendor/.*").permitAll()
-                .regexMatchers(GET, "/app/.*").permitAll()
-                .regexMatchers(GET, "/pages/.*").hasAuthority("ROLE_USER")
                 .regexMatchers("/api/.*").hasAuthority("ROLE_USER")
                 .anyRequest().denyAll()
                 .and();

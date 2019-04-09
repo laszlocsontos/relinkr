@@ -1,29 +1,9 @@
-/**
- * Copyright (c) 2017-present Laszlo Csontos All rights reserved.
- *
- * This file is part of springuni-particles.
- *
- * springuni-particles is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * springuni-particles is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with springuni-particles.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.springuni.hermes.core.security.authn.jwt;
 
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toSet;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.MalformedJwtException;
+import com.nimbusds.jwt.JWTClaimsSet;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
@@ -52,19 +32,19 @@ class JwtAuthenticationToken extends AbstractAuthenticationToken {
     /**
      * Factory method for creating a new {@code {@link JwtAuthenticationToken}}.
      *
-     * @param claims JWT claims
+     * @param claimsSet JWT claims
      * @return a JwtAuthenticationToken
      */
-    static JwtAuthenticationToken of(Claims claims) {
-        long userId = 0;
+    static JwtAuthenticationToken of(JWTClaimsSet claimsSet) {
+        long userId;
         try {
-            userId = Long.valueOf(claims.getSubject());
+            userId = Long.valueOf(claimsSet.getSubject());
         } catch (NumberFormatException e) {
-            throw new MalformedJwtException(e.getMessage(), e);
+            throw new JwtTokenException(e.getMessage(), e);
         }
 
         Collection<? extends GrantedAuthority> authorities =
-                Optional.ofNullable(claims.get(AUTHORITIES))
+                Optional.ofNullable(claimsSet.getClaim(AUTHORITIES))
                         .map(String::valueOf)
                         .map(it -> it.split(","))
                         .map(Arrays::stream)
@@ -73,13 +53,13 @@ class JwtAuthenticationToken extends AbstractAuthenticationToken {
                         .map(it -> it.collect(toSet()))
                         .orElse(emptySet());
 
-        JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(userId,
-                authorities);
+        JwtAuthenticationToken jwtAuthenticationToken =
+                new JwtAuthenticationToken(userId, authorities);
 
         Instant now = Instant.now();
-        Instant expiration = claims.getExpiration().toInstant();
+        Instant expiration = claimsSet.getExpirationTime().toInstant();
 
-        Instant notBefore = Optional.ofNullable(claims.getNotBefore())
+        Instant notBefore = Optional.ofNullable(claimsSet.getNotBeforeTime())
                 .map(Date::toInstant)
                 .orElse(now);
 

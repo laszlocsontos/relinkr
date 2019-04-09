@@ -1,17 +1,15 @@
 package com.springuni.hermes.core.security.authn.jwt;
 
-import static com.springuni.hermes.Mocks.JWT_SECRET_KEY;
-import static com.springuni.hermes.Mocks.JWT_TOKEN_EXPIRED;
-import static com.springuni.hermes.Mocks.JWT_TOKEN_INVALID;
-import static com.springuni.hermes.Mocks.JWT_TOKEN_VALID;
+import static com.springuni.hermes.test.Mocks.JWT_TOKEN_EXPIRED;
+import static com.springuni.hermes.test.Mocks.JWT_TOKEN_INVALID;
+import static com.springuni.hermes.test.Mocks.JWT_TOKEN_VALID;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import com.springuni.hermes.core.util.IdentityGenerator;
-import java.util.Arrays;
-import java.util.Base64;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,18 +24,17 @@ public class JwtTokenServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        jwtTokenService = new JwtTokenServiceImpl(
-                Base64.getDecoder().decode(JWT_SECRET_KEY), IdentityGenerator.getInstance()
-        );
+        // TODO: Add private and public keys here
+        jwtTokenService = new JwtTokenServiceImpl(null, null, IdentityGenerator.getInstance());
     }
 
     @Test(expected = BadCredentialsException.class)
-    public void createJwtToken_withInvalidPrincipal() {
+    public void givenInvalidPrincipal_whenCreateJwtToken_thenBadCredentialsException() {
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(
                         "invalid",
                         null,
-                        Arrays.asList(new SimpleGrantedAuthority("USER"))
+                        singletonList(new SimpleGrantedAuthority("USER"))
                 );
 
         String jwtToken = jwtTokenService.createJwtToken(authentication, 1);
@@ -45,12 +42,12 @@ public class JwtTokenServiceTest {
     }
 
     @Test
-    public void createJwtToken_withValidPrincipal() {
+    public void givenValidPrincipal_whenCreateJwtToken_thenParsed() {
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(
                         "53245345345345",
                         null,
-                        Arrays.asList(new SimpleGrantedAuthority("USER"))
+                        singletonList(new SimpleGrantedAuthority("USER"))
                 );
 
         String jwtToken = jwtTokenService.createJwtToken(authentication, 1);
@@ -61,7 +58,7 @@ public class JwtTokenServiceTest {
     }
 
     @Test
-    public void parseJwtToken_withValid() {
+    public void givenValidPrincipal_whenParseJwtToken_thenAuthenticated() {
         Authentication authentication = jwtTokenService.parseJwtToken(JWT_TOKEN_VALID);
         assertEquals("53245345345345", authentication.getName());
         assertThat(authentication.getAuthorities(), contains(new SimpleGrantedAuthority("USER")));
@@ -69,12 +66,12 @@ public class JwtTokenServiceTest {
     }
 
     @Test(expected = BadCredentialsException.class)
-    public void parseJwtToken_withInvalid() {
+    public void givenInvalidPrincipal_whenParseJwtToken_thenBadCredentialsException() {
         jwtTokenService.parseJwtToken(JWT_TOKEN_INVALID);
     }
 
     @Test(expected = NonceExpiredException.class)
-    public void parseJwtToken_withExpired() {
+    public void givenExpiredPrincipal_whenParseJwtToken_thenNonceExpiredException() {
         jwtTokenService.parseJwtToken(JWT_TOKEN_EXPIRED);
     }
 

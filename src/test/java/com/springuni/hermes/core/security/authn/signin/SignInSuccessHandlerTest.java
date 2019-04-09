@@ -1,6 +1,6 @@
 package com.springuni.hermes.core.security.authn.signin;
 
-import com.springuni.hermes.core.BaseServletTest;
+import com.springuni.hermes.test.web.BaseServletTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

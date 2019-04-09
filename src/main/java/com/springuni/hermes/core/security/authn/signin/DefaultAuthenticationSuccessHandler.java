@@ -20,39 +20,45 @@
 package com.springuni.hermes.core.security.authn.signin;
 
 import com.springuni.hermes.core.security.authn.jwt.JwtTokenService;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.web.util.NestedServletException;
 
 /**
  * Created by lcsontos on 5/17/17.
  */
 @Slf4j
-public class SignInSuccessHandler implements AuthenticationSuccessHandler {
+public class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     static final int ONE_DAY_MINUTES = 24 * 60;
     static final String X_SET_AUTHORIZATION_BEARER_HEADER = "X-Set-Authorization-Bearer";
 
     private final JwtTokenService jwtTokenService;
 
-    public SignInSuccessHandler(JwtTokenService jwtTokenService) {
+    public DefaultAuthenticationSuccessHandler(JwtTokenService jwtTokenService) {
         this.jwtTokenService = jwtTokenService;
     }
 
     @Override
     public void onAuthenticationSuccess(
             HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication) {
+            Authentication authentication) throws ServletException {
 
         if (response.containsHeader(X_SET_AUTHORIZATION_BEARER_HEADER)) {
             log.debug("{} has already been set.", X_SET_AUTHORIZATION_BEARER_HEADER);
             return;
         }
 
-        String jwtToken = jwtTokenService.createJwtToken(authentication, ONE_DAY_MINUTES);
-        response.setHeader(X_SET_AUTHORIZATION_BEARER_HEADER, jwtToken);
+        try {
+            String jwtToken = jwtTokenService.createJwtToken(authentication, ONE_DAY_MINUTES);
+            response.setHeader(X_SET_AUTHORIZATION_BEARER_HEADER, jwtToken);
+        } catch (Exception e) {
+            throw new NestedServletException(e.getMessage(), e);
+        }
     }
 
 }

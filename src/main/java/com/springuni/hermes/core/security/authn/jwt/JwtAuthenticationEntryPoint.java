@@ -20,7 +20,7 @@
 package com.springuni.hermes.core.security.authn.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springuni.hermes.core.security.authn.signin.SignInFailureHandler;
+import com.springuni.hermes.core.security.authn.signin.DefaultAuthenticationFailureHandler;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,7 +31,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
  * Created by lcsontos on 5/18/17.
  */
 public class JwtAuthenticationEntryPoint
-        extends SignInFailureHandler implements AuthenticationEntryPoint {
+        extends DefaultAuthenticationFailureHandler implements AuthenticationEntryPoint {
 
     public JwtAuthenticationEntryPoint(ObjectMapper objectMapper) {
         super(objectMapper);
