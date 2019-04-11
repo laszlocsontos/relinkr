@@ -56,12 +56,13 @@ public class PersistentOAuth2UserService
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        // We expect that spring.security.oauth2.client.provider.<provider_name>.userNameAttribute
+        // be always set to email and hence we expect a valid email address from the OAuth2 server.
         OAuth2User oAuth2User;
         try {
             oAuth2User = defaultUserService.loadUser(userRequest);
         } catch (IllegalArgumentException e) {
-            log.error(e.getMessage(), e);
-            throw new OAuth2AuthenticationException(new OAuth2Error(INVALID_EMAIL_ADDRESS), e);
+            throw createOAuth2Error(INVALID_EMAIL_ADDRESS, e);
         }
 
         EmailAddress emailAddress = extractEmailAddress(oAuth2User.getName());
@@ -78,8 +79,7 @@ public class PersistentOAuth2UserService
         try {
             return EmailAddress.of(principalName);
         } catch (IllegalArgumentException e) {
-            log.error(e.getMessage(), e);
-            throw new OAuth2AuthenticationException(new OAuth2Error(INVALID_EMAIL_ADDRESS), e);
+            throw createOAuth2Error(INVALID_EMAIL_ADDRESS, e);
         }
 
     }
@@ -91,8 +91,7 @@ public class PersistentOAuth2UserService
             UserProfileType userProfileType = UserProfileType.valueOf(registrationId.toUpperCase());
             return userProfileFactory.create(userProfileType, userAttributes);
         } catch (RuntimeException e) {
-            log.error(e.getMessage(), e);
-            throw new OAuth2AuthenticationException(new OAuth2Error(INVALID_PROFILE), e);
+            throw createOAuth2Error(INVALID_PROFILE, e);
         }
 
     }
@@ -103,8 +102,7 @@ public class PersistentOAuth2UserService
         try {
             return userService.saveUser(emailAddress, userProfile);
         } catch (RuntimeException e) {
-            log.error(e.getMessage(), e);
-            throw new OAuth2AuthenticationException(new OAuth2Error(SERVER_ERROR), e);
+            throw createOAuth2Error(SERVER_ERROR, e);
         }
     }
 
@@ -124,6 +122,15 @@ public class PersistentOAuth2UserService
 
         return new DefaultOAuth2User(authorities, userAttributes, USER_ID_ATTRIBUTE);
 
+    }
+
+    private RuntimeException createOAuth2Error(String code, Throwable cause) {
+        OAuth2Error oauth2Error = new OAuth2Error(code, cause.getMessage(), null);
+
+        OAuth2AuthenticationException oAuth2AuthenticationException =
+                new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString(), cause);
+
+        throw oAuth2AuthenticationException;
     }
 
 }

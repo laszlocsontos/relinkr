@@ -49,13 +49,6 @@ public class WebRequestAuthorizationTest extends AbstractWebSecurityTest {
     }
 
     @Test
-    public void givenDashboardAccessed_whenUnauthenticated_thenRedirected() throws Exception {
-        mockMvc.perform(get("/pages/dashboard"))
-                .andExpect(status().isFound())
-                .andDo(print());
-    }
-
-    @Test
     @WithMockUser
     public void givenRootAccessed_whenAuthenticated_thenOk() throws Exception {
         mockMvc.perform(get(ROOT_PATH))
@@ -75,14 +68,6 @@ public class WebRequestAuthorizationTest extends AbstractWebSecurityTest {
     @WithMockUser
     public void givenApiAccessed_whenAuthenticated_thenOk() throws Exception {
         mockMvc.perform(get(TEST_API_PATH))
-                .andExpect(status().isOk())
-                .andDo(print());
-    }
-
-    @Test
-    @WithMockUser
-    public void givenDashboardAccessed_whenAuthenticated_thenOk() throws Exception {
-        mockMvc.perform(get(TEST_DASHBOARD_PATH))
                 .andExpect(status().isOk())
                 .andDo(print());
     }

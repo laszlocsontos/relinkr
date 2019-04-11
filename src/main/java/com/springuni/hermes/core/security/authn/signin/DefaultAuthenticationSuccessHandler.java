@@ -34,8 +34,9 @@ import org.springframework.web.util.NestedServletException;
 @Slf4j
 public class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    static final int ONE_DAY_MINUTES = 24 * 60;
-    static final String X_SET_AUTHORIZATION_BEARER_HEADER = "X-Set-Authorization-Bearer";
+    public static final String X_SET_AUTHORIZATION_BEARER_HEADER = "X-Set-Authorization-Bearer";
+
+    private static final int ONE_DAY_MINUTES = 24 * 60;
 
     private final JwtAuthenticationService jwtAuthenticationService;
 
