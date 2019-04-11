@@ -19,7 +19,7 @@
 
 package com.springuni.hermes.core.security.authn.signin;
 
-import com.springuni.hermes.core.security.authn.jwt.JwtTokenService;
+import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationService;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,10 +37,10 @@ public class DefaultAuthenticationSuccessHandler implements AuthenticationSucces
     static final int ONE_DAY_MINUTES = 24 * 60;
     static final String X_SET_AUTHORIZATION_BEARER_HEADER = "X-Set-Authorization-Bearer";
 
-    private final JwtTokenService jwtTokenService;
+    private final JwtAuthenticationService jwtAuthenticationService;
 
-    public DefaultAuthenticationSuccessHandler(JwtTokenService jwtTokenService) {
-        this.jwtTokenService = jwtTokenService;
+    public DefaultAuthenticationSuccessHandler(JwtAuthenticationService jwtAuthenticationService) {
+        this.jwtAuthenticationService = jwtAuthenticationService;
     }
 
     @Override
@@ -54,7 +54,8 @@ public class DefaultAuthenticationSuccessHandler implements AuthenticationSucces
         }
 
         try {
-            String jwtToken = jwtTokenService.createJwtToken(authentication, ONE_DAY_MINUTES);
+            String jwtToken = jwtAuthenticationService
+                    .createJwtToken(authentication, ONE_DAY_MINUTES);
             response.setHeader(X_SET_AUTHORIZATION_BEARER_HEADER, jwtToken);
         } catch (Exception e) {
             throw new NestedServletException(e.getMessage(), e);

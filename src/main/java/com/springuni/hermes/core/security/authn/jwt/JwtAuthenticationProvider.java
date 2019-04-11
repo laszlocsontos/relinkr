@@ -14,7 +14,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             throws AuthenticationException {
 
         // JwtAuthenticationToken is always authenticated, as JwtAuthenticationFilter has already
-        // checked them through JwtTokenService.
+        // checked them through JwtAuthenticationService.
         return authentication;
     }
 

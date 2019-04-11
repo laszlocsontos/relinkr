@@ -6,7 +6,7 @@ import org.springframework.security.core.AuthenticationException;
 /**
  * Created by lcsontos on 5/17/17.
  */
-public interface JwtTokenService {
+public interface JwtAuthenticationService {
 
     String createJwtToken(Authentication authentication, int minutes);
 

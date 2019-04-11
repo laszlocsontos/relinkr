@@ -6,7 +6,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationEntryPoint;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationFilter;
-import com.springuni.hermes.core.security.authn.jwt.JwtTokenService;
+import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationService;
 import com.springuni.hermes.core.security.authn.oauth2.PersistentOAuth2UserService;
 import com.springuni.hermes.core.security.authn.signin.DefaultAuthenticationFailureHandler;
 import com.springuni.hermes.core.security.authn.signin.DefaultAuthenticationSuccessHandler;
@@ -41,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final ObjectMapper objectMapper;
     private final UserProfileFactory userProfileFactory;
     private final UserService userService;
-    private final JwtTokenService jwtTokenService;
+    private final JwtAuthenticationService jwtAuthenticationService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new DefaultAuthenticationSuccessHandler(jwtTokenService);
+        return new DefaultAuthenticationSuccessHandler(jwtAuthenticationService);
     }
 
     @Bean

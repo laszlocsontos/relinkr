@@ -51,16 +51,17 @@ public class JwtConfig {
     }
 
     @Bean
-    public JwtTokenService jwtTokenService(JwtProperties jwtProperties) {
-        return new JwtTokenServiceImpl(
+    public JwtAuthenticationService jwtTokenService(JwtProperties jwtProperties) {
+        return new JwtAuthenticationServiceImpl(
                 jwtProperties.getPrivateKey(), jwtProperties.getPublicKey(),
                 IdentityGenerator.getInstance()
         );
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtTokenService jwtTokenService) {
-        return new JwtAuthenticationFilter(jwtTokenService);
+    public JwtAuthenticationFilter jwtAuthenticationFilter(
+            JwtAuthenticationService jwtAuthenticationService) {
+        return new JwtAuthenticationFilter(jwtAuthenticationService);
     }
 
     @Data

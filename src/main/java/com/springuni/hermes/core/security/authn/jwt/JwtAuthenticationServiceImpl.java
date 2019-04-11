@@ -27,7 +27,7 @@ import org.springframework.security.core.GrantedAuthority;
 /**
  * Created by lcsontos on 5/17/17.
  */
-public class JwtTokenServiceImpl implements JwtTokenService {
+public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
     private static final String AUTHORITIES = "authorities";
 
@@ -36,7 +36,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     private final IdentityGenerator identityGenerator;
 
-    public JwtTokenServiceImpl(
+    public JwtAuthenticationServiceImpl(
             PrivateKey privateKey, PublicKey publicKey, IdentityGenerator identityGenerator) {
 
         this.verifier = new RSASSAVerifier((RSAPublicKey) publicKey);

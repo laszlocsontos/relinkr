@@ -18,14 +18,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
 
-public class JwtTokenServiceTest {
+public class JwtAuthenticationServiceTest {
 
-    private JwtTokenService jwtTokenService;
+    private JwtAuthenticationService jwtAuthenticationService;
 
     @Before
     public void setUp() throws Exception {
         // TODO: Add private and public keys here
-        jwtTokenService = new JwtTokenServiceImpl(null, null, IdentityGenerator.getInstance());
+        jwtAuthenticationService = new JwtAuthenticationServiceImpl(null, null, IdentityGenerator.getInstance());
     }
 
     @Test(expected = BadCredentialsException.class)
@@ -37,8 +37,8 @@ public class JwtTokenServiceTest {
                         singletonList(new SimpleGrantedAuthority("USER"))
                 );
 
-        String jwtToken = jwtTokenService.createJwtToken(authentication, 1);
-        jwtTokenService.parseJwtToken(jwtToken);
+        String jwtToken = jwtAuthenticationService.createJwtToken(authentication, 1);
+        jwtAuthenticationService.parseJwtToken(jwtToken);
     }
 
     @Test
@@ -50,8 +50,8 @@ public class JwtTokenServiceTest {
                         singletonList(new SimpleGrantedAuthority("USER"))
                 );
 
-        String jwtToken = jwtTokenService.createJwtToken(authentication, 1);
-        authentication = jwtTokenService.parseJwtToken(jwtToken);
+        String jwtToken = jwtAuthenticationService.createJwtToken(authentication, 1);
+        authentication = jwtAuthenticationService.parseJwtToken(jwtToken);
 
         assertEquals("53245345345345", authentication.getName());
         assertThat(authentication.getAuthorities(), contains(new SimpleGrantedAuthority("USER")));
@@ -59,7 +59,7 @@ public class JwtTokenServiceTest {
 
     @Test
     public void givenValidPrincipal_whenParseJwtToken_thenAuthenticated() {
-        Authentication authentication = jwtTokenService.parseJwtToken(JWT_TOKEN_VALID);
+        Authentication authentication = jwtAuthenticationService.parseJwtToken(JWT_TOKEN_VALID);
         assertEquals("53245345345345", authentication.getName());
         assertThat(authentication.getAuthorities(), contains(new SimpleGrantedAuthority("USER")));
         assertTrue(authentication.isAuthenticated());
@@ -67,12 +67,12 @@ public class JwtTokenServiceTest {
 
     @Test(expected = BadCredentialsException.class)
     public void givenInvalidPrincipal_whenParseJwtToken_thenBadCredentialsException() {
-        jwtTokenService.parseJwtToken(JWT_TOKEN_INVALID);
+        jwtAuthenticationService.parseJwtToken(JWT_TOKEN_INVALID);
     }
 
     @Test(expected = NonceExpiredException.class)
     public void givenExpiredPrincipal_whenParseJwtToken_thenNonceExpiredException() {
-        jwtTokenService.parseJwtToken(JWT_TOKEN_EXPIRED);
+        jwtAuthenticationService.parseJwtToken(JWT_TOKEN_EXPIRED);
     }
 
 }

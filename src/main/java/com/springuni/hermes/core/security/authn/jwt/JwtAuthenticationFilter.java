@@ -25,10 +25,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer";
 
-    private final JwtTokenService jwtTokenService;
+    private final JwtAuthenticationService jwtAuthenticationService;
 
-    public JwtAuthenticationFilter(JwtTokenService jwtTokenService) {
-        this.jwtTokenService = jwtTokenService;
+    public JwtAuthenticationFilter(JwtAuthenticationService jwtAuthenticationService) {
+        this.jwtAuthenticationService = jwtAuthenticationService;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwtToken = authorizationHeader.substring(TOKEN_PREFIX.length() + 1);
 
         try {
-            return Optional.of(jwtTokenService.parseJwtToken(jwtToken));
+            return Optional.of(jwtAuthenticationService.parseJwtToken(jwtToken));
         } catch (AuthenticationException e) {
             log.warn(e.getMessage());
             return empty();

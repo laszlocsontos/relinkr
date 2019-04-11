@@ -28,7 +28,7 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
     private Authentication authentication;
 
     @Mock
-    private JwtTokenService jwtTokenService;
+    private JwtAuthenticationService jwtAuthenticationService;
 
     @Mock
     private SecurityContext securityContext;
@@ -43,13 +43,13 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
         SecurityContextHolder.setStrategyName(MODE_GLOBAL);
         SecurityContextHolder.setContext(securityContext);
 
-        jwtTokenFilter = new JwtAuthenticationFilter(jwtTokenService);
+        jwtTokenFilter = new JwtAuthenticationFilter(jwtAuthenticationService);
     }
 
     @Test
     public void givenValidJwtToken_doFilter_thenOkAndContextSet() throws Exception {
         request.addHeader(AUTHORIZATION_HEADER, TOKEN_PREFIX + " valid");
-        given(jwtTokenService.parseJwtToken(anyString())).willReturn(authentication);
+        given(jwtAuthenticationService.parseJwtToken(anyString())).willReturn(authentication);
 
         jwtTokenFilter.doFilter(request, response, filterChain);
 
@@ -60,7 +60,7 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
     @Test
     public void givenInvalidJwtToken_whenDoFilter_thenOkAndNoContextSet() throws Exception {
         request.addHeader(AUTHORIZATION_HEADER, TOKEN_PREFIX + " invalid");
-        given(jwtTokenService.parseJwtToken(anyString())).willThrow(BadCredentialsException.class);
+        given(jwtAuthenticationService.parseJwtToken(anyString())).willThrow(BadCredentialsException.class);
 
         jwtTokenFilter.doFilter(request, response, filterChain);
 
