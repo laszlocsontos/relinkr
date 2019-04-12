@@ -1,12 +1,10 @@
-package com.springuni.hermes.core.security.authn.signin;
+package com.springuni.hermes.core.security.authn.handler;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.springuni.hermes.core.web.RestErrorResponse;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;

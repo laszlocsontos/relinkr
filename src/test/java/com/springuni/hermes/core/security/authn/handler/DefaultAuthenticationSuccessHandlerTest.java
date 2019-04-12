@@ -1,4 +1,4 @@
-package com.springuni.hermes.core.security.authn.signin;
+package com.springuni.hermes.core.security.authn.handler;
 
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import static org.junit.Assert.assertEquals;
@@ -11,14 +11,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationService;
 import com.springuni.hermes.core.web.RestErrorResponse;
 import com.springuni.hermes.test.web.BaseServletTest;
-import java.util.Map;
-import javax.servlet.http.HttpServletResponse;
-import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;

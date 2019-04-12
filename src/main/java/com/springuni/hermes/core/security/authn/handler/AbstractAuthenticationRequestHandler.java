@@ -1,4 +1,4 @@
-package com.springuni.hermes.core.security.authn.signin;
+package com.springuni.hermes.core.security.authn.handler;
 
 
 import static lombok.AccessLevel.PACKAGE;

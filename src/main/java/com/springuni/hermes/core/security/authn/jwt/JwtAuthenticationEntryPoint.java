@@ -20,7 +20,7 @@
 package com.springuni.hermes.core.security.authn.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springuni.hermes.core.security.authn.signin.DefaultAuthenticationFailureHandler;
+import com.springuni.hermes.core.security.authn.handler.DefaultAuthenticationFailureHandler;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

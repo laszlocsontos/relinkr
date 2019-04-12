@@ -3,7 +3,6 @@ package com.springuni.hermes.core.security.authn;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
-import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,8 +10,8 @@ import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationEntryPoint;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationFilter;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationService;
 import com.springuni.hermes.core.security.authn.oauth2.PersistentOAuth2UserService;
-import com.springuni.hermes.core.security.authn.signin.DefaultAuthenticationFailureHandler;
-import com.springuni.hermes.core.security.authn.signin.DefaultAuthenticationSuccessHandler;
+import com.springuni.hermes.core.security.authn.handler.DefaultAuthenticationFailureHandler;
+import com.springuni.hermes.core.security.authn.handler.DefaultAuthenticationSuccessHandler;
 import com.springuni.hermes.user.service.UserProfileFactory;
 import com.springuni.hermes.user.service.UserService;
 import java.util.List;

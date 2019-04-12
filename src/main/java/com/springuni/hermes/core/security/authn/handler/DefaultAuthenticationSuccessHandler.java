@@ -1,4 +1,4 @@
-package com.springuni.hermes.core.security.authn.signin;
+package com.springuni.hermes.core.security.authn.handler;
 
 import static java.util.Collections.singletonMap;
 import static org.springframework.http.HttpStatus.OK;
@@ -6,15 +6,11 @@ import static org.springframework.http.HttpStatus.OK;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationService;
 import java.io.IOException;
-import java.util.Collections;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.web.util.NestedServletException;
 
 /**
  * Created by lcsontos on 5/17/17.

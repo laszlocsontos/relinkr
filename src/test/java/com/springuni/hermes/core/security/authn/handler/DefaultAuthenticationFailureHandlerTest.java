@@ -1,4 +1,4 @@
-package com.springuni.hermes.core.security.authn.signin;
+package com.springuni.hermes.core.security.authn.handler;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
