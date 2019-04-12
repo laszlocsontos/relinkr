@@ -2,7 +2,6 @@ package com.springuni.hermes.test;
 
 import static com.springuni.hermes.user.model.Gender.MALE;
 import static com.springuni.hermes.user.model.Role.ADMIN;
-import static com.springuni.hermes.user.model.Role.USER;
 import static com.springuni.hermes.user.model.UserProfileType.GOOGLE;
 import static java.time.Instant.ofEpochSecond;
 import static java.time.ZoneOffset.UTC;
@@ -15,7 +14,6 @@ import com.springuni.hermes.click.model.Click;
 import com.springuni.hermes.click.model.ClickId;
 import com.springuni.hermes.click.model.IpAddress;
 import com.springuni.hermes.core.model.ApplicationException;
-import com.springuni.hermes.core.security.authn.signin.SignInRequest;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;
 import com.springuni.hermes.link.model.LongUrl;
@@ -229,10 +227,6 @@ public final class Mocks {
                 null, "Csontos", null, null, MALE,
                 null
         );
-    }
-
-    public static SignInRequest createSignInRequest() {
-        return new SignInRequest(EMAIL_ADDRESS.getValue(), CLEARTEXT_PASSWORD);
     }
 
 }
