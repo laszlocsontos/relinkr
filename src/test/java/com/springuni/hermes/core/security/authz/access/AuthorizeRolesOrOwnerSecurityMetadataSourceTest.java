@@ -1,8 +1,8 @@
-package com.springuni.hermes.core.security.authz;
+package com.springuni.hermes.core.security.authz.access;
 
-import static com.springuni.hermes.core.security.authz.MethodSecurityTestController.GET_ENTITY_WITHOUT_ANNOTATION_METHOD;
-import static com.springuni.hermes.core.security.authz.MethodSecurityTestController.GET_ENTITY_WITHOUT_ID_METHOD;
-import static com.springuni.hermes.core.security.authz.MethodSecurityTestController.GET_ENTITY_WITH_ID_METHOD;
+import static com.springuni.hermes.core.security.authz.access.MethodSecurityTestController.GET_ENTITY_WITHOUT_ANNOTATION_METHOD;
+import static com.springuni.hermes.core.security.authz.access.MethodSecurityTestController.GET_ENTITY_WITHOUT_ID_METHOD;
+import static com.springuni.hermes.core.security.authz.access.MethodSecurityTestController.GET_ENTITY_WITH_ID_METHOD;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;

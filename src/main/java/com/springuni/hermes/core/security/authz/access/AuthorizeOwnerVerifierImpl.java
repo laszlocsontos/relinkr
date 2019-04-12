@@ -1,4 +1,4 @@
-package com.springuni.hermes.core.security.authz;
+package com.springuni.hermes.core.security.authz.access;
 
 import static javax.persistence.LockModeType.NONE;
 import static org.springframework.security.access.AccessDecisionVoter.ACCESS_ABSTAIN;

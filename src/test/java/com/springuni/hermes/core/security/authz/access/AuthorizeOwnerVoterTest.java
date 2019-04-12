@@ -1,7 +1,7 @@
-package com.springuni.hermes.core.security.authz;
+package com.springuni.hermes.core.security.authz.access;
 
-import static com.springuni.hermes.core.security.authz.AuthorizeRolesOrOwnerSecurityMetadataSource.IS_OWNER;
-import static com.springuni.hermes.core.security.authz.MethodSecurityTestController.GET_ENTITY_WITH_ID_METHOD;
+import static com.springuni.hermes.core.security.authz.access.AuthorizeRolesOrOwnerSecurityMetadataSource.IS_OWNER;
+import static com.springuni.hermes.core.security.authz.access.MethodSecurityTestController.GET_ENTITY_WITH_ID_METHOD;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;

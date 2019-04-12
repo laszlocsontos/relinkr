@@ -1,7 +1,8 @@
-package com.springuni.hermes.core.security.authz;
+package com.springuni.hermes.core.security.authz.access;
 
 import static org.springframework.util.ReflectionUtils.findMethod;
 
+import com.springuni.hermes.core.security.authz.annotation.AuthorizeRolesOrOwner;
 import java.lang.reflect.Method;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

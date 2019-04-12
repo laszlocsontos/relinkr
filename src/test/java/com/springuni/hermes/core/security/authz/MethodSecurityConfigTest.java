@@ -10,6 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.springuni.hermes.core.convert.StringToEntityClassAwareIdConverter;
 import com.springuni.hermes.core.security.authz.MethodSecurityConfigTest.TestConfig;
+import com.springuni.hermes.core.security.authz.access.MethodSecurityTestController;
+import com.springuni.hermes.core.security.authz.access.TestId;
+import com.springuni.hermes.core.security.authz.access.TestOwnable;
 import javax.persistence.EntityManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;

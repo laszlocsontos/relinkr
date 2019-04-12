@@ -1,6 +1,6 @@
 package com.springuni.hermes.core.web;
 
-import com.springuni.hermes.core.security.authn.CurrentUser;
+import com.springuni.hermes.core.security.authn.annotation.CurrentUser;
 import com.springuni.hermes.user.model.UserId;
 import java.security.Principal;
 import org.springframework.core.MethodParameter;

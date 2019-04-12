@@ -1,9 +1,10 @@
-package com.springuni.hermes.core.security.authz;
+package com.springuni.hermes.core.security.authz.access;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 import com.springuni.hermes.core.orm.EntityClassAwareId;
+import com.springuni.hermes.core.security.authz.annotation.AuthorizeRolesOrOwner;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;

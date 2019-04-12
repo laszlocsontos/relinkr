@@ -6,8 +6,8 @@ import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
 import com.springuni.hermes.core.model.ApplicationException;
-import com.springuni.hermes.core.security.authn.CurrentUser;
-import com.springuni.hermes.core.security.authz.AuthorizeRolesOrOwner;
+import com.springuni.hermes.core.security.authn.annotation.CurrentUser;
+import com.springuni.hermes.core.security.authz.annotation.AuthorizeRolesOrOwner;
 import com.springuni.hermes.link.model.InvalidLinkStatusException;
 import com.springuni.hermes.link.model.Link;
 import com.springuni.hermes.link.model.LinkId;

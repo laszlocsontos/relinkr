@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.springuni.hermes.core.security.authn.CurrentUser;
+import com.springuni.hermes.core.security.authn.annotation.CurrentUser;
 import com.springuni.hermes.core.web.CurrentUserArgumentResolverTest.TestConfig;
 import com.springuni.hermes.core.web.CurrentUserArgumentResolverTest.TestController;
 import com.springuni.hermes.user.model.UserId;

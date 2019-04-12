@@ -1,4 +1,4 @@
-package com.springuni.hermes.core.security.authn;
+package com.springuni.hermes.core.security.authn.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

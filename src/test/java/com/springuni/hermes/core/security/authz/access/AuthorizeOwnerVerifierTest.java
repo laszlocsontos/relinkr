@@ -1,4 +1,4 @@
-package com.springuni.hermes.core.security.authz;
+package com.springuni.hermes.core.security.authz.access;
 
 import static com.springuni.hermes.test.Mocks.USER_ID;
 import static com.springuni.hermes.test.Mocks.USER_ID_ZERO;

@@ -1,4 +1,4 @@
-package com.springuni.hermes.core.security.authz;
+package com.springuni.hermes.core.security.authz.access;
 
 import com.springuni.hermes.user.model.Ownable;
 import com.springuni.hermes.user.model.UserId;

@@ -1,4 +1,4 @@
-package com.springuni.hermes.core.security.authz;
+package com.springuni.hermes.core.security.authz.access;
 
 import com.springuni.hermes.core.orm.AbstractId;
 

@@ -1,6 +1,6 @@
-package com.springuni.hermes.core.security.authz;
+package com.springuni.hermes.core.security.authz.access;
 
-import static com.springuni.hermes.core.security.authz.AuthorizeRolesOrOwnerSecurityMetadataSource.IS_OWNER;
+import static com.springuni.hermes.core.security.authz.access.AuthorizeRolesOrOwnerSecurityMetadataSource.IS_OWNER;
 
 import com.springuni.hermes.core.orm.EntityClassAwareId;
 import java.lang.reflect.Method;
