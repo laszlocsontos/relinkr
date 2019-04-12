@@ -10,7 +10,7 @@ public abstract class BaseServletTest {
     protected MockHttpServletResponse response;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
     }

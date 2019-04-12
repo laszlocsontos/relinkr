@@ -8,7 +8,7 @@ public class BaseFilterTest extends BaseServletTest {
     protected MockFilterChain filterChain;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         filterChain = new MockFilterChain();
     }

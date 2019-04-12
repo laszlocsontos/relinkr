@@ -1,7 +1,6 @@
 package com.springuni.hermes.core.security.authn;
 
 import static com.springuni.hermes.core.security.authn.WebSecurityConfig.OAUTH2_LOGIN_PROCESSES_BASE_URI;
-import static com.springuni.hermes.core.security.authn.signin.DefaultAuthenticationSuccessHandler.X_SET_AUTHORIZATION_BEARER_HEADER;
 import static com.springuni.hermes.test.Mocks.EMAIL_ADDRESS;
 import static com.springuni.hermes.test.Mocks.USER_ID;
 import static com.springuni.hermes.test.Mocks.createUser;
@@ -24,6 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springuni.hermes.core.security.authn.WebOAuth2LoginTest.TestController;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationService;
 import com.springuni.hermes.test.security.AbstractWebSecurityTest;
@@ -32,11 +33,13 @@ import com.springuni.hermes.user.model.Role;
 import com.springuni.hermes.user.model.User;
 import com.springuni.hermes.user.model.UserProfile;
 import com.springuni.hermes.user.model.UserProfileType;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Sets;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,7 +63,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.util.StringUtils;
 
+@Slf4j
 @WebMvcTest(controllers = TestController.class)
 public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
 
@@ -70,6 +75,9 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
     private static final String REDIRECT_URI =
             "http://localhost" + OAUTH2_LOGIN_PROCESSES_BASE_URI + "/" + CLIENT_REG_ID;
     private static final String CLIENT_SECRET = "1234";
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private JwtAuthenticationService jwtAuthenticationService;
@@ -211,7 +219,7 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
     }
 
     @RequiredArgsConstructor
-    private static class JwtMatcher implements ResultMatcher {
+    private class JwtMatcher implements ResultMatcher {
 
         private final JwtAuthenticationService jwtAuthenticationService;
 
@@ -282,8 +290,16 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
         }
 
         private Authentication load(MvcResult result) {
-            String jwt = result.getResponse().getHeader(X_SET_AUTHORIZATION_BEARER_HEADER);
-            return Optional.ofNullable(jwt)
+            JsonNode tokenResponse = null;
+            try {
+                tokenResponse = objectMapper.readTree(result.getResponse().getContentAsByteArray());
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            }
+
+            return Optional.ofNullable(tokenResponse)
+                    .map(it -> it.path("token").asText())
+                    .filter(StringUtils::hasText)
                     .map(jwtAuthenticationService::parseJwtToken)
                     .orElse(null);
         }

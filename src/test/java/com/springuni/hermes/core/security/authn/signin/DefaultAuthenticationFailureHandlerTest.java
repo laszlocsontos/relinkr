@@ -27,7 +27,7 @@ public class DefaultAuthenticationFailureHandlerTest extends BaseServletTest {
     private AuthenticationFailureHandler handler;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         objectMapper = new ObjectMapper();
         handler = new DefaultAuthenticationFailureHandler(objectMapper);

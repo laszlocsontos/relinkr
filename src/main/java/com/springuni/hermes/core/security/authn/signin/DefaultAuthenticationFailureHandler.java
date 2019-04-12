@@ -22,12 +22,11 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
  * General authentication failure handler.
  */
 @Slf4j
-public class DefaultAuthenticationFailureHandler implements AuthenticationFailureHandler {
-
-    private final ObjectWriter objectWriter;
+public class DefaultAuthenticationFailureHandler
+        extends AbstractAuthenticationRequestHandler implements AuthenticationFailureHandler {
 
     public DefaultAuthenticationFailureHandler(ObjectMapper objectMapper) {
-        this.objectWriter = objectMapper.writer();
+        super(objectMapper.writer());
     }
 
     @Override
@@ -39,14 +38,10 @@ public class DefaultAuthenticationFailureHandler implements AuthenticationFailur
         log.warn(exception.getMessage());
 
         HttpStatus httpStatus = translateAuthenticationException(exception);
-
-        response.setStatus(httpStatus.value());
-        response.setContentType(APPLICATION_JSON_VALUE);
-
-        objectWriter.writeValue(response.getWriter(), RestErrorResponse.of(httpStatus, exception));
+        handle(response, httpStatus, RestErrorResponse.of(httpStatus, exception));
     }
 
-    protected HttpStatus translateAuthenticationException(AuthenticationException exception) {
+    private HttpStatus translateAuthenticationException(AuthenticationException exception) {
         if (exception instanceof InternalAuthenticationServiceException) {
             return INTERNAL_SERVER_ERROR;
         }

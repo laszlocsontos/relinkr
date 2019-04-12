@@ -47,7 +47,7 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
     private JwtAuthenticationFilter jwtTokenFilter;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
 
         SecurityContextHolder.setContext(securityContext);
