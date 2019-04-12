@@ -1,5 +1,6 @@
 package com.springuni.hermes.core.security.authn;
 
+import static com.springuni.hermes.core.security.authn.WebSecurityConfig.OAUTH2_LOGIN_PROCESSES_BASE_URI;
 import static com.springuni.hermes.core.security.authn.signin.DefaultAuthenticationSuccessHandler.X_SET_AUTHORIZATION_BEARER_HEADER;
 import static com.springuni.hermes.test.Mocks.EMAIL_ADDRESS;
 import static com.springuni.hermes.test.Mocks.USER_ID;
@@ -66,7 +67,8 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
     private static final String CLIENT_ID = "1234";
     private static final String CLIENT_REG_ID = "google";
     private static final String STATE = "state";
-    private static final String REDIRECT_URI = "http://localhost/login/oauth2/code/google";
+    private static final String REDIRECT_URI =
+            "http://localhost" + OAUTH2_LOGIN_PROCESSES_BASE_URI + "/" + CLIENT_REG_ID;
     private static final String CLIENT_SECRET = "1234";
 
     @Autowired
@@ -201,7 +203,7 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
 
     private ResultActions performLoginWithState(String state) throws Exception {
         return mockMvc.perform(
-                post("/login/oauth2/code/{regId}", CLIENT_REG_ID)
+                post(OAUTH2_LOGIN_PROCESSES_BASE_URI + "/{regId}", CLIENT_REG_ID)
                         .param("code", "code")
                         .param("state", state)
                         .param("redirectUri", REDIRECT_URI))

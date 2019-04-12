@@ -21,6 +21,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.validation.annotation.Validated;
 
 @Configuration
@@ -56,12 +58,6 @@ public class JwtConfig {
                 jwtProperties.getPrivateKey(), jwtProperties.getPublicKey(),
                 IdentityGenerator.getInstance()
         );
-    }
-
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(
-            JwtAuthenticationService jwtAuthenticationService) {
-        return new JwtAuthenticationFilter(jwtAuthenticationService);
     }
 
     @Data

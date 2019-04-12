@@ -104,10 +104,13 @@ public final class Mocks {
     public static final Pageable PAGEABLE = PageRequest.of(0, 10);
 
     public static final String JWT_TOKEN_VALID =
-            "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzNDU0MzUzMjQ1MzQ1MyIsInN1YiI6IjUzMjQ1"
-                    + "MzQ1MzQ1MzQ1IiwiZXhwIjoyNTM0MDIyMTQ0MDAsImlhdCI6MTUxNjIzOTAyMiwiYXV0aG9yaXR"
-                    + "pZXMiOiJVU0VSIn0.xTT81NHZdRdo-Enk5Dfl-v90wYcbF5sbHCKmda5yTB8n5kZ3Y-VhykVGXn"
-                    + "VmfgsPXPgO6QmmpIky1vPQYRUHsw";
+            "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI1MzI0NTM0NTM0NTM0NSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NSwi"
+                    + "aWF0IjoxNTU1MDYwMDY1LCJqdGkiOiI1OTk5MjcyNjYwMTQ4NiIsImF1dGhvcml0aWVzIjoiVVN"
+                    + "FUiJ9.qR-9dUgcae_voPS0HDIzGE1aKiIEY6uLkNoZLAmjhuYyte7wdtGZ3uwfDScebZkyG3BoZ"
+                    + "iRhx-IDfRJJ18Pv_iFRW-yXR6Oau3U74KLfJQnCshArSKZtHPLwNLKpS3H6dSIaWZEGi0VI2YHG"
+                    + "hM7gpbicbjFzCfEurYT6WilLliAhyhx5NXfVOUfxqe-LZoYPFj6Bkk49Q5mxm1hjAIyxgKnYJuy"
+                    + "aN_-46kF63JeBjoMChmUD7P4Q3NNCQVAmvmYcdUlRef22ETj-k52nGRQ1HmtXRP6GQzci6HQoGP"
+                    + "4RAZzH4tx6kDLKVX2nzCqv8o5FxYztN8CYE9e6vYdaICJCZg";
 
     public static final String JWT_TOKEN_INVALID =
             "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzNDU0MzUzMjQ1MzQ1MyIsInN1YiI6IjUzMjQ1"
@@ -116,10 +119,13 @@ public final class Mocks {
                     + "GeMqLQkCA1Al7iBu1oGU7i5QHc5A";
 
     public static final String JWT_TOKEN_EXPIRED =
-            "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzNDU0MzUzMjQ1MzQ1MyIsInN1YiI6IjUzMjQ1"
-                    + "MzQ1MzQ1MzQ1IiwiZXhwIjoxNTE0Njc4NDAwLCJpYXQiOjE1MTYyMzkwMjIsImF1dGhvcml0aWV"
-                    + "zIjoiVVNFUiJ9.tJYq8hIbSc2gSKNU2F4c29Nn6X1L4HgEPnqS8MIEDEMN0nCnYLNqo_yWStemV"
-                    + "vcOV0YVKWvZCey3KspAhEXQKA";
+            "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI1MzI0NTM0NTM0NTM0NSIsImV4cCI6MTU1NTA1OTkyNywiaWF0Ijox"
+                    + "NTU1MDU5ODY3LCJqdGkiOiI1OTk4OTQ3NjY5ODAyOCIsImF1dGhvcml0aWVzIjoiVVNFUiJ9.0F"
+                    + "ItJV2bbpPsdcqa3AbnNFwucK3tQuWQtOTrZ_g4dTdbpv1w0KjrqY6NlusjP7EzkWj_A79YNBnwv"
+                    + "C8HeAVwrJVY8uGe854iSD-5Rx3eAiGLxMm4zLsKLLwY_8Ewi6J1ki6wl22uClzSJbBLV7Pl6L_O"
+                    + "MOwz9Br18kdJo4JBY5oiBc1Ybpb5PTOmNI0U6iJyvg2qh9-8KIB4NT_cb-988-j1DImqP0JgUCj"
+                    + "4t8MG5JXBiGL3pfPEDO0zkW9Rr__jmqPoxPbDcxSQTo5m361MHOmE8BuCsZvoAbf-oY5JaLij5x"
+                    + "bq0gAONANoBdQzt264uBu9bTRLXxzw2hGT0AqZMg";
 
     public static final String JWT_SECRET_KEY =
             "cFZJY3VpV2RMZHZMQTdVNzRAMVUqc2RFWTJoSlNpJk5MNzE2TkghI1FqKnEmKjk2TjY4TnZ5MG9t";

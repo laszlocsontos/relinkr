@@ -1,5 +1,8 @@
 package com.springuni.hermes.core.security.authn;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static java.util.Collections.unmodifiableList;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -12,9 +15,12 @@ import com.springuni.hermes.core.security.authn.signin.DefaultAuthenticationFail
 import com.springuni.hermes.core.security.authn.signin.DefaultAuthenticationSuccessHandler;
 import com.springuni.hermes.user.service.UserProfileFactory;
 import com.springuni.hermes.user.service.UserService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -32,17 +38,40 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    public static final String OAUTH2_REDIRECT_REQUEST_BASE_URI = "/oauth2/redirect";
+    public static final String OAUTH2_REDIRECT_REQUEST_URI =
+            OAUTH2_REDIRECT_REQUEST_BASE_URI + "/*";
+
+    public static final String OAUTH2_LOGIN_PROCESSES_BASE_URI = "/oauth2/login";
+    public static final String OAUTH2_LOGIN_PROCESSES_URI =
+            OAUTH2_LOGIN_PROCESSES_BASE_URI + "/*";
+
+    public static final List<RequestMatcher> PUBLIC_REQUEST_MATCHERS = unmodifiableList(
+            asList(
+                    new AntPathRequestMatcher("/", "GET"),
+                    new AntPathRequestMatcher(OAUTH2_LOGIN_PROCESSES_URI, "POST"),
+                    new AntPathRequestMatcher(OAUTH2_REDIRECT_REQUEST_URI, "GET"),
+                    new RegexRequestMatcher("/[a-zA-Z0-9_-]{11}", "GET")
+            )
+    );
+
+    public static final List<RequestMatcher> PROTECTED_REQUEST_MATCHERS = unmodifiableList(
+            singletonList(new RegexRequestMatcher("/api/.*", null))
+    );
+
     private final ObjectMapper objectMapper;
     private final UserProfileFactory userProfileFactory;
     private final UserService userService;
     private final JwtAuthenticationService jwtAuthenticationService;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
@@ -67,6 +96,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return new DefaultAuthenticationSuccessHandler(jwtAuthenticationService);
     }
@@ -81,6 +116,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationEntryPoint(objectMapper);
     }
 
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(
+                authenticationManagerBean(),
+                authenticationFailureHandler()
+        );
+
+        jwtAuthenticationFilter.setIgnoredRequestMatchers(PUBLIC_REQUEST_MATCHERS);
+
+        return jwtAuthenticationFilter;
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(jwtAuthenticationService);
+    }
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -90,7 +142,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .oauth2Login()
                 .successHandler(authenticationSuccessHandler())
                 .failureHandler(authenticationFailureHandler())
+                .redirectionEndpoint()
+                .baseUri(OAUTH2_LOGIN_PROCESSES_URI)
+                .and()
                 .authorizationEndpoint()
+                .baseUri(OAUTH2_REDIRECT_REQUEST_BASE_URI)
                 .authorizationRequestRepository(authorizationRequestRepository())
                 .and()
                 .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
@@ -100,14 +156,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint())
                 .and()
-                .addFilterBefore(jwtAuthenticationFilter, LogoutFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter(), LogoutFilter.class)
                 .authorizeRequests()
-                .regexMatchers(GET, "/").permitAll()
-                .regexMatchers(GET, "/login/oauth2").permitAll()
-                .regexMatchers(GET, "/[a-zA-Z0-9_-]{11}").permitAll()
-                .regexMatchers("/api/.*").hasAuthority("ROLE_USER")
+                .requestMatchers(asArray(PUBLIC_REQUEST_MATCHERS)).permitAll()
+                .requestMatchers(asArray(PROTECTED_REQUEST_MATCHERS)).hasAuthority("ROLE_USER")
                 .anyRequest().denyAll()
                 .and();
+    }
+
+    private RequestMatcher[] asArray(List<RequestMatcher> requestMatchers) {
+        return requestMatchers.toArray(new RequestMatcher[0]);
     }
 
 }

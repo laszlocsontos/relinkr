@@ -2,6 +2,8 @@ package com.springuni.hermes.core.security.authn.jwt;
 
 import static com.nimbusds.jose.JWSAlgorithm.RS256;
 import static java.lang.System.currentTimeMillis;
+import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toSet;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSHeader;
@@ -11,18 +13,25 @@ import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import com.springuni.hermes.core.security.authn.userdetails.UserIdAuthenticationToken;
 import com.springuni.hermes.core.util.IdentityGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.web.authentication.www.NonceExpiredException;
 
 /**
  * Created by lcsontos on 5/17/17.
@@ -66,7 +75,7 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
         try {
             signedJWT.sign(signer);
         } catch (JOSEException e) {
-            throw new JwtTokenException(e.getMessage(), e);
+            throw new InternalAuthenticationServiceException(e.getMessage(), e);
         }
 
         return signedJWT.serialize();
@@ -74,6 +83,7 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
     @Override
     public Authentication parseJwtToken(String jwtToken) throws AuthenticationException {
+        JWTClaimsSet claimsSet;
         try {
             SignedJWT signedJWT = SignedJWT.parse(jwtToken);
 
@@ -81,14 +91,41 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
                 throw new BadCredentialsException("Token verification failed.");
             }
 
-            JWTClaimsSet claimsSet = signedJWT.getJWTClaimsSet();
-
-            return JwtAuthenticationToken.of(claimsSet);
-        } catch (JwtTokenException | JOSEException | ParseException e) {
+            claimsSet = signedJWT.getJWTClaimsSet();
+        } catch (JOSEException | ParseException e) {
             throw new BadCredentialsException(e.getMessage(), e);
         } catch (Exception e) {
             throw new InternalAuthenticationServiceException(e.getMessage(), e);
         }
+
+        long userId;
+        try {
+            userId = Long.valueOf(claimsSet.getSubject());
+        } catch (NumberFormatException e) {
+            throw new BadCredentialsException(e.getMessage(), e);
+        }
+
+        Instant expiration = Optional.ofNullable(claimsSet.getExpirationTime())
+                .map(Date::toInstant)
+                .orElseThrow(() -> new BadCredentialsException("Missing expiration date."));
+
+        Instant now = Instant.now();
+        if (now.isAfter(expiration)) {
+            throw new NonceExpiredException("Token has expired.");
+        }
+
+        Collection<? extends GrantedAuthority> authorities =
+                Optional.ofNullable(claimsSet.getClaim(AUTHORITIES))
+                        .map(String::valueOf)
+                        .map(it -> it.split(","))
+                        .map(Arrays::stream)
+                        .map(it -> it.map(String::trim).map(String::toUpperCase))
+                        .map(it -> it.map(SimpleGrantedAuthority::new))
+                        .map(it -> it.collect(toSet()))
+                        .orElse(emptySet());
+
+
+        return UserIdAuthenticationToken.of(userId, authorities);
     }
 
 }
