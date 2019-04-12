@@ -1,4 +1,4 @@
-package com.springuni.hermes.core.security.authn.userdetails;
+package com.springuni.hermes.core.security.authn.user;
 
 import static com.springuni.hermes.test.Mocks.createUser;
 import static org.hamcrest.Matchers.containsInAnyOrder;

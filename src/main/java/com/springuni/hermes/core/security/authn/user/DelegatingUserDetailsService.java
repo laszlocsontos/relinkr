@@ -1,4 +1,4 @@
-package com.springuni.hermes.core.security.authn.userdetails;
+package com.springuni.hermes.core.security.authn.user;
 
 import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.service.UserService;
@@ -23,7 +23,7 @@ public class DelegatingUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (StringUtils.isEmpty(username)) {
-            throw new UsernameNotFoundException("Empty userdetails name");
+            throw new UsernameNotFoundException("Empty user name");
         }
 
         EmailAddress emailAddress;

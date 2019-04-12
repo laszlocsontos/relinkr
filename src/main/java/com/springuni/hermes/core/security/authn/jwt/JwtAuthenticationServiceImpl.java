@@ -13,7 +13,7 @@ import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import com.springuni.hermes.core.security.authn.userdetails.UserIdAuthenticationToken;
+import com.springuni.hermes.core.security.authn.user.UserIdAuthenticationToken;
 import com.springuni.hermes.core.util.IdentityGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
