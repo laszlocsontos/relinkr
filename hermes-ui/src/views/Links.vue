@@ -1,91 +1,93 @@
 <template>
-  <b-container fluid class="p-4 w-75">
-    <b-pagination
-        v-model="currentPage"
-        :total-rows="rows"
-        :per-page="perPage"
-        aria-controls="my-table"
-    ></b-pagination>
+  <PageTemplate>
+    <b-container fluid class="p-4 w-75">
+      <b-pagination
+          v-model="currentPage"
+          :total-rows="rows"
+          :per-page="perPage"
+          aria-controls="my-table"
+      ></b-pagination>
 
-    <p class="mt-3">Current Page: {{ currentPage }}</p>
+      <p class="mt-3">Current Page: {{ currentPage }}</p>
 
-    <b-table
-        id="my-table"
-        :fields="fields"
-        :items="items"
-        :per-page="perPage"
-        :current-page="currentPage"
-        small striped borderless outlined>
+      <b-table
+          id="my-table"
+          :fields="fields"
+          :items="items"
+          :per-page="perPage"
+          :current-page="currentPage"
+          small striped borderless outlined>
 
-      <template slot="show_details" slot-scope="row">
-        <chevrons-down-icon v-b-tooltip.hover title="Show Details" @click="row.toggleDetails" v-if="!row.detailsShowing" class="btn-outline-primary"/>
-        <chevrons-up-icon v-b-tooltip.hover title="Hide Details" @click="row.toggleDetails" v-if="row.detailsShowing" class="btn-outline-primary"/>
-        <a v-b-tooltip.hover title="View Target" target="_blank" :href="row.item.short_link">
-          <external-link-icon class="btn-outline-primary" />
-        </a>
-        <trash-2-icon v-b-tooltip.hover title="Delete Link" class="btn-outline-primary" />
-      </template>
+        <template slot="show_details" slot-scope="row">
+          <chevrons-down-icon v-b-tooltip.hover title="Show Details" @click="row.toggleDetails" v-if="!row.detailsShowing" class="btn-outline-primary"/>
+          <chevrons-up-icon v-b-tooltip.hover title="Hide Details" @click="row.toggleDetails" v-if="row.detailsShowing" class="btn-outline-primary"/>
+          <a v-b-tooltip.hover title="View Target" target="_blank" :href="row.item.short_link">
+            <external-link-icon class="btn-outline-primary" />
+          </a>
+          <trash-2-icon v-b-tooltip.hover title="Delete Link" class="btn-outline-primary" />
+        </template>
 
-      <template slot="row-details" slot-scope="row">
-        <b-card>
-          <b-tabs content-class="mt-3">
-            <b-tab title="UTM Parameters" active>
-              <b-list-group>
-                <b-list-group-item href="#" disabled class="flex-column align-items-start">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ row.item.utm_parameters.utm_source }}</h5>
-                  </div>
-                  <small class="text-muted">UTM Source</small>
-                </b-list-group-item>
-                <b-list-group-item href="#" disabled class="flex-column align-items-start">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ row.item.utm_parameters.utm_medium }}</h5>
-                  </div>
-                  <small class="text-muted">UTM Medium</small>
-                </b-list-group-item>
-                <b-list-group-item href="#" disabled class="flex-column align-items-start">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ row.item.utm_parameters.utm_campaign }}</h5>
-                  </div>
-                  <small class="text-muted">UTM Campaign</small>
-                </b-list-group-item>
-                <b-list-group-item href="#" disabled class="flex-column align-items-start">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ row.item.utm_parameters.utm_term }}</h5>
-                  </div>
-                  <small class="text-muted">UTM Term</small>
-                </b-list-group-item>
-                <b-list-group-item href="#" disabled class="flex-column align-items-start">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ row.item.utm_parameters.utm_content }}</h5>
-                  </div>
-                  <small class="text-muted">UTM Content</small>
-                </b-list-group-item>
-              </b-list-group>
-            </b-tab>
-            <b-tab title="Clicks">
-              <line-chart :chart-data="clicksData" :chartId="'clicks-chart-' + row.item.id" height="150"></line-chart>
-            </b-tab>
-            <b-tab title="Visitors">
-              <doughnut-chart :chart-data="visitorsData" :chartId="'visitors-chart-' +row.item.id" height="150"></doughnut-chart>
-            </b-tab>
-          </b-tabs>
-        </b-card>
-      </template>
-    </b-table>
-  </b-container>
+        <template slot="row-details" slot-scope="row">
+          <b-card>
+            <b-tabs content-class="mt-3">
+              <b-tab title="UTM Parameters" active>
+                <b-list-group>
+                  <b-list-group-item href="#" disabled class="flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h5 class="mb-1">{{ row.item.utm_parameters.utm_source }}</h5>
+                    </div>
+                    <small class="text-muted">UTM Source</small>
+                  </b-list-group-item>
+                  <b-list-group-item href="#" disabled class="flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h5 class="mb-1">{{ row.item.utm_parameters.utm_medium }}</h5>
+                    </div>
+                    <small class="text-muted">UTM Medium</small>
+                  </b-list-group-item>
+                  <b-list-group-item href="#" disabled class="flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h5 class="mb-1">{{ row.item.utm_parameters.utm_campaign }}</h5>
+                    </div>
+                    <small class="text-muted">UTM Campaign</small>
+                  </b-list-group-item>
+                  <b-list-group-item href="#" disabled class="flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h5 class="mb-1">{{ row.item.utm_parameters.utm_term }}</h5>
+                    </div>
+                    <small class="text-muted">UTM Term</small>
+                  </b-list-group-item>
+                  <b-list-group-item href="#" disabled class="flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h5 class="mb-1">{{ row.item.utm_parameters.utm_content }}</h5>
+                    </div>
+                    <small class="text-muted">UTM Content</small>
+                  </b-list-group-item>
+                </b-list-group>
+              </b-tab>
+              <b-tab title="Clicks">
+                <line-chart :chart-data="clicksData" :chartId="'clicks-chart-' + row.item.id" height="150"></line-chart>
+              </b-tab>
+              <b-tab title="Visitors">
+                <doughnut-chart :chart-data="visitorsData" :chartId="'visitors-chart-' +row.item.id" height="150"></doughnut-chart>
+              </b-tab>
+            </b-tabs>
+          </b-card>
+        </template>
+      </b-table>
+    </b-container>
+  </PageTemplate>
 </template>
 
 <script>
 import { ExternalLinkIcon, Trash2Icon, ChevronsDownIcon, ChevronsUpIcon } from 'vue-feather-icons'
 import DoughnutChart from '@/components/DoughnutChart.js'
 import LineChart from '@/components/LineChart.js'
-
+import PageTemplate from '@/components/PageTemplate.vue'
 
 export default {
   components: {
     ExternalLinkIcon, Trash2Icon, ChevronsDownIcon, ChevronsUpIcon,
-    DoughnutChart, LineChart
+    DoughnutChart, LineChart, PageTemplate
   },
   data() {
     return {
