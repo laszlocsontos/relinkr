@@ -19,9 +19,8 @@ const router = new Router({
       redirect: '/dashboard'
     },
     {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: Dashboard
+      path: '/oauth2/callback/:registrationId',
+      name: 'oauth2-callback'
     },
     {
       path: '/login',
@@ -29,31 +28,37 @@ const router = new Router({
       component: Login
     },
     {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: Dashboard,
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/links',
       name: 'links',
-      component: Links
+      component: Links,
+      meta: { requiresAuth: true }
     },
     {
       path: '/stats',
       name: 'stats',
-      component: Stats
+      component: Stats,
+      meta: { requiresAuth: true }
     }
   ]
 });
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login'];
-  const authRequired = !publicPages.includes(to.path);
-  const loggedIn = store.state.isLoggedIn;
-
-  // eslint-disable-next-line
-  console.log("loggedIn", loggedIn);
-
-  if (authRequired && !loggedIn) {
-    return next('/login');
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // this route requires auth, check if logged in if not, redirect to login page.
+    if (!store.state.isLoggedIn) {
+      next({ path: '/login', query: { redirect: to.fullPath } });
+    } else {
+      next();
+    }
+  } else {
+    next();
   }
-
-  next();
 });
 
 export default router;

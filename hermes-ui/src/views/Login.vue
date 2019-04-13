@@ -43,7 +43,8 @@
     methods: {
       login() {
         this.$store.commit('login');
-        this.$router.push('dashboard');
+        let redirect = this.$route.query.redirect || '/dashboard';
+        this.$router.push({ path: redirect });
       }
     }
   };
