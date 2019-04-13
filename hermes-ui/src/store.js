@@ -3,6 +3,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import router from './router'
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -22,6 +24,11 @@ export default new Vuex.Store({
     obtainAuthToken ({ commit, state }, args) {
       const { registrationId, query } = args;
       console.log(registrationId, query);
+
+      setTimeout(() => {
+        commit('login');
+        router.push('/');
+      }, 3000);
     }
   }
 });
