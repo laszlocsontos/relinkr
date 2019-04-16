@@ -12,6 +12,8 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
+import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN;
+import static org.springframework.http.HttpHeaders.ORIGIN;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
 import static org.springframework.security.oauth2.core.ClientAuthenticationMethod.BASIC;
 import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER;
@@ -20,8 +22,10 @@ import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.web.cors.CorsConfiguration.ALL;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,8 +76,9 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
     private static final String CLIENT_ID = "1234";
     private static final String CLIENT_REG_ID = "google";
     private static final String STATE = "state";
+    private static final String BASE_URI = "http://localhost";
     private static final String REDIRECT_URI =
-            "http://localhost" + OAUTH2_LOGIN_PROCESSES_BASE_URI + "/" + CLIENT_REG_ID;
+        BASE_URI + OAUTH2_LOGIN_PROCESSES_BASE_URI + "/" + CLIENT_REG_ID;
     private static final String CLIENT_SECRET = "1234";
 
     @Autowired
@@ -164,7 +169,9 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
                         new JwtMatcher(jwtAuthenticationService)
                                 .withAuthenticationName(String.valueOf(USER_ID))
                                 .withRoles(roles)
-                );
+                )
+                .andExpect(header().string(ACCESS_CONTROL_ALLOW_ORIGIN, ALL));
+
 
         then(userService).should().saveUser(EMAIL_ADDRESS, userProfile);
     }
@@ -176,7 +183,9 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
         performLoginWithState("bad")
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("detailMessage", is("[invalid_state_parameter] ")))
-                .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication());
+                .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication())
+                .andExpect(header().string(ACCESS_CONTROL_ALLOW_ORIGIN, ALL));
+
 
         then(userService).should(never()).saveUser(EMAIL_ADDRESS, userProfile);
     }
@@ -204,7 +213,8 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
                                 is("[invalid_email_address] Invalid email address: bad")
                         )
                 )
-                .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication());
+                .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication())
+                .andExpect(header().string(ACCESS_CONTROL_ALLOW_ORIGIN, ALL));
 
         then(userService).should(never()).saveUser(EMAIL_ADDRESS, userProfile);
     }
@@ -214,7 +224,8 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
                 post(OAUTH2_LOGIN_PROCESSES_BASE_URI + "/{regId}", CLIENT_REG_ID)
                         .param("code", "code")
                         .param("state", state)
-                        .param("redirectUri", REDIRECT_URI))
+                        .param("redirectUri", REDIRECT_URI)
+                        .header(ORIGIN, BASE_URI + ":9999"))
                 .andDo(print());
     }
 

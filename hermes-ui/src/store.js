@@ -3,11 +3,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import router from './router'
 import jwt from 'jsonwebtoken'
 import _ from 'lodash'
 
-import { JWT_PUBLIC_KEY } from "./config";
+import { post } from './api'
+import router from './router'
+
+import { JWT_PUBLIC_KEY, OAUTH2_LOGIN_ENDPOINT } from "./config";
 
 Vue.use(Vuex);
 
@@ -41,7 +43,8 @@ export default new Vuex.Store({
     isLoggedIn: state => {
       const clockTimestamp = Math.floor(Date.now() / 1000);
       return (clockTimestamp <= (state.auth.expiresAt  || 0));
-    }
+    },
+    authToken: state => state.token
   },
   actions: {
     checkToken({ commit, dispatch }, args) {
@@ -73,10 +76,9 @@ export default new Vuex.Store({
       const { registrationId, query, redirect } = args || {};
       console.log("obtainAuthToken", registrationId, query, redirect);
 
-      // Simulate OAuth2 Login
-      setTimeout(() => {
-        dispatch('checkToken', { token: AUTH_TOKEN, redirect: redirect })
-      }, 100);
+      post({ endpoint: `${OAUTH2_LOGIN_ENDPOINT}/${registrationId}`, params: { ...query }})
+        .then(response => dispatch('checkToken', { token: response.token, redirect: redirect }))
+        .catch(err => console.log("error", err));
     },
     login ({ commit }, args) {
       const { auth, redirect } = args || {};

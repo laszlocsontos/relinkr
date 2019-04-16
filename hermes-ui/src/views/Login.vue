@@ -11,13 +11,13 @@
 
           <b-row>
             <b-col>
-              <b-button @click="login" variant="danger" size="lg" style="width: 170px;">
+              <b-button :href="oauth2InitUrl('google')" variant="danger" size="lg" style="width: 170px;">
                 <span class="px-1"><strong>G</strong></span>
                 <span class="px-1">Google</span>
               </b-button>
             </b-col>
             <b-col>
-              <b-button @click="login" variant="primary" size="lg" style="width: 170px;">
+              <b-button :href="oauth2InitUrl('facebook')" variant="primary" size="lg" style="width: 170px;">
                 <span class="px-1">
                   <facebook-icon class="custom-class"></facebook-icon>
                 </span>
@@ -35,14 +35,15 @@
 
 <script>
   import { FacebookIcon } from 'vue-feather-icons'
+  import { API_BASE_URL, OAUTH2_INIT_ENDPOINT } from '@/config.js'
 
   export default {
     components: {
       FacebookIcon
     },
     methods: {
-      login() {
-        this.$store.dispatch('obtainAuthToken', { redirect: this.$route.query.redirect });
+      oauth2InitUrl(registrationId) {
+        return `${API_BASE_URL}/${OAUTH2_INIT_ENDPOINT}/${registrationId}`;
       }
     }
   };

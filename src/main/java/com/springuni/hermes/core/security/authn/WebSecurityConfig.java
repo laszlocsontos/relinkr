@@ -46,9 +46,9 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public static final String OAUTH2_REDIRECT_REQUEST_BASE_URI = "/oauth2/redirect";
-    public static final String OAUTH2_REDIRECT_REQUEST_URI =
-            OAUTH2_REDIRECT_REQUEST_BASE_URI + "/*";
+    public static final String OAUTH2_INIT_REQUEST_BASE_URI = "/oauth2/init";
+    public static final String OAUTH2_INIT_REQUEST_URI =
+            OAUTH2_INIT_REQUEST_BASE_URI + "/*";
 
     public static final String OAUTH2_LOGIN_PROCESSES_BASE_URI = "/oauth2/login";
     public static final String OAUTH2_LOGIN_PROCESSES_URI =
@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             asList(
                     new AntPathRequestMatcher("/", "GET"),
                     new AntPathRequestMatcher(OAUTH2_LOGIN_PROCESSES_URI, "POST"),
-                    new AntPathRequestMatcher(OAUTH2_REDIRECT_REQUEST_URI, "GET"),
+                    new AntPathRequestMatcher(OAUTH2_INIT_REQUEST_URI, "GET"),
                     new RegexRequestMatcher("/[a-zA-Z0-9_-]{11}", "GET")
             )
     );
@@ -136,6 +136,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf().disable()
+                .cors()
+                .and()
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and()
                 .oauth2Login()
@@ -145,7 +147,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .baseUri(OAUTH2_LOGIN_PROCESSES_URI)
                 .and()
                 .authorizationEndpoint()
-                .baseUri(OAUTH2_REDIRECT_REQUEST_BASE_URI)
+                .baseUri(OAUTH2_INIT_REQUEST_BASE_URI)
                 .authorizationRequestRepository(authorizationRequestRepository())
                 .and()
                 .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
