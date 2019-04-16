@@ -42,9 +42,7 @@
     },
     methods: {
       login() {
-        this.$store.commit('login');
-        let redirect = this.$route.query.redirect || '/dashboard';
-        this.$router.push({ path: redirect });
+        this.$store.dispatch('obtainAuthToken', { redirect: this.$route.query.redirect });
       }
     }
   };

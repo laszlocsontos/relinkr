@@ -15,5 +15,8 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
+  created() {
+    this.$store.dispatch('checkToken');
+  },
   render: h => h(App)
 }).$mount('#app');

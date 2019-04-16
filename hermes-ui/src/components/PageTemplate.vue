@@ -82,8 +82,7 @@
     name: 'PageTemplate',
     methods: {
       logout() {
-        this.$store.commit('logout');
-        this.$router.push('login');
+        this.$store.dispatch('logout');
       }
     }
   }

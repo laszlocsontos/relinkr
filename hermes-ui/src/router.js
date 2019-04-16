@@ -52,7 +52,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   // This route requires auth, check if logged in if not, redirect to login page.
   if (to.meta.requiresAuth) {
-    if (!store.state.isLoggedIn) {
+    if (!store.getters.isLoggedIn) {
       next({ path: '/login', query: { redirect: to.fullPath } });
     } else {
       next();
