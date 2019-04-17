@@ -1,4 +1,4 @@
-package com.springuni.hermes.core.security.authn;
+package com.springuni.hermes.core.security.authn.oauth2;
 
 import static com.springuni.hermes.core.security.authn.WebSecurityConfig.OAUTH2_LOGIN_PROCESSES_BASE_URI;
 import static com.springuni.hermes.test.Mocks.EMAIL_ADDRESS;
@@ -29,7 +29,7 @@ import static org.springframework.web.cors.CorsConfiguration.ALL;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springuni.hermes.core.security.authn.WebOAuth2LoginTest.TestController;
+import com.springuni.hermes.core.security.authn.oauth2.OAuth2LoginTest.TestController;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationService;
 import com.springuni.hermes.test.security.AbstractWebSecurityTest;
 import com.springuni.hermes.user.model.EmailAddress;
@@ -72,7 +72,7 @@ import org.springframework.util.StringUtils;
 
 @Slf4j
 @WebMvcTest(controllers = TestController.class)
-public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
+public class OAuth2LoginTest extends AbstractWebSecurityTest {
 
     private static final String CLIENT_ID = "1234";
     private static final String CLIENT_REG_ID = "google";
