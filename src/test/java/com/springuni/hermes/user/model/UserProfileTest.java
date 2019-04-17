@@ -9,12 +9,12 @@ import org.junit.Test;
  */
 public class UserProfileTest {
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void givenNullProfileType_whenCreate_thenNPE() {
         UserProfile.of(null, "1234");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void givenNullProfileId_whenCreate_thenNPE() {
         UserProfile.of(FACEBOOK, null);
     }
