@@ -57,6 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public static final List<RequestMatcher> PUBLIC_REQUEST_MATCHERS = unmodifiableList(
             asList(
                     new AntPathRequestMatcher("/", "GET"),
+                    new AntPathRequestMatcher("/", "HEAD"),
                     new AntPathRequestMatcher(OAUTH2_LOGIN_PROCESSES_URI, "POST"),
                     new AntPathRequestMatcher(OAUTH2_INIT_REQUEST_URI, "GET"),
                     new RegexRequestMatcher("/[a-zA-Z0-9_-]{11}", "GET")

@@ -12,8 +12,6 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
-import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN;
-import static org.springframework.http.HttpHeaders.ORIGIN;
 import static org.springframework.security.config.oauth2.client.CommonOAuth2Provider.GOOGLE;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
 import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER;
@@ -22,15 +20,13 @@ import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.web.cors.CorsConfiguration.ALL;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springuni.hermes.core.security.authn.oauth2.OAuth2LoginTest.TestController;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationService;
+import com.springuni.hermes.core.security.authn.oauth2.OAuth2LoginTest.TestController;
 import com.springuni.hermes.test.security.AbstractWebSecurityTest;
 import com.springuni.hermes.user.model.EmailAddress;
 import com.springuni.hermes.user.model.Role;
@@ -83,7 +79,7 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
     private static final String AUTHORIZATION_URI = BASE_URI + "/authorize";
 
     private static final String REDIRECT_URI =
-        BASE_URI + OAUTH2_LOGIN_PROCESSES_BASE_URI + "/" + CLIENT_REG_ID;
+            BASE_URI + OAUTH2_LOGIN_PROCESSES_BASE_URI + "/" + CLIENT_REG_ID;
     private static final String CLIENT_SECRET = "1234";
 
     @Autowired
@@ -170,9 +166,7 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
                         new JwtMatcher(jwtAuthenticationService)
                                 .withAuthenticationName(String.valueOf(USER_ID))
                                 .withRoles(roles)
-                )
-                .andExpect(header().string(ACCESS_CONTROL_ALLOW_ORIGIN, ALL));
-
+                );
 
         then(userService).should().saveUser(EMAIL_ADDRESS, userProfile);
     }
@@ -184,9 +178,7 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
         performLoginWithState("bad")
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("detailMessage", is("[invalid_state_parameter] ")))
-                .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication())
-                .andExpect(header().string(ACCESS_CONTROL_ALLOW_ORIGIN, ALL));
-
+                .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication());
 
         then(userService).should(never()).saveUser(EMAIL_ADDRESS, userProfile);
     }
@@ -214,8 +206,7 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
                                 is("[invalid_email_address] Invalid email address: bad")
                         )
                 )
-                .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication())
-                .andExpect(header().string(ACCESS_CONTROL_ALLOW_ORIGIN, ALL));
+                .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication());
 
         then(userService).should(never()).saveUser(EMAIL_ADDRESS, userProfile);
     }
@@ -225,8 +216,7 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
                 post(OAUTH2_LOGIN_PROCESSES_BASE_URI + "/{regId}", CLIENT_REG_ID)
                         .param("code", "code")
                         .param("state", state)
-                        .param("redirectUri", REDIRECT_URI)
-                        .header(ORIGIN, BASE_URI + ":9999"))
+                        .param("redirectUri", REDIRECT_URI))
                 .andDo(print());
     }
 
