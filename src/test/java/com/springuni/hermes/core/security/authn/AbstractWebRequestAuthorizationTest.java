@@ -6,18 +6,24 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.springuni.hermes.core.security.authn.AbstractWebRequestAuthorizationTest.TestConfig;
 import com.springuni.hermes.core.security.authn.AbstractWebRequestAuthorizationTest.TestController;
 import com.springuni.hermes.test.security.AbstractWebSecurityTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @WebMvcTest(controllers = TestController.class)
+@ContextConfiguration(classes = TestConfig.class)
 public abstract class AbstractWebRequestAuthorizationTest extends AbstractWebSecurityTest {
 
     private static final String ROOT_PATH = "/";
@@ -99,7 +105,7 @@ public abstract class AbstractWebRequestAuthorizationTest extends AbstractWebSec
     }
 
     @RestController
-    public static class TestController {
+    static class TestController {
 
         @GetMapping(ROOT_PATH)
         public HttpEntity getRoot() {
@@ -119,6 +125,17 @@ public abstract class AbstractWebRequestAuthorizationTest extends AbstractWebSec
         @GetMapping(TEST_DASHBOARD_PATH)
         public String dashboard() {
             return "pages/dashboard";
+        }
+
+    }
+
+    @TestConfiguration
+    @Import({AbstractWebSecurityTest.TestConfig.class})
+    static class TestConfig {
+
+        @Bean
+        TestController testController() {
+            return new TestController();
         }
 
     }
