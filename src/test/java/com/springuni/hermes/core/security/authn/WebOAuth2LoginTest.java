@@ -14,8 +14,8 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN;
 import static org.springframework.http.HttpHeaders.ORIGIN;
+import static org.springframework.security.config.oauth2.client.CommonOAuth2Provider.GOOGLE;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
-import static org.springframework.security.oauth2.core.ClientAuthenticationMethod.BASIC;
 import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER;
 import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.REGISTRATION_ID;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Sets;
@@ -76,7 +77,11 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
     private static final String CLIENT_ID = "1234";
     private static final String CLIENT_REG_ID = "google";
     private static final String STATE = "state";
+
     private static final String BASE_URI = "http://localhost";
+
+    private static final String AUTHORIZATION_URI = BASE_URI + "/authorize";
+
     private static final String REDIRECT_URI =
         BASE_URI + OAUTH2_LOGIN_PROCESSES_BASE_URI + "/" + CLIENT_REG_ID;
     private static final String CLIENT_SECRET = "1234";
@@ -101,17 +106,12 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
     private UserProfile userProfile;
 
     @Before
-    public void setUp() throws Exception {
-        ClientRegistration clientRegistration = ClientRegistration.withRegistrationId(CLIENT_REG_ID)
+    public void setUp() {
+        ClientRegistration clientRegistration = GOOGLE.getBuilder(CLIENT_REG_ID)
                 .authorizationGrantType(AUTHORIZATION_CODE)
                 .clientId(CLIENT_ID)
                 .clientSecret(CLIENT_SECRET)
-                .clientName(CLIENT_REG_ID)
-                .clientAuthenticationMethod(BASIC)
-                .redirectUriTemplate("/")
                 .scope("email")
-                .authorizationUri("/")
-                .tokenUri("/")
                 .build();
 
         given(clientRegistrationRepository.findByRegistrationId(CLIENT_REG_ID))
@@ -119,15 +119,16 @@ public class WebOAuth2LoginTest extends AbstractWebSecurityTest {
 
         OAuth2AuthorizationRequest authorizationRequest = OAuth2AuthorizationRequest
                 .authorizationCode()
-                .authorizationUri("/")
+                .authorizationUri(clientRegistration.getProviderDetails().getAuthorizationUri())
                 .clientId(CLIENT_ID)
                 .state(STATE)
                 .redirectUri(REDIRECT_URI)
                 .additionalParameters(singletonMap(REGISTRATION_ID, CLIENT_REG_ID))
                 .build();
 
-        given(authorizationRequestRepository.loadAuthorizationRequest(
-                any(HttpServletRequest.class))).willReturn(authorizationRequest);
+        given(authorizationRequestRepository.removeAuthorizationRequest(
+                any(HttpServletRequest.class), any(HttpServletResponse.class)
+        )).willReturn(authorizationRequest);
 
         OAuth2AccessTokenResponse accessTokenResponse = OAuth2AccessTokenResponse.withToken("1234")
                 .tokenType(BEARER).build();
