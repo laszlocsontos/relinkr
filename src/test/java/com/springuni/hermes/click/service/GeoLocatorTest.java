@@ -59,7 +59,7 @@ public class GeoLocatorTest {
     @Test
     public void givenNullIpAddress_whenLookupCountry_thenIllegalArgumentExceptionAndNotRetried() {
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("ipAddress is null");
+        expectedException.expectMessage("ipAddress is marked @NonNull but is null");
 
         try {
             geoLocator.lookupCountry(null);
