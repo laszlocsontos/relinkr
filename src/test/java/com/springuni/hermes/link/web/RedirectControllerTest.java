@@ -50,7 +50,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -181,12 +180,11 @@ public class RedirectControllerTest {
                 .andExpect(status().isMovedPermanently())
                 .andExpect(header().string(CACHE_CONTROL,
                         "no-cache, no-store, max-age=0, must-revalidate"))
-                .andExpect(header().string(EXPIRES, "Thu, 1 Jan 1970 00:00:00 GMT"))
+                .andExpect(header().string(EXPIRES, "Thu, 01 Jan 1970 00:00:00 GMT"))
                 .andExpect(header().string(PRAGMA, "no-cache"))
                 .andExpect(redirectedUrl(targetUrl));
     }
 
-    @Component
     static class RedirectedEventListener implements ApplicationListener<RedirectedEvent> {
 
         final BlockingQueue<RedirectedEvent> redirectedEvents = new LinkedBlockingQueue<>();
@@ -216,6 +214,11 @@ public class RedirectControllerTest {
         @Bean
         Clock clock() {
             return FIXED_CLOCK;
+        }
+
+        @Bean
+        RedirectedEventListener redirectedEventListener() {
+            return new RedirectedEventListener();
         }
 
     }
