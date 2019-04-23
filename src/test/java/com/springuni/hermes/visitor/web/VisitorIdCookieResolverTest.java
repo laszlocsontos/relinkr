@@ -3,9 +3,9 @@ package com.springuni.hermes.visitor.web;
 import static com.springuni.hermes.test.Mocks.JWS_VISITOR_COOKIE_SECRET_KEY;
 import static com.springuni.hermes.test.Mocks.JWS_VISITOR_COOKIE_VALUE;
 import static com.springuni.hermes.test.Mocks.VISITOR_ID;
-import static com.springuni.hermes.visitor.web.VisitorIdResolverImpl.COOKIE_MAX_AGE;
-import static com.springuni.hermes.visitor.web.VisitorIdResolverImpl.COOKIE_NAME;
-import static com.springuni.hermes.visitor.web.VisitorIdResolverImpl.VISITOR_SECRET_KEY_PROPERTY;
+import static com.springuni.hermes.visitor.web.VisitorIdCookieResolverImpl.COOKIE_MAX_AGE;
+import static com.springuni.hermes.visitor.web.VisitorIdCookieResolverImpl.COOKIE_NAME;
+import static com.springuni.hermes.visitor.web.VisitorIdCookieResolverImpl.VISITOR_SECRET_KEY_PROPERTY;
 
 import com.springuni.hermes.core.convert.EntityClassAwareIdToStringConverter;
 import com.springuni.hermes.core.convert.StringToEntityClassAwareIdConverter;
@@ -16,11 +16,11 @@ import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.mock.env.MockEnvironment;
 
-public class VisitorIdResolverTest extends AbstractCookieValueResolverTest<VisitorId> {
+public class VisitorIdCookieResolverTest extends AbstractCookieValueResolverTest<VisitorId> {
 
     private final ConfigurableConversionService conversionService;
 
-    public VisitorIdResolverTest() {
+    public VisitorIdCookieResolverTest() {
         super(COOKIE_NAME, COOKIE_MAX_AGE, VISITOR_ID, JWS_VISITOR_COOKIE_VALUE);
 
         conversionService = new GenericConversionService();
@@ -41,7 +41,7 @@ public class VisitorIdResolverTest extends AbstractCookieValueResolverTest<Visit
 
     @Override
     protected AbstractCookieValueResolver<VisitorId> createCookieValueResolver() {
-        return new VisitorIdResolverImpl(conversionService);
+        return new VisitorIdCookieResolverImpl(conversionService);
     }
 
 }

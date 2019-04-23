@@ -10,8 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class VisitorIdResolverImpl
-        extends AbstractCookieValueResolver<VisitorId> implements VisitorIdResolver {
+public class VisitorIdCookieResolverImpl
+        extends AbstractCookieValueResolver<VisitorId> implements VisitorIdCookieResolver {
 
     static final String COOKIE_NAME = "vid";
 
@@ -23,7 +23,7 @@ public class VisitorIdResolverImpl
 
     private final ConversionService conversionService;
 
-    public VisitorIdResolverImpl(ConversionService conversionService) {
+    public VisitorIdCookieResolverImpl(ConversionService conversionService) {
         super(COOKIE_NAME, COOKIE_MAX_AGE, VISITOR_SECRET_KEY_PROPERTY);
 
         assertCanConvert(conversionService, String.class, VisitorId.class);

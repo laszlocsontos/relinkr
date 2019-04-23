@@ -6,7 +6,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public interface VisitorIdResolver extends CookieValueResolver<VisitorId> {
+public interface VisitorIdCookieResolver extends CookieValueResolver<VisitorId> {
 
     default Optional<VisitorId> resolveVisitorId(HttpServletRequest request) {
         return resolveValue(request);

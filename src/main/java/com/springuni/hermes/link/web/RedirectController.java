@@ -14,7 +14,7 @@ import com.springuni.hermes.link.service.LinkService;
 import com.springuni.hermes.user.model.UserId;
 import com.springuni.hermes.visitor.model.VisitorId;
 import com.springuni.hermes.visitor.service.VisitorService;
-import com.springuni.hermes.visitor.web.VisitorIdResolver;
+import com.springuni.hermes.visitor.web.VisitorIdCookieResolver;
 import java.net.URI;
 import java.time.Clock;
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +45,7 @@ public class RedirectController {
     private final URI notFoundUrl;
 
     private final LinkService linkService;
-    private final VisitorIdResolver visitorIdResolver;
+    private final VisitorIdCookieResolver visitorIdCookieResolver;
     private final VisitorService visitorService;
 
     static {
@@ -62,14 +62,14 @@ public class RedirectController {
             ObjectProvider<Clock> clockProvider,
             Environment environment,
             LinkService linkService,
-            VisitorIdResolver visitorIdResolver,
+            VisitorIdCookieResolver visitorIdCookieResolver,
             VisitorService visitorService) {
 
         this.eventPublisher = eventPublisher;
         clock = clockProvider.getIfAvailable(Clock::systemUTC);
         notFoundUrl = environment.getRequiredProperty(REDIRECT_NOT_FOUND_URL_PROPERTY, URI.class);
         this.linkService = linkService;
-        this.visitorIdResolver = visitorIdResolver;
+        this.visitorIdCookieResolver = visitorIdCookieResolver;
         this.visitorService = visitorService;
     }
 
@@ -106,12 +106,12 @@ public class RedirectController {
         UserId userId = link.getUserId();
 
         VisitorId existingVisitorId =
-                visitorIdResolver.resolveVisitorId(webRequest.getRequest()).orElse(null);
+                visitorIdCookieResolver.resolveVisitorId(webRequest.getRequest()).orElse(null);
 
         VisitorId visitorId = visitorService.ensureVisitor(existingVisitorId, userId);
 
         if (!visitorId.equals(existingVisitorId)) {
-            visitorIdResolver.setVisitorId(webRequest.getResponse(), visitorId);
+            visitorIdCookieResolver.setVisitorId(webRequest.getResponse(), visitorId);
         }
 
         String ipAddress = extractRemoteAddr(webRequest.getRequest());

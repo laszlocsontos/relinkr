@@ -33,7 +33,7 @@ import com.springuni.hermes.link.service.LinkService;
 import com.springuni.hermes.link.web.RedirectControllerTest.TestConfig;
 import com.springuni.hermes.visitor.model.VisitorId;
 import com.springuni.hermes.visitor.service.VisitorService;
-import com.springuni.hermes.visitor.web.VisitorIdResolver;
+import com.springuni.hermes.visitor.web.VisitorIdCookieResolver;
 import java.time.Clock;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
@@ -71,7 +71,7 @@ public class RedirectControllerTest {
     private VisitorService visitorService;
 
     @MockBean
-    private VisitorIdResolver visitorIdResolver;
+    private VisitorIdCookieResolver visitorIdCookieResolver;
 
     @Autowired
     private RedirectedEventListener redirectedEventListener;
@@ -93,15 +93,15 @@ public class RedirectControllerTest {
             throws Exception {
 
         given(linkService.getLink(link.getPath())).willReturn(link);
-        //  VisitorIdResolver returns null when cookie value is missing or integrity check failed
-        given(visitorIdResolver.resolveVisitorId(any(HttpServletRequest.class)))
+        //  VisitorIdCookieResolver returns null when cookie value is missing or integrity check failed
+        given(visitorIdCookieResolver.resolveVisitorId(any(HttpServletRequest.class)))
                 .willReturn(Optional.empty());
         given(visitorService.ensureVisitor(null, link.getUserId())).willReturn(VISITOR_ID);
 
         redirect(link);
 
         then(visitorService).should().ensureVisitor(null, link.getUserId());
-        then(visitorIdResolver).should().setVisitorId(
+        then(visitorIdCookieResolver).should().setVisitorId(
                 any(HttpServletResponse.class),
                 eq(VISITOR_ID)
         );
@@ -114,8 +114,8 @@ public class RedirectControllerTest {
             throws Exception {
 
         given(linkService.getLink(link.getPath())).willReturn(link);
-        //  VisitorIdResolver returns null when cookie value is missing or integrity check failed
-        given(visitorIdResolver.resolveVisitorId(any(HttpServletRequest.class)))
+        //  VisitorIdCookieResolver returns null when cookie value is missing or integrity check failed
+        given(visitorIdCookieResolver.resolveVisitorId(any(HttpServletRequest.class)))
                 .willReturn(Optional.of(VISITOR_ID_ZERO));
         given(visitorService.ensureVisitor(VISITOR_ID_ZERO, link.getUserId()))
                 .willReturn(VISITOR_ID);
@@ -123,7 +123,7 @@ public class RedirectControllerTest {
         redirect(link);
 
         then(visitorService).should().ensureVisitor(VISITOR_ID_ZERO, link.getUserId());
-        then(visitorIdResolver).should().setVisitorId(
+        then(visitorIdCookieResolver).should().setVisitorId(
                 any(HttpServletResponse.class),
                 eq(VISITOR_ID)
         );
@@ -136,14 +136,14 @@ public class RedirectControllerTest {
             throws Exception {
 
         given(linkService.getLink(link.getPath())).willReturn(link);
-        given(visitorIdResolver.resolveVisitorId(any(HttpServletRequest.class)))
+        given(visitorIdCookieResolver.resolveVisitorId(any(HttpServletRequest.class)))
                 .willReturn(Optional.of(VISITOR_ID));
         given(visitorService.ensureVisitor(VISITOR_ID, link.getUserId())).willReturn(VISITOR_ID);
 
         redirect(link);
 
         then(visitorService).should().ensureVisitor(VISITOR_ID, link.getUserId());
-        then(visitorIdResolver).should(never()).setVisitorId(
+        then(visitorIdCookieResolver).should(never()).setVisitorId(
                 any(HttpServletResponse.class),
                 any(VisitorId.class)
         );
