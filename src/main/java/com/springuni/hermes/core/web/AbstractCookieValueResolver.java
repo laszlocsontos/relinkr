@@ -29,12 +29,12 @@ public abstract class AbstractCookieValueResolver<V>
 
     @Override
     public final Optional<V> resolveValue(HttpServletRequest request) {
-        return cookieManager.getCookie(request).map(this::fromString);
+        return cookieManager.getCookie(request).flatMap(this::fromString);
     }
 
     @Override
     public final void setValue(HttpServletResponse response, V value) {
-        Optional<String> cookieValue = Optional.ofNullable(value).map(this::toString);
+        Optional<String> cookieValue = Optional.ofNullable(value).flatMap(this::toString);
         if (cookieValue.isPresent()) {
             cookieManager.addCookie(response, cookieValue.get());
             return;
@@ -43,9 +43,9 @@ public abstract class AbstractCookieValueResolver<V>
         cookieManager.removeCookie(response);
     }
 
-    protected abstract V fromString(String value);
+    protected abstract Optional<V> fromString(String value);
 
-    protected abstract String toString(V value);
+    protected abstract Optional<String> toString(V value);
 
     @Override
     public final void afterPropertiesSet() {

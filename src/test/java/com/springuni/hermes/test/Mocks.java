@@ -1,14 +1,18 @@
 package com.springuni.hermes.test;
 
+import static com.springuni.hermes.core.security.authn.WebSecurityConfig.OAUTH2_LOGIN_PROCESSES_BASE_URI;
 import static com.springuni.hermes.user.model.Gender.MALE;
 import static com.springuni.hermes.user.model.Role.ADMIN;
 import static com.springuni.hermes.user.model.UserProfileType.GOOGLE;
 import static java.time.Instant.ofEpochSecond;
 import static java.time.ZoneOffset.UTC;
+import static java.util.Collections.singletonMap;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
+import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.REGISTRATION_ID;
 
 import com.springuni.hermes.click.model.Click;
 import com.springuni.hermes.click.model.ClickId;
@@ -34,6 +38,9 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
@@ -147,6 +154,33 @@ public final class Mocks {
     public static final Exception REST_CLIENT_ERROR =
             new HttpClientErrorException(BAD_REQUEST);
 
+    public static final String OAUTH2_CLIENT_ID = "1234";
+    public static final String OAUTH2_CLIENT_SECRET = "1234";
+    public static final String OAUTH2_CLIENT_REG_ID = "google";
+    public static final String OAUTH2_STATE = "state";
+
+    public static final String OAUTH2_BASE_URI = "http://localhost";
+
+    public static final String OAUTH2_REDIRECT_URI =
+            OAUTH2_BASE_URI + OAUTH2_LOGIN_PROCESSES_BASE_URI + "/" + OAUTH2_CLIENT_REG_ID;
+
+    public static final OAuth2AuthorizationRequest OAUTH2_AUTHORIZATION_REQUEST;
+
+    public static final String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_SECRET_KEY =
+            "MGBDV!Wu*8G345kddLK8rB!PgLTnSAaQXs";
+
+    public static final String JWS_OAUTH2_AUTHORIZATION_REQUEST_COOKIE_VALUE =
+            "eyJhbGciOiJIUzI1NiJ9.eyJAY2xhc3MiOiJvcmcuc3ByaW5nZnJhbWV3b3JrLnNlY3VyaXR5Lm9hdXRoMi5j"
+                    + "b3JlLmVuZHBvaW50Lk9BdXRoMkF1dGhvcml6YXRpb25SZXF1ZXN0IiwiYXV0aG9yaXphdGlvblV"
+                    + "yaSI6Imh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbS9vL29hdXRoMi92Mi9hdXRoIiwiY2xpZW"
+                    + "50SWQiOiIxMjM0IiwicmVkaXJlY3RVcmkiOiJodHRwOi8vbG9jYWxob3N0L29hdXRoMi9sb2dpb"
+                    + "i9nb29nbGUiLCJzY29wZXMiOltdLCJzdGF0ZSI6InN0YXRlIiwiYWRkaXRpb25hbFBhcmFtZXRl"
+                    + "cnMiOnsicmVnaXN0cmF0aW9uX2lkIjoiZ29vZ2xlIn0sImF1dGhvcml6YXRpb25SZXF1ZXN0VXJ"
+                    + "pIjoiaHR0cHM6Ly9hY2NvdW50cy5nb29nbGUuY29tL28vb2F1dGgyL3YyL2F1dGg_cmVzcG9uc2"
+                    + "VfdHlwZT1jb2RlJmNsaWVudF9pZD0xMjM0JnN0YXRlPXN0YXRlJnJlZGlyZWN0X3VyaT1odHRwO"
+                    + "i8vbG9jYWxob3N0L29hdXRoMi9sb2dpbi9nb29nbGUiLCJncmFudFR5cGUudmFsdWUiOiJhdXRo"
+                    + "b3JpemF0aW9uX2NvZGUifQ.6yQoOt9ZcYznhPvxWDToobRpKtYxNiZj54TWMzrqq7Q";
+
     public static final Map<String, Object> GOOGLE_USER_ATTRIBUTES;
 
     private Mocks() {
@@ -191,6 +225,22 @@ public final class Mocks {
                     "https://lh3.googleusercontent.com/-7EVTpxqEgj8/AAAAAAAAAAI/AAAAAAAAAAA/Qo9wrOAoxPU/photo.jpg");
 
             GOOGLE_USER_ATTRIBUTES = unmodifiableMap(googleUserAttributes);
+
+            ClientRegistration clientRegistration = CommonOAuth2Provider.GOOGLE.getBuilder(OAUTH2_CLIENT_REG_ID)
+                    .authorizationGrantType(AUTHORIZATION_CODE)
+                    .clientId(OAUTH2_CLIENT_ID)
+                    .clientSecret(OAUTH2_CLIENT_SECRET)
+                    .scope("email")
+                    .build();
+
+            OAUTH2_AUTHORIZATION_REQUEST = OAuth2AuthorizationRequest
+                    .authorizationCode()
+                    .authorizationUri(clientRegistration.getProviderDetails().getAuthorizationUri())
+                    .clientId(OAUTH2_CLIENT_ID)
+                    .state(OAUTH2_STATE)
+                    .redirectUri(OAUTH2_REDIRECT_URI)
+                    .additionalParameters(singletonMap(REGISTRATION_ID, OAUTH2_CLIENT_REG_ID))
+                    .build();
         } catch (Exception e) {
             // This shouldn't happen, if it does, make test cases fail.
             throw new AssertionError(e);

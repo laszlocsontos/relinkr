@@ -58,7 +58,11 @@ public abstract class AbstractCookieValueResolverTest<V> {
     @Test
     public void givenValidCookie_whenResolveValue_thenPresent() {
         HttpServletRequest request = createMockHttpServletRequest(sentCookieValue);
-        assertEquals(originalCookieValue, cookieValueResolver.resolveValue(request).orElse(null));
+        assertCookieValue(originalCookieValue, cookieValueResolver.resolveValue(request).orElse(null));
+    }
+
+    protected void assertCookieValue(V expected, V actual) {
+        assertEquals(expected, actual);
     }
 
     @Test

@@ -5,6 +5,7 @@ import static org.springframework.util.Assert.isTrue;
 import com.springuni.hermes.core.web.AbstractCookieValueResolver;
 import com.springuni.hermes.visitor.model.VisitorId;
 import java.time.Duration;
+import java.util.Optional;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
@@ -42,16 +43,20 @@ public class VisitorIdCookieResolverImpl
     }
 
     @Override
-    protected VisitorId fromString(String value) {
-        return convert(value, VisitorId.class);
+    protected Optional<VisitorId> fromString(String value) {
+        return Optional.ofNullable(convert(value, VisitorId.class));
     }
 
     @Override
-    protected String toString(VisitorId value) {
-        return convert(value, String.class);
+    protected Optional<String> toString(VisitorId value) {
+        return Optional.ofNullable(convert(value, String.class));
     }
 
     private <S, T> T convert(S source, Class<T> targetClass) {
+        if (source == null) {
+            return null;
+        }
+
         try {
             return conversionService.convert(source, targetClass);
         } catch (ConversionFailedException e) {
