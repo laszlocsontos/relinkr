@@ -6,21 +6,26 @@ import static com.springuni.hermes.core.security.authn.oauth2.OAuth2Authorizatio
 import static com.springuni.hermes.test.Mocks.JWS_OAUTH2_AUTHORIZATION_REQUEST_COOKIE_VALUE;
 import static com.springuni.hermes.test.Mocks.OAUTH2_AUTHORIZATION_REQUEST;
 import static com.springuni.hermes.test.Mocks.OAUTH2_AUTHORIZATION_REQUEST_COOKIE_SECRET_KEY;
+import static com.springuni.hermes.test.Mocks.OAUTH2_STATE;
+import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import com.springuni.hermes.core.web.AbstractCookieValueResolver;
 import com.springuni.hermes.core.web.AbstractCookieValueResolverTest;
+import java.util.Map;
+import org.hamcrest.Matchers;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
 public class OAuth2AuthorizationRequestTest
-        extends AbstractCookieValueResolverTest<OAuth2AuthorizationRequest> {
+        extends AbstractCookieValueResolverTest<Map<String, OAuth2AuthorizationRequest>> {
 
     public OAuth2AuthorizationRequestTest() {
         super(
                 COOKIE_NAME,
                 COOKIE_MAX_AGE,
-                OAUTH2_AUTHORIZATION_REQUEST,
+                singletonMap(OAUTH2_STATE, OAUTH2_AUTHORIZATION_REQUEST),
                 JWS_OAUTH2_AUTHORIZATION_REQUEST_COOKIE_VALUE
         );
     }
@@ -34,13 +39,21 @@ public class OAuth2AuthorizationRequestTest
     }
 
     @Override
-    protected AbstractCookieValueResolver<OAuth2AuthorizationRequest> createCookieValueResolver() {
+    protected AbstractCookieValueResolver<Map<String, OAuth2AuthorizationRequest>> createCookieValueResolver() {
         return new OAuth2AuthorizationRequestCookieResolverImpl();
     }
 
     @Override
     protected void assertCookieValue(
-            OAuth2AuthorizationRequest expected, OAuth2AuthorizationRequest actual) {
+            Map<String, OAuth2AuthorizationRequest> expectedRequests,
+            Map<String, OAuth2AuthorizationRequest> actualRequests) {
+
+        // Sanity check
+        assertThat(expectedRequests, Matchers.hasKey(OAUTH2_STATE));
+        assertThat(actualRequests, Matchers.hasKey(OAUTH2_STATE));
+
+        OAuth2AuthorizationRequest expected = expectedRequests.get(OAUTH2_STATE);
+        OAuth2AuthorizationRequest actual = actualRequests.get(OAUTH2_STATE);
 
         assertEquals(expected.getGrantType(), actual.getGrantType());
         assertEquals(expected.getResponseType(), actual.getResponseType());

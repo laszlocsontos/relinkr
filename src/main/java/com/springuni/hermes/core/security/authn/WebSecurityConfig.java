@@ -6,12 +6,14 @@ import static java.util.Collections.unmodifiableList;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springuni.hermes.core.security.authn.handler.DefaultAuthenticationFailureHandler;
+import com.springuni.hermes.core.security.authn.handler.DefaultAuthenticationSuccessHandler;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationEntryPoint;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationFilter;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationService;
+import com.springuni.hermes.core.security.authn.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.springuni.hermes.core.security.authn.oauth2.OAuth2AuthorizationRequestsCookieResolver;
 import com.springuni.hermes.core.security.authn.oauth2.PersistentOAuth2UserService;
-import com.springuni.hermes.core.security.authn.handler.DefaultAuthenticationFailureHandler;
-import com.springuni.hermes.core.security.authn.handler.DefaultAuthenticationSuccessHandler;
 import com.springuni.hermes.user.service.UserProfileFactory;
 import com.springuni.hermes.user.service.UserService;
 import java.util.List;
@@ -30,7 +32,6 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
-import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -72,6 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserProfileFactory userProfileFactory;
     private final UserService userService;
     private final JwtAuthenticationService jwtAuthenticationService;
+    private final OAuth2AuthorizationRequestsCookieResolver authorizationRequestsCookieResolver;
 
     @Bean
     public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
@@ -80,7 +82,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
-        return new HttpSessionOAuth2AuthorizationRequestRepository();
+        return new HttpCookieOAuth2AuthorizationRequestRepository(authorizationRequestsCookieResolver);
     }
 
     @Bean

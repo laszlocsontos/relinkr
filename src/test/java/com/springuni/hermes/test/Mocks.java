@@ -170,16 +170,15 @@ public final class Mocks {
             "MGBDV!Wu*8G345kddLK8rB!PgLTnSAaQXs";
 
     public static final String JWS_OAUTH2_AUTHORIZATION_REQUEST_COOKIE_VALUE =
-            "eyJhbGciOiJIUzI1NiJ9.eyJAY2xhc3MiOiJvcmcuc3ByaW5nZnJhbWV3b3JrLnNlY3VyaXR5Lm9hdXRoMi5j"
-                    + "b3JlLmVuZHBvaW50Lk9BdXRoMkF1dGhvcml6YXRpb25SZXF1ZXN0IiwiYXV0aG9yaXphdGlvblV"
-                    + "yaSI6Imh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbS9vL29hdXRoMi92Mi9hdXRoIiwiY2xpZW"
-                    + "50SWQiOiIxMjM0IiwicmVkaXJlY3RVcmkiOiJodHRwOi8vbG9jYWxob3N0L29hdXRoMi9sb2dpb"
-                    + "i9nb29nbGUiLCJzY29wZXMiOltdLCJzdGF0ZSI6InN0YXRlIiwiYWRkaXRpb25hbFBhcmFtZXRl"
-                    + "cnMiOnsicmVnaXN0cmF0aW9uX2lkIjoiZ29vZ2xlIn0sImF1dGhvcml6YXRpb25SZXF1ZXN0VXJ"
-                    + "pIjoiaHR0cHM6Ly9hY2NvdW50cy5nb29nbGUuY29tL28vb2F1dGgyL3YyL2F1dGg_cmVzcG9uc2"
-                    + "VfdHlwZT1jb2RlJmNsaWVudF9pZD0xMjM0JnN0YXRlPXN0YXRlJnJlZGlyZWN0X3VyaT1odHRwO"
-                    + "i8vbG9jYWxob3N0L29hdXRoMi9sb2dpbi9nb29nbGUiLCJncmFudFR5cGUudmFsdWUiOiJhdXRo"
-                    + "b3JpemF0aW9uX2NvZGUifQ.6yQoOt9ZcYznhPvxWDToobRpKtYxNiZj54TWMzrqq7Q";
+            "eyJhbGciOiJIUzI1NiJ9.eyJzdGF0ZSI6eyJhdXRob3JpemF0aW9uVXJpIjoiaHR0cHM6Ly9hY2NvdW50cy5nb"
+                    + "29nbGUuY29tL28vb2F1dGgyL3YyL2F1dGgiLCJjbGllbnRJZCI6IjEyMzQiLCJyZWRpcmVjdFVya"
+                    + "SI6Imh0dHA6Ly9sb2NhbGhvc3Qvb2F1dGgyL2xvZ2luL2dvb2dsZSIsInNjb3BlcyI6W10sInN0Y"
+                    + "XRlIjoic3RhdGUiLCJhZGRpdGlvbmFsUGFyYW1ldGVycyI6eyJyZWdpc3RyYXRpb25faWQiOiJnb"
+                    + "29nbGUifSwiYXV0aG9yaXphdGlvblJlcXVlc3RVcmkiOiJodHRwczovL2FjY291bnRzLmdvb2dsZ"
+                    + "S5jb20vby9vYXV0aDIvdjIvYXV0aD9yZXNwb25zZV90eXBlPWNvZGUmY2xpZW50X2lkPTEyMzQmc"
+                    + "3RhdGU9c3RhdGUmcmVkaXJlY3RfdXJpPWh0dHA6Ly9sb2NhbGhvc3Qvb2F1dGgyL2xvZ2luL2dvb"
+                    + "2dsZSIsImdyYW50VHlwZS52YWx1ZSI6ImF1dGhvcml6YXRpb25fY29kZSJ9fQ.0z2Q2Td8KILXg8"
+                    + "hzQWpIQspyJu5bn-Fe0bAlptUxZ0g";
 
     public static final Map<String, Object> GOOGLE_USER_ATTRIBUTES;
 
