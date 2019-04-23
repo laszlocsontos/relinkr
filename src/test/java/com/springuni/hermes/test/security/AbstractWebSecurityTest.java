@@ -2,6 +2,7 @@ package com.springuni.hermes.test.security;
 
 import com.springuni.hermes.core.security.authn.WebSecurityConfig;
 import com.springuni.hermes.core.security.authn.jwt.JwtConfig;
+import com.springuni.hermes.core.security.authn.oauth2.OAuth2AuthorizationRequestsCookieResolver;
 import com.springuni.hermes.test.security.AbstractWebSecurityTest.TestConfig;
 import com.springuni.hermes.user.service.UserProfileFactory;
 import com.springuni.hermes.user.service.UserService;
@@ -32,6 +33,9 @@ public abstract class AbstractWebSecurityTest {
 
     @MockBean
     protected ClientRegistrationRepository clientRegistrationRepository;
+
+    @MockBean
+    protected OAuth2AuthorizationRequestsCookieResolver authorizationRequestsCookieResolver;
 
     @TestConfiguration
     @Import({WebSecurityConfig.class, JwtConfig.class})
