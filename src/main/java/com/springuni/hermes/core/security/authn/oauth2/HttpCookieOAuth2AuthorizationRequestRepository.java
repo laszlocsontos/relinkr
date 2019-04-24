@@ -4,41 +4,39 @@ import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterN
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * An implementation of an {@link AuthorizationRequestRepository} that stores {@link
  * OAuth2AuthorizationRequest} in the {@code javax.servlet.http.Cookie}.
  */
+@RequiredArgsConstructor
 public final class HttpCookieOAuth2AuthorizationRequestRepository
         implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 
     private final OAuth2AuthorizationRequestsCookieResolver authorizationRequestCookieResolver;
 
-    public HttpCookieOAuth2AuthorizationRequestRepository(
-            OAuth2AuthorizationRequestsCookieResolver authorizationRequestCookieResolver) {
-
-        this.authorizationRequestCookieResolver = authorizationRequestCookieResolver;
-    }
-
     @Override
     public OAuth2AuthorizationRequest loadAuthorizationRequest(
             @NonNull HttpServletRequest request) {
 
-        String stateParameter = this.getStateParameter(request);
-        if (stateParameter == null) {
+        Optional<String> stateParameter = getStateParameter(request);
+        if (!stateParameter.isPresent()) {
             return null;
         }
 
         Map<String, OAuth2AuthorizationRequest> authorizationRequests =
                 getAuthorizationRequests(request);
 
-        return authorizationRequests.get(stateParameter);
+        return authorizationRequests.get(stateParameter.get());
     }
 
     @Override
@@ -58,7 +56,7 @@ public final class HttpCookieOAuth2AuthorizationRequestRepository
                 getAuthorizationRequests(request);
 
         authorizationRequests.put(state, authorizationRequest);
-        authorizationRequestCookieResolver.setValue(response, authorizationRequests);
+        authorizationRequestCookieResolver.setRequests(response, authorizationRequests);
     }
 
     @Override
@@ -70,33 +68,35 @@ public final class HttpCookieOAuth2AuthorizationRequestRepository
     public OAuth2AuthorizationRequest removeAuthorizationRequest(
             @NonNull HttpServletRequest request, @NonNull HttpServletResponse response) {
 
-        String stateParameter = this.getStateParameter(request);
-        if (stateParameter == null) {
+        Optional<String> stateParameter = this.getStateParameter(request);
+        if (!stateParameter.isPresent()) {
             return null;
         }
 
         Map<String, OAuth2AuthorizationRequest> authorizationRequests =
                 getAuthorizationRequests(request);
 
-        OAuth2AuthorizationRequest originalRequest = authorizationRequests.remove(stateParameter);
+        OAuth2AuthorizationRequest originalRequest =
+                authorizationRequests.remove(stateParameter.get());
 
         if (!authorizationRequests.isEmpty()) {
-            authorizationRequestCookieResolver.setValue(response, authorizationRequests);
+            authorizationRequestCookieResolver.setRequests(response, authorizationRequests);
         } else {
-            authorizationRequestCookieResolver.setValue(response, null);
+            authorizationRequestCookieResolver.setRequests(response, null);
         }
 
         return originalRequest;
     }
 
-    private String getStateParameter(HttpServletRequest request) {
-        return request.getParameter(STATE);
+    private Optional<String> getStateParameter(HttpServletRequest request) {
+        return Optional.ofNullable(request.getParameter(STATE)).filter(StringUtils::hasText);
     }
 
     private Map<String, OAuth2AuthorizationRequest> getAuthorizationRequests(
             HttpServletRequest request) {
 
-        return authorizationRequestCookieResolver.resolveRequests(request).orElse(new HashMap<>());
+        return authorizationRequestCookieResolver.resolveRequests(request)
+                .map(HashMap::new).orElse(new HashMap<>());
     }
 
 }
