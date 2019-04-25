@@ -13,7 +13,8 @@ const fetch = (method, endpoint, authToken, headers = {}, params = {}, data=null
     method: method,
     url: `${API_BASE_URL}/${endpoint}`,
     params: _.defaults({}, params || {}, { bust: (Date.now()) }),
-    headers: _.defaults(DEFAULT_HEADERS, headers || {})
+    headers: _.defaults(DEFAULT_HEADERS, headers || {}),
+    withCredentials: true
   };
 
   if (!_.isEmpty(authToken)) {
