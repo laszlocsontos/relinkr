@@ -12,6 +12,9 @@ import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +61,11 @@ public class JwtConfig {
                 jwtProperties.getPrivateKey(), jwtProperties.getPublicKey(),
                 IdentityGenerator.getInstance()
         );
+    }
+
+    @Bean
+    public JwtAuthenticationTokenCookieResolver jwtAuthenticationTokenCookieResolver() {
+        return new JwtAuthenticationTokenCookieResolverImpl();
     }
 
     @Data

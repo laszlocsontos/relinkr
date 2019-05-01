@@ -7,12 +7,14 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springuni.hermes.core.security.authn.handler.DefaultAuthenticationFailureHandler;
-import com.springuni.hermes.core.security.authn.handler.DefaultAuthenticationSuccessHandler;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationEntryPoint;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationFilter;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationService;
+import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationTokenCookieResolver;
 import com.springuni.hermes.core.security.authn.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.springuni.hermes.core.security.authn.oauth2.OAuth2AuthorizationRequestsCookieResolver;
+import com.springuni.hermes.core.security.authn.oauth2.OAuth2LoginAuthenticationFailureHandler;
+import com.springuni.hermes.core.security.authn.oauth2.OAuth2LoginAuthenticationSuccessHandler;
 import com.springuni.hermes.core.security.authn.oauth2.PersistentOAuth2UserService;
 import com.springuni.hermes.user.service.UserProfileFactory;
 import com.springuni.hermes.user.service.UserService;
@@ -73,6 +75,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserProfileFactory userProfileFactory;
     private final UserService userService;
     private final JwtAuthenticationService jwtAuthenticationService;
+    private final JwtAuthenticationTokenCookieResolver jwtAuthenticationTokenCookieResolver;
     private final OAuth2AuthorizationRequestsCookieResolver authorizationRequestsCookieResolver;
 
     @Bean
@@ -82,7 +85,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
-        return new HttpCookieOAuth2AuthorizationRequestRepository(authorizationRequestsCookieResolver);
+        return new HttpCookieOAuth2AuthorizationRequestRepository(
+                authorizationRequestsCookieResolver);
     }
 
     @Bean
@@ -104,12 +108,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new DefaultAuthenticationSuccessHandler(objectMapper, jwtAuthenticationService);
+    public AuthenticationSuccessHandler oauth2LoginAuthenticationSuccessHandler() {
+        return new OAuth2LoginAuthenticationSuccessHandler(
+                jwtAuthenticationService, jwtAuthenticationTokenCookieResolver
+        );
     }
 
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
+    public AuthenticationFailureHandler oauth2LoginAuthenticationFailureHandler() {
+        return new OAuth2LoginAuthenticationFailureHandler(jwtAuthenticationTokenCookieResolver);
+    }
+
+    @Bean
+    public AuthenticationFailureHandler jwtAuthenticationFailureHandler() {
         return new DefaultAuthenticationFailureHandler(objectMapper);
     }
 
@@ -122,7 +133,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(
                 authenticationManagerBean(),
-                authenticationFailureHandler()
+                jwtAuthenticationFailureHandler()
         );
 
         jwtAuthenticationFilter.setIgnoredRequestMatchers(PUBLIC_REQUEST_MATCHERS);
@@ -144,8 +155,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and()
                 .oauth2Login()
-                .successHandler(authenticationSuccessHandler())
-                .failureHandler(authenticationFailureHandler())
+                .successHandler(oauth2LoginAuthenticationSuccessHandler())
+                .failureHandler(oauth2LoginAuthenticationFailureHandler())
                 .redirectionEndpoint()
                 .baseUri(OAUTH2_LOGIN_PROCESSES_URI)
                 .and()

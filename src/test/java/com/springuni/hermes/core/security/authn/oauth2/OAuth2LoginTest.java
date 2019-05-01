@@ -6,7 +6,6 @@ import static com.springuni.hermes.test.Mocks.USER_ID;
 import static com.springuni.hermes.test.Mocks.createUser;
 import static com.springuni.hermes.test.Mocks.createUserProfile;
 import static java.util.Collections.singletonMap;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
@@ -20,12 +19,11 @@ import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlTemplate;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationService;
+import com.springuni.hermes.core.security.authn.jwt.JwtAuthenticationTokenCookieResolver;
 import com.springuni.hermes.core.security.authn.oauth2.OAuth2LoginTest.TestController;
 import com.springuni.hermes.test.security.AbstractWebSecurityTest;
 import com.springuni.hermes.user.model.EmailAddress;
@@ -33,10 +31,8 @@ import com.springuni.hermes.user.model.Role;
 import com.springuni.hermes.user.model.User;
 import com.springuni.hermes.user.model.UserProfile;
 import com.springuni.hermes.user.model.UserProfileType;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +43,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -64,7 +61,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.util.StringUtils;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @Slf4j
 @WebMvcTest(controllers = TestController.class)
@@ -83,10 +80,10 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
     private static final String CLIENT_SECRET = "1234";
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private JwtAuthenticationService jwtAuthenticationService;
 
     @Autowired
-    private JwtAuthenticationService jwtAuthenticationService;
+    private JwtAuthenticationTokenCookieResolver jwtAuthenticationTokenCookieResolver;
 
     @MockBean
     private OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient;
@@ -161,7 +158,8 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
             throws Exception {
 
         performLoginWithState(STATE)
-                .andExpect(status().isOk())
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrlTemplate("https://localhost:9443/login"))
                 .andExpect(
                         new JwtMatcher(jwtAuthenticationService)
                                 .withAuthenticationName(String.valueOf(USER_ID))
@@ -176,8 +174,13 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
             throws Exception {
 
         performLoginWithState("bad")
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("detailMessage", is("[invalid_state_parameter] ")))
+                .andExpect(status().isFound())
+                .andExpect(
+                        redirectedUrlTemplate(
+                                "https://localhost:9443/login?error={error}",
+                                "[invalid_state_parameter] "
+                        )
+                )
                 .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication());
 
         then(userService).should(never()).saveUser(EMAIL_ADDRESS, userProfile);
@@ -199,11 +202,11 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
                 .willReturn(oAuth2User);
 
         performLoginWithState(STATE)
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isFound())
                 .andExpect(
-                        jsonPath(
-                                "detailMessage",
-                                is("[invalid_email_address] Invalid email address: bad")
+                        redirectedUrlTemplate(
+                                "https://localhost:9443/login?error={error}",
+                                "[invalid_email_address] Invalid email address: bad"
                         )
                 )
                 .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication());
@@ -292,16 +295,12 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
         }
 
         private Authentication load(MvcResult result) {
-            JsonNode tokenResponse = null;
-            try {
-                tokenResponse = objectMapper.readTree(result.getResponse().getContentAsByteArray());
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-            }
+            MockHttpServletRequest request =
+                    new MockHttpServletRequest(result.getRequest().getServletContext());
 
-            return Optional.ofNullable(tokenResponse)
-                    .map(it -> it.path("token").asText())
-                    .filter(StringUtils::hasText)
+            request.setCookies(result.getResponse().getCookies());
+
+            return jwtAuthenticationTokenCookieResolver.resolveToken(request)
                     .map(jwtAuthenticationService::parseJwtToken)
                     .orElse(null);
         }
