@@ -14,6 +14,7 @@ import com.springuni.hermes.core.web.AbstractCookieValueResolverTest;
 import com.springuni.hermes.visitor.model.VisitorId;
 import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
+import org.springframework.core.env.Environment;
 import org.springframework.mock.env.MockEnvironment;
 
 public class VisitorIdCookieResolverTest extends AbstractCookieValueResolverTest<VisitorId> {
@@ -40,8 +41,10 @@ public class VisitorIdCookieResolverTest extends AbstractCookieValueResolverTest
     }
 
     @Override
-    protected AbstractCookieValueResolver<VisitorId> createCookieValueResolver() {
-        return new VisitorIdCookieResolverImpl(conversionService);
+    protected AbstractCookieValueResolver<VisitorId> createCookieValueResolver(
+            Environment environment) {
+
+        return new VisitorIdCookieResolverImpl(conversionService, environment);
     }
 
 }

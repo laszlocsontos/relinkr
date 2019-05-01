@@ -2,7 +2,7 @@ package com.springuni.hermes.core.security.authn.oauth2;
 
 import static com.springuni.hermes.core.security.authn.oauth2.OAuth2AuthorizationRequestCookieResolverImpl.COOKIE_MAX_AGE;
 import static com.springuni.hermes.core.security.authn.oauth2.OAuth2AuthorizationRequestCookieResolverImpl.COOKIE_NAME;
-import static com.springuni.hermes.core.security.authn.oauth2.OAuth2AuthorizationRequestCookieResolverImpl.OAUTH2_AUTHORIZATION_REQUEST_COOKIE_SECRET_KEY_PROPERTY;
+import static com.springuni.hermes.core.security.authn.oauth2.OAuth2AuthorizationRequestCookieResolverImpl.OAUTH2_REQUEST_COOKIE_SECRET_KEY_PROPERTY;
 import static com.springuni.hermes.test.Mocks.JWS_OAUTH2_AUTHORIZATION_REQUEST_COOKIE_VALUE;
 import static com.springuni.hermes.test.Mocks.OAUTH2_AUTHORIZATION_REQUEST;
 import static com.springuni.hermes.test.Mocks.OAUTH2_AUTHORIZATION_REQUEST_COOKIE_SECRET_KEY;
@@ -15,6 +15,7 @@ import com.springuni.hermes.core.web.AbstractCookieValueResolver;
 import com.springuni.hermes.core.web.AbstractCookieValueResolverTest;
 import java.util.Map;
 import org.hamcrest.Matchers;
+import org.springframework.core.env.Environment;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
@@ -33,14 +34,16 @@ public class OAuth2AuthorizationRequestTest
     @Override
     protected void setUpEnvironment(MockEnvironment environment) {
         environment.setProperty(
-                OAUTH2_AUTHORIZATION_REQUEST_COOKIE_SECRET_KEY_PROPERTY,
+                OAUTH2_REQUEST_COOKIE_SECRET_KEY_PROPERTY,
                 OAUTH2_AUTHORIZATION_REQUEST_COOKIE_SECRET_KEY
         );
     }
 
     @Override
-    protected AbstractCookieValueResolver<Map<String, OAuth2AuthorizationRequest>> createCookieValueResolver() {
-        return new OAuth2AuthorizationRequestCookieResolverImpl();
+    protected AbstractCookieValueResolver<Map<String, OAuth2AuthorizationRequest>> createCookieValueResolver(
+            Environment environment) {
+
+        return new OAuth2AuthorizationRequestCookieResolverImpl(environment);
     }
 
     @Override

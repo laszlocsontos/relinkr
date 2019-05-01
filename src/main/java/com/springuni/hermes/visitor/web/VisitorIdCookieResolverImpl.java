@@ -3,11 +3,14 @@ package com.springuni.hermes.visitor.web;
 import static org.springframework.util.Assert.isTrue;
 
 import com.springuni.hermes.core.web.AbstractCookieValueResolver;
+import com.springuni.hermes.core.web.CookieManager;
+import com.springuni.hermes.core.web.JwsCookieManager;
 import com.springuni.hermes.visitor.model.VisitorId;
 import java.time.Duration;
 import java.util.Optional;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,10 +25,16 @@ public class VisitorIdCookieResolverImpl
     static final String VISITOR_SECRET_KEY_PROPERTY =
             "craftingjava.relinkr.cookies.visitor-secret-key";
 
+    private final CookieManager cookieManager;
     private final ConversionService conversionService;
 
-    public VisitorIdCookieResolverImpl(ConversionService conversionService) {
-        super(COOKIE_NAME, COOKIE_MAX_AGE, VISITOR_SECRET_KEY_PROPERTY);
+    public VisitorIdCookieResolverImpl(
+            ConversionService conversionService, Environment environment) {
+
+        String secretKey =
+                environment.getRequiredProperty(VISITOR_SECRET_KEY_PROPERTY);
+
+        cookieManager = new JwsCookieManager(COOKIE_NAME, COOKIE_MAX_AGE, secretKey);
 
         assertCanConvert(conversionService, String.class, VisitorId.class);
         assertCanConvert(conversionService, VisitorId.class, String.class);
@@ -40,6 +49,11 @@ public class VisitorIdCookieResolverImpl
                 "conversionService is not configured for converting ["
                         + sourceType.getSimpleName() + "] to [" + targetType.getSimpleName() + "]"
         );
+    }
+
+    @Override
+    protected CookieManager getCookieManager() {
+        return cookieManager;
     }
 
     @Override

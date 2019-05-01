@@ -1,5 +1,6 @@
 package com.springuni.hermes.core.web;
 
+import static com.springuni.hermes.core.web.CookieManager.MAX_AGE_AUTO_EXPIRE;
 import static com.springuni.hermes.test.Mocks.VISITOR_ID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -17,7 +18,7 @@ public abstract class AbstractCookieManagerTest {
     private static final String COOKIE_VALUE = String.valueOf(VISITOR_ID);
     private static final Duration COOKIE_MAX_AGE = Duration.ofHours(24);
 
-    private final CookieManager cookieManager = createCookieManager(COOKIE_NAME, COOKIE_MAX_AGE);
+    private CookieManager cookieManager;
 
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
@@ -36,12 +37,24 @@ public abstract class AbstractCookieManagerTest {
 
 
         };
+
+        cookieManager = createCookieManager(COOKIE_NAME, COOKIE_MAX_AGE);
     }
 
     @Test
-    public void givenCookieMaxAge_whenCreateCookieManager_thenCookieNameAndMaxAgeSet() {
-        assertEquals(COOKIE_NAME, cookieManager.getCookieName());
-        assertEquals(24 * 3600, cookieManager.getCookieMaxAge().intValue());
+    public void givenCookieNameAndMaxAge_whenCreateCookieManager_thenCookieNameAndMaxAgeSet() {
+        assertCookie(COOKIE_NAME, COOKIE_MAX_AGE.getSeconds(), true, true, cookieManager);
+    }
+
+    @Test
+    public void givenCookieNameAndNoMaxAge_whenCreateCookieManager_thenCookieNameAndMaxAgeSet() {
+        cookieManager = createCookieManager(COOKIE_NAME, null);
+        assertCookie(COOKIE_NAME, MAX_AGE_AUTO_EXPIRE, true, true, cookieManager);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void givenFalse_whenSetCookieSecure_thenIllegalArgumentException() {
+        cookieManager.setCookieSecure(false);
     }
 
     @Test
@@ -58,5 +71,18 @@ public abstract class AbstractCookieManagerTest {
     }
 
     abstract CookieManager createCookieManager(String cookieName, Duration cookieMaxAgeDuration);
+
+    private void assertCookie(
+            String expectedCookieName,
+            long expectCookieMaxAge,
+            boolean expectedHttpOnly,
+            boolean expectedSecure,
+            CookieManager cookieManager) {
+
+        assertEquals(expectedCookieName, cookieManager.getCookieName());
+        assertEquals(expectCookieMaxAge, cookieManager.getCookieMaxAge().longValue());
+        assertEquals(expectedHttpOnly, cookieManager.isCookieHttpOnly());
+        assertEquals(expectedSecure, cookieManager.isCookieSecure());
+    }
 
 }

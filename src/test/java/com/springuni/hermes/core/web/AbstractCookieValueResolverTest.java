@@ -10,6 +10,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.env.Environment;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -40,14 +41,13 @@ public abstract class AbstractCookieValueResolverTest<V> {
         environment = new MockEnvironment();
         setUpEnvironment(environment);
 
-        cookieValueResolver = createCookieValueResolver();
-        cookieValueResolver.setEnvironment(environment);
-        cookieValueResolver.afterPropertiesSet();
+        cookieValueResolver = createCookieValueResolver(environment);
     }
 
     protected abstract void setUpEnvironment(MockEnvironment environment);
 
-    protected abstract AbstractCookieValueResolver<V> createCookieValueResolver();
+    protected abstract AbstractCookieValueResolver<V> createCookieValueResolver(
+            Environment environment);
 
     @Test
     public void givenNoCookie_whenResolveValue_thenAbsent() {
@@ -58,7 +58,8 @@ public abstract class AbstractCookieValueResolverTest<V> {
     @Test
     public void givenValidCookie_whenResolveValue_thenPresent() {
         HttpServletRequest request = createMockHttpServletRequest(sentCookieValue);
-        assertCookieValue(originalCookieValue, cookieValueResolver.resolveValue(request).orElse(null));
+        assertCookieValue(originalCookieValue,
+                cookieValueResolver.resolveValue(request).orElse(null));
     }
 
     protected void assertCookieValue(V expected, V actual) {
