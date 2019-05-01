@@ -6,7 +6,7 @@ public class CookieManagerTest extends AbstractCookieManagerTest {
 
     @Override
     CookieManager createCookieManager(String cookieName, Duration cookieMaxAgeDuration) {
-        return new CookieManager(cookieName, cookieMaxAgeDuration);
+        return new CookieManager(cookieName, cookieMaxAgeDuration, true);
     }
 
 }

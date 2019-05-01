@@ -22,8 +22,9 @@ public class JwsCookieManager extends CookieManager {
     private final JWSSigner signer;
     private final JWSVerifier verifier;
 
-    public JwsCookieManager(String cookieName, Duration cookieMaxAgeDuration, String secretKey) {
-        super(cookieName, cookieMaxAgeDuration);
+    public JwsCookieManager(String cookieName, Duration cookieMaxAgeDuration, boolean httpOnly,
+            String secretKey) {
+        super(cookieName, cookieMaxAgeDuration, httpOnly);
 
         try {
             signer = new MACSigner(secretKey);
@@ -32,6 +33,10 @@ public class JwsCookieManager extends CookieManager {
             // TODO: Add RuntimeException for system errors
             throw new RuntimeException(e);
         }
+    }
+
+    public JwsCookieManager(String cookieName, Duration cookieMaxAgeDuration, String secretKey) {
+        this(cookieName, cookieMaxAgeDuration, false, secretKey);
     }
 
     @Override

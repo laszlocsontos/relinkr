@@ -9,7 +9,7 @@ public class JwsCookieManagerTest extends AbstractCookieManagerTest {
     @Override
     CookieManager createCookieManager(String cookieName, Duration cookieMaxAgeDuration) {
         return new JwsCookieManager(
-                cookieName, cookieMaxAgeDuration, JWS_VISITOR_COOKIE_SECRET_KEY
+                cookieName, cookieMaxAgeDuration, true, JWS_VISITOR_COOKIE_SECRET_KEY
         );
     }
 
