@@ -11,7 +11,7 @@ import org.springframework.web.util.WebUtils;
 
 public class CookieManager extends CookieGenerator {
 
-    static final int MAX_AGE_AUTO_EXPIRE = -1;
+    public static final int MAX_AGE_AUTO_EXPIRE = -1;
 
     public CookieManager(String cookieName, Duration cookieMaxAgeDuration) {
         this(cookieName, cookieMaxAgeDuration, false);
