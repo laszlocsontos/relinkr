@@ -41,6 +41,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -131,14 +133,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(
+        RequestMatcher requiresAuthenticationRequestMatcher =
+                new NegatedRequestMatcher(new OrRequestMatcher(PUBLIC_REQUEST_MATCHERS));
+
+        return new JwtAuthenticationFilter(
+                requiresAuthenticationRequestMatcher,
                 authenticationManagerBean(),
-                jwtAuthenticationFailureHandler()
+                jwtAuthenticationFailureHandler(),
+                jwtAuthenticationTokenCookieResolver
         );
-
-        jwtAuthenticationFilter.setIgnoredRequestMatchers(PUBLIC_REQUEST_MATCHERS);
-
-        return jwtAuthenticationFilter;
     }
 
     @Override

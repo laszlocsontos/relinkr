@@ -34,6 +34,12 @@ public class JwtAuthenticationServiceTest {
     @Autowired
     private JwtAuthenticationService jwtAuthenticationService;
 
+    @Test(expected = IllegalArgumentException.class)
+    public void givenNullPrincipal_whenCreateJwtToken_thenBadCredentialsException() {
+        String jwtToken = jwtAuthenticationService.createJwtToken(null, 1);
+        jwtAuthenticationService.parseJwtToken(jwtToken);
+    }
+
     @Test(expected = BadCredentialsException.class)
     public void givenInvalidPrincipal_whenCreateJwtToken_thenBadCredentialsException() {
         Authentication authentication =
@@ -75,6 +81,11 @@ public class JwtAuthenticationServiceTest {
     @Test(expected = BadCredentialsException.class)
     public void givenInvalidPrincipal_whenParseJwtToken_thenBadCredentialsException() {
         jwtAuthenticationService.parseJwtToken(JWT_TOKEN_INVALID);
+    }
+
+    @Test(expected = BadCredentialsException.class)
+    public void givenNullPrincipal_whenParseJwtToken_thenBadCredentialsException() {
+        jwtAuthenticationService.parseJwtToken(null);
     }
 
     @Test(expected = NonceExpiredException.class)

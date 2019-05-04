@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -32,6 +33,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
+import org.springframework.util.StringUtils;
 
 /**
  * Created by lcsontos on 5/17/17.
@@ -54,7 +56,7 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
     }
 
     @Override
-    public String createJwtToken(Authentication authentication, int minutes) {
+    public String createJwtToken(@NonNull Authentication authentication, int minutes) {
         String authorities = authentication.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
@@ -83,6 +85,10 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
     @Override
     public Authentication parseJwtToken(String jwtToken) throws AuthenticationException {
+        if (!StringUtils.hasText(jwtToken)) {
+            throw new BadCredentialsException("Null or empty token.");
+        }
+
         JWTClaimsSet claimsSet;
         try {
             SignedJWT signedJWT = SignedJWT.parse(jwtToken);
@@ -123,7 +129,6 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
                         .map(it -> it.map(SimpleGrantedAuthority::new))
                         .map(it -> it.collect(toSet()))
                         .orElse(emptySet());
-
 
         return UserIdAuthenticationToken.of(userId, authorities);
     }
