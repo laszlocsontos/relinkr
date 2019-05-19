@@ -15,6 +15,7 @@
     "lodash": "^4.17.11",
     "vue": "^2.6.6",
     "vue-chartjs": "^3.4.2",
+    "vue-cookies": "^1.5.13",
     "vue-feather-icons": "^4.10.0",
     "vue-router": "^3.0.1",
     "vuejs-datepicker": "^1.5.4",
