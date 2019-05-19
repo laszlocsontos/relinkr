@@ -17,7 +17,7 @@ import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenTy
 import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.REGISTRATION_ID;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlTemplate;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -216,7 +216,7 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
 
     private ResultActions performLoginWithState(String state) throws Exception {
         return mockMvc.perform(
-                post(OAUTH2_LOGIN_PROCESSES_BASE_URI + "/{regId}", CLIENT_REG_ID)
+                get(OAUTH2_LOGIN_PROCESSES_BASE_URI + "/{regId}", CLIENT_REG_ID)
                         .param("code", "code")
                         .param("state", state)
                         .param("redirectUri", REDIRECT_URI))
