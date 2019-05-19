@@ -2,6 +2,10 @@
 
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VueCookies from 'vue-cookies'
+
+Vue.use(Vuex);
+Vue.use(VueCookies);
 
 import jwt from 'jsonwebtoken'
 import _ from 'lodash'
@@ -11,18 +15,12 @@ import router from './router'
 
 import { JWT_PUBLIC_KEY, OAUTH2_LOGIN_ENDPOINT } from "./config";
 
-Vue.use(Vuex);
-
-// Temporarily set add a JWT auth token to local storage
-const AUTH_TOKEN = "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI1MzI0NTM0NTM0NTM0NSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NSwiaWF0IjoxNTU1MDYwMDY1LCJqdGkiOiI1OTk5MjcyNjYwMTQ4NiIsImF1dGhvcml0aWVzIjoiVVNFUiJ9.qR-9dUgcae_voPS0HDIzGE1aKiIEY6uLkNoZLAmjhuYyte7wdtGZ3uwfDScebZkyG3BoZiRhx-IDfRJJ18Pv_iFRW-yXR6Oau3U74KLfJQnCshArSKZtHPLwNLKpS3H6dSIaWZEGi0VI2YHGhM7gpbicbjFzCfEurYT6WilLliAhyhx5NXfVOUfxqe-LZoYPFj6Bkk49Q5mxm1hjAIyxgKnYJuyaN_-46kF63JeBjoMChmUD7P4Q3NNCQVAmvmYcdUlRef22ETj-k52nGRQ1HmtXRP6GQzci6HQoGP4RAZzH4tx6kDLKVX2nzCqv8o5FxYztN8CYE9e6vYdaICJCZg";
-const AUTH_TOKEN_KEY = "auth_token";
-
 export default new Vuex.Store({
   state: {
     auth: {
-      token: "",
       userId: 0,
-      expiresAt: 0
+      expiresAt: 0,
+      roles: []
     }
   },
   mutations: {
