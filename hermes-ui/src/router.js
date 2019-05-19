@@ -19,11 +19,6 @@ const router = new Router({
       redirect: '/dashboard'
     },
     {
-      path: '/oauth2/callback/:registrationId',
-      name: 'oauth2-callback',
-      meta: { oauth2Callback: true }
-    },
-    {
       path: '/login',
       name: 'login',
       component: Login
@@ -50,19 +45,13 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  // This route requires auth, check if logged in if not, redirect to login page.
+  // This route requires auth, check if logged in otherwise redirect to login page.
   if (to.meta.requiresAuth) {
     if (!store.getters.isLoggedIn) {
-      next({ path: '/login', query: { redirect: to.fullPath } });
+      next({ path: '/login' });
     } else {
       next();
     }
-  // This route processes OAuth2 callbacks, obtain auth token with the back-end.
-  } else if (to.meta.oauth2Callback) {
-    store.dispatch(
-        'obtainAuthToken',
-        { registrationId: to.params.registrationId, query: to.query }
-    );
   } else {
     next();
   }

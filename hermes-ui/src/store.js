@@ -7,13 +7,11 @@ import VueCookies from 'vue-cookies'
 Vue.use(Vuex);
 Vue.use(VueCookies);
 
-import jwt from 'jsonwebtoken'
 import _ from 'lodash'
 
-import { post } from './api'
 import router from './router'
 
-import { JWT_PUBLIC_KEY, OAUTH2_LOGIN_ENDPOINT } from "./config";
+const TOKEN_PAYLOAD_COOKIE_NAME = 'atp';
 
 export default new Vuex.Store({
   state: {
@@ -26,15 +24,13 @@ export default new Vuex.Store({
   mutations: {
     setAuthentication(state, auth) {
       state.auth = auth;
-      localStorage.setItem(AUTH_TOKEN_KEY, auth.token);
     },
     clearAuthentication(state) {
       state.auth = {
-        token: "",
         userId: 0,
         expiresAt: 0
       };
-      localStorage.removeItem(AUTH_TOKEN_KEY);
+      this._vm.$cookies.remove(TOKEN_PAYLOAD_COOKIE_NAME);
     }
   },
   getters: {
@@ -42,53 +38,41 @@ export default new Vuex.Store({
       const clockTimestamp = Math.floor(Date.now() / 1000);
       return (clockTimestamp <= (state.auth.expiresAt  || 0));
     },
-    authToken: state => state.token
+    userId: state => state.auth.userId
   },
   actions: {
-    checkToken({ commit, dispatch }, args) {
-      let { token, redirect } = args || {};
-      console.log("checkToken", token, redirect);
+    checkToken({ commit, dispatch }) {
+      console.log("checkToken");
 
-      token = _.defaultTo(token, localStorage.getItem(AUTH_TOKEN_KEY));
+      const token = this._vm.$cookies.get(TOKEN_PAYLOAD_COOKIE_NAME);
       if (_.isEmpty(token)) {
         return;
       }
 
       try {
         console.log("token", token);
-        let decoded = jwt.verify(token, JWT_PUBLIC_KEY, { algorithms: ['RS256'] });
+        let decoded = JSON.parse(atob(token));
         console.log("decoded", decoded);
         dispatch('login', {
           auth: {
-            token: token,
             userId: decoded.sub,
             expiresAt: decoded.exp
-          },
-          redirect: redirect
+          }
         });
       } catch (err) {
-        dispatch('logout', { redirect: redirect });
+        dispatch('logout');
       }
     },
-    obtainAuthToken ({ commit, dispatch }, args) {
-      const { registrationId, query, redirect } = args || {};
-      console.log("obtainAuthToken", registrationId, query, redirect);
-
-      post({ endpoint: `${OAUTH2_LOGIN_ENDPOINT}/${registrationId}`, params: { ...query }})
-        .then(response => dispatch('checkToken', { token: response.token, redirect: redirect }))
-        .catch(err => console.log("error", err));
-    },
     login ({ commit }, args) {
-      const { auth, redirect } = args || {};
+      const { auth } = args || {};
       commit('setAuthentication', auth);
-      router.push({ path: _.defaultTo(redirect, '/dashboard') });
-      console.log("login: ", auth, redirect);
+      router.push({ path: '/dashboard' });
+      console.log("login: ", auth);
     },
-    logout ({ commit }, args) {
-      const { redirect } = args || {};
+    logout ({ commit }) {
       commit('clearAuthentication');
-      router.push({ path: '/login', query: { redirect: redirect } });
-      console.log("logout", redirect);
+      router.push({ path: '/login' });
+      console.log("logout");
     }
   }
 });

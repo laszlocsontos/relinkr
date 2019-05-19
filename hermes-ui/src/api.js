@@ -5,7 +5,8 @@ import { API_BASE_URL } from './config'
 
 const DEFAULT_HEADERS = {
   'Accept': 'application/json',
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
+  'X-Requested-With': 'XMLHttpRequest'
 };
 
 const fetch = (method, endpoint, authToken, headers = {}, params = {}, data=null) => {
