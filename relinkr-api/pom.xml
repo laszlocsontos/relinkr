@@ -4,13 +4,13 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.springuni</groupId>
-    <artifactId>hermes</artifactId>
+    <groupId>io.relinkr</groupId>
+    <artifactId>relinkr-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>hermes-prototype</name>
-    <description>Hermes URL Shortener Prototype</description>
+    <name>relinkr-api</name>
+    <description>reLinkR API</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
