@@ -31,9 +31,10 @@ spring:
 
 relinkr:
   # openssl rand -base64 32
-  cookies:
+  cookie:
     visitor-secret-key: ${COOKIE_VISITOR_SECRET_KEY}
     oauth2-request-secret-key: ${COOKIE_OAUTH2_REQUEST_SECRET_KEY}
+  # openssl genrsa -out privatekey.pem 2048
   jwt:
     # openssl pkcs8 -topk8 -nocrypt -in privatekey.pem -outform der | base64 -w0
     private-key: ${JWT_PRIVATE_KEY}
@@ -42,7 +43,7 @@ relinkr:
   redirect:
     not-found-url: https://relinkr.io/not-found
   frontend:
-    base-url: ${FRONTEND_BASE_URL:'https://localhost:9443'}
+    base-url: ${FRONTEND_BASE_URL:https://localhost:9443}
     login-url: ${relinkr.frontend.base-url}/login
   short-link:
     scheme: ${SHORT_LINK_SCHEME:https}
