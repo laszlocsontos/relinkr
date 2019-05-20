@@ -1,4 +1,4 @@
-# hermes-ui
+# reLinkR UI
 
 ## Project setup
 ```
