@@ -18,8 +18,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class LinkResourceAssembler
         extends IdentifiableResourceAssemblerSupport<Link, LinkResource> {
 
-    static final String SHORT_LINK_SCHEME = "relinkr.shortLink.scheme";
-    static final String SHORT_LINK_DOMAIN = "relinkr.shortLink.domain";
+    static final String SHORT_LINK_SCHEME = "relinkr.short-link.scheme";
+    static final String SHORT_LINK_DOMAIN = "relinkr.short-link.domain";
 
     private final Environment environment;
 

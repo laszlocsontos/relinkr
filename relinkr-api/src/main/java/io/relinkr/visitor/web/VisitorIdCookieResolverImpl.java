@@ -22,8 +22,7 @@ public class VisitorIdCookieResolverImpl
     // Three years
     static final Duration COOKIE_MAX_AGE = Duration.ofDays(3 * 365);
 
-    static final String VISITOR_SECRET_KEY_PROPERTY =
-            "craftingjava.relinkr.cookies.visitor-secret-key";
+    static final String VISITOR_SECRET_KEY_PROPERTY = "relinkr.cookie.visitor-secret-key";
 
     private final CookieManager cookieManager;
     private final ConversionService conversionService;

@@ -27,7 +27,7 @@ public class OAuth2AuthorizationRequestCookieResolverImpl
     static final Duration COOKIE_MAX_AGE = Duration.ofMinutes(1);
 
     static final String OAUTH2_REQUEST_COOKIE_SECRET_KEY_PROPERTY =
-            "craftingjava.relinkr.cookies.oauth2-request-secret-key";
+            "relinkr.cookie.oauth2-request-secret-key";
 
     private static final TypeReference<Map<String, OAuth2AuthorizationRequest>> TYPE_REFERENCE =
             new TypeReference<Map<String, OAuth2AuthorizationRequest>>() { };

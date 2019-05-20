@@ -32,8 +32,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 @Controller
 public class RedirectController {
 
-    static final String REDIRECT_NOT_FOUND_URL_PROPERTY =
-            "craftingjava.relinkr.redirect.not-found-url";
+    static final String REDIRECT_NOT_FOUND_URL_PROPERTY = "relinkr.redirect.not-found-url";
 
     static final String HEADER_XFF = "X-Forwarded-For";
 

@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${PGSQL_HOST:localhost}:${PGSQL_PORT:5432}/${PGSQL_DB:relinkr}
+    username: ${PGSQL_USERNAME:relinkr}
+    password: ${PGSQL_PASSWORD:relinkr}
+  flyway:
+    locations: classpath:db/migration/common, classpath:db/migration/{vendor}
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            redirect-uri: "{baseUrl}/oauth2/{action}/{registrationId}"
+            client-id: ${OAUTH2_GOOGLE_CLIENT_ID}
+            client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+          facebook:
+            redirect-uri: "{baseUrl}/oauth2/{action}/{registrationId}"
+            client-id: ${OAUTH2_FACEBOOK_CLIENT_ID}
+            client-secret: ${OAUTH2_FACEBOOK_CLIENT_SECRET}
+            scope:
+              - email
+              - public_profile
+        provider:
+          google:
+            userNameAttribute: email
+          facebook:
+            userNameAttribute: email
+
+relinkr:
+  # openssl rand -base64 32
+  cookies:
+    visitor-secret-key: ${COOKIE_VISITOR_SECRET_KEY}
+    oauth2-request-secret-key: ${COOKIE_OAUTH2_REQUEST_SECRET_KEY}
+  jwt:
+    # openssl pkcs8 -topk8 -nocrypt -in privatekey.pem -outform der | base64 -w0
+    private-key: ${JWT_PRIVATE_KEY}
+    # openssl rsa -in privatekey.pem -outform der -pubout | base64 -w0
+    public-key: ${JWT_PUBLIC_KEY}
+  redirect:
+    not-found-url: https://relinkr.io/not-found
+  frontend:
+    base-url: ${FRONTEND_BASE_URL:'https://localhost:9443'}
+    login-url: ${relinkr.frontend.base-url}/login
+  short-link:
+    scheme: ${SHORT_LINK_SCHEME:https}
+    domain: ${SHORT_LINK_SCHEME:rln.kr}

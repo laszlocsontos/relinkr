@@ -15,7 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 abstract class AbstractOAuth2LoginAuthenticationHandler implements EnvironmentAware {
 
-    static final String FRONTEND_LOGIN_URL_PROPERTY = "craftingjava.relinkr.frontend.login-url";
+    static final String FRONTEND_LOGIN_URL_PROPERTY = "relinkr.frontend.login-url";
 
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 

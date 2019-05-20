@@ -22,8 +22,9 @@ public class JwsCookieManager extends CookieManager {
     private final JWSSigner signer;
     private final JWSVerifier verifier;
 
-    public JwsCookieManager(String cookieName, Duration cookieMaxAgeDuration, boolean httpOnly,
-            String secretKey) {
+    public JwsCookieManager(
+            String cookieName, Duration cookieMaxAgeDuration, boolean httpOnly, String secretKey) {
+
         super(cookieName, cookieMaxAgeDuration, httpOnly);
 
         try {
