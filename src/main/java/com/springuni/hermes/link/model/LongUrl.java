@@ -7,7 +7,6 @@ import static com.springuni.hermes.link.model.UtmParameters.UTM_SOURCE;
 import static com.springuni.hermes.link.model.UtmParameters.UTM_TERM;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
-import io.jsonwebtoken.lang.Assert;
 import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
@@ -18,6 +17,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Transient;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;

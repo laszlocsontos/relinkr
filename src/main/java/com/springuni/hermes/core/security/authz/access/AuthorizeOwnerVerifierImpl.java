@@ -9,10 +9,10 @@ import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 import com.springuni.hermes.core.orm.EntityClassAwareId;
 import com.springuni.hermes.user.model.Ownable;
 import com.springuni.hermes.user.model.UserId;
-import io.jsonwebtoken.lang.Assert;
 import java.security.Principal;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.NumberUtils;
@@ -28,9 +28,8 @@ public class AuthorizeOwnerVerifierImpl implements AuthorizeOwnerVerifier {
     }
 
     @Override
-    public int canAccess(Principal principal, EntityClassAwareId<?> entityClassAwareId) {
-        Assert.notNull(principal, "principal cannot be null");
-        Assert.notNull(entityClassAwareId, "entityClassAwareId cannot be null");
+    public int canAccess(
+            @NonNull Principal principal, @NonNull EntityClassAwareId<?> entityClassAwareId) {
 
         Class<?> entityClass = entityClassAwareId.getEntityClass();
         if (!Ownable.class.isAssignableFrom(entityClass)) {

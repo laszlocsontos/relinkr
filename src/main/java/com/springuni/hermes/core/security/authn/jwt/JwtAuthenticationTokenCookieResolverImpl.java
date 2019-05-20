@@ -5,12 +5,12 @@ import static org.springframework.util.StringUtils.tokenizeToStringArray;
 import com.springuni.hermes.core.web.AbstractCookieValueResolver;
 import com.springuni.hermes.core.web.CookieManager;
 import com.springuni.hermes.core.web.CookieValueResolver;
-import io.jsonwebtoken.lang.Assert;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 @Slf4j

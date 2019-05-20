@@ -1,9 +1,9 @@
 package com.springuni.hermes.core.security.authn.jwt;
 
-import io.jsonwebtoken.lang.Assert;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.util.Assert;
 
 /**
  * Created by lcsontos on 5/17/17.
