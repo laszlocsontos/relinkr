@@ -17,6 +17,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Transient;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
@@ -78,7 +79,7 @@ public class LongUrl {
         this(url, null);
     }
 
-    public LongUrl(String url, UtmParameters utmParameters) throws InvalidUrlException {
+    public LongUrl(@NonNull String url, UtmParameters utmParameters) throws InvalidUrlException {
         UriComponents uriComponents = parseUrl(url);
 
         MultiValueMap<String, String> queryParams =

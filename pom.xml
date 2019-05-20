@@ -27,11 +27,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
             <groupId>org.hashids</groupId>
             <artifactId>hashids</artifactId>
             <version>1.0.3</version>

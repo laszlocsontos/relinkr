@@ -18,7 +18,7 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 import org.springframework.util.Assert;
 
 @MappedSuperclass
@@ -29,8 +29,7 @@ public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
     @AttributeOverride(name = "id", column = @Column(name = "user_id"))
     private UserId userId;
 
-    LinkBase(@NotNull UserId userId) {
-        Assert.notNull(userId, "userId cannot be null");
+    LinkBase(@NonNull UserId userId) {
         this.userId = userId;
     }
 
@@ -47,7 +46,7 @@ public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
 
     public abstract URI getLongUrl();
 
-    public abstract void updateLongUrl(@NotNull String longUrl) throws InvalidUrlException;
+    public abstract void updateLongUrl(@NonNull String longUrl) throws InvalidUrlException;
 
     public abstract Set<Tag> getTags();
 

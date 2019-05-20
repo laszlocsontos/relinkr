@@ -15,9 +15,8 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import lombok.NonNull;
 import org.hashids.Hashids;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @Entity
 public class Link extends LinkBase<LinkId> {
@@ -42,17 +41,18 @@ public class Link extends LinkBase<LinkId> {
     @ElementCollection
     private Set<Tag> tags = new LinkedHashSet<>();
 
-    public Link(@NotNull String longUrl, @Nullable UtmParameters utmParameters,
-            @NotNull UserId userId) throws InvalidUrlException {
+    public Link(
+            @NonNull String longUrl, UtmParameters utmParameters, @NonNull UserId userId)
+            throws InvalidUrlException {
 
         this(new LongUrl(longUrl, utmParameters), userId);
     }
 
-    public Link(@NotNull String longUrl, @NotNull UserId userId) throws InvalidUrlException {
+    public Link(@NonNull String longUrl, @NonNull UserId userId) throws InvalidUrlException {
         this(longUrl, null, userId);
     }
 
-    Link(@NotNull LongUrl longUrl, @NotNull UserId userId) {
+    Link(@NonNull LongUrl longUrl, @NonNull UserId userId) {
         super(userId);
         this.longUrl = longUrl;
         path = generatePath();
@@ -111,7 +111,7 @@ public class Link extends LinkBase<LinkId> {
         return getTargetUrl().toString();
     }
 
-    public void updateLongUrl(@NotNull String longUrl) throws InvalidUrlException {
+    public void updateLongUrl(@NonNull String longUrl) throws InvalidUrlException {
         updateLongUrl(longUrl, this.longUrl.getUtmParameters().orElse(null));
     }
 

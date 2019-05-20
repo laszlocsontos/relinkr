@@ -11,8 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.ToString;
-import org.jetbrains.annotations.NotNull;
 
 @Embeddable
 @NoArgsConstructor(access = PACKAGE)
@@ -22,10 +22,10 @@ import org.jetbrains.annotations.NotNull;
 @ToString(of = {"timeZone", "locale"})
 public class UserPreferences {
 
-    @NotNull
+    @NonNull
     private TimeZone timeZone = UTC;
 
-    @NotNull
+    @NonNull
     private Locale locale = ENGLISH;
 
 }
