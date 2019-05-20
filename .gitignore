@@ -45,3 +45,4 @@ nbdist/
 ### Log Files ###
 *.log
 
+privatekey.pem
