@@ -182,10 +182,17 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
     }
 
     @Test
-    public void givenNoJwtToken_whenDoFilter_thenUnauthorizedAndNoContextSet() throws Exception {
+    public void givenNoJwtToken_whenDoFilter_thenFilterProceeds() throws Exception {
         jwtTokenFilter.doFilter(request, response, filterChain);
 
-        assertEquals(SC_UNAUTHORIZED, response.getStatus());
+        then(authenticationManager).shouldHaveZeroInteractions();
+        then(securityContext).shouldHaveZeroInteractions();
+    }
+
+    @Test
+    public void givenNoJwtTokenAndIgnoredPath_whenDoFilter_thenFilterProceeds() throws Exception {
+        request.setPathInfo(PUBLIC_PATH);
+        jwtTokenFilter.doFilter(request, response, filterChain);
 
         then(authenticationManager).shouldHaveZeroInteractions();
         then(securityContext).shouldHaveZeroInteractions();
