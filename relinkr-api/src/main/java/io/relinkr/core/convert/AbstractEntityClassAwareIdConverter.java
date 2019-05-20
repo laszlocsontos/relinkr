@@ -1,6 +1,7 @@
 package io.relinkr.core.convert;
 
 import static org.springframework.beans.BeanUtils.instantiateClass;
+import static org.springframework.util.ClassUtils.getConstructorIfAvailable;
 
 import io.relinkr.core.orm.EntityClassAwareId;
 import java.io.Serializable;

@@ -13,6 +13,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 
 import io.relinkr.core.model.EntityNotFoundException;
@@ -40,7 +41,7 @@ public class UserServiceTest {
     private UserProfile userProfile;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         userService = new UserServiceImpl(userRepository);
 
         user = createUser();
