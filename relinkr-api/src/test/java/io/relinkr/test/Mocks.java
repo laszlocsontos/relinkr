@@ -4,7 +4,6 @@ import static java.time.Instant.ofEpochSecond;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Collections.singletonMap;
 import static java.util.Collections.unmodifiableMap;
-import static java.util.Collections.unmodifiableSet;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
@@ -14,28 +13,26 @@ import io.relinkr.click.model.Click;
 import io.relinkr.click.model.ClickId;
 import io.relinkr.click.model.IpAddress;
 import io.relinkr.core.model.ApplicationException;
+import io.relinkr.core.security.authn.WebSecurityConfig;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.model.LinkId;
 import io.relinkr.link.model.LongUrl;
 import io.relinkr.link.model.Tag;
 import io.relinkr.link.model.UtmParameters;
 import io.relinkr.user.model.EmailAddress;
+import io.relinkr.user.model.Gender;
+import io.relinkr.user.model.Role;
 import io.relinkr.user.model.User;
 import io.relinkr.user.model.UserId;
 import io.relinkr.user.model.UserProfile;
+import io.relinkr.user.model.UserProfileType;
 import io.relinkr.visitor.model.Visitor;
 import io.relinkr.visitor.model.VisitorId;
-import io.relinkr.core.security.authn.WebSecurityConfig;
-import io.relinkr.user.model.Gender;
-import io.relinkr.user.model.Role;
-import io.relinkr.user.model.UserProfileType;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
@@ -153,7 +150,8 @@ public final class Mocks {
     public static final String OAUTH2_BASE_URI = "http://localhost";
 
     public static final String OAUTH2_REDIRECT_URI =
-            OAUTH2_BASE_URI + WebSecurityConfig.OAUTH2_LOGIN_PROCESSES_BASE_URI + "/" + OAUTH2_CLIENT_REG_ID;
+            OAUTH2_BASE_URI + WebSecurityConfig.OAUTH2_LOGIN_PROCESSES_BASE_URI + "/"
+                    + OAUTH2_CLIENT_REG_ID;
 
     public static final OAuth2AuthorizationRequest OAUTH2_AUTHORIZATION_REQUEST;
 
@@ -211,7 +209,8 @@ public final class Mocks {
 
             GOOGLE_USER_ATTRIBUTES = unmodifiableMap(googleUserAttributes);
 
-            ClientRegistration clientRegistration = CommonOAuth2Provider.GOOGLE.getBuilder(OAUTH2_CLIENT_REG_ID)
+            ClientRegistration clientRegistration = CommonOAuth2Provider.GOOGLE
+                    .getBuilder(OAUTH2_CLIENT_REG_ID)
                     .authorizationGrantType(AUTHORIZATION_CODE)
                     .clientId(OAUTH2_CLIENT_ID)
                     .clientSecret(OAUTH2_CLIENT_SECRET)

@@ -42,7 +42,8 @@ public class AuthorizeRolesOrOwnerSecurityMetadataSourceTest {
     @Test
     public void givenMethodWithoutAnnotation_whenGetAttributes_thenNonePresent() {
         Collection<String> attributes = source
-                .getAttributes(MethodSecurityTestController.GET_ENTITY_WITHOUT_ANNOTATION_METHOD, null)
+                .getAttributes(MethodSecurityTestController.GET_ENTITY_WITHOUT_ANNOTATION_METHOD,
+                        null)
                 .stream()
                 .map(ConfigAttribute::getAttribute)
                 .collect(toList());

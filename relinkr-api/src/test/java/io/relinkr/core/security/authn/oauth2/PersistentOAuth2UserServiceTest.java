@@ -1,11 +1,11 @@
 package io.relinkr.core.security.authn.oauth2;
 
-import static io.relinkr.test.Mocks.EMAIL_ADDRESS;
-import static io.relinkr.test.Mocks.GOOGLE_USER_ATTRIBUTES;
-import static io.relinkr.test.Mocks.createUser;
 import static io.relinkr.core.security.authn.oauth2.PersistentOAuth2UserService.INVALID_EMAIL_ADDRESS;
 import static io.relinkr.core.security.authn.oauth2.PersistentOAuth2UserService.INVALID_PROFILE;
 import static io.relinkr.core.security.authn.oauth2.PersistentOAuth2UserService.USER_ID_ATTRIBUTE;
+import static io.relinkr.test.Mocks.EMAIL_ADDRESS;
+import static io.relinkr.test.Mocks.GOOGLE_USER_ATTRIBUTES;
+import static io.relinkr.test.Mocks.createUser;
 import static io.relinkr.user.model.UserProfileType.GOOGLE;
 import static java.util.Collections.emptyMap;
 import static org.hamcrest.Matchers.containsInAnyOrder;

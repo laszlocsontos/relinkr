@@ -1,5 +1,7 @@
 package io.relinkr.link.web;
 
+import static io.relinkr.link.web.RedirectController.HEADER_XFF;
+import static io.relinkr.link.web.RedirectController.REDIRECT_NOT_FOUND_URL_PROPERTY;
 import static io.relinkr.test.Mocks.FIXED_CLOCK;
 import static io.relinkr.test.Mocks.FIXED_INSTANT;
 import static io.relinkr.test.Mocks.NOT_FOUND_URL;
@@ -7,8 +9,6 @@ import static io.relinkr.test.Mocks.VISITOR_ID;
 import static io.relinkr.test.Mocks.VISITOR_ID_ZERO;
 import static io.relinkr.test.Mocks.VISITOR_IP;
 import static io.relinkr.test.Mocks.createLink;
-import static io.relinkr.link.web.RedirectController.HEADER_XFF;
-import static io.relinkr.link.web.RedirectController.REDIRECT_NOT_FOUND_URL_PROPERTY;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

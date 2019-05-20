@@ -7,8 +7,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import io.relinkr.test.web.BaseServletTest;
 import io.relinkr.core.web.CookieManager;
+import io.relinkr.test.web.BaseServletTest;
 import java.util.Optional;
 import javax.servlet.http.Cookie;
 import org.junit.Test;

@@ -37,10 +37,12 @@ class OAuth2AuthorizationRequestDeserializer extends JsonDeserializer<OAuth2Auth
         }
 
         Set<String> scopes = mapper.convertValue(
-                jsonNode.get("authorities"), new TypeReference<Set<String>>() {});
+                jsonNode.get("authorities"), new TypeReference<Set<String>>() {
+                });
 
         Map<String, Object> additionalParameters = mapper.convertValue(
-                jsonNode.get("additionalParameters"), new TypeReference<Map<String, Object>>() {});
+                jsonNode.get("additionalParameters"), new TypeReference<Map<String, Object>>() {
+                });
 
         return builder
                 .clientId(readJsonNode(jsonNode, "clientId").asText())

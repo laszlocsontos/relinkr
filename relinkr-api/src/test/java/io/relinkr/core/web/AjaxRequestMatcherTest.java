@@ -30,7 +30,8 @@ public class AjaxRequestMatcherTest extends BaseServletTest {
     @Test
     public void givenHeaderWithValidValue_whenMatches_thenTrue() {
         request.addHeader(
-                AjaxRequestMatcher.X_REQUESTED_WITH_HEADER, AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
+                AjaxRequestMatcher.X_REQUESTED_WITH_HEADER,
+                AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
         assertTrue(requestMatcher.matches(request));
     }
 

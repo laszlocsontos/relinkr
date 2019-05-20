@@ -17,9 +17,9 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 
 import io.relinkr.core.model.EntityNotFoundException;
+import io.relinkr.user.model.Role;
 import io.relinkr.user.model.User;
 import io.relinkr.user.model.UserProfile;
-import io.relinkr.user.model.Role;
 import java.util.Optional;
 import java.util.function.Consumer;
 import org.junit.Before;

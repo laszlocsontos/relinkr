@@ -1,11 +1,11 @@
 package io.relinkr.link.web;
 
+import static io.relinkr.link.model.LinkStatus.ACTIVE;
+import static io.relinkr.link.model.LinkStatus.ARCHIVED;
 import static io.relinkr.test.Mocks.PAGEABLE;
 import static io.relinkr.test.Mocks.TAG_A;
 import static io.relinkr.test.Mocks.USER_ID;
 import static io.relinkr.test.Mocks.createLink;
-import static io.relinkr.link.model.LinkStatus.ACTIVE;
-import static io.relinkr.link.model.LinkStatus.ARCHIVED;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;

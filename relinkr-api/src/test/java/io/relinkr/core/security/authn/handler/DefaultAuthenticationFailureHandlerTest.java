@@ -34,7 +34,8 @@ public class DefaultAuthenticationFailureHandlerTest extends BaseServletTest {
     }
 
     @Test
-    public void giveBadCredentialsException_whenOnAuthenticationFailure_Unauthorized() throws Exception {
+    public void giveBadCredentialsException_whenOnAuthenticationFailure_Unauthorized()
+            throws Exception {
         handler.onAuthenticationFailure(request, response, new BadCredentialsException(MESSAGE));
 
         RestErrorResponse errorResponse =
@@ -44,18 +45,23 @@ public class DefaultAuthenticationFailureHandlerTest extends BaseServletTest {
     }
 
     @Test
-    public void giveInternalAuthenticationServiceException_whenOnAuthenticationFailure_Unauthorized() throws Exception {
-        handler.onAuthenticationFailure(request, response, new InternalAuthenticationServiceException(MESSAGE));
+    public void giveInternalAuthenticationServiceException_whenOnAuthenticationFailure_Unauthorized()
+            throws Exception {
+        handler.onAuthenticationFailure(request, response,
+                new InternalAuthenticationServiceException(MESSAGE));
 
         RestErrorResponse errorResponse =
                 objectMapper.readValue(response.getContentAsByteArray(), RestErrorResponse.class);
 
-        assertResponse(errorResponse, INTERNAL_SERVER_ERROR.value(), APPLICATION_JSON_VALUE, MESSAGE);
+        assertResponse(errorResponse, INTERNAL_SERVER_ERROR.value(), APPLICATION_JSON_VALUE,
+                MESSAGE);
     }
 
     @Test
-    public void giveAuthenticationServiceException_whenOnAuthenticationFailure_Unauthorized() throws Exception {
-        handler.onAuthenticationFailure(request, response, new AuthenticationServiceException(MESSAGE));
+    public void giveAuthenticationServiceException_whenOnAuthenticationFailure_Unauthorized()
+            throws Exception {
+        handler.onAuthenticationFailure(request, response,
+                new AuthenticationServiceException(MESSAGE));
 
         RestErrorResponse errorResponse =
                 objectMapper.readValue(response.getContentAsByteArray(), RestErrorResponse.class);

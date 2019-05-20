@@ -11,8 +11,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import io.relinkr.core.security.authn.user.UserIdAuthenticationToken;
-import io.relinkr.test.web.BaseFilterTest;
 import io.relinkr.core.web.AjaxRequestMatcher;
+import io.relinkr.test.web.BaseFilterTest;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
@@ -122,7 +122,8 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
     @Test
     public void givenValidJwtTokenInCookie_whenDoFilter_thenOkAndContextSet() throws Exception {
         request.addHeader(
-                AjaxRequestMatcher.X_REQUESTED_WITH_HEADER, AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
+                AjaxRequestMatcher.X_REQUESTED_WITH_HEADER,
+                AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
 
         given(authenticationTokenCookieResolver.resolveToken(request))
                 .willReturn(Optional.of("valid"));
@@ -143,7 +144,8 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
             throws Exception {
 
         request.addHeader(
-                AjaxRequestMatcher.X_REQUESTED_WITH_HEADER, AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
+                AjaxRequestMatcher.X_REQUESTED_WITH_HEADER,
+                AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
 
         given(authenticationTokenCookieResolver.resolveToken(request))
                 .willReturn(Optional.of("valid"));
@@ -167,7 +169,8 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
             throws Exception {
 
         request.addHeader(
-                AjaxRequestMatcher.X_REQUESTED_WITH_HEADER, AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
+                AjaxRequestMatcher.X_REQUESTED_WITH_HEADER,
+                AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
 
         given(authenticationTokenCookieResolver.resolveToken(request))
                 .willReturn(Optional.of("invalid"));

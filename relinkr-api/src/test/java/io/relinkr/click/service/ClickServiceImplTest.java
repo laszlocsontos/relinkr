@@ -6,12 +6,10 @@ import static io.relinkr.test.Mocks.createClick;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.verify;
 
 import io.relinkr.click.model.Click;
 import io.relinkr.core.model.Country;
 import java.util.Optional;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

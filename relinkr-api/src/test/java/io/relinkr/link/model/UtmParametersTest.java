@@ -1,16 +1,16 @@
 package io.relinkr.link.model;
 
+import static io.relinkr.link.model.UtmParameters.UTM_CAMPAIGN;
+import static io.relinkr.link.model.UtmParameters.UTM_CONTENT;
+import static io.relinkr.link.model.UtmParameters.UTM_MEDIUM;
+import static io.relinkr.link.model.UtmParameters.UTM_SOURCE;
+import static io.relinkr.link.model.UtmParameters.UTM_TERM;
 import static io.relinkr.test.Mocks.UTM_CAMPAIGN_V;
 import static io.relinkr.test.Mocks.UTM_CONTENT_V;
 import static io.relinkr.test.Mocks.UTM_MEDIUM_V;
 import static io.relinkr.test.Mocks.UTM_PARAMETERS_FULL;
 import static io.relinkr.test.Mocks.UTM_SOURCE_V;
 import static io.relinkr.test.Mocks.UTM_TERM_V;
-import static io.relinkr.link.model.UtmParameters.UTM_CAMPAIGN;
-import static io.relinkr.link.model.UtmParameters.UTM_CONTENT;
-import static io.relinkr.link.model.UtmParameters.UTM_MEDIUM;
-import static io.relinkr.link.model.UtmParameters.UTM_SOURCE;
-import static io.relinkr.link.model.UtmParameters.UTM_TERM;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 

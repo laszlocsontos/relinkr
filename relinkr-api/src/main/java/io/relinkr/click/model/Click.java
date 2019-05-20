@@ -10,7 +10,6 @@ import io.relinkr.user.model.UserId;
 import io.relinkr.visitor.model.VisitorId;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Optional;
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;

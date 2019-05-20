@@ -2,7 +2,6 @@ package io.relinkr.user.service;
 
 import static io.relinkr.test.Mocks.GOOGLE_USER_ATTRIBUTES;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 import io.relinkr.user.model.UserProfile;
 import io.relinkr.user.model.UserProfileType;
@@ -22,7 +21,8 @@ public class UserProfileFactoryTest {
 
     @Test
     public void givenGoogleUserInfo_whenCreate_thenOk() {
-        UserProfile userProfile = userProfileFactory.create(UserProfileType.GOOGLE, GOOGLE_USER_ATTRIBUTES);
+        UserProfile userProfile = userProfileFactory
+                .create(UserProfileType.GOOGLE, GOOGLE_USER_ATTRIBUTES);
 
         assertEquals(UserProfileType.GOOGLE, userProfile.getUserProfileType());
         assertEquals("12345789", userProfile.getUserProfileId());
@@ -48,7 +48,8 @@ public class UserProfileFactoryTest {
                 "https://lh3.googleusercontent.com/-7EVTpxqEgj8/AAAAAAAAAAI/AAAAAAAAAAA/Qo9wrOAoxPU/photo.jpg");
         userAttributes.put("birthday", "05/06");
 
-        UserProfile userProfile = userProfileFactory.create(UserProfileType.FACEBOOK, userAttributes);
+        UserProfile userProfile = userProfileFactory
+                .create(UserProfileType.FACEBOOK, userAttributes);
 
         assertEquals(UserProfileType.FACEBOOK, userProfile.getUserProfileType());
         assertEquals("12345789", userProfile.getUserProfileId());

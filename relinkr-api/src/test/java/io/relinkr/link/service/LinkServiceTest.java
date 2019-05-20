@@ -1,13 +1,13 @@
 package io.relinkr.link.service;
 
+import static io.relinkr.link.model.LinkStatus.ACTIVE;
+import static io.relinkr.link.model.LinkStatus.ARCHIVED;
 import static io.relinkr.test.Mocks.LINK_ID;
 import static io.relinkr.test.Mocks.LONG_URL_BASE_S;
 import static io.relinkr.test.Mocks.LONG_URL_VALID_UTM_S;
 import static io.relinkr.test.Mocks.USER_ID;
 import static io.relinkr.test.Mocks.UTM_PARAMETERS_FULL;
 import static io.relinkr.test.Mocks.UTM_PARAMETERS_MINIMAL;
-import static io.relinkr.link.model.LinkStatus.ACTIVE;
-import static io.relinkr.link.model.LinkStatus.ARCHIVED;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -15,11 +15,11 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.data.domain.Pageable.unpaged;
 
-import io.relinkr.test.Mocks;
 import io.relinkr.core.model.ApplicationException;
 import io.relinkr.core.model.EntityNotFoundException;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.model.LinkId;
+import io.relinkr.test.Mocks;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;

@@ -19,7 +19,8 @@ public class VisitorIdCookieResolverTest extends AbstractCookieValueResolverTest
     private final ConfigurableConversionService conversionService;
 
     public VisitorIdCookieResolverTest() {
-        super(VisitorIdCookieResolverImpl.COOKIE_NAME, VisitorIdCookieResolverImpl.COOKIE_MAX_AGE, VISITOR_ID, JWS_VISITOR_COOKIE_VALUE);
+        super(VisitorIdCookieResolverImpl.COOKIE_NAME, VisitorIdCookieResolverImpl.COOKIE_MAX_AGE,
+                VISITOR_ID, JWS_VISITOR_COOKIE_VALUE);
 
         conversionService = new GenericConversionService();
 
@@ -34,7 +35,8 @@ public class VisitorIdCookieResolverTest extends AbstractCookieValueResolverTest
 
     @Override
     protected void setUpEnvironment(MockEnvironment environment) {
-        environment.setProperty(VisitorIdCookieResolverImpl.VISITOR_SECRET_KEY_PROPERTY, JWS_VISITOR_COOKIE_SECRET_KEY);
+        environment.setProperty(VisitorIdCookieResolverImpl.VISITOR_SECRET_KEY_PROPERTY,
+                JWS_VISITOR_COOKIE_SECRET_KEY);
     }
 
     @Override

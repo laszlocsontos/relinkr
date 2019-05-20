@@ -1,5 +1,9 @@
 package io.relinkr.link.model;
 
+import static io.relinkr.link.model.Link.HASHIDS_LENGTH;
+import static io.relinkr.link.model.LinkStatus.ACTIVE;
+import static io.relinkr.link.model.LinkStatus.ARCHIVED;
+import static io.relinkr.link.model.LinkStatus.BROKEN;
 import static io.relinkr.test.Mocks.LONG_URL_BASE_S;
 import static io.relinkr.test.Mocks.LONG_URL_WITHOUT_UTM;
 import static io.relinkr.test.Mocks.LONG_URL_WITHOUT_UTM_S;
@@ -7,10 +11,6 @@ import static io.relinkr.test.Mocks.TAG_A;
 import static io.relinkr.test.Mocks.TAG_B;
 import static io.relinkr.test.Mocks.USER_ID;
 import static io.relinkr.test.Mocks.UTM_PARAMETERS_MINIMAL;
-import static io.relinkr.link.model.Link.HASHIDS_LENGTH;
-import static io.relinkr.link.model.LinkStatus.ACTIVE;
-import static io.relinkr.link.model.LinkStatus.ARCHIVED;
-import static io.relinkr.link.model.LinkStatus.BROKEN;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;

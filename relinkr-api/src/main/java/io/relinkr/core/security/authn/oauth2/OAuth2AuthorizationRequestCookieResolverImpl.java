@@ -30,7 +30,8 @@ public class OAuth2AuthorizationRequestCookieResolverImpl
             "relinkr.cookie.oauth2-request-secret-key";
 
     private static final TypeReference<Map<String, OAuth2AuthorizationRequest>> TYPE_REFERENCE =
-            new TypeReference<Map<String, OAuth2AuthorizationRequest>>() { };
+            new TypeReference<Map<String, OAuth2AuthorizationRequest>>() {
+            };
 
     private final CookieManager cookieManager;
     private final ObjectMapper objectMapper;

@@ -6,7 +6,6 @@ import static io.relinkr.test.Mocks.USER_ID;
 import static io.relinkr.test.Mocks.VISITOR_ID;
 import static io.relinkr.test.Mocks.VISITOR_IP;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 import io.relinkr.core.model.Country;
 import org.junit.Before;

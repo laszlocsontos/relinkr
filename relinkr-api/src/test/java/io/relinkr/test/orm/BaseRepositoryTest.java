@@ -5,12 +5,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import io.relinkr.test.orm.BaseRepositoryTest.TestConfig;
 import io.relinkr.core.orm.AbstractEntity;
 import io.relinkr.core.orm.AbstractId;
 import io.relinkr.core.orm.BaseRepository;
 import io.relinkr.core.orm.JpaConfig;
 import io.relinkr.core.orm.UtcLocalDateTimeProvider;
+import io.relinkr.test.orm.BaseRepositoryTest.TestConfig;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.junit.Before;
