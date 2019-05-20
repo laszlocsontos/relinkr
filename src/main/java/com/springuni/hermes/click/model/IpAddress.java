@@ -30,10 +30,10 @@ public class IpAddress {
     private boolean localAddress;
 
     private boolean multicastAddress;
+
     /*
      * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
      */
-
     IpAddress() {
     }
 

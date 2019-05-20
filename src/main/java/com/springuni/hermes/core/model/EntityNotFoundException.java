@@ -19,12 +19,9 @@
 
 package com.springuni.hermes.core.model;
 
-import lombok.Getter;
-
 /**
  * Created by lcsontos on 5/10/17.
  */
-@Getter
 public class EntityNotFoundException extends GeneralEntityException {
 
     public EntityNotFoundException(String fieldName, Object fieldValue) {

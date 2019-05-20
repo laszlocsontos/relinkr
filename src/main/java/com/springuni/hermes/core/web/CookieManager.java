@@ -13,10 +13,6 @@ public class CookieManager extends CookieGenerator {
 
     public static final int MAX_AGE_AUTO_EXPIRE = -1;
 
-    public CookieManager(String cookieName, Duration cookieMaxAgeDuration) {
-        this(cookieName, cookieMaxAgeDuration, false);
-    }
-
     public CookieManager(String cookieName, Duration cookieMaxAgeDuration, boolean httpOnly) {
         setCookieName(cookieName);
         setCookieMaxAge(cookieMaxAgeDuration);

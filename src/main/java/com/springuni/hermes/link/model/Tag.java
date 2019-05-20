@@ -18,6 +18,9 @@ public class Tag implements Serializable {
         this.tagName = tagName;
     }
 
+    /*
+     * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
+     */
     Tag() {
     }
 

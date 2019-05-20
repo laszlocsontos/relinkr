@@ -80,12 +80,9 @@ public final class Mocks {
 
     public static final UtmParameters UTM_PARAMETERS_MINIMAL;
     public static final UtmParameters UTM_PARAMETERS_FULL;
-    public static final Set<UtmParameters> UTM_PARAMETERS_SET;
 
     public static final UserId USER_ID = UserId.of(1L);
     public static final UserId USER_ID_ZERO = UserId.of(0L);
-
-    public static final String UTM_TEMPLATE_NAME = "template";
 
     public static final Tag TAG_A = new Tag("A");
     public static final Tag TAG_B = new Tag("B");
@@ -97,7 +94,6 @@ public final class Mocks {
     public static final String IPV6_ADDRESS = "2001:db8:85a3:0:0:8a2e:370:7334";
 
     public static final LinkId LINK_ID = LinkId.of(1L);
-    public static final LinkId LINK_ID_ZERO = LinkId.of(0L);
 
     public static final VisitorId VISITOR_ID = VisitorId.of(27469143961212L);
     public static final VisitorId VISITOR_ID_ZERO = VisitorId.of(0L);
@@ -132,16 +128,11 @@ public final class Mocks {
                     + "4t8MG5JXBiGL3pfPEDO0zkW9Rr__jmqPoxPbDcxSQTo5m361MHOmE8BuCsZvoAbf-oY5JaLij5x"
                     + "bq0gAONANoBdQzt264uBu9bTRLXxzw2hGT0AqZMg";
 
-    public static final String JWT_SECRET_KEY =
-            "cFZJY3VpV2RMZHZMQTdVNzRAMVUqc2RFWTJoSlNpJk5MNzE2TkghI1FqKnEmKjk2TjY4TnZ5MG9t";
-
     public static final String JWS_VISITOR_COOKIE_VALUE =
             "eyJhbGciOiJIUzI1NiJ9.Mjc0NjkxNDM5NjEyMTI.hW09QfpayfzkXZ_01tYyl5n-p2V8iseFcm9ecqJIf6Y";
 
     public static final String JWS_VISITOR_COOKIE_SECRET_KEY =
             "MGBDV!Wu*8G$f#CLK8rB!PgLTnSAaQXs";
-
-    public static final String CLEARTEXT_PASSWORD = "password";
 
     public static final String ENCRYPTED_PASSWORD =
             "{bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG";
@@ -205,11 +196,6 @@ public final class Mocks {
                     UTM_MEDIUM_V,
                     UTM_CAMPAIGN_V
             );
-
-            Set<UtmParameters> utmParametersSet = new LinkedHashSet<>(2);
-            utmParametersSet.add(UTM_PARAMETERS_FULL);
-            utmParametersSet.add(UTM_PARAMETERS_MINIMAL);
-            UTM_PARAMETERS_SET = unmodifiableSet(utmParametersSet);
 
             VISITOR_IP = IpAddress.fromString(IPV4_ADDRESS);
 

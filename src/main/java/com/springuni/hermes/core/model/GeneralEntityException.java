@@ -1,5 +1,8 @@
 package com.springuni.hermes.core.model;
 
+import lombok.Getter;
+
+@Getter
 public class GeneralEntityException extends ApplicationException {
 
     private final String fieldName;

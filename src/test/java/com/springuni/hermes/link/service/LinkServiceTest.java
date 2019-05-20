@@ -35,17 +35,18 @@ import org.springframework.data.domain.PageImpl;
 @RunWith(MockitoJUnitRunner.class)
 public class LinkServiceTest {
 
-    protected LinkId linkId;
     protected Link link;
-    protected List<Link> links;
+
+    private LinkId linkId;
+    private List<Link> links;
 
     @Mock
     protected LinkRepository linkRepository;
 
-    protected LinkService linkService;
+    private LinkService linkService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         link = Mocks.createLink();
         linkId = link.getId();
         links = singletonList(link);

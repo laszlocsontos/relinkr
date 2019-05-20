@@ -73,8 +73,6 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
 
     private static final String BASE_URI = "http://localhost";
 
-    private static final String AUTHORIZATION_URI = BASE_URI + "/authorize";
-
     private static final String REDIRECT_URI =
             BASE_URI + OAUTH2_LOGIN_PROCESSES_BASE_URI + "/" + CLIENT_REG_ID;
     private static final String CLIENT_SECRET = "1234";

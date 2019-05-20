@@ -16,7 +16,6 @@ public class UserTest {
 
     @Before
     public void setUp() {
-        EmailAddress emailAddress = new EmailAddress("test@springuni.com");
         user = createUser();
     }
 
