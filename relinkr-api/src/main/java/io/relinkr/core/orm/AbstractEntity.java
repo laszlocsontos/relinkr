@@ -31,7 +31,7 @@ public class AbstractEntity<ID extends AbstractId<? extends AbstractEntity<ID>>>
     @GeneratedValue(generator = "time-based")
     @GenericGenerator(
             name = "time-based",
-            strategy = "TimeBasedIdentifierGenerator"
+            strategy = "io.relinkr.core.orm.TimeBasedIdentifierGenerator"
     )
     private ID id;
 
