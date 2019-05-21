@@ -45,9 +45,8 @@ public class JwsCookieManager extends CookieManager {
     try {
       signer = new MACSigner(secretKey);
       verifier = new MACVerifier(secretKey);
-    } catch (JOSEException e) {
-      // TODO: Add RuntimeException for system errors
-      throw new RuntimeException(e);
+    } catch (JOSEException je) {
+      throw new JwsCookieManagerException(je.getMessage(), je);
     }
   }
 
@@ -77,9 +76,8 @@ public class JwsCookieManager extends CookieManager {
 
     try {
       jwsObject.sign(signer);
-    } catch (JOSEException e) {
-      // TODO: Add RuntimeException for system errors
-      throw new RuntimeException(e);
+    } catch (JOSEException je) {
+      throw new JwsCookieManagerException(je.getMessage(), je);
     }
 
     String signedCookieValue = jwsObject.serialize();
@@ -97,8 +95,8 @@ public class JwsCookieManager extends CookieManager {
     JWSObject jwsObject;
     try {
       jwsObject = JWSObject.parse(jwsCookieValue);
-    } catch (ParseException e) {
-      // jwsCookieValue could not be parsed to a valid JWS object
+    } catch (ParseException pe) {
+      // JWS cookie value could not be parsed to a valid JWS object
       return null;
     }
 
@@ -106,8 +104,9 @@ public class JwsCookieManager extends CookieManager {
       if (jwsObject.verify(verifier)) {
         return jwsObject.getPayload().toString();
       }
-    } catch (IllegalStateException | JOSEException e) {
-      // If the JWS object couldn't be verified
+    } catch (IllegalStateException | JOSEException ex) {
+      // JWS cookie could not be validated
+      return null;
     }
 
     return null;

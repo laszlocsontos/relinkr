@@ -26,12 +26,12 @@ public class ClickServiceImpl implements ClickService {
     Optional<Country> country;
     try {
       country = geoLocator.lookupCountry(visitorIp);
-    } catch (RestClientException e) {
+    } catch (RestClientException rce) {
       log.error(
           "Country code of {} couldn't be determined; reason: {}.",
           visitorIp,
-          e.getMessage(),
-          e
+          rce.getMessage(),
+          rce
       );
       country = Optional.empty();
     }

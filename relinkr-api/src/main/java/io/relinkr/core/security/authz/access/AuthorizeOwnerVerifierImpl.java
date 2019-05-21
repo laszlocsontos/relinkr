@@ -39,8 +39,8 @@ public class AuthorizeOwnerVerifierImpl implements AuthorizeOwnerVerifier {
     Object entity;
     try {
       entity = entityManager.find(entityClass, entityClassAwareId, NONE);
-    } catch (PersistenceException e) {
-      log.error(e.getMessage(), e);
+    } catch (PersistenceException pe) {
+      log.error(pe.getMessage(), pe);
       return ACCESS_ABSTAIN;
     }
 

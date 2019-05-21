@@ -61,8 +61,8 @@ public class PersistentOAuth2UserService
     OAuth2User oAuth2User;
     try {
       oAuth2User = defaultUserService.loadUser(userRequest);
-    } catch (IllegalArgumentException e) {
-      throw createOAuth2Error(INVALID_EMAIL_ADDRESS, e);
+    } catch (IllegalArgumentException iae) {
+      throw createOAuth2Error(INVALID_EMAIL_ADDRESS, iae);
     }
 
     EmailAddress emailAddress = extractEmailAddress(oAuth2User.getName());
@@ -78,8 +78,8 @@ public class PersistentOAuth2UserService
   EmailAddress extractEmailAddress(String principalName) throws OAuth2AuthenticationException {
     try {
       return EmailAddress.of(principalName);
-    } catch (IllegalArgumentException e) {
-      throw createOAuth2Error(INVALID_EMAIL_ADDRESS, e);
+    } catch (IllegalArgumentException iae) {
+      throw createOAuth2Error(INVALID_EMAIL_ADDRESS, iae);
     }
 
   }
@@ -90,8 +90,8 @@ public class PersistentOAuth2UserService
     try {
       UserProfileType userProfileType = UserProfileType.valueOf(registrationId.toUpperCase());
       return userProfileFactory.create(userProfileType, userAttributes);
-    } catch (RuntimeException e) {
-      throw createOAuth2Error(INVALID_PROFILE, e);
+    } catch (RuntimeException re) {
+      throw createOAuth2Error(INVALID_PROFILE, re);
     }
 
   }
@@ -101,8 +101,8 @@ public class PersistentOAuth2UserService
 
     try {
       return userService.saveUser(emailAddress, userProfile);
-    } catch (RuntimeException e) {
-      throw createOAuth2Error(SERVER_ERROR, e);
+    } catch (RuntimeException re) {
+      throw createOAuth2Error(SERVER_ERROR, re);
     }
   }
 

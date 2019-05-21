@@ -79,9 +79,9 @@ class UserServiceImpl implements UserService {
 
     try {
       user = userRepository.save(user);
-    } catch (DuplicateKeyException e) {
+    } catch (DuplicateKeyException dke) {
       // User might have been created by another concurrent process
-      log.warn(e.getMessage(), e);
+      log.warn(dke.getMessage(), dke);
       user = getUser(emailAddress);
     }
 
@@ -95,9 +95,9 @@ class UserServiceImpl implements UserService {
       try {
         user = userRepository.save(user);
         break;
-      } catch (OptimisticLockingFailureException e) {
+      } catch (OptimisticLockingFailureException olfe) {
         // User might have been altered by another concurrent process
-        log.warn(e.getMessage(), e);
+        log.warn(olfe.getMessage(), olfe);
         user = getUser(user.getId());
       }
     }

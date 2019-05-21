@@ -58,8 +58,8 @@ public class IpAddress {
     InetAddress inetAddress;
     try {
       inetAddress = InetAddress.getByName(ipAddress);
-    } catch (UnknownHostException e) {
-      throw new InvalidIpAddressException(e.getMessage(), e);
+    } catch (UnknownHostException uhe) {
+      throw new InvalidIpAddressException(uhe.getMessage(), uhe);
     }
 
     IpAddressType ipAddressType = IpAddressType.of(inetAddress);

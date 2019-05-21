@@ -72,7 +72,7 @@ public class VisitorIdCookieResolverImpl
 
     try {
       return conversionService.convert(source, targetClass);
-    } catch (ConversionFailedException e) {
+    } catch (ConversionFailedException cfe) {
       // Conversion failed for whatever reason
       return null;
     }

@@ -110,9 +110,9 @@ public class LongUrl {
   public static LongUrl from(URI uri, UtmParameters utmParameters) {
     try {
       return new LongUrl(uri.toString(), utmParameters);
-    } catch (InvalidUrlException e) {
+    } catch (InvalidUrlException iue) {
       // This should never happen as url itself is a valid java.net.URL.
-      throw new AssertionError("Internal error: longUrl=" + uri, e);
+      throw new AssertionError("Internal error: longUrl=" + uri, iue);
     }
   }
 
@@ -130,8 +130,8 @@ public class LongUrl {
 
     try {
       return UriComponentsBuilder.fromUriString(url).build();
-    } catch (IllegalArgumentException e) {
-      throw new InvalidUrlException(e);
+    } catch (IllegalArgumentException iae) {
+      throw new InvalidUrlException(iae);
     }
   }
 
@@ -189,7 +189,7 @@ public class LongUrl {
 
     try {
       return UtmParameters.of(utmParameterMap);
-    } catch (MissingUtmParameterException e) {
+    } catch (MissingUtmParameterException mupe) {
       return null;
     }
   }

@@ -158,7 +158,7 @@ public class UserProfileFactoryImpl implements UserProfileFactory {
     Gender getGender(Map<String, Object> userAttributes, String attributeName) {
       try {
         return super.getGender(userAttributes, attributeName);
-      } catch (IllegalArgumentException e) {
+      } catch (IllegalArgumentException iae) {
         // If the gender is set to a custom value, this value will be based off of the
         // preferred pronoun; it will be omitted if the preferred preferred pronoun is
         // neutral.

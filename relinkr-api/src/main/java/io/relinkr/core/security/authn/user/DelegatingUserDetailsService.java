@@ -29,8 +29,8 @@ public class DelegatingUserDetailsService implements UserDetailsService {
     EmailAddress emailAddress;
     try {
       emailAddress = EmailAddress.of(username);
-    } catch (IllegalArgumentException e) {
-      throw new UsernameNotFoundException("Invalid email address", e);
+    } catch (IllegalArgumentException iae) {
+      throw new UsernameNotFoundException("Invalid email address", iae);
     }
 
     return delegate.findUser(emailAddress)

@@ -33,8 +33,8 @@ public class JwtConfig {
   static {
     try {
       RSA_KEY_FACTORY = KeyFactory.getInstance("RSA");
-    } catch (NoSuchAlgorithmException e) {
-      throw new AssertionError("Couldn't create RSA key factory", e);
+    } catch (NoSuchAlgorithmException nsae) {
+      throw new AssertionError("Couldn't create RSA key factory", nsae);
     }
   }
 
@@ -86,8 +86,8 @@ public class JwtConfig {
       KeySpec keySpec = decodeKey(encodedKey);
       try {
         return generateKey(keySpec);
-      } catch (InvalidKeySpecException e) {
-        throw new IllegalArgumentException("Couldn't generate key", e);
+      } catch (InvalidKeySpecException ikse) {
+        throw new IllegalArgumentException("Couldn't generate key", ikse);
       }
     }
 

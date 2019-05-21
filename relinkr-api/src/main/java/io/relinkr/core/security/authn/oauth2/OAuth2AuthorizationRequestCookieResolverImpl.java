@@ -61,8 +61,8 @@ public class OAuth2AuthorizationRequestCookieResolverImpl
 
     try {
       return Optional.of(objectMapper.readValue(value, TYPE_REFERENCE));
-    } catch (IOException e) {
-      log.debug(e.getMessage(), e);
+    } catch (IOException ioe) {
+      log.debug(ioe.getMessage(), ioe);
       return Optional.empty();
     }
   }
@@ -75,8 +75,8 @@ public class OAuth2AuthorizationRequestCookieResolverImpl
 
     try {
       return Optional.of(objectMapper.writeValueAsString(value));
-    } catch (IOException e) {
-      log.debug(e.getMessage(), e);
+    } catch (IOException ioe) {
+      log.debug(ioe.getMessage(), ioe);
       return Optional.empty();
     }
   }

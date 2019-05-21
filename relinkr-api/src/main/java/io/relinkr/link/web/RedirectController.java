@@ -83,7 +83,7 @@ public class RedirectController {
     Link link;
     try {
       link = linkService.getLink(path);
-    } catch (EntityNotFoundException e) {
+    } catch (EntityNotFoundException enfe) {
       return buildRedirect(notFoundUrl);
     }
 

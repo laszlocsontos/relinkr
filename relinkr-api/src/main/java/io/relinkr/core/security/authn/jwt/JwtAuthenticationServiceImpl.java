@@ -114,8 +114,8 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
     long userId;
     try {
       userId = Long.valueOf(claimsSet.getSubject());
-    } catch (NumberFormatException e) {
-      throw new BadCredentialsException(e.getMessage(), e);
+    } catch (NumberFormatException nfe) {
+      throw new BadCredentialsException(nfe.getMessage(), nfe);
     }
 
     Instant expiration = Optional.ofNullable(claimsSet.getExpirationTime())

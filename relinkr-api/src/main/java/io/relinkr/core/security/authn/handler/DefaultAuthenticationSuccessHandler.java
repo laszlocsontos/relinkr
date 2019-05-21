@@ -40,8 +40,8 @@ public class DefaultAuthenticationSuccessHandler
           .createJwtToken(authentication, ONE_DAY_MINUTES);
 
       handle(response, OK, singletonMap("token", jwtToken));
-    } catch (Exception e) {
-      handleError(response, e);
+    } catch (Exception ex) {
+      handleError(response, ex);
     }
   }
 
