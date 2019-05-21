@@ -28,6 +28,11 @@ public enum LinkStatus implements Identifiable<String> {
     return name();
   }
 
+  /**
+   * Returns next possible transitions from this {@code LinkStatus}.
+   *
+   * @return Returns next possible transitions from this {@code LinkStatus}
+   */
   public Set<LinkStatus> getNextLinkStatuses() {
     return Collections.unmodifiableSet(
         nextLinkStatuses.stream().map(LinkStatus::valueOf).collect(Collectors.toSet())

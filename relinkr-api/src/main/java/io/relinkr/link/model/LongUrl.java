@@ -74,7 +74,13 @@ public class LongUrl {
     this(url, null);
   }
 
-  public LongUrl(@NonNull String url, UtmParameters utmParameters) throws InvalidUrlException {
+  /*
+   * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
+   */
+  LongUrl() {
+  }
+
+  private LongUrl(@NonNull String url, UtmParameters utmParameters) throws InvalidUrlException {
     UriComponents uriComponents = parseUrl(url);
 
     MultiValueMap<String, String> queryParams =
@@ -101,13 +107,14 @@ public class LongUrl {
         .toUri();
   }
 
-  /*
-   * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
+  /**
+   * Factory method for creating a new {@code LongUrl} instance with the following parameters
+   *
+   * @param uri Original (long) URL, cannot be {@code null}
+   * @param utmParameters UTM parameters (optional, ie. can be {@code null}
+   * @throws InvalidUrlException is thrown in case of an invalid URL is given
    */
-  LongUrl() {
-  }
-
-  public static LongUrl from(URI uri, UtmParameters utmParameters) {
+  public static LongUrl from(@NonNull URI uri, UtmParameters utmParameters) {
     try {
       return new LongUrl(uri.toString(), utmParameters);
     } catch (InvalidUrlException iue) {
@@ -135,6 +142,12 @@ public class LongUrl {
     }
   }
 
+  /**
+   * Applies the given {@code utmParameters} to this {@code LongUrl}.
+   *
+   * @param utmParameters UTM parameters to apply
+   * @return A new {@code LongUrl}
+   */
   public LongUrl apply(UtmParameters utmParameters) {
     return from(longUrl, utmParameters);
   }
@@ -143,6 +156,12 @@ public class LongUrl {
     return longUrl;
   }
 
+  /**
+   * Returns the target URL this {@code LongUrl} represents, that is, it will contain all the UTM
+   * parameters.
+   *
+   * @return the full target URL
+   */
   public URI getTargetUrl() {
     if (targetUrl == null) {
       targetUrl = createTargetUrl();

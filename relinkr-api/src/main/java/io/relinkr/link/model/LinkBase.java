@@ -53,6 +53,11 @@ public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
 
   protected abstract void setLinkStatus(LinkStatus linkStatus);
 
+  /**
+   * Gets next possible statuses.
+   *
+   * @return Next possible statuses
+   */
   public Set<LinkStatus> getUserLinkStatuses() {
     // Users cannot change state in PENDING state
     if (LinkStatus.PENDING.equals(getLinkStatus())) {

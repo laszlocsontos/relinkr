@@ -37,6 +37,19 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
   private final JwtAuthenticationTokenCookieResolver authenticationTokenCookieResolver;
 
+  /**
+   * Creates a new {@code JwtAuthenticationFilter}.
+   *
+   * @param requiresAuthenticationRequestMatcher a possibly (compound matcher) which indicates for
+   * which {@link HttpServletRequest} this filter must be activated.
+   *
+   * @param authenticationManager An {@link AuthenticationManager} to delegate the authentication
+   * request to
+   * @param authenticationFailureHandler An {@link AuthenticationFailureHandler} for processing
+   * failed authentication requests
+   * @param authenticationTokenCookieResolver An {@link AuthenticationSuccessHandler} for processing
+   * successful authentication requests
+   */
   public JwtAuthenticationFilter(
       RequestMatcher requiresAuthenticationRequestMatcher,
       AuthenticationManager authenticationManager,

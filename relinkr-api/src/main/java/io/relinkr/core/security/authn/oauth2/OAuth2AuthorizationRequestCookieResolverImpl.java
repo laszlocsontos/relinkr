@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,7 @@ public class OAuth2AuthorizationRequestCookieResolverImpl
   private final CookieManager cookieManager;
   private final ObjectMapper objectMapper;
 
+  @Autowired
   public OAuth2AuthorizationRequestCookieResolverImpl(Environment environment) {
     String secretKey =
         environment.getRequiredProperty(OAUTH2_REQUEST_COOKIE_SECRET_KEY_PROPERTY);

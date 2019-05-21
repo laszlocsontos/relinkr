@@ -8,6 +8,7 @@ import io.relinkr.core.web.JwsCookieManager;
 import io.relinkr.visitor.model.VisitorId;
 import java.time.Duration;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.env.Environment;
@@ -27,6 +28,7 @@ public class VisitorIdCookieResolverImpl
   private final CookieManager cookieManager;
   private final ConversionService conversionService;
 
+  @Autowired
   public VisitorIdCookieResolverImpl(
       ConversionService conversionService, Environment environment) {
 

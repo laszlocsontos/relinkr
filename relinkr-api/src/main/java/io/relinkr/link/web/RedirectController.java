@@ -19,6 +19,7 @@ import java.net.URI;
 import java.time.Clock;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
@@ -55,6 +56,7 @@ public class RedirectController {
   private final VisitorIdCookieResolver visitorIdCookieResolver;
   private final VisitorService visitorService;
 
+  @Autowired
   public RedirectController(
       ApplicationEventPublisher eventPublisher,
       ObjectProvider<Clock> clockProvider,
@@ -72,7 +74,7 @@ public class RedirectController {
   }
 
   @GetMapping("/{path}")
-  public ResponseEntity redirectLink(
+  ResponseEntity redirectLink(
       @PathVariable(required = false) String path, ServletWebRequest webRequest)
       throws ApplicationException {
 

@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -26,6 +27,7 @@ public class UserProfileFactoryImpl implements UserProfileFactory {
 
   private final Map<UserProfileType, UserProfileCreator> USER_PROFILE_CREATOR_MAP;
 
+  @Autowired
   public UserProfileFactoryImpl() {
     Map<UserProfileType, UserProfileCreator> userProfileCreatorMap = new HashMap<>();
 

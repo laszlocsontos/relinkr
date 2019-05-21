@@ -25,7 +25,7 @@ public class JwtAuthenticationTokenCookieResolverImpl
   private final CookieValueResolver<String> tokenPayloadResolver;
   private final CookieValueResolver<String> tokenSignatureResolver;
 
-  public JwtAuthenticationTokenCookieResolverImpl() {
+  JwtAuthenticationTokenCookieResolverImpl() {
     tokenPayloadResolver = TokenPartValueResolver.with(
         new CookieManager(TOKEN_PAYLOAD_COOKIE_NAME, null, false)
     );

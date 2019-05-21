@@ -33,6 +33,17 @@ public class UtmParameters {
     this(utmSource, utmMedium, utmCampaign, null, null);
   }
 
+  /**
+   * Creates a new UTM parameters instance.
+   *
+   * @param utmSource UTM source (cannot be empty)
+   * @param utmMedium UTM medium (cannot be empty)
+   * @param utmCampaign UTM campaign (cannot be empty)
+   * @param utmTerm UTM term (can be null or empty)
+   * @param utmContent UTM content (can be null or empty)
+   *
+   * @throws MissingUtmParameterException when UTM parameters are invalid, see above
+   */
   public UtmParameters(
       String utmSource, String utmMedium, String utmCampaign, String utmTerm,
       String utmContent) throws MissingUtmParameterException {
@@ -62,6 +73,14 @@ public class UtmParameters {
   UtmParameters() {
   }
 
+  /**
+   * Factory method for creating an {@code UtmParameters} instance from a {@link Map}.
+   *
+   * @param utmParameterMap Map to convert
+   * @return A new {@code UtmParameters} instance
+   *
+   * @throws MissingUtmParameterException is thrown if the given map contains invalid values
+   */
   public static UtmParameters of(Map<String, String> utmParameterMap)
       throws MissingUtmParameterException {
 
@@ -76,6 +95,11 @@ public class UtmParameters {
     );
   }
 
+  /**
+   * Convert this {@code UtmParameters} to a {@link Map}.
+   *
+   * @return A map based on this instance
+   */
   public Map<String, String> asMap() {
     Map<String, String> utmParameterMap = new LinkedHashMap<>();
 

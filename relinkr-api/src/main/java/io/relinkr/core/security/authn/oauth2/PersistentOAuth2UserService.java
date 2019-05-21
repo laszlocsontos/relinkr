@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -37,6 +38,7 @@ public class PersistentOAuth2UserService
   private final UserProfileFactory userProfileFactory;
   private final UserService userService;
 
+  @Autowired
   public PersistentOAuth2UserService(
       OAuth2UserService<OAuth2UserRequest, OAuth2User> defaultUserService,
       UserProfileFactory userProfileFactory,

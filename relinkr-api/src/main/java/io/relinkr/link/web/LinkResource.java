@@ -33,6 +33,11 @@ public class LinkResource extends AbstractResource {
   private String path;
   private String targetUrl;
 
+  /**
+   * Creates a new DTO representing a {@link Link}.
+   *
+   * @param link that {@code Link} this DTO will represent
+   */
   public LinkResource(Link link) {
     super(link);
 
@@ -64,7 +69,7 @@ public class LinkResource extends AbstractResource {
   }
 
   @JsonIgnore
-  public Optional<UtmParameters> getUtmParameters() throws MissingUtmParameterException {
+  Optional<UtmParameters> getUtmParameters() throws MissingUtmParameterException {
     return Optional.ofNullable(utmParametersResource)
         .map(it -> new UtmParameters(it.getUtmSource(), it.getUtmMedium(),
             it.getUtmCampaign(), it.getUtmTerm(), it.getUtmContent()));
@@ -72,7 +77,7 @@ public class LinkResource extends AbstractResource {
 
   @Data
   @NoArgsConstructor
-  public class UtmParametersResource {
+  class UtmParametersResource {
 
     private String utmSource;
     private String utmMedium;
@@ -80,7 +85,7 @@ public class LinkResource extends AbstractResource {
     private String utmTerm;
     private String utmContent;
 
-    public UtmParametersResource(UtmParameters utmParameters) {
+    UtmParametersResource(UtmParameters utmParameters) {
       utmSource = utmParameters.getUtmSource();
       utmMedium = utmParameters.getUtmMedium();
       utmCampaign = utmParameters.getUtmCampaign();

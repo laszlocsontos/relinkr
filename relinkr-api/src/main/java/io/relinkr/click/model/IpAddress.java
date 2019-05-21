@@ -48,6 +48,13 @@ public class IpAddress {
     this.multicastAddress = multicastAddress;
   }
 
+  /**
+   * Creates a new {@code IpAddress} instance from the given {@code ipAddress}.
+   *
+   * @param ipAddress String representation of an IPv4 ot an IPv6 address
+   * @return a new {@code IpAddress} instance if {@code ipAddress} is a valid address
+   * @throws InvalidIpAddressException is thrown if {@code ipAddress} is an invalid address
+   */
   public static IpAddress fromString(String ipAddress) throws InvalidIpAddressException {
     Assert.notNull(ipAddress, "ipAddress cannot be null");
 

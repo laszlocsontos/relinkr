@@ -51,6 +51,10 @@ public class User extends AbstractEntity<UserId> {
   @Embedded
   private UserPreferences userPreferences;
 
+  /**
+   * Creates a new user with a single {@link Role} {@code USER} and
+   * with a default {@link UserPreferences}.
+   */
   public User() {
     roles = new LinkedHashSet<>();
     roles.add(Role.USER);
@@ -59,6 +63,12 @@ public class User extends AbstractEntity<UserId> {
     userPreferences = new UserPreferences();
   }
 
+  /**
+   * Creates a new user with the given email address and password.
+   *
+   * @param emailAddress email address
+   * @param encryptedPassword password
+   */
   public User(EmailAddress emailAddress, String encryptedPassword) {
     this();
     this.emailAddress = emailAddress;
@@ -89,6 +99,11 @@ public class User extends AbstractEntity<UserId> {
     return locked;
   }
 
+  /**
+   * Returns {@code true} if this {@code User} has got an {@link Role#ADMIN} role.
+   *
+   * @return {@code true} if this {@code User} has got an {@link Role#ADMIN} role
+   */
   public boolean isAdmin() {
     if (CollectionUtils.isEmpty(roles)) {
       return false;
