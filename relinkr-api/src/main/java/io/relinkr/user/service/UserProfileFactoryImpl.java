@@ -25,7 +25,7 @@ import org.springframework.util.Assert;
 @Component
 public class UserProfileFactoryImpl implements UserProfileFactory {
 
-  private final Map<UserProfileType, UserProfileCreator> USER_PROFILE_CREATOR_MAP;
+  private final Map<UserProfileType, UserProfileCreator> userProfileCreatorMap;
 
   @Autowired
   public UserProfileFactoryImpl() {
@@ -34,7 +34,7 @@ public class UserProfileFactoryImpl implements UserProfileFactory {
     userProfileCreatorMap.put(GOOGLE, new GoogleUserProfileCreator());
     userProfileCreatorMap.put(FACEBOOK, new FacebookUserProfileCreator());
 
-    USER_PROFILE_CREATOR_MAP = Collections.unmodifiableMap(userProfileCreatorMap);
+    this.userProfileCreatorMap = Collections.unmodifiableMap(userProfileCreatorMap);
   }
 
   @Override
@@ -42,7 +42,7 @@ public class UserProfileFactoryImpl implements UserProfileFactory {
     Assert.notNull(userProfileType, "userProfileType cannot be null");
     Assert.notNull(userAttributes, "userAttributes cannot be null");
 
-    UserProfileCreator userProfileCreator = USER_PROFILE_CREATOR_MAP.get(userProfileType);
+    UserProfileCreator userProfileCreator = userProfileCreatorMap.get(userProfileType);
     Assert.notNull(userProfileCreator, "No user profile creator found");
 
     return userProfileCreator.create(userAttributes);
@@ -66,8 +66,8 @@ public class UserProfileFactoryImpl implements UserProfileFactory {
           getString(userAttributes, fieldNames[2]), // givenName
           getString(userAttributes, fieldNames[3]), // middleName,
           getString(userAttributes, fieldNames[4]), // familyName,
-          getURI(userAttributes, fieldNames[5]), // profileUrl
-          getURI(userAttributes, fieldNames[6]), // pictureUrl
+          getUri(userAttributes, fieldNames[5]), // profileUrl
+          getUri(userAttributes, fieldNames[6]), // pictureUrl
           getGender(userAttributes, fieldNames[7]), // gender
           getBirthDate(userAttributes, fieldNames[8]) // birthDate,
       );
@@ -91,7 +91,7 @@ public class UserProfileFactoryImpl implements UserProfileFactory {
           .map(Object::toString).orElse(null);
     }
 
-    URI getURI(Map<String, Object> userAttributes, String attributeName) {
+    URI getUri(Map<String, Object> userAttributes, String attributeName) {
       return Optional.ofNullable(getString(userAttributes, attributeName))
           .map(URI::create).orElse(null);
     }

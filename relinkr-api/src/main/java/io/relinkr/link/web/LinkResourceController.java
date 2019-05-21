@@ -1,6 +1,9 @@
 package io.relinkr.link.web;
 
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
+import static org.springframework.http.HttpMethod.PATCH;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.ResponseEntity.ok;
 
 import io.relinkr.core.model.ApplicationException;
@@ -64,14 +67,11 @@ public class LinkResourceController {
     }
 
     HttpMethod httpMethod = request.getHttpMethod();
-    switch (httpMethod) {
-      case POST:
-      case PUT:
-        binder.setValidator(FULL_LINK_VALIDATOR);
-        break;
-      case PATCH:
-        binder.setValidator(PARTIAL_LINK_VALIDATOR);
-        break;
+
+    if (EnumSet.of(POST, PUT).contains(httpMethod)) {
+      binder.setValidator(FULL_LINK_VALIDATOR);
+    } else if (PATCH.equals(httpMethod)) {
+      binder.setValidator(PARTIAL_LINK_VALIDATOR);
     }
   }
 

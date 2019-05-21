@@ -1,4 +1,5 @@
 @TypeDefs({@TypeDef(name = "URI", typeClass = UriUserType.class, defaultForType = URI.class)})
+
 package io.relinkr;
 
 import io.relinkr.core.orm.UriUserType;

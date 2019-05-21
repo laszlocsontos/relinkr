@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * <a href="https://engineering.instagram.com/sharding-ids-at-instagram-1cf5a71e5a5c">
  * Sharding & IDs at Instagram</a>
  *
- * The maximum value generated is 2^53 - 1 in order to maintain compatibility with hashids.
+ * <p>The maximum value generated is 2^53 - 1 in order to maintain compatibility with hashids.
  * <a href="https://github.com/10cella/hashids-java#limitations">Hashids's limitations</a>
  *
  * <p>Going to the most to the least significant bits

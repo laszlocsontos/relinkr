@@ -27,8 +27,8 @@ class AbstractAuthenticationRequestHandler {
     doWrite(response, httpStatus, valueToWrite);
   }
 
-  void handleError(HttpServletResponse response, Exception e) throws IOException {
-    doWrite(response, INTERNAL_SERVER_ERROR, RestErrorResponse.of(INTERNAL_SERVER_ERROR, e));
+  void handleError(HttpServletResponse response, Exception ex) throws IOException {
+    doWrite(response, INTERNAL_SERVER_ERROR, RestErrorResponse.of(INTERNAL_SERVER_ERROR, ex));
   }
 
   private void doWrite(
