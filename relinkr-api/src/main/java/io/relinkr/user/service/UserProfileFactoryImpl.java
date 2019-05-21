@@ -48,7 +48,7 @@ public class UserProfileFactoryImpl implements UserProfileFactory {
     return userProfileCreator.create(userAttributes);
   }
 
-  private static abstract class UserProfileCreator {
+  private abstract static class UserProfileCreator {
 
     final UserProfileType userProfileType;
     final String[] fieldNames;

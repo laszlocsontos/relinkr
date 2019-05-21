@@ -20,7 +20,7 @@ public class JwtAuthenticationTokenCookieResolverImpl
   static final String TOKEN_PAYLOAD_COOKIE_NAME = "atp";
   static final String TOKEN_SIGNATURE_COOKIE_NAME = "ats";
 
-  private final static String DELIMITER = ".";
+  private static final String DELIMITER = ".";
 
   private final CookieValueResolver<String> tokenPayloadResolver;
   private final CookieValueResolver<String> tokenSignatureResolver;

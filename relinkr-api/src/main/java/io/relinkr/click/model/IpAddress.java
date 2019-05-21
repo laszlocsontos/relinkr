@@ -91,7 +91,7 @@ public class IpAddress {
 
     IPV4, IPV6;
 
-    final static int IPV6_ADDRESS_SIZE = 16;
+    static final int IPV6_ADDRESS_SIZE = 16;
 
     static IpAddressType of(InetAddress inetAddress) {
       byte[] address = inetAddress.getAddress();

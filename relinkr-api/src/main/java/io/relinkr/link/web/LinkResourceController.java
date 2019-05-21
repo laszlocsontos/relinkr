@@ -204,7 +204,7 @@ public class LinkResourceController {
 
   }
 
-  private static abstract class AbstractLinkValidator implements Validator {
+  private abstract static class AbstractLinkValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
