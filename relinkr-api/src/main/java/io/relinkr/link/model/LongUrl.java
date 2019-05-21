@@ -46,11 +46,11 @@ public class LongUrl {
           + "(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))"
           + "|"
           // host name
-          + "(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)"
+          + "(?:(?:[a-z¡-\\uffff0-9]-*)*[a-z¡-\\uffff0-9]+)"
           // domain name
-          + "(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*"
+          + "(?:\\.(?:[a-z¡-\\uffff0-9]-*)*[a-z¡-\\uffff0-9]+)*"
           // TLD identifier
-          + "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))"
+          + "(?:\\.(?:[a-z¡-\\uffff]{2,}))"
           // TLD may end with dot
           + "\\.?"
           + ")"
