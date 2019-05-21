@@ -12,7 +12,11 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationResponseType;
 
 @JsonDeserialize(using = OAuth2AuthorizationRequestDeserializer.class)
-@JsonAutoDetect(fieldVisibility = NONE, getterVisibility = PUBLIC_ONLY, isGetterVisibility = PUBLIC_ONLY)
+@JsonAutoDetect(
+    fieldVisibility = NONE,
+    getterVisibility = PUBLIC_ONLY,
+    isGetterVisibility = PUBLIC_ONLY
+)
 @JsonIgnoreProperties(ignoreUnknown = true)
 abstract class OAuth2AuthorizationRequestMixIn {
 

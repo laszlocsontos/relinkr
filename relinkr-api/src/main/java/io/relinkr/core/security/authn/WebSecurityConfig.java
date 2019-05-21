@@ -81,12 +81,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private final OAuth2AuthorizationRequestsCookieResolver authorizationRequestsCookieResolver;
 
   @Bean
-  public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
+  public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest>
+      accessTokenResponseClient() {
+
     return new NimbusAuthorizationCodeTokenResponseClient();
   }
 
   @Bean
-  public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
+  public AuthorizationRequestRepository<OAuth2AuthorizationRequest>
+      authorizationRequestRepository() {
+
     return new HttpCookieOAuth2AuthorizationRequestRepository(
         authorizationRequestsCookieResolver);
   }
