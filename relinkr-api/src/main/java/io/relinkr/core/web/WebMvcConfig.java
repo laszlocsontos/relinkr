@@ -74,8 +74,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
           it -> setValue(it, conversionService),
           it -> APPA$BMP_CONVERSION_SERVICE.equals(it.getName())
       );
-    } catch (ClassNotFoundException e) {
-      log.error(e.getMessage(), e);
+    } catch (ClassNotFoundException cnfe) {
+      log.error(cnfe.getMessage(), cnfe);
     }
   }
 

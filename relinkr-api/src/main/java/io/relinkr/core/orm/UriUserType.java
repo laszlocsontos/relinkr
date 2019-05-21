@@ -28,8 +28,8 @@ public class UriUserType implements UserType, StringRepresentableType<URI> {
   public URI fromStringValue(String value) throws HibernateException {
     try {
       return Optional.ofNullable(value).map(URI::create).orElse(null);
-    } catch (IllegalArgumentException e) {
-      throw translateException(e);
+    } catch (IllegalArgumentException iae) {
+      throw translateException(iae);
     }
   }
 
@@ -44,13 +44,13 @@ public class UriUserType implements UserType, StringRepresentableType<URI> {
   }
 
   @Override
-  public boolean equals(Object x, Object y) throws HibernateException {
-    return Objects.equals(x, y);
+  public boolean equals(Object obj1, Object obj2) throws HibernateException {
+    return Objects.equals(obj1, obj2);
   }
 
   @Override
-  public int hashCode(Object x) throws HibernateException {
-    return Objects.hashCode(x);
+  public int hashCode(Object obj) throws HibernateException {
+    return Objects.hashCode(obj);
   }
 
   @Override
@@ -63,8 +63,8 @@ public class UriUserType implements UserType, StringRepresentableType<URI> {
 
     try {
       return Optional.ofNullable(value).map(URI::create).orElse(null);
-    } catch (IllegalArgumentException e) {
-      throw translateException(e);
+    } catch (IllegalArgumentException iae) {
+      throw translateException(iae);
     }
   }
 
@@ -105,8 +105,8 @@ public class UriUserType implements UserType, StringRepresentableType<URI> {
     return original;
   }
 
-  private HibernateException translateException(IllegalArgumentException e) {
-    return new HibernateException("URI has invalid syntax - could not read entity", e);
+  private HibernateException translateException(IllegalArgumentException iae) {
+    return new HibernateException("URI has invalid syntax - could not read entity", iae);
   }
 
 }

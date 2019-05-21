@@ -15,14 +15,14 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
-    return parameter.getParameterAnnotation(CurrentUser.class) != null &&
-        UserId.class.equals(parameter.getParameterType());
+    return (parameter.getParameterAnnotation(CurrentUser.class) != null)
+        && UserId.class.equals(parameter.getParameterType());
   }
 
   @Override
   public Object resolveArgument(
       MethodParameter parameter, ModelAndViewContainer mavContainer,
-      NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+      NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
 
     Principal principal = SecurityContextHolder.getContext().getAuthentication();
     if (principal == null) {
@@ -34,9 +34,9 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
     try {
       long userId = NumberUtils.parseNumber(principalName, Long.class);
       return UserId.of(userId);
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException iea) {
       throw new IllegalArgumentException(
-          principalName + " is not convertable to " + parameter.getParameterType(), e
+          principalName + " is not convertable to " + parameter.getParameterType(), iea
       );
     }
   }

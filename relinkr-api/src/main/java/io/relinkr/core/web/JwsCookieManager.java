@@ -17,11 +17,26 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.util.StringUtils;
 
+/**
+ * Helper class for cookie generation based upon {@link CookieManager}. Main additions to the
+ * original implementations are that {@code JwsCookieManager} stores cookies in
+ * <a href="https://en.wikipedia.org/wiki/JSON_Web_Signature">JWS</a> format in order
+ * to ensure integrity of information and prevent it from being tampering with.
+ */
 public class JwsCookieManager extends CookieManager {
 
   private final JWSSigner signer;
   private final JWSVerifier verifier;
 
+  /**
+   * Creates a new {@code JwsCookieManager}.
+   *
+   * @param cookieName Cookie name
+   * @param cookieMaxAgeDuration Cookies max age, if null expires immediately
+   * @param httpOnly Whether or not this is a
+   * <a href="https://www.owasp.org/index.php/HttpOnly">HTTPOnly</a> cookie
+   * @param secretKey Secret key used for signing and verifying the signature
+   */
   public JwsCookieManager(
       String cookieName, Duration cookieMaxAgeDuration, boolean httpOnly, String secretKey) {
 
@@ -36,6 +51,13 @@ public class JwsCookieManager extends CookieManager {
     }
   }
 
+  /**
+   * Creates a new {@code JwsCookieManager}.
+   *
+   * @param cookieName Cookie name
+   * @param cookieMaxAgeDuration Cookies max age, if null expires immediately
+   * @param secretKey Secret key used for signing and verifying the signature
+   */
   public JwsCookieManager(String cookieName, Duration cookieMaxAgeDuration, String secretKey) {
     this(cookieName, cookieMaxAgeDuration, false, secretKey);
   }
@@ -64,8 +86,8 @@ public class JwsCookieManager extends CookieManager {
 
     if (logger.isDebugEnabled()) {
       logger.debug(
-          "Signed cookie with name [" + getCookieName() + "] and value [" +
-              cookieValue + "] is [" + signedCookieValue + "]");
+          "Signed cookie with name [" + getCookieName() + "] and value [" + cookieValue
+              + "] is [" + signedCookieValue + "]");
     }
 
     return super.createCookie(signedCookieValue);

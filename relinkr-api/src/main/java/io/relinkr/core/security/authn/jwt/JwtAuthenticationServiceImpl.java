@@ -47,6 +47,13 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
   private final IdentityGenerator identityGenerator;
 
+  /**
+   * Creates a new {@code JwtAuthenticationService}.
+   *
+   * @param privateKey RSA private key for signing JWT tokens
+   * @param publicKey RSA public key for verifying JWT tokens' signature
+   * @param identityGenerator ID generator for assigning unique IDs to tokens
+   */
   public JwtAuthenticationServiceImpl(
       PrivateKey privateKey, PublicKey publicKey, IdentityGenerator identityGenerator) {
 
@@ -71,16 +78,16 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
         .claim(AUTHORITIES, authorities)
         .build();
 
-    SignedJWT signedJWT = new SignedJWT(new JWSHeader.Builder(RS256).build(), claimsSet);
+    SignedJWT signedJwt = new SignedJWT(new JWSHeader.Builder(RS256).build(), claimsSet);
 
     // Compute the RSA signature
     try {
-      signedJWT.sign(signer);
-    } catch (JOSEException e) {
-      throw new InternalAuthenticationServiceException(e.getMessage(), e);
+      signedJwt.sign(signer);
+    } catch (JOSEException je) {
+      throw new InternalAuthenticationServiceException(je.getMessage(), je);
     }
 
-    return signedJWT.serialize();
+    return signedJwt.serialize();
   }
 
   @Override
@@ -91,17 +98,17 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
     JWTClaimsSet claimsSet;
     try {
-      SignedJWT signedJWT = SignedJWT.parse(jwtToken);
+      SignedJWT signedJwt = SignedJWT.parse(jwtToken);
 
-      if (!signedJWT.verify(verifier)) {
+      if (!signedJwt.verify(verifier)) {
         throw new BadCredentialsException("Token verification failed.");
       }
 
-      claimsSet = signedJWT.getJWTClaimsSet();
-    } catch (JOSEException | ParseException e) {
-      throw new BadCredentialsException(e.getMessage(), e);
-    } catch (Exception e) {
-      throw new InternalAuthenticationServiceException(e.getMessage(), e);
+      claimsSet = signedJwt.getJWTClaimsSet();
+    } catch (JOSEException | ParseException je) {
+      throw new BadCredentialsException(je.getMessage(), je);
+    } catch (Exception ex) {
+      throw new InternalAuthenticationServiceException(ex.getMessage(), ex);
     }
 
     long userId;

@@ -279,6 +279,14 @@ public enum Country {
     this.numericCode = numericCode;
   }
 
+  /**
+   * Static factory method to create a {@code Country} from the given country code.
+   *
+   * @param countryCode Country code
+   * @return A {@code Country} as an {@link Optional} provided that that {@code countryCode} is a
+   * non-empty, two letter country code. If that code doesn't belong to any valid countries above,
+   * {@link Country#ZZ} is returned. Otherwise an empty {@link Optional} is returned.
+   */
   public static Optional<Country> fromString(String countryCode) {
     Optional<String> normalizedCountryCode = Optional.ofNullable(countryCode)
         .map(String::trim)
@@ -292,7 +300,7 @@ public enum Country {
 
     try {
       return normalizedCountryCode.map(Country::valueOf);
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException iae) {
       return Optional.of(ZZ);
     }
   }

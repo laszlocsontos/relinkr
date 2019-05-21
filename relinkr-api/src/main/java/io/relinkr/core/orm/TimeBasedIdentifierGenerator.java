@@ -19,9 +19,9 @@ import org.springframework.core.convert.converter.Converter;
 
 public class TimeBasedIdentifierGenerator implements Configurable, IdentifierGenerator {
 
-  private final ConcurrentMap<String, EntityPersister> CACHE = new ConcurrentHashMap<>();
+  private final ConcurrentMap<String, EntityPersister> cache = new ConcurrentHashMap<>();
 
-  private final IdentityGenerator IDENTITY_GENERATOR = IdentityGenerator.getInstance();
+  private final IdentityGenerator identityGenerator = IdentityGenerator.getInstance();
 
   private Converter<Long, ? extends Serializable> conversionStrategy;
   private String entityName;
@@ -50,14 +50,14 @@ public class TimeBasedIdentifierGenerator implements Configurable, IdentifierGen
   public Serializable generate(SharedSessionContractImplementor session, Object object)
       throws HibernateException {
 
-    EntityPersister entityPersister = CACHE
+    EntityPersister entityPersister = cache
         .computeIfAbsent(entityName, it -> session.getEntityPersister(entityName, object));
 
     Serializable id = entityPersister.getIdentifier(object, session);
 
     return Optional
         .ofNullable(id)
-        .orElseGet(() -> conversionStrategy.convert(IDENTITY_GENERATOR.generate()));
+        .orElseGet(() -> conversionStrategy.convert(identityGenerator.generate()));
   }
 
 }

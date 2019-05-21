@@ -10,8 +10,8 @@ import java.util.Optional;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.util.Assert;
 
-abstract class AbstractEntityClassAwareIdConverter<S extends Serializable, T extends EntityClassAwareId<?>>
-    implements Converter<S, T> {
+abstract class AbstractEntityClassAwareIdConverter
+    <S extends Serializable, T extends EntityClassAwareId<?>> implements Converter<S, T> {
 
   private final Constructor<T> targetConstructor;
 
