@@ -80,7 +80,7 @@ public class LongUrl {
   LongUrl() {
   }
 
-  private LongUrl(@NonNull String url, UtmParameters utmParameters) throws InvalidUrlException {
+  LongUrl(@NonNull String url, UtmParameters utmParameters) throws InvalidUrlException {
     UriComponents uriComponents = parseUrl(url);
 
     MultiValueMap<String, String> queryParams =
