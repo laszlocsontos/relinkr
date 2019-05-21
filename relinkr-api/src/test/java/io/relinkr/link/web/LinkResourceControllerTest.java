@@ -65,7 +65,7 @@ public class LinkResourceControllerTest {
 
   @MockBean
   private LinkService linkService;
-  
+
   private Link link;
 
   @Before
