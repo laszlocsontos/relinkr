@@ -22,94 +22,94 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class AuthorizeOwnerVerifierTest {
 
-    @Mock
-    private Principal principal;
+  @Mock
+  private Principal principal;
 
-    @Mock
-    private EntityClassAwareId entityClassAwareId;
+  @Mock
+  private EntityClassAwareId entityClassAwareId;
 
-    @Mock
-    private EntityManager entityManager;
+  @Mock
+  private EntityManager entityManager;
 
-    private AuthorizeOwnerVerifier ownerVerifier;
+  private AuthorizeOwnerVerifier ownerVerifier;
 
-    @Before
-    public void setUp() throws Exception {
-        ownerVerifier = new AuthorizeOwnerVerifierImpl(entityManager);
-    }
+  @Before
+  public void setUp() throws Exception {
+    ownerVerifier = new AuthorizeOwnerVerifierImpl(entityManager);
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void givenNullPrincipal_whenCanAccess_thenIllegalArgumentException() {
-        ownerVerifier.canAccess(null, entityClassAwareId);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void givenNullPrincipal_whenCanAccess_thenIllegalArgumentException() {
+    ownerVerifier.canAccess(null, entityClassAwareId);
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void givenNullEntityClassAwareId_whenCanAccess_thenIllegalArgumentException() {
-        ownerVerifier.canAccess(principal, null);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void givenNullEntityClassAwareId_whenCanAccess_thenIllegalArgumentException() {
+    ownerVerifier.canAccess(principal, null);
+  }
 
-    @Test
-    public void givenUnsupportedEntityClass_whenCanAccess_thenAbstain() {
-        given(entityClassAwareId.getEntityClass()).willReturn(Object.class);
+  @Test
+  public void givenUnsupportedEntityClass_whenCanAccess_thenAbstain() {
+    given(entityClassAwareId.getEntityClass()).willReturn(Object.class);
 
-        int result = ownerVerifier.canAccess(principal, entityClassAwareId);
+    int result = ownerVerifier.canAccess(principal, entityClassAwareId);
 
-        assertEquals(ACCESS_ABSTAIN, result);
-    }
+    assertEquals(ACCESS_ABSTAIN, result);
+  }
 
-    @Test
-    public void givenNoSuchEntityFound_whenCanAccess_thenAbstain() {
-        given(entityClassAwareId.getEntityClass()).willReturn(TestOwnable.class);
-        given(entityManager.find(TestOwnable.class, entityClassAwareId, NONE)).willReturn(null);
+  @Test
+  public void givenNoSuchEntityFound_whenCanAccess_thenAbstain() {
+    given(entityClassAwareId.getEntityClass()).willReturn(TestOwnable.class);
+    given(entityManager.find(TestOwnable.class, entityClassAwareId, NONE)).willReturn(null);
 
-        int result = ownerVerifier.canAccess(principal, entityClassAwareId);
+    int result = ownerVerifier.canAccess(principal, entityClassAwareId);
 
-        assertEquals(ACCESS_ABSTAIN, result);
-    }
+    assertEquals(ACCESS_ABSTAIN, result);
+  }
 
-    @Test
-    public void givenEntityOwnedByGivenPrinciple_whenCanAccess_thenGranted() {
-        given(principal.getName()).willReturn(USER_ID.toString());
-        given(entityClassAwareId.getEntityClass()).willReturn(TestOwnable.class);
-        given(entityManager.find(TestOwnable.class, entityClassAwareId, NONE))
-                .willReturn(TestOwnable.of(USER_ID));
+  @Test
+  public void givenEntityOwnedByGivenPrinciple_whenCanAccess_thenGranted() {
+    given(principal.getName()).willReturn(USER_ID.toString());
+    given(entityClassAwareId.getEntityClass()).willReturn(TestOwnable.class);
+    given(entityManager.find(TestOwnable.class, entityClassAwareId, NONE))
+        .willReturn(TestOwnable.of(USER_ID));
 
-        int result = ownerVerifier.canAccess(principal, entityClassAwareId);
+    int result = ownerVerifier.canAccess(principal, entityClassAwareId);
 
-        assertEquals(ACCESS_GRANTED, result);
-    }
+    assertEquals(ACCESS_GRANTED, result);
+  }
 
-    @Test
-    public void givenEntityOwnedByGivenPrinciple_andPersistenceError_whenCanAccess_thenAbstain() {
-        given(entityClassAwareId.getEntityClass()).willReturn(TestOwnable.class);
-        given(entityManager.find(TestOwnable.class, entityClassAwareId, NONE))
-                .willThrow(PersistenceException.class);
+  @Test
+  public void givenEntityOwnedByGivenPrinciple_andPersistenceError_whenCanAccess_thenAbstain() {
+    given(entityClassAwareId.getEntityClass()).willReturn(TestOwnable.class);
+    given(entityManager.find(TestOwnable.class, entityClassAwareId, NONE))
+        .willThrow(PersistenceException.class);
 
-        int result = ownerVerifier.canAccess(principal, entityClassAwareId);
+    int result = ownerVerifier.canAccess(principal, entityClassAwareId);
 
-        assertEquals(ACCESS_ABSTAIN, result);
-    }
+    assertEquals(ACCESS_ABSTAIN, result);
+  }
 
-    @Test
-    public void givenEntityOwnedByAnotherPrinciple_whenCanAccess_thenGranted() {
-        given(principal.getName()).willReturn(USER_ID_ZERO.toString());
-        given(entityClassAwareId.getEntityClass()).willReturn(TestOwnable.class);
-        given(entityManager.find(TestOwnable.class, entityClassAwareId, NONE))
-                .willReturn(TestOwnable.of(USER_ID));
+  @Test
+  public void givenEntityOwnedByAnotherPrinciple_whenCanAccess_thenGranted() {
+    given(principal.getName()).willReturn(USER_ID_ZERO.toString());
+    given(entityClassAwareId.getEntityClass()).willReturn(TestOwnable.class);
+    given(entityManager.find(TestOwnable.class, entityClassAwareId, NONE))
+        .willReturn(TestOwnable.of(USER_ID));
 
-        int result = ownerVerifier.canAccess(principal, entityClassAwareId);
+    int result = ownerVerifier.canAccess(principal, entityClassAwareId);
 
-        assertEquals(ACCESS_DENIED, result);
-    }
+    assertEquals(ACCESS_DENIED, result);
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void givenIllegalPrincipalName_whenCanAccess_thenIllegalArgumentException() {
-        given(principal.getName()).willReturn("bad");
-        given(entityClassAwareId.getEntityClass()).willReturn(TestOwnable.class);
-        given(entityManager.find(TestOwnable.class, entityClassAwareId, NONE))
-                .willReturn(TestOwnable.of(USER_ID));
+  @Test(expected = IllegalArgumentException.class)
+  public void givenIllegalPrincipalName_whenCanAccess_thenIllegalArgumentException() {
+    given(principal.getName()).willReturn("bad");
+    given(entityClassAwareId.getEntityClass()).willReturn(TestOwnable.class);
+    given(entityManager.find(TestOwnable.class, entityClassAwareId, NONE))
+        .willReturn(TestOwnable.of(USER_ID));
 
-        ownerVerifier.canAccess(principal, entityClassAwareId);
-    }
+    ownerVerifier.canAccess(principal, entityClassAwareId);
+  }
 
 }

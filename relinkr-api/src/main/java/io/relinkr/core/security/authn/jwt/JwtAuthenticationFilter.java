@@ -20,123 +20,123 @@ import org.springframework.util.StringUtils;
 @Slf4j
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
+  public static final String AUTHORIZATION_HEADER = "Authorization";
 
-    public static final String BEARER_TOKEN_PREFIX = "Bearer";
+  public static final String BEARER_TOKEN_PREFIX = "Bearer";
 
-    private static final String BEARER_TOKEN_ATTRIBUTE = "bearer_token";
+  private static final String BEARER_TOKEN_ATTRIBUTE = "bearer_token";
 
-    private static final RequestMatcher AJAX_REQUEST_MATCHER = new AjaxRequestMatcher();
+  private static final RequestMatcher AJAX_REQUEST_MATCHER = new AjaxRequestMatcher();
 
-    private static final RequestMatcher AUTHORIZATION_BEARER_REQUEST_HEADER_MATCHER =
-            new AuthorizationBearerRequestHeaderMatcher();
+  private static final RequestMatcher AUTHORIZATION_BEARER_REQUEST_HEADER_MATCHER =
+      new AuthorizationBearerRequestHeaderMatcher();
 
-    private static final AuthenticationSuccessHandler NOOP_AUTH_SUCCESS_HANDLER =
-            (request, response, authentication) -> {
-            };
+  private static final AuthenticationSuccessHandler NOOP_AUTH_SUCCESS_HANDLER =
+      (request, response, authentication) -> {
+      };
 
-    private final JwtAuthenticationTokenCookieResolver authenticationTokenCookieResolver;
+  private final JwtAuthenticationTokenCookieResolver authenticationTokenCookieResolver;
 
-    public JwtAuthenticationFilter(
-            RequestMatcher requiresAuthenticationRequestMatcher,
-            AuthenticationManager authenticationManager,
-            AuthenticationFailureHandler authenticationFailureHandler,
-            JwtAuthenticationTokenCookieResolver authenticationTokenCookieResolver) {
+  public JwtAuthenticationFilter(
+      RequestMatcher requiresAuthenticationRequestMatcher,
+      AuthenticationManager authenticationManager,
+      AuthenticationFailureHandler authenticationFailureHandler,
+      JwtAuthenticationTokenCookieResolver authenticationTokenCookieResolver) {
 
-        super(requiresAuthenticationRequestMatcher);
+    super(requiresAuthenticationRequestMatcher);
 
-        setAuthenticationManager(authenticationManager);
-        setAuthenticationSuccessHandler(NOOP_AUTH_SUCCESS_HANDLER);
-        setAuthenticationFailureHandler(authenticationFailureHandler);
+    setAuthenticationManager(authenticationManager);
+    setAuthenticationSuccessHandler(NOOP_AUTH_SUCCESS_HANDLER);
+    setAuthenticationFailureHandler(authenticationFailureHandler);
 
-        this.authenticationTokenCookieResolver = authenticationTokenCookieResolver;
+    this.authenticationTokenCookieResolver = authenticationTokenCookieResolver;
+  }
+
+  @Override
+  public Authentication attemptAuthentication(
+      HttpServletRequest request, HttpServletResponse response)
+      throws AuthenticationException {
+
+    Optional<String> bearerToken =
+        Optional.ofNullable((String) request.getAttribute(BEARER_TOKEN_ATTRIBUTE));
+
+    if (!bearerToken.isPresent() && AJAX_REQUEST_MATCHER.matches(request)) {
+      bearerToken = authenticationTokenCookieResolver.resolveToken(request);
     }
+
+    return bearerToken.map(JwtAuthenticationToken::of)
+        .map(getAuthenticationManager()::authenticate)
+        .orElse(null);
+  }
+
+  @Override
+  protected boolean requiresAuthentication(
+      HttpServletRequest request, HttpServletResponse response) {
+
+    if (!super.requiresAuthentication(request, response)) {
+      return false;
+    }
+
+    if (AJAX_REQUEST_MATCHER.matches(request)) {
+      return true;
+    }
+
+    return AUTHORIZATION_BEARER_REQUEST_HEADER_MATCHER.matches(request);
+  }
+
+  private Optional<String> extractFromAuthorizationHeader(HttpServletRequest request) {
+    String authHeaderValue = request.getHeader(AUTHORIZATION_HEADER);
+    if (StringUtils.isEmpty(authHeaderValue)) {
+      log.debug("Authorization header is empty.");
+      return Optional.empty();
+    }
+
+    if (!StringUtils.substringMatch(authHeaderValue, 0, BEARER_TOKEN_PREFIX)) {
+      log.debug(
+          "Token prefix {} in Authorization header was not found.",
+          BEARER_TOKEN_PREFIX
+      );
+
+      return Optional.empty();
+    }
+
+    String bearerToken = authHeaderValue.substring(BEARER_TOKEN_PREFIX.length() + 1);
+    if (!StringUtils.hasText(bearerToken)) {
+      return Optional.empty();
+    }
+
+    return Optional.of(bearerToken);
+  }
+
+  private static class AuthorizationBearerRequestHeaderMatcher implements RequestMatcher {
 
     @Override
-    public Authentication attemptAuthentication(
-            HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+    public boolean matches(HttpServletRequest request) {
+      String authHeaderValue = request.getHeader(AUTHORIZATION_HEADER);
+      if (StringUtils.isEmpty(authHeaderValue)) {
+        log.debug("Authorization header is empty.");
+        return false;
+      }
 
-        Optional<String> bearerToken =
-                Optional.ofNullable((String) request.getAttribute(BEARER_TOKEN_ATTRIBUTE));
+      if (!StringUtils.substringMatch(authHeaderValue, 0, BEARER_TOKEN_PREFIX)) {
+        log.debug(
+            "Token prefix {} in Authorization header was not found.",
+            BEARER_TOKEN_PREFIX
+        );
 
-        if (!bearerToken.isPresent() && AJAX_REQUEST_MATCHER.matches(request)) {
-            bearerToken = authenticationTokenCookieResolver.resolveToken(request);
-        }
+        return false;
+      }
 
-        return bearerToken.map(JwtAuthenticationToken::of)
-                .map(getAuthenticationManager()::authenticate)
-                .orElse(null);
+      String bearerToken = authHeaderValue.substring(BEARER_TOKEN_PREFIX.length() + 1);
+      if (!StringUtils.hasText(bearerToken)) {
+        return false;
+      }
+
+      request.setAttribute(BEARER_TOKEN_ATTRIBUTE, bearerToken);
+
+      return true;
     }
 
-    @Override
-    protected boolean requiresAuthentication(
-            HttpServletRequest request, HttpServletResponse response) {
-
-        if (!super.requiresAuthentication(request, response)) {
-            return false;
-        }
-
-        if (AJAX_REQUEST_MATCHER.matches(request)) {
-            return true;
-        }
-
-        return AUTHORIZATION_BEARER_REQUEST_HEADER_MATCHER.matches(request);
-    }
-
-    private Optional<String> extractFromAuthorizationHeader(HttpServletRequest request) {
-        String authHeaderValue = request.getHeader(AUTHORIZATION_HEADER);
-        if (StringUtils.isEmpty(authHeaderValue)) {
-            log.debug("Authorization header is empty.");
-            return Optional.empty();
-        }
-
-        if (!StringUtils.substringMatch(authHeaderValue, 0, BEARER_TOKEN_PREFIX)) {
-            log.debug(
-                    "Token prefix {} in Authorization header was not found.",
-                    BEARER_TOKEN_PREFIX
-            );
-
-            return Optional.empty();
-        }
-
-        String bearerToken = authHeaderValue.substring(BEARER_TOKEN_PREFIX.length() + 1);
-        if (!StringUtils.hasText(bearerToken)) {
-            return Optional.empty();
-        }
-
-        return Optional.of(bearerToken);
-    }
-
-    private static class AuthorizationBearerRequestHeaderMatcher implements RequestMatcher {
-
-        @Override
-        public boolean matches(HttpServletRequest request) {
-            String authHeaderValue = request.getHeader(AUTHORIZATION_HEADER);
-            if (StringUtils.isEmpty(authHeaderValue)) {
-                log.debug("Authorization header is empty.");
-                return false;
-            }
-
-            if (!StringUtils.substringMatch(authHeaderValue, 0, BEARER_TOKEN_PREFIX)) {
-                log.debug(
-                        "Token prefix {} in Authorization header was not found.",
-                        BEARER_TOKEN_PREFIX
-                );
-
-                return false;
-            }
-
-            String bearerToken = authHeaderValue.substring(BEARER_TOKEN_PREFIX.length() + 1);
-            if (!StringUtils.hasText(bearerToken)) {
-                return false;
-            }
-
-            request.setAttribute(BEARER_TOKEN_ATTRIBUTE, bearerToken);
-
-            return true;
-        }
-
-    }
+  }
 
 }

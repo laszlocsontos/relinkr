@@ -13,22 +13,22 @@ import lombok.Getter;
 @Entity
 public class Visitor extends AbstractEntity<VisitorId> implements Ownable {
 
-    @Embedded
-    @AttributeOverride(name = "id", column = @Column(name = "user_id"))
-    private UserId userId;
+  @Embedded
+  @AttributeOverride(name = "id", column = @Column(name = "user_id"))
+  private UserId userId;
 
-    /*
-     * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
-     */
-    Visitor() {
-    }
+  /*
+   * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
+   */
+  Visitor() {
+  }
 
-    private Visitor(UserId userId) {
-        this.userId = userId;
-    }
+  private Visitor(UserId userId) {
+    this.userId = userId;
+  }
 
-    public static Visitor of(UserId userId) {
-        return new Visitor(userId);
-    }
+  public static Visitor of(UserId userId) {
+    return new Visitor(userId);
+  }
 
 }

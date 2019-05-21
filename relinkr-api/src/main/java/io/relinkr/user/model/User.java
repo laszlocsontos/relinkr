@@ -28,113 +28,113 @@ import org.springframework.util.CollectionUtils;
 @Table(name = "user_")
 public class User extends AbstractEntity<UserId> {
 
-    @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "email_address"))
-    private EmailAddress emailAddress;
+  @Embedded
+  @AttributeOverride(name = "value", column = @Column(name = "email_address"))
+  private EmailAddress emailAddress;
 
-    private String encryptedPassword;
+  private String encryptedPassword;
 
-    @ElementCollection(fetch = EAGER)
-    @Enumerated(STRING)
-    @Column(name = "role")
-    private Set<Role> roles;
+  @ElementCollection(fetch = EAGER)
+  @Enumerated(STRING)
+  @Column(name = "role")
+  private Set<Role> roles;
 
-    private boolean confirmed;
-    private boolean locked;
+  private boolean confirmed;
+  private boolean locked;
 
-    @ElementCollection
-    @CollectionTable(name = "user_profile")
-    @MapKeyColumn(name = "user_profile_type", insertable = false, updatable = false)
-    @MapKeyEnumerated(STRING)
-    private Map<UserProfileType, UserProfile> userProfiles;
+  @ElementCollection
+  @CollectionTable(name = "user_profile")
+  @MapKeyColumn(name = "user_profile_type", insertable = false, updatable = false)
+  @MapKeyEnumerated(STRING)
+  private Map<UserProfileType, UserProfile> userProfiles;
 
-    @Embedded
-    private UserPreferences userPreferences;
+  @Embedded
+  private UserPreferences userPreferences;
 
-    public User() {
-        roles = new LinkedHashSet<>();
-        roles.add(Role.USER);
+  public User() {
+    roles = new LinkedHashSet<>();
+    roles.add(Role.USER);
 
-        userProfiles = new LinkedHashMap<>();
-        userPreferences = new UserPreferences();
+    userProfiles = new LinkedHashMap<>();
+    userPreferences = new UserPreferences();
+  }
+
+  public User(EmailAddress emailAddress, String encryptedPassword) {
+    this();
+    this.emailAddress = emailAddress;
+    this.encryptedPassword = encryptedPassword;
+  }
+
+  public static User of(EmailAddress emailAddress) {
+    return new User(emailAddress, null);
+  }
+
+  public boolean isConfirmed() {
+    return confirmed;
+  }
+
+  public void confirm() {
+    confirmed = true;
+  }
+
+  public void lock() {
+    locked = true;
+  }
+
+  public void unlock() {
+    locked = false;
+  }
+
+  public boolean isLocked() {
+    return locked;
+  }
+
+  public boolean isAdmin() {
+    if (CollectionUtils.isEmpty(roles)) {
+      return false;
     }
+    return roles.contains(Role.ADMIN);
+  }
 
-    public User(EmailAddress emailAddress, String encryptedPassword) {
-        this();
-        this.emailAddress = emailAddress;
-        this.encryptedPassword = encryptedPassword;
-    }
+  public Set<Role> getRoles() {
+    return unmodifiableSet(roles);
+  }
 
-    public static User of(EmailAddress emailAddress) {
-        return new User(emailAddress, null);
-    }
+  public void grantRole(Role role) {
+    roles.add(role);
+  }
 
-    public boolean isConfirmed() {
-        return confirmed;
-    }
+  public void revokeRole(Role role) {
+    roles.remove(role);
+  }
 
-    public void confirm() {
-        confirmed = true;
-    }
+  public EmailAddress getEmailAddress() {
+    return emailAddress;
+  }
 
-    public void lock() {
-        locked = true;
-    }
+  public Optional<String> getEncryptedPassword() {
+    return Optional.ofNullable(encryptedPassword);
+  }
 
-    public void unlock() {
-        locked = false;
-    }
+  public void addUserProfile(UserProfile userProfile) {
+    userProfiles.put(userProfile.getUserProfileType(), userProfile);
+  }
 
-    public boolean isLocked() {
-        return locked;
-    }
+  public Optional<UserProfile> getUserProfile(UserProfileType userProfileType) {
+    return Optional.ofNullable(userProfiles.get(userProfileType));
+  }
 
-    public boolean isAdmin() {
-        if (CollectionUtils.isEmpty(roles)) {
-            return false;
-        }
-        return roles.contains(Role.ADMIN);
-    }
+  public Map<UserProfileType, UserProfile> getUserProfiles() {
+    return unmodifiableMap(userProfiles);
+  }
 
-    public Set<Role> getRoles() {
-        return unmodifiableSet(roles);
-    }
+  public UserPreferences getUserPreferences() {
+    return userPreferences;
+  }
 
-    public void grantRole(Role role) {
-        roles.add(role);
-    }
-
-    public void revokeRole(Role role) {
-        roles.remove(role);
-    }
-
-    public EmailAddress getEmailAddress() {
-        return emailAddress;
-    }
-
-    public Optional<String> getEncryptedPassword() {
-        return Optional.ofNullable(encryptedPassword);
-    }
-
-    public void addUserProfile(UserProfile userProfile) {
-        userProfiles.put(userProfile.getUserProfileType(), userProfile);
-    }
-
-    public Optional<UserProfile> getUserProfile(UserProfileType userProfileType) {
-        return Optional.ofNullable(userProfiles.get(userProfileType));
-    }
-
-    public Map<UserProfileType, UserProfile> getUserProfiles() {
-        return unmodifiableMap(userProfiles);
-    }
-
-    public UserPreferences getUserPreferences() {
-        return userPreferences;
-    }
-
-    public void setUserPreferences(UserPreferences userPreferences) {
-        Assert.notNull(userPreferences, "userPreferences cannot be null");
-        this.userPreferences = userPreferences;
-    }
+  public void setUserPreferences(UserPreferences userPreferences) {
+    Assert.notNull(userPreferences, "userPreferences cannot be null");
+    this.userPreferences = userPreferences;
+  }
 
 }

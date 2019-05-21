@@ -35,154 +35,153 @@ import org.springframework.data.domain.PageImpl;
 @RunWith(MockitoJUnitRunner.class)
 public class LinkServiceTest {
 
-    protected Link link;
+  protected Link link;
 
-    private LinkId linkId;
-    private List<Link> links;
+  @Mock
+  protected LinkRepository linkRepository;
 
-    @Mock
-    protected LinkRepository linkRepository;
+  private LinkId linkId;
+  private List<Link> links;
+  private LinkService linkService;
 
-    private LinkService linkService;
+  @Before
+  public void setUp() {
+    link = Mocks.createLink();
+    linkId = link.getId();
+    links = singletonList(link);
+    linkService = new LinkServiceImpl(linkRepository);
+  }
 
-    @Before
-    public void setUp() {
-        link = Mocks.createLink();
-        linkId = link.getId();
-        links = singletonList(link);
-        linkService = new LinkServiceImpl(linkRepository);
-    }
+  @Test
+  public void getLink() throws ApplicationException {
+    given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
+    Link link = linkService.getLink(linkId);
+    assertSame(this.link, link);
+  }
 
-    @Test
-    public void getLink() throws ApplicationException {
-        given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
-        Link link = linkService.getLink(linkId);
-        assertSame(this.link, link);
-    }
+  @Test(expected = EntityNotFoundException.class)
+  public void getLink_withNonExistent() throws ApplicationException {
+    given(linkRepository.findById(linkId)).willReturn(Optional.empty());
+    linkService.getLink(linkId);
+  }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void getLink_withNonExistent() throws ApplicationException {
-        given(linkRepository.findById(linkId)).willReturn(Optional.empty());
-        linkService.getLink(linkId);
-    }
+  @Test
+  public void listLinks() {
+    Page<Link> linkPage = new PageImpl<>(links);
+    given(linkRepository.findByUserId(USER_ID, unpaged())).willReturn(linkPage);
+    assertEquals(linkPage, linkService.listLinks(USER_ID, unpaged()));
+  }
 
-    @Test
-    public void listLinks() {
-        Page<Link> linkPage = new PageImpl<>(links);
-        given(linkRepository.findByUserId(USER_ID, unpaged())).willReturn(linkPage);
-        assertEquals(linkPage, linkService.listLinks(USER_ID, unpaged()));
-    }
+  @Test
+  public void activateLink() throws ApplicationException {
+    link.markArchived();
+    given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
+    linkService.activateLink(linkId);
 
-    @Test
-    public void activateLink() throws ApplicationException {
-        link.markArchived();
-        given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
-        linkService.activateLink(linkId);
+    Link link = captureSavedLink();
+    assertEquals(ACTIVE, link.getLinkStatus());
+  }
 
-        Link link = captureSavedLink();
-        assertEquals(ACTIVE, link.getLinkStatus());
-    }
+  @Test(expected = EntityNotFoundException.class)
+  public void activateLink_withNonExistent() throws ApplicationException {
+    given(linkRepository.findById(linkId)).willReturn(Optional.empty());
+    linkService.activateLink(linkId);
+  }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void activateLink_withNonExistent() throws ApplicationException {
-        given(linkRepository.findById(linkId)).willReturn(Optional.empty());
-        linkService.activateLink(linkId);
-    }
+  @Test
+  public void archiveLink() throws ApplicationException {
+    given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
+    linkService.archiveLink(linkId);
 
-    @Test
-    public void archiveLink() throws ApplicationException {
-        given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
-        linkService.archiveLink(linkId);
+    Link link = captureSavedLink();
+    assertEquals(ARCHIVED, link.getLinkStatus());
+  }
 
-        Link link = captureSavedLink();
-        assertEquals(ARCHIVED, link.getLinkStatus());
-    }
+  @Test(expected = EntityNotFoundException.class)
+  public void archiveLink_withNonExistent() throws ApplicationException {
+    given(linkRepository.findById(linkId)).willReturn(Optional.empty());
+    linkService.archiveLink(linkId);
+  }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void archiveLink_withNonExistent() throws ApplicationException {
-        given(linkRepository.findById(linkId)).willReturn(Optional.empty());
-        linkService.archiveLink(linkId);
-    }
+  @Test
+  public void addTag() throws ApplicationException {
+    given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
+    linkService.addTag(linkId, "test");
+  }
 
-    @Test
-    public void addTag() throws ApplicationException {
-        given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
-        linkService.addTag(linkId, "test");
-    }
+  @Test(expected = EntityNotFoundException.class)
+  public void addTag_withNonExistent() throws ApplicationException {
+    given(linkRepository.findById(linkId)).willReturn(Optional.empty());
+    linkService.addTag(linkId, "test");
+  }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void addTag_withNonExistent() throws ApplicationException {
-        given(linkRepository.findById(linkId)).willReturn(Optional.empty());
-        linkService.addTag(linkId, "test");
-    }
+  @Test
+  public void removeTag() {
+    given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
+    linkService.removeTag(linkId, "test");
+  }
 
-    @Test
-    public void removeTag() {
-        given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
-        linkService.removeTag(linkId, "test");
-    }
+  @Test(expected = EntityNotFoundException.class)
+  public void removeTag_withNonExistent() throws ApplicationException {
+    given(linkRepository.findById(linkId)).willReturn(Optional.empty());
+    linkService.removeTag(linkId, "test");
+  }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void removeTag_withNonExistent() throws ApplicationException {
-        given(linkRepository.findById(linkId)).willReturn(Optional.empty());
-        linkService.removeTag(linkId, "test");
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void updateLongUrl_withNull() throws ApplicationException {
+    linkService.updateLongUrl(linkId, null);
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void updateLongUrl_withNull() throws ApplicationException {
-        linkService.updateLongUrl(linkId, null);
-    }
+  @Test
+  public void getTargetUrl() throws ApplicationException {
+    String path = link.getPath();
+    given(linkRepository.findByPath(path)).willReturn(Optional.of(link));
+    URI targetUri = linkService.getTargetUrl(path);
+    assertEquals(link.getTargetUrl(), targetUri);
+  }
 
-    @Test
-    public void getTargetUrl() throws ApplicationException {
-        String path = link.getPath();
-        given(linkRepository.findByPath(path)).willReturn(Optional.of(link));
-        URI targetUri = linkService.getTargetUrl(path);
-        assertEquals(link.getTargetUrl(), targetUri);
-    }
+  @Test(expected = EntityNotFoundException.class)
+  public void getTargetUrl_withNonExistent() throws ApplicationException {
+    String path = "bad path";
+    given(linkRepository.findByPath(path)).willReturn(Optional.empty());
+    linkService.getTargetUrl(path);
+  }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void getTargetUrl_withNonExistent() throws ApplicationException {
-        String path = "bad path";
-        given(linkRepository.findByPath(path)).willReturn(Optional.empty());
-        linkService.getTargetUrl(path);
-    }
+  @Test(expected = EntityNotFoundException.class)
+  public void getTargetUrl_withArchived() throws ApplicationException {
+    link.markArchived();
+    String path = link.getPath();
+    given(linkRepository.findByPath(path)).willReturn(Optional.of(link));
+    linkService.getTargetUrl(path);
+  }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void getTargetUrl_withArchived() throws ApplicationException {
-        link.markArchived();
-        String path = link.getPath();
-        given(linkRepository.findByPath(path)).willReturn(Optional.of(link));
-        linkService.getTargetUrl(path);
-    }
+  @Test
+  public void addLink() {
+    linkService.addLink(LONG_URL_BASE_S, UTM_PARAMETERS_FULL, USER_ID);
 
-    @Test
-    public void addLink() {
-        linkService.addLink(LONG_URL_BASE_S, UTM_PARAMETERS_FULL, USER_ID);
+    Link link = captureSavedLink();
 
-        Link link = captureSavedLink();
+    assertEquals(USER_ID, link.getUserId());
+    assertEquals(URI.create(LONG_URL_BASE_S), link.getLongUrl());
+    assertEquals(UTM_PARAMETERS_FULL, link.getUtmParameters().get());
+  }
 
-        assertEquals(USER_ID, link.getUserId());
-        assertEquals(URI.create(LONG_URL_BASE_S), link.getLongUrl());
-        assertEquals(UTM_PARAMETERS_FULL, link.getUtmParameters().get());
-    }
+  @Test
+  public void updateUtmParameters() {
+    given(linkRepository.findById(LINK_ID)).willReturn(Optional.of(link));
+    linkService.updateUtmParameters(LINK_ID, UTM_PARAMETERS_MINIMAL);
 
-    @Test
-    public void updateUtmParameters() {
-        given(linkRepository.findById(LINK_ID)).willReturn(Optional.of(link));
-        linkService.updateUtmParameters(LINK_ID, UTM_PARAMETERS_MINIMAL);
+    Link link = captureSavedLink();
 
-        Link link = captureSavedLink();
+    assertEquals(USER_ID, link.getUserId());
+    assertEquals(URI.create(LONG_URL_VALID_UTM_S), link.getTargetUrl());
+    assertEquals(UTM_PARAMETERS_MINIMAL, link.getUtmParameters().get());
+  }
 
-        assertEquals(USER_ID, link.getUserId());
-        assertEquals(URI.create(LONG_URL_VALID_UTM_S), link.getTargetUrl());
-        assertEquals(UTM_PARAMETERS_MINIMAL, link.getUtmParameters().get());
-    }
-
-    private Link captureSavedLink() {
-        ArgumentCaptor<Link> linkCaptor = ArgumentCaptor.forClass(Link.class);
-        then(linkRepository).should().save(linkCaptor.capture());
-        return linkCaptor.getValue();
-    }
+  private Link captureSavedLink() {
+    ArgumentCaptor<Link> linkCaptor = ArgumentCaptor.forClass(Link.class);
+    then(linkRepository).should().save(linkCaptor.capture());
+    return linkCaptor.getValue();
+  }
 
 }

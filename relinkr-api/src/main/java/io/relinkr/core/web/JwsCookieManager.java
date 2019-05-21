@@ -19,76 +19,76 @@ import org.springframework.util.StringUtils;
 
 public class JwsCookieManager extends CookieManager {
 
-    private final JWSSigner signer;
-    private final JWSVerifier verifier;
+  private final JWSSigner signer;
+  private final JWSVerifier verifier;
 
-    public JwsCookieManager(
-            String cookieName, Duration cookieMaxAgeDuration, boolean httpOnly, String secretKey) {
+  public JwsCookieManager(
+      String cookieName, Duration cookieMaxAgeDuration, boolean httpOnly, String secretKey) {
 
-        super(cookieName, cookieMaxAgeDuration, httpOnly);
+    super(cookieName, cookieMaxAgeDuration, httpOnly);
 
-        try {
-            signer = new MACSigner(secretKey);
-            verifier = new MACVerifier(secretKey);
-        } catch (JOSEException e) {
-            // TODO: Add RuntimeException for system errors
-            throw new RuntimeException(e);
-        }
+    try {
+      signer = new MACSigner(secretKey);
+      verifier = new MACVerifier(secretKey);
+    } catch (JOSEException e) {
+      // TODO: Add RuntimeException for system errors
+      throw new RuntimeException(e);
+    }
+  }
+
+  public JwsCookieManager(String cookieName, Duration cookieMaxAgeDuration, String secretKey) {
+    this(cookieName, cookieMaxAgeDuration, false, secretKey);
+  }
+
+  @Override
+  public Optional<String> getCookie(HttpServletRequest request) {
+    return super.getCookie(request).map(this::parseAndVerify);
+  }
+
+  @Override
+  protected Cookie createCookie(String cookieValue) {
+    if (!StringUtils.hasText(cookieValue)) {
+      return super.createCookie("");
     }
 
-    public JwsCookieManager(String cookieName, Duration cookieMaxAgeDuration, String secretKey) {
-        this(cookieName, cookieMaxAgeDuration, false, secretKey);
+    JWSObject jwsObject = new JWSObject(new JWSHeader(HS256), new Payload(cookieValue));
+
+    try {
+      jwsObject.sign(signer);
+    } catch (JOSEException e) {
+      // TODO: Add RuntimeException for system errors
+      throw new RuntimeException(e);
     }
 
-    @Override
-    public Optional<String> getCookie(HttpServletRequest request) {
-        return super.getCookie(request).map(this::parseAndVerify);
+    String signedCookieValue = jwsObject.serialize();
+
+    if (logger.isDebugEnabled()) {
+      logger.debug(
+          "Signed cookie with name [" + getCookieName() + "] and value [" +
+              cookieValue + "] is [" + signedCookieValue + "]");
     }
 
-    @Override
-    protected Cookie createCookie(String cookieValue) {
-        if (!StringUtils.hasText(cookieValue)) {
-            return super.createCookie("");
-        }
+    return super.createCookie(signedCookieValue);
+  }
 
-        JWSObject jwsObject = new JWSObject(new JWSHeader(HS256), new Payload(cookieValue));
-
-        try {
-            jwsObject.sign(signer);
-        } catch (JOSEException e) {
-            // TODO: Add RuntimeException for system errors
-            throw new RuntimeException(e);
-        }
-
-        String signedCookieValue = jwsObject.serialize();
-
-        if (logger.isDebugEnabled()) {
-            logger.debug(
-                    "Signed cookie with name [" + getCookieName() + "] and value [" +
-                            cookieValue + "] is [" + signedCookieValue + "]");
-        }
-
-        return super.createCookie(signedCookieValue);
+  private String parseAndVerify(String jwsCookieValue) {
+    JWSObject jwsObject;
+    try {
+      jwsObject = JWSObject.parse(jwsCookieValue);
+    } catch (ParseException e) {
+      // jwsCookieValue could not be parsed to a valid JWS object
+      return null;
     }
 
-    private String parseAndVerify(String jwsCookieValue) {
-        JWSObject jwsObject;
-        try {
-            jwsObject = JWSObject.parse(jwsCookieValue);
-        } catch (ParseException e) {
-            // jwsCookieValue could not be parsed to a valid JWS object
-            return null;
-        }
-
-        try {
-            if (jwsObject.verify(verifier)) {
-                return jwsObject.getPayload().toString();
-            }
-        } catch (IllegalStateException | JOSEException e) {
-            // If the JWS object couldn't be verified
-        }
-
-        return null;
+    try {
+      if (jwsObject.verify(verifier)) {
+        return jwsObject.getPayload().toString();
+      }
+    } catch (IllegalStateException | JOSEException e) {
+      // If the JWS object couldn't be verified
     }
+
+    return null;
+  }
 
 }

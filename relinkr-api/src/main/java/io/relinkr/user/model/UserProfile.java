@@ -24,65 +24,65 @@ import lombok.ToString;
 @ToString(of = {"userProfileType", "fullName"})
 public class UserProfile {
 
-    @NonNull
-    @Enumerated(STRING)
-    @Column(name = "user_profile_type")
-    private UserProfileType userProfileType;
+  @NonNull
+  @Enumerated(STRING)
+  @Column(name = "user_profile_type")
+  private UserProfileType userProfileType;
 
-    @NonNull
-    private String userProfileId;
+  @NonNull
+  private String userProfileId;
 
-    private String fullName;
-    private String givenName;
-    private String middleName;
-    private String familyName;
+  private String fullName;
+  private String givenName;
+  private String middleName;
+  private String familyName;
 
-    private URI profileUrl;
-    private URI pictureUrl;
+  private URI profileUrl;
+  private URI pictureUrl;
 
-    @Enumerated(STRING)
-    private Gender gender;
+  @Enumerated(STRING)
+  private Gender gender;
 
-    private LocalDate birthDate;
+  private LocalDate birthDate;
 
-    public UserProfileType getUserProfileType() {
-        return userProfileType;
-    }
+  public UserProfileType getUserProfileType() {
+    return userProfileType;
+  }
 
-    public String getUserProfileId() {
-        return userProfileId;
-    }
+  public String getUserProfileId() {
+    return userProfileId;
+  }
 
-    public Optional<String> getFullName() {
-        return Optional.ofNullable(fullName);
-    }
+  public Optional<String> getFullName() {
+    return Optional.ofNullable(fullName);
+  }
 
-    public Optional<String> getGivenName() {
-        return Optional.ofNullable(givenName);
-    }
+  public Optional<String> getGivenName() {
+    return Optional.ofNullable(givenName);
+  }
 
-    public Optional<String> getMiddleName() {
-        return Optional.ofNullable(middleName);
-    }
+  public Optional<String> getMiddleName() {
+    return Optional.ofNullable(middleName);
+  }
 
-    public Optional<String> getFamilyName() {
-        return Optional.ofNullable(familyName);
-    }
+  public Optional<String> getFamilyName() {
+    return Optional.ofNullable(familyName);
+  }
 
-    public Optional<URI> getProfileUrl() {
-        return Optional.ofNullable(profileUrl);
-    }
+  public Optional<URI> getProfileUrl() {
+    return Optional.ofNullable(profileUrl);
+  }
 
-    public Optional<URI> getPictureUrl() {
-        return Optional.ofNullable(pictureUrl);
-    }
+  public Optional<URI> getPictureUrl() {
+    return Optional.ofNullable(pictureUrl);
+  }
 
-    public Optional<Gender> getGender() {
-        return Optional.ofNullable(gender);
-    }
+  public Optional<Gender> getGender() {
+    return Optional.ofNullable(gender);
+  }
 
-    public Optional<LocalDate> getBirthDate() {
-        return Optional.ofNullable(birthDate);
-    }
+  public Optional<LocalDate> getBirthDate() {
+    return Optional.ofNullable(birthDate);
+  }
 
 }

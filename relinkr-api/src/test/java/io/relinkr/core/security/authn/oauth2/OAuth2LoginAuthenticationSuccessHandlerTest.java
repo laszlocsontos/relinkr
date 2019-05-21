@@ -16,46 +16,46 @@ import org.springframework.security.core.Authentication;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OAuth2LoginAuthenticationSuccessHandlerTest extends
-        AbstractOAuth2LoginAuthenticationHandlerTest<OAuth2LoginAuthenticationSuccessHandler> {
+    AbstractOAuth2LoginAuthenticationHandlerTest<OAuth2LoginAuthenticationSuccessHandler> {
 
-    @Mock
-    private JwtAuthenticationService jwtAuthenticationService;
+  @Mock
+  private JwtAuthenticationService jwtAuthenticationService;
 
-    @Mock
-    private JwtAuthenticationTokenCookieResolver authenticationTokenCookieResolver;
+  @Mock
+  private JwtAuthenticationTokenCookieResolver authenticationTokenCookieResolver;
 
-    @Test(expected = IllegalArgumentException.class)
-    public void givenNullAuthentication_whenOnAuthenticationSuccess_thenIllegalArgumentException()
-            throws Exception {
+  @Test(expected = IllegalArgumentException.class)
+  public void givenNullAuthentication_whenOnAuthenticationSuccess_thenIllegalArgumentException()
+      throws Exception {
 
-        handler.onAuthenticationSuccess(request, response, null);
-    }
+    handler.onAuthenticationSuccess(request, response, null);
+  }
 
-    @Test
-    public void givenAuthenticationException_whenOnAuthenticationSuccess_thenRedirectAndCookieSet()
-            throws Exception {
+  @Test
+  public void givenAuthenticationException_whenOnAuthenticationSuccess_thenRedirectAndCookieSet()
+      throws Exception {
 
-        Authentication authentication = new TestingAuthenticationToken("little", "bunny");
+    Authentication authentication = new TestingAuthenticationToken("little", "bunny");
 
-        given(jwtAuthenticationService.createJwtToken(authentication, HALF_AN_HOUR))
-                .willReturn("token");
+    given(jwtAuthenticationService.createJwtToken(authentication, HALF_AN_HOUR))
+        .willReturn("token");
 
-        handler.onAuthenticationSuccess(
-                request,
-                response,
-                authentication
-        );
+    handler.onAuthenticationSuccess(
+        request,
+        response,
+        authentication
+    );
 
-        assertEquals(LOGIN_URL, response.getRedirectedUrl());
+    assertEquals(LOGIN_URL, response.getRedirectedUrl());
 
-        then(authenticationTokenCookieResolver).should().setToken(response, "token");
-    }
+    then(authenticationTokenCookieResolver).should().setToken(response, "token");
+  }
 
-    @Override
-    OAuth2LoginAuthenticationSuccessHandler createHandler() {
-        return new OAuth2LoginAuthenticationSuccessHandler(
-                jwtAuthenticationService, authenticationTokenCookieResolver
-        );
-    }
+  @Override
+  OAuth2LoginAuthenticationSuccessHandler createHandler() {
+    return new OAuth2LoginAuthenticationSuccessHandler(
+        jwtAuthenticationService, authenticationTokenCookieResolver
+    );
+  }
 
 }

@@ -12,18 +12,18 @@ import org.springframework.security.web.AuthenticationEntryPoint;
  * Created by lcsontos on 5/18/17.
  */
 public class JwtAuthenticationEntryPoint
-        extends DefaultAuthenticationFailureHandler implements AuthenticationEntryPoint {
+    extends DefaultAuthenticationFailureHandler implements AuthenticationEntryPoint {
 
-    public JwtAuthenticationEntryPoint(ObjectMapper objectMapper) {
-        super(objectMapper);
-    }
+  public JwtAuthenticationEntryPoint(ObjectMapper objectMapper) {
+    super(objectMapper);
+  }
 
-    @Override
-    public void commence(
-            HttpServletRequest request, HttpServletResponse response,
-            AuthenticationException authException) throws IOException {
+  @Override
+  public void commence(
+      HttpServletRequest request, HttpServletResponse response,
+      AuthenticationException authException) throws IOException {
 
-        onAuthenticationFailure(request, response, authException);
-    }
+    onAuthenticationFailure(request, response, authException);
+  }
 
 }

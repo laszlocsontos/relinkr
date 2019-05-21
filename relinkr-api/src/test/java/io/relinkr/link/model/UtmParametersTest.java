@@ -20,54 +20,54 @@ import org.junit.Test;
 
 public class UtmParametersTest {
 
-    @Test
-    public void asMap() {
-        Map<String, String> utmParameterMap = UTM_PARAMETERS_FULL.asMap();
-        assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_SOURCE, UTM_SOURCE_V));
-        assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_MEDIUM, UTM_MEDIUM_V));
-        assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_CAMPAIGN, UTM_CAMPAIGN_V));
-        assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_TERM, UTM_TERM_V));
-        assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_CONTENT, UTM_CONTENT_V));
-    }
+  @Test
+  public void asMap() {
+    Map<String, String> utmParameterMap = UTM_PARAMETERS_FULL.asMap();
+    assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_SOURCE, UTM_SOURCE_V));
+    assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_MEDIUM, UTM_MEDIUM_V));
+    assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_CAMPAIGN, UTM_CAMPAIGN_V));
+    assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_TERM, UTM_TERM_V));
+    assertThat(utmParameterMap, IsMapContaining.hasEntry(UTM_CONTENT, UTM_CONTENT_V));
+  }
 
-    @Test(expected = MissingUtmParameterException.class)
-    public void create_withMissingUtmSource() throws Exception {
-        new UtmParameters(null, "test", "test");
-    }
+  @Test(expected = MissingUtmParameterException.class)
+  public void create_withMissingUtmSource() throws Exception {
+    new UtmParameters(null, "test", "test");
+  }
 
-    @Test(expected = MissingUtmParameterException.class)
-    public void create_withMissingUtmMedium() throws Exception {
-        new UtmParameters("test", null, "test");
-    }
+  @Test(expected = MissingUtmParameterException.class)
+  public void create_withMissingUtmMedium() throws Exception {
+    new UtmParameters("test", null, "test");
+  }
 
-    @Test(expected = MissingUtmParameterException.class)
-    public void create_withMissingUtmCampaign() throws Exception {
-        new UtmParameters("test", "test", null);
-    }
+  @Test(expected = MissingUtmParameterException.class)
+  public void create_withMissingUtmCampaign() throws Exception {
+    new UtmParameters("test", "test", null);
+  }
 
-    @Test
-    public void getUtmSource() {
-        assertEquals(UTM_SOURCE_V, UTM_PARAMETERS_FULL.getUtmSource());
-    }
+  @Test
+  public void getUtmSource() {
+    assertEquals(UTM_SOURCE_V, UTM_PARAMETERS_FULL.getUtmSource());
+  }
 
-    @Test
-    public void getUtmMedium() {
-        assertEquals(UTM_MEDIUM_V, UTM_PARAMETERS_FULL.getUtmMedium());
-    }
+  @Test
+  public void getUtmMedium() {
+    assertEquals(UTM_MEDIUM_V, UTM_PARAMETERS_FULL.getUtmMedium());
+  }
 
-    @Test
-    public void getUtmCampaign() {
-        assertEquals(UTM_CAMPAIGN_V, UTM_PARAMETERS_FULL.getUtmCampaign());
-    }
+  @Test
+  public void getUtmCampaign() {
+    assertEquals(UTM_CAMPAIGN_V, UTM_PARAMETERS_FULL.getUtmCampaign());
+  }
 
-    @Test
-    public void getUtmTerm() {
-        assertEquals(UTM_TERM_V, UTM_PARAMETERS_FULL.getUtmTerm().get());
-    }
+  @Test
+  public void getUtmTerm() {
+    assertEquals(UTM_TERM_V, UTM_PARAMETERS_FULL.getUtmTerm().get());
+  }
 
-    @Test
-    public void getUtmContent() {
-        assertEquals(UTM_CONTENT_V, UTM_PARAMETERS_FULL.getUtmContent().get());
-    }
+  @Test
+  public void getUtmContent() {
+    assertEquals(UTM_CONTENT_V, UTM_PARAMETERS_FULL.getUtmContent().get());
+  }
 
 }

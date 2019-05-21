@@ -11,35 +11,35 @@ import org.junit.Test;
 
 public class WebRequestAuthorizationWithJwtTest extends AbstractWebRequestAuthorizationTest {
 
-    @Test
-    public void givenInvalidAuthentication_whenRootAccessed_thenOk() throws Exception {
-        super.givenInvalidAuthentication_whenRootAccessed_thenStatus(SC_OK);
-    }
+  @Test
+  public void givenInvalidAuthentication_whenRootAccessed_thenOk() throws Exception {
+    super.givenInvalidAuthentication_whenRootAccessed_thenStatus(SC_OK);
+  }
 
-    @Test
-    public void givenInvalidAuthentication_whenShortLinkAccessed_thenOk()
-            throws Exception {
+  @Test
+  public void givenInvalidAuthentication_whenShortLinkAccessed_thenOk()
+      throws Exception {
 
-        super.givenInvalidAuthentication_whenShortLinkAccessed_thenStatus(SC_OK);
-    }
+    super.givenInvalidAuthentication_whenShortLinkAccessed_thenStatus(SC_OK);
+  }
 
-    @Test
-    public void givenInvalidAuthentication_whenApiAccessed_thenUnauthorized() throws Exception {
-        super.givenInvalidAuthentication_whenApiAccessed_thenStatus(SC_UNAUTHORIZED);
-    }
+  @Test
+  public void givenInvalidAuthentication_whenApiAccessed_thenUnauthorized() throws Exception {
+    super.givenInvalidAuthentication_whenApiAccessed_thenStatus(SC_UNAUTHORIZED);
+  }
 
-    @Override
-    protected void withValidAuthentication() {
-        setAuthorizationHeader(JWT_TOKEN_VALID);
-    }
+  @Override
+  protected void withValidAuthentication() {
+    setAuthorizationHeader(JWT_TOKEN_VALID);
+  }
 
-    @Override
-    protected void withInvalidAuthentication() {
-        setAuthorizationHeader(JWT_TOKEN_EXPIRED);
-    }
+  @Override
+  protected void withInvalidAuthentication() {
+    setAuthorizationHeader(JWT_TOKEN_EXPIRED);
+  }
 
-    private void setAuthorizationHeader(String value) {
-        addHttpHeader(AUTHORIZATION_HEADER, BEARER_TOKEN_PREFIX + " " + value);
-    }
+  private void setAuthorizationHeader(String value) {
+    addHttpHeader(AUTHORIZATION_HEADER, BEARER_TOKEN_PREFIX + " " + value);
+  }
 
 }

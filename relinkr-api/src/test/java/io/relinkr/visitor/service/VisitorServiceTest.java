@@ -23,64 +23,64 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class VisitorServiceTest {
 
-    @Mock
-    private VisitorRepository visitorRepository;
+  @Mock
+  private VisitorRepository visitorRepository;
 
-    @Captor
-    private ArgumentCaptor<Visitor> visitorArgumentCaptor;
+  @Captor
+  private ArgumentCaptor<Visitor> visitorArgumentCaptor;
 
-    private VisitorService visitorService;
+  private VisitorService visitorService;
 
-    private Visitor visitor;
+  private Visitor visitor;
 
-    @Before
-    public void setUp() {
-        visitor = createVisitor();
-        visitorService = new VisitorServiceImpl(visitorRepository);
-    }
+  @Before
+  public void setUp() {
+    visitor = createVisitor();
+    visitorService = new VisitorServiceImpl(visitorRepository);
+  }
 
-    @Test
-    public void givenNullVisitorId_whenEnsureVisitor_thenCreated() {
-        // given
-        given(visitorRepository.save(any(Visitor.class))).willReturn(visitor);
+  @Test
+  public void givenNullVisitorId_whenEnsureVisitor_thenCreated() {
+    // given
+    given(visitorRepository.save(any(Visitor.class))).willReturn(visitor);
 
-        // when
-        assertEquals(visitor.getId(), visitorService.ensureVisitor(null, USER_ID));
+    // when
+    assertEquals(visitor.getId(), visitorService.ensureVisitor(null, USER_ID));
 
-        // then
-        then(visitorRepository).should(never()).findById(any(VisitorId.class));
-        then(visitorRepository).should().save(visitorArgumentCaptor.capture());
-        assertEquals(USER_ID, visitorArgumentCaptor.getValue().getUserId());
-    }
+    // then
+    then(visitorRepository).should(never()).findById(any(VisitorId.class));
+    then(visitorRepository).should().save(visitorArgumentCaptor.capture());
+    assertEquals(USER_ID, visitorArgumentCaptor.getValue().getUserId());
+  }
 
-    @Test
-    public void givenNonExistentVisitorId_whenEnsureVisitor_thenCreated() {
-        // given
-        given(visitorRepository.findById(VISITOR_ID_ZERO)).willReturn(Optional.empty());
-        given(visitorRepository.save(any(Visitor.class))).willReturn(visitor);
+  @Test
+  public void givenNonExistentVisitorId_whenEnsureVisitor_thenCreated() {
+    // given
+    given(visitorRepository.findById(VISITOR_ID_ZERO)).willReturn(Optional.empty());
+    given(visitorRepository.save(any(Visitor.class))).willReturn(visitor);
 
-        // when
-        assertEquals(visitor.getId(), visitorService.ensureVisitor(VISITOR_ID_ZERO, USER_ID));
+    // when
+    assertEquals(visitor.getId(), visitorService.ensureVisitor(VISITOR_ID_ZERO, USER_ID));
 
-        // then
-        then(visitorRepository).should().findById(VISITOR_ID_ZERO);
-        then(visitorRepository).should().save(visitorArgumentCaptor.capture());
-        assertEquals(USER_ID, visitorArgumentCaptor.getValue().getUserId());
-    }
+    // then
+    then(visitorRepository).should().findById(VISITOR_ID_ZERO);
+    then(visitorRepository).should().save(visitorArgumentCaptor.capture());
+    assertEquals(USER_ID, visitorArgumentCaptor.getValue().getUserId());
+  }
 
-    @Test
-    public void givenExistentVisitorId_whenEnsureVisitor_thenUpdated() {
-        // given
-        given(visitorRepository.findById(visitor.getId())).willReturn(Optional.of(visitor));
-        given(visitorRepository.save(any(Visitor.class))).willReturn(visitor);
+  @Test
+  public void givenExistentVisitorId_whenEnsureVisitor_thenUpdated() {
+    // given
+    given(visitorRepository.findById(visitor.getId())).willReturn(Optional.of(visitor));
+    given(visitorRepository.save(any(Visitor.class))).willReturn(visitor);
 
-        // when
-        assertEquals(visitor.getId(), visitorService.ensureVisitor(visitor.getId(), USER_ID));
+    // when
+    assertEquals(visitor.getId(), visitorService.ensureVisitor(visitor.getId(), USER_ID));
 
-        // then
-        then(visitorRepository).should().findById(visitor.getId());
-        then(visitorRepository).should().save(visitorArgumentCaptor.capture());
-        assertEquals(USER_ID, visitorArgumentCaptor.getValue().getUserId());
-    }
+    // then
+    then(visitorRepository).should().findById(visitor.getId());
+    then(visitorRepository).should().save(visitorArgumentCaptor.capture());
+    assertEquals(USER_ID, visitorArgumentCaptor.getValue().getUserId());
+  }
 
 }

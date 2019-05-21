@@ -8,24 +8,24 @@ import org.springframework.core.env.Environment;
 import org.springframework.mock.env.MockEnvironment;
 
 abstract class AbstractOAuth2LoginAuthenticationHandlerTest<H extends AbstractOAuth2LoginAuthenticationHandler>
-        extends BaseServletTest {
+    extends BaseServletTest {
 
-    static final String LOGIN_URL = "https://app.relinkr.com/login";
+  static final String LOGIN_URL = "https://app.relinkr.com/login";
 
-    H handler;
+  H handler;
 
-    @Before
-    public void setUp() {
-        super.setUp();
+  @Before
+  public void setUp() {
+    super.setUp();
 
-        handler = createHandler();
+    handler = createHandler();
 
-        Environment environment = new MockEnvironment()
-                .withProperty(FRONTEND_LOGIN_URL_PROPERTY, LOGIN_URL);
+    Environment environment = new MockEnvironment()
+        .withProperty(FRONTEND_LOGIN_URL_PROPERTY, LOGIN_URL);
 
-        handler.setEnvironment(environment);
-    }
+    handler.setEnvironment(environment);
+  }
 
-    abstract H createHandler();
+  abstract H createHandler();
 
 }

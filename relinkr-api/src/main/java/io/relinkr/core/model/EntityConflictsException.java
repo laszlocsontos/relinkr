@@ -5,8 +5,8 @@ package io.relinkr.core.model;
  */
 public class EntityConflictsException extends GeneralEntityException {
 
-    public EntityConflictsException(String fieldName, Object fieldValue) {
-        super(fieldName, fieldValue);
-    }
+  public EntityConflictsException(String fieldName, Object fieldValue) {
+    super(fieldName, fieldValue);
+  }
 
 }

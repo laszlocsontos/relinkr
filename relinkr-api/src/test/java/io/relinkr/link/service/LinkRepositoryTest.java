@@ -21,26 +21,26 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 public class LinkRepositoryTest {
 
-    @Autowired
-    private LinkRepository linkRepository;
+  @Autowired
+  private LinkRepository linkRepository;
 
-    private Link link;
+  private Link link;
 
-    @Before
-    public void setUp() throws Exception {
-        link = linkRepository.save(createLink());
-    }
+  @Before
+  public void setUp() throws Exception {
+    link = linkRepository.save(createLink());
+  }
 
-    @Test
-    public void findByUserId() {
-        List<Link> links = linkRepository.findByUserId(USER_ID);
-        assertThat(links, contains(link));
-    }
+  @Test
+  public void findByUserId() {
+    List<Link> links = linkRepository.findByUserId(USER_ID);
+    assertThat(links, contains(link));
+  }
 
-    @Test
-    public void findByUserId_withPageRequest() {
-        Page<Link> linkPage = linkRepository.findByUserId(USER_ID, PageRequest.of(0, 10));
-        assertEquals(1, linkPage.getTotalElements());
-    }
+  @Test
+  public void findByUserId_withPageRequest() {
+    Page<Link> linkPage = linkRepository.findByUserId(USER_ID, PageRequest.of(0, 10));
+    assertEquals(1, linkPage.getTotalElements());
+  }
 
 }

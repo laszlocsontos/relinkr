@@ -16,58 +16,58 @@ import org.springframework.security.access.method.AbstractMethodSecurityMetadata
 import org.springframework.util.Assert;
 
 public class AuthorizeRolesOrOwnerSecurityMetadataSource
-        extends AbstractMethodSecurityMetadataSource {
+    extends AbstractMethodSecurityMetadataSource {
 
-    static final String IS_OWNER = "IS_OWNER";
-    static final String ROLE_PREFIX = "ROLE_";
+  static final String IS_OWNER = "IS_OWNER";
+  static final String ROLE_PREFIX = "ROLE_";
 
-    private static final ConfigAttribute IS_OWNER_CONFIG_ATTRIBUTE = new SecurityConfig(IS_OWNER);
+  private static final ConfigAttribute IS_OWNER_CONFIG_ATTRIBUTE = new SecurityConfig(IS_OWNER);
 
-    @Override
-    public Collection<ConfigAttribute> getAllConfigAttributes() {
-        return null;
+  @Override
+  public Collection<ConfigAttribute> getAllConfigAttributes() {
+    return null;
+  }
+
+  @Override
+  public Collection<ConfigAttribute> getAttributes(Method method, Class<?> targetClass) {
+    AuthorizeRolesOrOwner authorizeRolesOrOwner =
+        AnnotatedElementUtils.findMergedAnnotation(method, AuthorizeRolesOrOwner.class);
+
+    if (authorizeRolesOrOwner == null) {
+      return emptyList();
     }
 
-    @Override
-    public Collection<ConfigAttribute> getAttributes(Method method, Class<?> targetClass) {
-        AuthorizeRolesOrOwner authorizeRolesOrOwner =
-                AnnotatedElementUtils.findMergedAnnotation(method, AuthorizeRolesOrOwner.class);
+    Collection<ConfigAttribute> configAttributes = new LinkedList<>();
 
-        if (authorizeRolesOrOwner == null) {
-            return emptyList();
-        }
+    configAttributes.addAll(createRoleAttributes(authorizeRolesOrOwner));
 
-        Collection<ConfigAttribute> configAttributes = new LinkedList<>();
-
-        configAttributes.addAll(createRoleAttributes(authorizeRolesOrOwner));
-
-        if (hasEntityClassParameter(method)) {
-            configAttributes.add(IS_OWNER_CONFIG_ATTRIBUTE);
-        }
-
-        return configAttributes;
+    if (hasEntityClassParameter(method)) {
+      configAttributes.add(IS_OWNER_CONFIG_ATTRIBUTE);
     }
 
-    private String addRolePrefixIfNeeded(String role) {
-        Assert.hasText(role, "role cannot be blank");
-        if (role.startsWith(ROLE_PREFIX)) {
-            return role;
-        }
-        return ROLE_PREFIX + role;
-    }
+    return configAttributes;
+  }
 
-    private Collection<ConfigAttribute> createRoleAttributes(
-            AuthorizeRolesOrOwner authorizeRolesOrOwner) {
-
-        return Arrays.stream(authorizeRolesOrOwner.roles())
-                .map(this::addRolePrefixIfNeeded)
-                .map(SecurityConfig::new)
-                .collect(toList());
+  private String addRolePrefixIfNeeded(String role) {
+    Assert.hasText(role, "role cannot be blank");
+    if (role.startsWith(ROLE_PREFIX)) {
+      return role;
     }
+    return ROLE_PREFIX + role;
+  }
 
-    private boolean hasEntityClassParameter(Method method) {
-        return Arrays.stream(method.getParameterTypes())
-                .anyMatch(EntityClassAwareId.class::isAssignableFrom);
-    }
+  private Collection<ConfigAttribute> createRoleAttributes(
+      AuthorizeRolesOrOwner authorizeRolesOrOwner) {
+
+    return Arrays.stream(authorizeRolesOrOwner.roles())
+        .map(this::addRolePrefixIfNeeded)
+        .map(SecurityConfig::new)
+        .collect(toList());
+  }
+
+  private boolean hasEntityClassParameter(Method method) {
+    return Arrays.stream(method.getParameterTypes())
+        .anyMatch(EntityClassAwareId.class::isAssignableFrom);
+  }
 
 }

@@ -6,6 +6,6 @@ import org.springframework.aop.framework.AopInfrastructureBean;
 
 public interface AuthorizeOwnerVerifier extends AopInfrastructureBean {
 
-    int canAccess(Principal principal, EntityClassAwareId<?> entityClassAwareId);
+  int canAccess(Principal principal, EntityClassAwareId<?> entityClassAwareId);
 
 }

@@ -12,69 +12,69 @@ import org.junit.Test;
 
 public class IpAddressTest {
 
-    private IpAddress ipv4Address;
-    private IpAddress ipv6Address;
+  private IpAddress ipv4Address;
+  private IpAddress ipv6Address;
 
-    @Before
-    public void setUp() {
-        ipv4Address = IpAddress.fromString(IPV4_ADDRESS);
-        ipv6Address = IpAddress.fromString(IPV6_ADDRESS);
-    }
+  @Before
+  public void setUp() {
+    ipv4Address = IpAddress.fromString(IPV4_ADDRESS);
+    ipv6Address = IpAddress.fromString(IPV6_ADDRESS);
+  }
 
-    @Test(expected = InvalidIpAddressException.class)
-    public void create_withInvalid() {
-        IpAddress.fromString("bad");
-    }
+  @Test(expected = InvalidIpAddressException.class)
+  public void create_withInvalid() {
+    IpAddress.fromString("bad");
+  }
 
-    @Test
-    public void getIpAddress_withIPV4() {
-        assertEquals(IPV4_ADDRESS, ipv4Address.getIpAddress());
-    }
+  @Test
+  public void getIpAddress_withIPV4() {
+    assertEquals(IPV4_ADDRESS, ipv4Address.getIpAddress());
+  }
 
-    @Test
-    public void getIpAddressDecimal_withIPV4() {
-        assertEquals(BigInteger.valueOf(3090433715L), ipv4Address.getIpAddressDecimal());
-    }
+  @Test
+  public void getIpAddressDecimal_withIPV4() {
+    assertEquals(BigInteger.valueOf(3090433715L), ipv4Address.getIpAddressDecimal());
+  }
 
-    @Test
-    public void getIpAddressType_withIPV4() {
-        assertEquals(IpAddressType.IPV4, ipv4Address.getIpAddressType());
-    }
+  @Test
+  public void getIpAddressType_withIPV4() {
+    assertEquals(IpAddressType.IPV4, ipv4Address.getIpAddressType());
+  }
 
-    @Test
-    public void isLocalAddress_withIPV4() {
-        assertFalse(ipv4Address.isLocalAddress());
-    }
+  @Test
+  public void isLocalAddress_withIPV4() {
+    assertFalse(ipv4Address.isLocalAddress());
+  }
 
-    @Test
-    public void isMulticastAddress_withIPV4() {
-        assertFalse(ipv4Address.isMulticastAddress());
-    }
+  @Test
+  public void isMulticastAddress_withIPV4() {
+    assertFalse(ipv4Address.isMulticastAddress());
+  }
 
-    @Test
-    public void getIpAddress_withIPV6() {
-        assertEquals(IPV6_ADDRESS, ipv6Address.getIpAddress());
-    }
+  @Test
+  public void getIpAddress_withIPV6() {
+    assertEquals(IPV6_ADDRESS, ipv6Address.getIpAddress());
+  }
 
-    @Test
-    public void getIpAddressDecimal_withIPV6() {
-        assertEquals(new BigInteger("42540766452641154071740215577757643572"),
-                ipv6Address.getIpAddressDecimal());
-    }
+  @Test
+  public void getIpAddressDecimal_withIPV6() {
+    assertEquals(new BigInteger("42540766452641154071740215577757643572"),
+        ipv6Address.getIpAddressDecimal());
+  }
 
-    @Test
-    public void getIpAddressType_withIPV6() {
-        assertEquals(IpAddressType.IPV6, ipv6Address.getIpAddressType());
-    }
+  @Test
+  public void getIpAddressType_withIPV6() {
+    assertEquals(IpAddressType.IPV6, ipv6Address.getIpAddressType());
+  }
 
-    @Test
-    public void isLocalAddress_withIPV6() {
-        assertFalse(ipv6Address.isLocalAddress());
-    }
+  @Test
+  public void isLocalAddress_withIPV6() {
+    assertFalse(ipv6Address.isLocalAddress());
+  }
 
-    @Test
-    public void isMulticastAddress_withIPV6() {
-        assertFalse(ipv6Address.isMulticastAddress());
-    }
+  @Test
+  public void isMulticastAddress_withIPV6() {
+    assertFalse(ipv6Address.isMulticastAddress());
+  }
 
 }

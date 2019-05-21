@@ -10,10 +10,10 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
 public interface OwnableRepository<T extends Ownable, ID extends Serializable>
-        extends BaseRepository<T, ID> {
+    extends BaseRepository<T, ID> {
 
-    List<T> findByUserId(UserId userId);
+  List<T> findByUserId(UserId userId);
 
-    Page<T> findByUserId(UserId userId, Pageable pageable);
+  Page<T> findByUserId(UserId userId, Pageable pageable);
 
 }

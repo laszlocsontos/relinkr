@@ -61,166 +61,166 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(controllers = RedirectController.class, secure = false)
 public class RedirectControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-    @MockBean
-    private LinkService linkService;
+  @MockBean
+  private LinkService linkService;
 
-    @MockBean
-    private VisitorService visitorService;
+  @MockBean
+  private VisitorService visitorService;
 
-    @MockBean
-    private VisitorIdCookieResolver visitorIdCookieResolver;
+  @MockBean
+  private VisitorIdCookieResolver visitorIdCookieResolver;
 
-    @Autowired
-    private RedirectedEventListener redirectedEventListener;
+  @Autowired
+  private RedirectedEventListener redirectedEventListener;
 
-    private Link link;
+  private Link link;
 
-    @Before
-    public void setUp() {
-        link = createLink();
+  @Before
+  public void setUp() {
+    link = createLink();
+  }
+
+  @After
+  public void tearDown() {
+    redirectedEventListener.clear();
+  }
+
+  @Test
+  public void givenInvalidVisitorId_whenRedirect_thenRedirectedAndCookieSetAndEventEmitted()
+      throws Exception {
+
+    given(linkService.getLink(link.getPath())).willReturn(link);
+    //  VisitorIdCookieResolver returns null when cookie value is missing or integrity check failed
+    given(visitorIdCookieResolver.resolveVisitorId(any(HttpServletRequest.class)))
+        .willReturn(Optional.empty());
+    given(visitorService.ensureVisitor(null, link.getUserId())).willReturn(VISITOR_ID);
+
+    redirect(link);
+
+    then(visitorService).should().ensureVisitor(null, link.getUserId());
+    then(visitorIdCookieResolver).should().setVisitorId(
+        any(HttpServletResponse.class),
+        eq(VISITOR_ID)
+    );
+
+    assertRedirectedEvent();
+  }
+
+  @Test
+  public void givenUnknownVisitorId_whenRedirect_thenRedirectedAndCookieSetAndEventEmitted()
+      throws Exception {
+
+    given(linkService.getLink(link.getPath())).willReturn(link);
+    //  VisitorIdCookieResolver returns null when cookie value is missing or integrity check failed
+    given(visitorIdCookieResolver.resolveVisitorId(any(HttpServletRequest.class)))
+        .willReturn(Optional.of(VISITOR_ID_ZERO));
+    given(visitorService.ensureVisitor(VISITOR_ID_ZERO, link.getUserId()))
+        .willReturn(VISITOR_ID);
+
+    redirect(link);
+
+    then(visitorService).should().ensureVisitor(VISITOR_ID_ZERO, link.getUserId());
+    then(visitorIdCookieResolver).should().setVisitorId(
+        any(HttpServletResponse.class),
+        eq(VISITOR_ID)
+    );
+
+    assertRedirectedEvent();
+  }
+
+  @Test
+  public void givenValidVisitorId_whenRedirect_thenRedirectedAndCookieSetAndEventEmitted()
+      throws Exception {
+
+    given(linkService.getLink(link.getPath())).willReturn(link);
+    given(visitorIdCookieResolver.resolveVisitorId(any(HttpServletRequest.class)))
+        .willReturn(Optional.of(VISITOR_ID));
+    given(visitorService.ensureVisitor(VISITOR_ID, link.getUserId())).willReturn(VISITOR_ID);
+
+    redirect(link);
+
+    then(visitorService).should().ensureVisitor(VISITOR_ID, link.getUserId());
+    then(visitorIdCookieResolver).should(never()).setVisitorId(
+        any(HttpServletResponse.class),
+        any(VisitorId.class)
+    );
+
+    assertRedirectedEvent();
+  }
+
+  @Test
+  public void givenNonExistentPath_whenRedirect_thenNotFound() throws Exception {
+    given(linkService.getLink(link.getPath()))
+        .willThrow(new EntityNotFoundException("path", link.getPath()));
+
+    redirect(link.getPath(), NOT_FOUND_URL);
+
+    assertTrue(redirectedEventListener.isEmpty());
+  }
+
+  private void assertRedirectedEvent() throws InterruptedException {
+    RedirectedEvent redirectedEvent = redirectedEventListener.getEvent();
+    assertEquals(link.getId(), redirectedEvent.getLinkId());
+    assertEquals(VISITOR_ID, redirectedEvent.getVisitorId());
+    assertEquals(VISITOR_IP.getIpAddress(), redirectedEvent.getIpAddress());
+    assertEquals(link.getUserId(), redirectedEvent.getUserId());
+    assertEquals(FIXED_INSTANT, redirectedEvent.getInstant());
+  }
+
+  private void redirect(Link link) throws Exception {
+    redirect(link.getPath(), link.getTargetUrl().toString());
+  }
+
+  private void redirect(String path, String targetUrl) throws Exception {
+    mockMvc.perform(get("/" + path).header(HEADER_XFF, VISITOR_IP.getIpAddress()))
+        .andDo(print())
+        .andExpect(status().isMovedPermanently())
+        .andExpect(header().string(CACHE_CONTROL,
+            "no-cache, no-store, max-age=0, must-revalidate"))
+        .andExpect(header().string(EXPIRES, "Thu, 01 Jan 1970 00:00:00 GMT"))
+        .andExpect(header().string(PRAGMA, "no-cache"))
+        .andExpect(redirectedUrl(targetUrl));
+  }
+
+  static class RedirectedEventListener implements ApplicationListener<RedirectedEvent> {
+
+    final BlockingQueue<RedirectedEvent> redirectedEvents = new LinkedBlockingQueue<>();
+
+    @Override
+    public void onApplicationEvent(RedirectedEvent event) {
+      redirectedEvents.offer(event);
     }
 
-    @After
-    public void tearDown() {
-        redirectedEventListener.clear();
+    void clear() {
+      redirectedEvents.clear();
     }
 
-    @Test
-    public void givenInvalidVisitorId_whenRedirect_thenRedirectedAndCookieSetAndEventEmitted()
-            throws Exception {
-
-        given(linkService.getLink(link.getPath())).willReturn(link);
-        //  VisitorIdCookieResolver returns null when cookie value is missing or integrity check failed
-        given(visitorIdCookieResolver.resolveVisitorId(any(HttpServletRequest.class)))
-                .willReturn(Optional.empty());
-        given(visitorService.ensureVisitor(null, link.getUserId())).willReturn(VISITOR_ID);
-
-        redirect(link);
-
-        then(visitorService).should().ensureVisitor(null, link.getUserId());
-        then(visitorIdCookieResolver).should().setVisitorId(
-                any(HttpServletResponse.class),
-                eq(VISITOR_ID)
-        );
-
-        assertRedirectedEvent();
+    boolean isEmpty() {
+      return redirectedEvents.isEmpty();
     }
 
-    @Test
-    public void givenUnknownVisitorId_whenRedirect_thenRedirectedAndCookieSetAndEventEmitted()
-            throws Exception {
-
-        given(linkService.getLink(link.getPath())).willReturn(link);
-        //  VisitorIdCookieResolver returns null when cookie value is missing or integrity check failed
-        given(visitorIdCookieResolver.resolveVisitorId(any(HttpServletRequest.class)))
-                .willReturn(Optional.of(VISITOR_ID_ZERO));
-        given(visitorService.ensureVisitor(VISITOR_ID_ZERO, link.getUserId()))
-                .willReturn(VISITOR_ID);
-
-        redirect(link);
-
-        then(visitorService).should().ensureVisitor(VISITOR_ID_ZERO, link.getUserId());
-        then(visitorIdCookieResolver).should().setVisitorId(
-                any(HttpServletResponse.class),
-                eq(VISITOR_ID)
-        );
-
-        assertRedirectedEvent();
+    RedirectedEvent getEvent() throws InterruptedException {
+      return redirectedEvents.poll(1, SECONDS);
     }
 
-    @Test
-    public void givenValidVisitorId_whenRedirect_thenRedirectedAndCookieSetAndEventEmitted()
-            throws Exception {
+  }
 
-        given(linkService.getLink(link.getPath())).willReturn(link);
-        given(visitorIdCookieResolver.resolveVisitorId(any(HttpServletRequest.class)))
-                .willReturn(Optional.of(VISITOR_ID));
-        given(visitorService.ensureVisitor(VISITOR_ID, link.getUserId())).willReturn(VISITOR_ID);
+  @TestConfiguration
+  static class TestConfig {
 
-        redirect(link);
-
-        then(visitorService).should().ensureVisitor(VISITOR_ID, link.getUserId());
-        then(visitorIdCookieResolver).should(never()).setVisitorId(
-                any(HttpServletResponse.class),
-                any(VisitorId.class)
-        );
-
-        assertRedirectedEvent();
+    @Bean
+    Clock clock() {
+      return FIXED_CLOCK;
     }
 
-    @Test
-    public void givenNonExistentPath_whenRedirect_thenNotFound() throws Exception {
-        given(linkService.getLink(link.getPath()))
-                .willThrow(new EntityNotFoundException("path", link.getPath()));
-
-        redirect(link.getPath(), NOT_FOUND_URL);
-
-        assertTrue(redirectedEventListener.isEmpty());
+    @Bean
+    RedirectedEventListener redirectedEventListener() {
+      return new RedirectedEventListener();
     }
 
-    private void assertRedirectedEvent() throws InterruptedException {
-        RedirectedEvent redirectedEvent = redirectedEventListener.getEvent();
-        assertEquals(link.getId(), redirectedEvent.getLinkId());
-        assertEquals(VISITOR_ID, redirectedEvent.getVisitorId());
-        assertEquals(VISITOR_IP.getIpAddress(), redirectedEvent.getIpAddress());
-        assertEquals(link.getUserId(), redirectedEvent.getUserId());
-        assertEquals(FIXED_INSTANT, redirectedEvent.getInstant());
-    }
-
-    private void redirect(Link link) throws Exception {
-        redirect(link.getPath(), link.getTargetUrl().toString());
-    }
-
-    private void redirect(String path, String targetUrl) throws Exception {
-        mockMvc.perform(get("/" + path).header(HEADER_XFF, VISITOR_IP.getIpAddress()))
-                .andDo(print())
-                .andExpect(status().isMovedPermanently())
-                .andExpect(header().string(CACHE_CONTROL,
-                        "no-cache, no-store, max-age=0, must-revalidate"))
-                .andExpect(header().string(EXPIRES, "Thu, 01 Jan 1970 00:00:00 GMT"))
-                .andExpect(header().string(PRAGMA, "no-cache"))
-                .andExpect(redirectedUrl(targetUrl));
-    }
-
-    static class RedirectedEventListener implements ApplicationListener<RedirectedEvent> {
-
-        final BlockingQueue<RedirectedEvent> redirectedEvents = new LinkedBlockingQueue<>();
-
-        @Override
-        public void onApplicationEvent(RedirectedEvent event) {
-            redirectedEvents.offer(event);
-        }
-
-        void clear() {
-            redirectedEvents.clear();
-        }
-
-        boolean isEmpty() {
-            return redirectedEvents.isEmpty();
-        }
-
-        RedirectedEvent getEvent() throws InterruptedException {
-            return redirectedEvents.poll(1, SECONDS);
-        }
-
-    }
-
-    @TestConfiguration
-    static class TestConfig {
-
-        @Bean
-        Clock clock() {
-            return FIXED_CLOCK;
-        }
-
-        @Bean
-        RedirectedEventListener redirectedEventListener() {
-            return new RedirectedEventListener();
-        }
-
-    }
+  }
 
 }

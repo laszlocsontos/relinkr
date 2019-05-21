@@ -14,28 +14,28 @@ import org.springframework.util.StringUtils;
 @Component
 public class DelegatingUserDetailsService implements UserDetailsService {
 
-    private final UserService delegate;
+  private final UserService delegate;
 
-    public DelegatingUserDetailsService(UserService delegate) {
-        this.delegate = delegate;
+  public DelegatingUserDetailsService(UserService delegate) {
+    this.delegate = delegate;
+  }
+
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    if (StringUtils.isEmpty(username)) {
+      throw new UsernameNotFoundException("Empty user name");
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (StringUtils.isEmpty(username)) {
-            throw new UsernameNotFoundException("Empty user name");
-        }
-
-        EmailAddress emailAddress;
-        try {
-            emailAddress = EmailAddress.of(username);
-        } catch (IllegalArgumentException e) {
-            throw new UsernameNotFoundException("Invalid email address", e);
-        }
-
-        return delegate.findUser(emailAddress)
-                .map(DelegatingUserDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+    EmailAddress emailAddress;
+    try {
+      emailAddress = EmailAddress.of(username);
+    } catch (IllegalArgumentException e) {
+      throw new UsernameNotFoundException("Invalid email address", e);
     }
+
+    return delegate.findUser(emailAddress)
+        .map(DelegatingUserDetails::new)
+        .orElseThrow(() -> new UsernameNotFoundException(username));
+  }
 
 }

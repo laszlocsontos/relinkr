@@ -19,45 +19,45 @@ import org.springframework.core.convert.converter.Converter;
 
 public class TimeBasedIdentifierGenerator implements Configurable, IdentifierGenerator {
 
-    private final ConcurrentMap<String, EntityPersister> CACHE = new ConcurrentHashMap<>();
+  private final ConcurrentMap<String, EntityPersister> CACHE = new ConcurrentHashMap<>();
 
-    private final IdentityGenerator IDENTITY_GENERATOR = IdentityGenerator.getInstance();
+  private final IdentityGenerator IDENTITY_GENERATOR = IdentityGenerator.getInstance();
 
-    private Converter<Long, ? extends Serializable> conversionStrategy;
-    private String entityName;
+  private Converter<Long, ? extends Serializable> conversionStrategy;
+  private String entityName;
 
-    @Override
-    public void configure(Type type, Properties params, ServiceRegistry serviceRegistry)
-            throws MappingException {
+  @Override
+  public void configure(Type type, Properties params, ServiceRegistry serviceRegistry)
+      throws MappingException {
 
-        Class<?> idClass = type.getReturnedClass();
-        if (EntityClassAwareId.class.isAssignableFrom(idClass)) {
-            conversionStrategy = new LongToEntityClassAwareIdConverter(idClass);
-        } else if (Long.class.equals(idClass)) {
-            conversionStrategy = (it -> it);
-        } else if (long.class.equals(idClass)) {
-            conversionStrategy = Long::valueOf;
-        } else {
-            throw new MappingException("unsupported class: " + idClass.getName());
-        }
-
-        entityName = Optional
-                .ofNullable(params.getProperty(ENTITY_NAME))
-                .orElseThrow(() -> new MappingException("no entity name"));
+    Class<?> idClass = type.getReturnedClass();
+    if (EntityClassAwareId.class.isAssignableFrom(idClass)) {
+      conversionStrategy = new LongToEntityClassAwareIdConverter(idClass);
+    } else if (Long.class.equals(idClass)) {
+      conversionStrategy = (it -> it);
+    } else if (long.class.equals(idClass)) {
+      conversionStrategy = Long::valueOf;
+    } else {
+      throw new MappingException("unsupported class: " + idClass.getName());
     }
 
-    @Override
-    public Serializable generate(SharedSessionContractImplementor session, Object object)
-            throws HibernateException {
+    entityName = Optional
+        .ofNullable(params.getProperty(ENTITY_NAME))
+        .orElseThrow(() -> new MappingException("no entity name"));
+  }
 
-        EntityPersister entityPersister = CACHE
-                .computeIfAbsent(entityName, it -> session.getEntityPersister(entityName, object));
+  @Override
+  public Serializable generate(SharedSessionContractImplementor session, Object object)
+      throws HibernateException {
 
-        Serializable id = entityPersister.getIdentifier(object, session);
+    EntityPersister entityPersister = CACHE
+        .computeIfAbsent(entityName, it -> session.getEntityPersister(entityName, object));
 
-        return Optional
-                .ofNullable(id)
-                .orElseGet(() -> conversionStrategy.convert(IDENTITY_GENERATOR.generate()));
-    }
+    Serializable id = entityPersister.getIdentifier(object, session);
+
+    return Optional
+        .ofNullable(id)
+        .orElseGet(() -> conversionStrategy.convert(IDENTITY_GENERATOR.generate()));
+  }
 
 }

@@ -32,64 +32,64 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ContextConfiguration(classes = TestConfig.class)
 public class RedirectedEventListenerTest {
 
-    @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
+  @Autowired
+  private ApplicationEventPublisher applicationEventPublisher;
 
-    @Autowired
-    private AsyncActionInterceptor clickServiceInterceptor;
+  @Autowired
+  private AsyncActionInterceptor clickServiceInterceptor;
 
-    @Test
-    public void shouldHandleEventAsynchronously() {
-        Instant instant = now();
+  @Test
+  public void shouldHandleEventAsynchronously() {
+    Instant instant = now();
 
-        RedirectedEvent redirectedEvent = RedirectedEvent.of(
-                LINK_ID, VISITOR_ID, VISITOR_IP.getIpAddress(), USER_ID, instant
-        );
+    RedirectedEvent redirectedEvent = RedirectedEvent.of(
+        LINK_ID, VISITOR_ID, VISITOR_IP.getIpAddress(), USER_ID, instant
+    );
 
-        applicationEventPublisher.publishEvent(redirectedEvent);
+    applicationEventPublisher.publishEvent(redirectedEvent);
 
-        AsyncActionResult asyncActionResult = clickServiceInterceptor.takeResult();
-        assertThat(asyncActionResult.getExecutorName(), startsWith(AsyncConfig.THREAD_NAME_PREFIX));
+    AsyncActionResult asyncActionResult = clickServiceInterceptor.takeResult();
+    assertThat(asyncActionResult.getExecutorName(), startsWith(AsyncConfig.THREAD_NAME_PREFIX));
 
-        Click click = (Click) asyncActionResult.getArguments()[0];
-        assertEquals(LINK_ID, click.getLinkId());
-        assertEquals(VISITOR_ID, click.getVisitorId());
-        assertEquals(USER_ID, click.getUserId());
-        assertEquals(instant, click.getVisitTimestamp().toInstant(UTC));
+    Click click = (Click) asyncActionResult.getArguments()[0];
+    assertEquals(LINK_ID, click.getLinkId());
+    assertEquals(VISITOR_ID, click.getVisitorId());
+    assertEquals(USER_ID, click.getUserId());
+    assertEquals(instant, click.getVisitTimestamp().toInstant(UTC));
 
-    }
+  }
 
-    static class DummyClickService implements ClickService {
+  static class DummyClickService implements ClickService {
 
-        @Override
-        public void logClick(Click click) {
-
-        }
+    @Override
+    public void logClick(Click click) {
 
     }
 
-    @Configuration
-    @Import(AsyncConfig.class)
-    static class TestConfig {
+  }
 
-        @Bean
-        AsyncActionInterceptor clickServiceInterceptor() {
-            return new AsyncActionInterceptor();
-        }
+  @Configuration
+  @Import(AsyncConfig.class)
+  static class TestConfig {
 
-        @Bean
-        ClickService clickService(AsyncActionInterceptor clickServiceInterceptor) {
-            ClickService clickService = new DummyClickService();
-            ProxyFactory proxyFactory = new ProxyFactory(clickService);
-            proxyFactory.addAdvice(clickServiceInterceptor);
-            return (ClickService) proxyFactory.getProxy();
-        }
-
-        @Bean
-        RedirectedEventListener redirectedEventListener(ClickService clickService) {
-            return new RedirectedEventListener(clickService);
-        }
-
+    @Bean
+    AsyncActionInterceptor clickServiceInterceptor() {
+      return new AsyncActionInterceptor();
     }
+
+    @Bean
+    ClickService clickService(AsyncActionInterceptor clickServiceInterceptor) {
+      ClickService clickService = new DummyClickService();
+      ProxyFactory proxyFactory = new ProxyFactory(clickService);
+      proxyFactory.addAdvice(clickServiceInterceptor);
+      return (ClickService) proxyFactory.getProxy();
+    }
+
+    @Bean
+    RedirectedEventListener redirectedEventListener(ClickService clickService) {
+      return new RedirectedEventListener(clickService);
+    }
+
+  }
 
 }

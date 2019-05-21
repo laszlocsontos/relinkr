@@ -42,195 +42,195 @@ import org.springframework.web.context.request.ServletWebRequest;
 @RequestMapping("/api/links")
 public class LinkResourceController {
 
-    private static Validator FULL_LINK_VALIDATOR = new FullLinkValidator();
-    private static Validator PARTIAL_LINK_VALIDATOR = new PartialLinkValidator();
+  private static Validator FULL_LINK_VALIDATOR = new FullLinkValidator();
+  private static Validator PARTIAL_LINK_VALIDATOR = new PartialLinkValidator();
 
-    private final LinkService linkService;
-    private final LinkResourceAssembler linkResourceAssembler;
-    private final PagedResourcesAssembler pagedResourcesAssembler =
-            new PagedResourcesAssembler(null, null);
+  private final LinkService linkService;
+  private final LinkResourceAssembler linkResourceAssembler;
+  private final PagedResourcesAssembler pagedResourcesAssembler =
+      new PagedResourcesAssembler(null, null);
 
-    public LinkResourceController(LinkService linkService,
-            LinkResourceAssembler linkResourceAssembler) {
-        this.linkService = linkService;
-        this.linkResourceAssembler = linkResourceAssembler;
+  public LinkResourceController(LinkService linkService,
+      LinkResourceAssembler linkResourceAssembler) {
+    this.linkService = linkService;
+    this.linkResourceAssembler = linkResourceAssembler;
+  }
+
+  @InitBinder
+  protected void initBinder(WebDataBinder binder, ServletWebRequest request) {
+    Object target = binder.getTarget();
+    if (target == null || !LinkResource.class.isAssignableFrom(target.getClass())) {
+      return;
     }
 
-    @InitBinder
-    protected void initBinder(WebDataBinder binder, ServletWebRequest request) {
-        Object target = binder.getTarget();
-        if (target == null || !LinkResource.class.isAssignableFrom(target.getClass())) {
-            return;
-        }
+    HttpMethod httpMethod = request.getHttpMethod();
+    switch (httpMethod) {
+      case POST:
+      case PUT:
+        binder.setValidator(FULL_LINK_VALIDATOR);
+        break;
+      case PATCH:
+        binder.setValidator(PARTIAL_LINK_VALIDATOR);
+        break;
+    }
+  }
 
-        HttpMethod httpMethod = request.getHttpMethod();
-        switch (httpMethod) {
-            case POST:
-            case PUT:
-                binder.setValidator(FULL_LINK_VALIDATOR);
-                break;
-            case PATCH:
-                binder.setValidator(PARTIAL_LINK_VALIDATOR);
-                break;
-        }
+  @AuthorizeRolesOrOwner
+  @GetMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
+  HttpEntity<LinkResource> getLink(@PathVariable LinkId linkId) throws ApplicationException {
+    Link link = linkService.getLink(linkId);
+    return ok(linkResourceAssembler.toResource(link));
+  }
+
+  @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
+  @PostMapping(produces = HAL_JSON_VALUE)
+  HttpEntity<LinkResource> addLink(@CurrentUser UserId userId,
+      @Validated @RequestBody LinkResource linkResource)
+      throws ApplicationException {
+
+    Link link = linkService.addLink(
+        linkResource.getLongUrl(),
+        linkResource.getUtmParameters().orElse(null),
+        userId
+    );
+
+    return ok(linkResourceAssembler.toResource(link));
+  }
+
+  @AuthorizeRolesOrOwner
+  @PutMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
+  HttpEntity<LinkResource> replaceLink(
+      @PathVariable LinkId linkId, @Validated @RequestBody LinkResource linkResource)
+      throws ApplicationException {
+
+    String longUrl = linkResource.getLongUrl();
+    UtmParameters utmParameters = linkResource.getUtmParameters().orElse(null);
+
+    Link link = linkService.updateLongUrl(linkId, longUrl, utmParameters);
+
+    return ok(linkResourceAssembler.toResource(link));
+  }
+
+  @AuthorizeRolesOrOwner
+  @PatchMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
+  HttpEntity<LinkResource> updateLink(
+      @PathVariable LinkId linkId,
+      @Validated @RequestBody LinkResource linkResource)
+      throws ApplicationException {
+
+    Link link = null;
+    String longUrl = linkResource.getLongUrl();
+    Optional<UtmParameters> utmParameters = linkResource.getUtmParameters();
+
+    if (!StringUtils.isEmpty(longUrl)) {
+      link = linkService.updateLongUrl(linkId, longUrl);
     }
 
-    @AuthorizeRolesOrOwner
-    @GetMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
-    HttpEntity<LinkResource> getLink(@PathVariable LinkId linkId) throws ApplicationException {
-        Link link = linkService.getLink(linkId);
-        return ok(linkResourceAssembler.toResource(link));
+    if (utmParameters.isPresent()) {
+      link = linkService.updateUtmParameters(linkId, utmParameters.get());
     }
 
-    @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
-    @PostMapping(produces = HAL_JSON_VALUE)
-    HttpEntity<LinkResource> addLink(@CurrentUser UserId userId,
-            @Validated @RequestBody LinkResource linkResource)
-            throws ApplicationException {
+    return ok(linkResourceAssembler.toResource(link));
+  }
 
-        Link link = linkService.addLink(
-                linkResource.getLongUrl(),
-                linkResource.getUtmParameters().orElse(null),
-                userId
+  @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
+  @GetMapping(produces = HAL_JSON_VALUE)
+  HttpEntity<PagedResources<LinkResource>> listLinks(
+      @CurrentUser UserId userId, Pageable pageable) {
+
+    Page<Link> linkPage = linkService.listLinks(userId, pageable);
+    return ok(pagedResourcesAssembler.toResource(linkPage, linkResourceAssembler));
+  }
+
+  @AuthorizeRolesOrOwner
+  @PutMapping(path = "/{linkId}/linkStatuses/{linkStatus}")
+  HttpEntity updateLinkStatus(@PathVariable LinkId linkId, @PathVariable LinkStatus linkStatus)
+      throws ApplicationException {
+
+    switch (linkStatus) {
+      case ACTIVE:
+        linkService.activateLink(linkId);
+        break;
+      case ARCHIVED:
+        linkService.archiveLink(linkId);
+        break;
+      default:
+        throw InvalidLinkStatusException.forLinkStatus(
+            linkStatus, EnumSet.of(LinkStatus.ACTIVE, LinkStatus.ARCHIVED)
         );
-
-        return ok(linkResourceAssembler.toResource(link));
     }
 
-    @AuthorizeRolesOrOwner
-    @PutMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
-    HttpEntity<LinkResource> replaceLink(
-            @PathVariable LinkId linkId, @Validated @RequestBody LinkResource linkResource)
-            throws ApplicationException {
+    return ok().build();
+  }
 
-        String longUrl = linkResource.getLongUrl();
-        UtmParameters utmParameters = linkResource.getUtmParameters().orElse(null);
+  @AuthorizeRolesOrOwner
+  @PostMapping(path = "/{linkId}/tags/{tagName}")
+  HttpEntity addTag(@PathVariable LinkId linkId, @PathVariable String tagName)
+      throws ApplicationException {
 
-        Link link = linkService.updateLongUrl(linkId, longUrl, utmParameters);
+    linkService.addTag(linkId, tagName);
 
-        return ok(linkResourceAssembler.toResource(link));
+    return ok().build();
+  }
+
+  @AuthorizeRolesOrOwner
+  @DeleteMapping(path = "/{linkId}/tags/{tagName}")
+  HttpEntity removeTag(@PathVariable LinkId linkId, @PathVariable String tagName)
+      throws ApplicationException {
+    linkService.removeTag(linkId, tagName);
+
+    return ok().build();
+  }
+
+  static class FullLinkValidator extends AbstractLinkValidator {
+
+    @Override
+    void doValidate(LinkResource linkResource, Errors errors) {
+      if (!containsLongUrl(linkResource)) {
+        errors.rejectValue("longUrl", "links.long-url-is-missing-or-empty");
+      }
     }
 
-    @AuthorizeRolesOrOwner
-    @PatchMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
-    HttpEntity<LinkResource> updateLink(
-            @PathVariable LinkId linkId,
-            @Validated @RequestBody LinkResource linkResource)
-            throws ApplicationException {
+  }
 
-        Link link = null;
-        String longUrl = linkResource.getLongUrl();
-        Optional<UtmParameters> utmParameters = linkResource.getUtmParameters();
+  static class PartialLinkValidator extends AbstractLinkValidator {
 
-        if (!StringUtils.isEmpty(longUrl)) {
-            link = linkService.updateLongUrl(linkId, longUrl);
-        }
-
-        if (utmParameters.isPresent()) {
-            link = linkService.updateUtmParameters(linkId, utmParameters.get());
-        }
-
-        return ok(linkResourceAssembler.toResource(link));
+    @Override
+    void doValidate(LinkResource linkResource, Errors errors) {
+      if (!containsLongUrl(linkResource) && !containsUtmParameters(linkResource)) {
+        errors.reject("links.either-long-url-or-utm-parameters-have-to-be-specified");
+      }
     }
 
-    @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
-    @GetMapping(produces = HAL_JSON_VALUE)
-    HttpEntity<PagedResources<LinkResource>> listLinks(
-            @CurrentUser UserId userId, Pageable pageable) {
+  }
 
-        Page<Link> linkPage = linkService.listLinks(userId, pageable);
-        return ok(pagedResourcesAssembler.toResource(linkPage, linkResourceAssembler));
+  private static abstract class AbstractLinkValidator implements Validator {
+
+    @Override
+    public boolean supports(Class<?> clazz) {
+      return LinkResource.class.isAssignableFrom(clazz);
     }
 
-    @AuthorizeRolesOrOwner
-    @PutMapping(path = "/{linkId}/linkStatuses/{linkStatus}")
-    HttpEntity updateLinkStatus(@PathVariable LinkId linkId, @PathVariable LinkStatus linkStatus)
-            throws ApplicationException {
+    @Override
+    public void validate(Object target, Errors errors) {
+      if (target == null) {
+        errors.reject("general.request-body-is-empty");
+        return;
+      }
 
-        switch (linkStatus) {
-            case ACTIVE:
-                linkService.activateLink(linkId);
-                break;
-            case ARCHIVED:
-                linkService.archiveLink(linkId);
-                break;
-            default:
-                throw InvalidLinkStatusException.forLinkStatus(
-                        linkStatus, EnumSet.of(LinkStatus.ACTIVE, LinkStatus.ARCHIVED)
-                );
-        }
-
-        return ok().build();
+      doValidate((LinkResource) target, errors);
     }
 
-    @AuthorizeRolesOrOwner
-    @PostMapping(path = "/{linkId}/tags/{tagName}")
-    HttpEntity addTag(@PathVariable LinkId linkId, @PathVariable String tagName)
-            throws ApplicationException {
+    abstract void doValidate(LinkResource linkResource, Errors errors);
 
-        linkService.addTag(linkId, tagName);
-
-        return ok().build();
+    boolean containsLongUrl(LinkResource linkResource) {
+      return !StringUtils.isEmpty(linkResource.getLongUrl());
     }
 
-    @AuthorizeRolesOrOwner
-    @DeleteMapping(path = "/{linkId}/tags/{tagName}")
-    HttpEntity removeTag(@PathVariable LinkId linkId, @PathVariable String tagName)
-            throws ApplicationException {
-        linkService.removeTag(linkId, tagName);
-
-        return ok().build();
+    boolean containsUtmParameters(LinkResource linkResource) {
+      return linkResource.getUtmParametersResource() != null;
     }
 
-    static class FullLinkValidator extends AbstractLinkValidator {
-
-        @Override
-        void doValidate(LinkResource linkResource, Errors errors) {
-            if (!containsLongUrl(linkResource)) {
-                errors.rejectValue("longUrl", "links.long-url-is-missing-or-empty");
-            }
-        }
-
-    }
-
-    static class PartialLinkValidator extends AbstractLinkValidator {
-
-        @Override
-        void doValidate(LinkResource linkResource, Errors errors) {
-            if (!containsLongUrl(linkResource) && !containsUtmParameters(linkResource)) {
-                errors.reject("links.either-long-url-or-utm-parameters-have-to-be-specified");
-            }
-        }
-
-    }
-
-    private static abstract class AbstractLinkValidator implements Validator {
-
-        @Override
-        public boolean supports(Class<?> clazz) {
-            return LinkResource.class.isAssignableFrom(clazz);
-        }
-
-        @Override
-        public void validate(Object target, Errors errors) {
-            if (target == null) {
-                errors.reject("general.request-body-is-empty");
-                return;
-            }
-
-            doValidate((LinkResource) target, errors);
-        }
-
-        abstract void doValidate(LinkResource linkResource, Errors errors);
-
-        boolean containsLongUrl(LinkResource linkResource) {
-            return !StringUtils.isEmpty(linkResource.getLongUrl());
-        }
-
-        boolean containsUtmParameters(LinkResource linkResource) {
-            return linkResource.getUtmParametersResource() != null;
-        }
-
-    }
+  }
 
 }

@@ -10,20 +10,20 @@ import org.springframework.util.Assert;
  */
 public interface JwtAuthenticationService extends AuthenticationProvider {
 
-    String createJwtToken(Authentication authentication, int minutes);
+  String createJwtToken(Authentication authentication, int minutes);
 
-    Authentication parseJwtToken(String jwtToken) throws AuthenticationException;
+  Authentication parseJwtToken(String jwtToken) throws AuthenticationException;
 
-    @Override
-    default Authentication authenticate(Authentication authentication) {
-        Assert.isInstanceOf(JwtAuthenticationToken.class, authentication);
-        JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authentication;
-        return parseJwtToken(jwtAuthenticationToken.getPrincipal());
-    }
+  @Override
+  default Authentication authenticate(Authentication authentication) {
+    Assert.isInstanceOf(JwtAuthenticationToken.class, authentication);
+    JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authentication;
+    return parseJwtToken(jwtAuthenticationToken.getPrincipal());
+  }
 
-    @Override
-    default boolean supports(Class<?> authentication) {
-        return JwtAuthenticationToken.class.isAssignableFrom(authentication);
-    }
+  @Override
+  default boolean supports(Class<?> authentication) {
+    return JwtAuthenticationToken.class.isAssignableFrom(authentication);
+  }
 
 }

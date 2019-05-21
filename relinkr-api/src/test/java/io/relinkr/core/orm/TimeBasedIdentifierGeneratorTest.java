@@ -24,91 +24,91 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class TimeBasedIdentifierGeneratorTest {
 
-    private static final String ENTITY_NAME = "test";
-    private static final Object OBJECT = new Object();
-    private static final long ID = 1;
+  private static final String ENTITY_NAME = "test";
+  private static final Object OBJECT = new Object();
+  private static final long ID = 1;
 
-    @Mock
-    private SharedSessionContractImplementor session;
+  @Mock
+  private SharedSessionContractImplementor session;
 
-    @Mock
-    private EntityPersister entityPersister;
+  @Mock
+  private EntityPersister entityPersister;
 
-    @Mock
-    private Type type;
+  @Mock
+  private Type type;
 
-    private TimeBasedIdentifierGenerator timeBasedIdentifierGenerator;
+  private TimeBasedIdentifierGenerator timeBasedIdentifierGenerator;
 
-    @Before
-    public void setUp() throws Exception {
-        timeBasedIdentifierGenerator = new TimeBasedIdentifierGenerator();
-    }
+  @Before
+  public void setUp() throws Exception {
+    timeBasedIdentifierGenerator = new TimeBasedIdentifierGenerator();
+  }
 
-    @Test
-    public void configure() {
-        givenNoIdAssigned();
+  @Test
+  public void configure() {
+    givenNoIdAssigned();
 
-        timeBasedIdentifierGenerator.generate(session, OBJECT);
+    timeBasedIdentifierGenerator.generate(session, OBJECT);
 
-        then(session).should().getEntityPersister(ENTITY_NAME, OBJECT);
-    }
+    then(session).should().getEntityPersister(ENTITY_NAME, OBJECT);
+  }
 
-    @Test(expected = MappingException.class)
-    public void configure_withWrongIdClass() {
-        given(type.getReturnedClass()).willReturn(Object.class);
+  @Test(expected = MappingException.class)
+  public void configure_withWrongIdClass() {
+    given(type.getReturnedClass()).willReturn(Object.class);
 
-        timeBasedIdentifierGenerator.configure(type, getProperties(ENTITY_NAME), null);
-    }
+    timeBasedIdentifierGenerator.configure(type, getProperties(ENTITY_NAME), null);
+  }
 
-    @Test(expected = MappingException.class)
-    public void configure_withoutEntityName() {
-        configureWithEntityName(null);
-    }
+  @Test(expected = MappingException.class)
+  public void configure_withoutEntityName() {
+    configureWithEntityName(null);
+  }
 
-    @Test
-    public void assigned() {
-        givenIdAssigned(ID);
+  @Test
+  public void assigned() {
+    givenIdAssigned(ID);
 
-        Serializable id = timeBasedIdentifierGenerator.generate(session, OBJECT);
+    Serializable id = timeBasedIdentifierGenerator.generate(session, OBJECT);
 
-        assertEquals(ID, id);
-    }
+    assertEquals(ID, id);
+  }
 
-    @Test
-    public void generated() {
-        givenNoIdAssigned();
+  @Test
+  public void generated() {
+    givenNoIdAssigned();
 
-        Serializable id = timeBasedIdentifierGenerator.generate(session, OBJECT);
+    Serializable id = timeBasedIdentifierGenerator.generate(session, OBJECT);
 
-        assertNotNull(id);
-        assertNotEquals(ID, id);
-    }
+    assertNotNull(id);
+    assertNotEquals(ID, id);
+  }
 
-    private void configureWithEntityName(String entityName) {
-        Properties properties = getProperties(entityName);
+  private void configureWithEntityName(String entityName) {
+    Properties properties = getProperties(entityName);
 
-        given(type.getReturnedClass()).willReturn(ClickId.class);
+    given(type.getReturnedClass()).willReturn(ClickId.class);
 
-        timeBasedIdentifierGenerator.configure(type, properties, null);
-    }
+    timeBasedIdentifierGenerator.configure(type, properties, null);
+  }
 
-    private void givenIdAssigned(Long id) {
-        configureWithEntityName(ENTITY_NAME);
-        given(session.getEntityPersister(ENTITY_NAME, OBJECT)).willReturn(entityPersister);
-        given(entityPersister.getIdentifier(OBJECT, session)).willReturn(id);
-    }
+  private void givenIdAssigned(Long id) {
+    configureWithEntityName(ENTITY_NAME);
+    given(session.getEntityPersister(ENTITY_NAME, OBJECT)).willReturn(entityPersister);
+    given(entityPersister.getIdentifier(OBJECT, session)).willReturn(id);
+  }
 
-    private void givenNoIdAssigned() {
-        givenIdAssigned(null);
-    }
+  private void givenNoIdAssigned() {
+    givenIdAssigned(null);
+  }
 
-    private Properties getProperties(String entityName) {
-        Properties properties = new Properties();
+  private Properties getProperties(String entityName) {
+    Properties properties = new Properties();
 
-        Optional.ofNullable(entityName)
-                .ifPresent(it -> properties.put(IdentifierGenerator.ENTITY_NAME, entityName));
+    Optional.ofNullable(entityName)
+        .ifPresent(it -> properties.put(IdentifierGenerator.ENTITY_NAME, entityName));
 
-        return properties;
-    }
+    return properties;
+  }
 
 }

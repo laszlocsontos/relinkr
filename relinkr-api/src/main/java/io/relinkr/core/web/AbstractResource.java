@@ -15,20 +15,20 @@ import org.springframework.util.Assert;
 @NoArgsConstructor
 public abstract class AbstractResource extends ResourceSupport {
 
-    @JsonProperty("id")
-    private String resourceId;
+  @JsonProperty("id")
+  private String resourceId;
 
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
-    private Integer version;
+  private LocalDateTime createdDate;
+  private LocalDateTime lastModifiedDate;
+  private Integer version;
 
-    public AbstractResource(AbstractEntity entity) {
-        Assert.notNull(entity, "entity cannot be null");
+  public AbstractResource(AbstractEntity entity) {
+    Assert.notNull(entity, "entity cannot be null");
 
-        this.resourceId = Optional.ofNullable(entity.getId()).map(String::valueOf).orElse(null);
-        this.createdDate = entity.getCreatedDate();
-        this.lastModifiedDate = entity.getLastModifiedDate();
-        this.version = entity.getVersion();
-    }
+    this.resourceId = Optional.ofNullable(entity.getId()).map(String::valueOf).orElse(null);
+    this.createdDate = entity.getCreatedDate();
+    this.lastModifiedDate = entity.getLastModifiedDate();
+    this.version = entity.getVersion();
+  }
 
 }

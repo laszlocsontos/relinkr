@@ -18,11 +18,11 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false)
 public abstract class AbstractId<E> implements EntityClassAwareId<E> {
 
-    private Long id;
+  private Long id;
 
-    @Override
-    public String toString() {
-        return Objects.toString(id);
-    }
+  @Override
+  public String toString() {
+    return Objects.toString(id);
+  }
 
 }

@@ -21,34 +21,34 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
  */
 @Slf4j
 public class DefaultAuthenticationFailureHandler
-        extends AbstractAuthenticationRequestHandler implements AuthenticationFailureHandler {
+    extends AbstractAuthenticationRequestHandler implements AuthenticationFailureHandler {
 
-    public DefaultAuthenticationFailureHandler(ObjectMapper objectMapper) {
-        super(objectMapper.writer());
+  public DefaultAuthenticationFailureHandler(ObjectMapper objectMapper) {
+    super(objectMapper.writer());
+  }
+
+  @Override
+  public void onAuthenticationFailure(
+      HttpServletRequest request, HttpServletResponse response,
+      AuthenticationException exception)
+      throws IOException {
+
+    log.warn(exception.getMessage());
+
+    HttpStatus httpStatus = translateAuthenticationException(exception);
+    handle(response, httpStatus, RestErrorResponse.of(httpStatus, exception));
+  }
+
+  private HttpStatus translateAuthenticationException(AuthenticationException exception) {
+    if (exception instanceof InternalAuthenticationServiceException) {
+      return INTERNAL_SERVER_ERROR;
     }
 
-    @Override
-    public void onAuthenticationFailure(
-            HttpServletRequest request, HttpServletResponse response,
-            AuthenticationException exception)
-            throws IOException {
-
-        log.warn(exception.getMessage());
-
-        HttpStatus httpStatus = translateAuthenticationException(exception);
-        handle(response, httpStatus, RestErrorResponse.of(httpStatus, exception));
+    if (exception instanceof AuthenticationServiceException) {
+      return SERVICE_UNAVAILABLE;
     }
 
-    private HttpStatus translateAuthenticationException(AuthenticationException exception) {
-        if (exception instanceof InternalAuthenticationServiceException) {
-            return INTERNAL_SERVER_ERROR;
-        }
-
-        if (exception instanceof AuthenticationServiceException) {
-            return SERVICE_UNAVAILABLE;
-        }
-
-        return UNAUTHORIZED;
-    }
+    return UNAUTHORIZED;
+  }
 
 }

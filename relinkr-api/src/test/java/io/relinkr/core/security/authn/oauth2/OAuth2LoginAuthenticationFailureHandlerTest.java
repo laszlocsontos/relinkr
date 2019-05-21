@@ -12,40 +12,40 @@ import org.springframework.security.authentication.BadCredentialsException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OAuth2LoginAuthenticationFailureHandlerTest
-        extends
-        AbstractOAuth2LoginAuthenticationHandlerTest<OAuth2LoginAuthenticationFailureHandler> {
+    extends
+    AbstractOAuth2LoginAuthenticationHandlerTest<OAuth2LoginAuthenticationFailureHandler> {
 
-    @Mock
-    private JwtAuthenticationTokenCookieResolver authenticationTokenCookieResolver;
+  @Mock
+  private JwtAuthenticationTokenCookieResolver authenticationTokenCookieResolver;
 
-    @Test(expected = IllegalArgumentException.class)
-    public void givenNullAuthenticationException_whenOnAuthenticationFailure_thenIllegalArgumentException()
-            throws Exception {
+  @Test(expected = IllegalArgumentException.class)
+  public void givenNullAuthenticationException_whenOnAuthenticationFailure_thenIllegalArgumentException()
+      throws Exception {
 
-        handler.onAuthenticationFailure(request, response, null);
-    }
+    handler.onAuthenticationFailure(request, response, null);
+  }
 
-    @Test
-    public void givenAuthenticationException_whenOnAuthenticationFailure_thenRedirectAndCookieRemoved()
-            throws Exception {
+  @Test
+  public void givenAuthenticationException_whenOnAuthenticationFailure_thenRedirectAndCookieRemoved()
+      throws Exception {
 
-        handler.onAuthenticationFailure(
-                request,
-                response,
-                new BadCredentialsException("bad")
-        );
+    handler.onAuthenticationFailure(
+        request,
+        response,
+        new BadCredentialsException("bad")
+    );
 
-        assertEquals(
-                LOGIN_URL + "?error=bad",
-                response.getRedirectedUrl()
-        );
+    assertEquals(
+        LOGIN_URL + "?error=bad",
+        response.getRedirectedUrl()
+    );
 
-        then(authenticationTokenCookieResolver).should().removeToken(response);
-    }
+    then(authenticationTokenCookieResolver).should().removeToken(response);
+  }
 
-    @Override
-    OAuth2LoginAuthenticationFailureHandler createHandler() {
-        return new OAuth2LoginAuthenticationFailureHandler(authenticationTokenCookieResolver);
-    }
+  @Override
+  OAuth2LoginAuthenticationFailureHandler createHandler() {
+    return new OAuth2LoginAuthenticationFailureHandler(authenticationTokenCookieResolver);
+  }
 
 }

@@ -5,12 +5,12 @@ import org.springframework.mock.web.MockFilterChain;
 
 public class BaseFilterTest extends BaseServletTest {
 
-    protected MockFilterChain filterChain;
+  protected MockFilterChain filterChain;
 
-    @Before
-    public void setUp() {
-        super.setUp();
-        filterChain = new MockFilterChain();
-    }
+  @Before
+  public void setUp() {
+    super.setUp();
+    filterChain = new MockFilterChain();
+  }
 
 }

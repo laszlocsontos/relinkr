@@ -13,48 +13,47 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 
 public class WebRequestAuthorizationWithAuthenticationTest
-        extends AbstractWebRequestAuthorizationTest {
+    extends AbstractWebRequestAuthorizationTest {
 
-    @After
-    public void tearDown() {
-        clearContext();
-    }
+  private static Authentication AUTHORIZED_AUTHENTICATION_TOKEN =
+      new TestingAuthenticationToken("1", null, "ROLE_USER");
+  private static Authentication UNAUTHORIZED_AUTHENTICATION_TOKEN =
+      new TestingAuthenticationToken("2", null, "ROLE_NONE");
 
-    private static Authentication AUTHORIZED_AUTHENTICATION_TOKEN =
-            new TestingAuthenticationToken("1", null, "ROLE_USER");
+  @After
+  public void tearDown() {
+    clearContext();
+  }
 
-    private static Authentication UNAUTHORIZED_AUTHENTICATION_TOKEN =
-            new TestingAuthenticationToken("2", null, "ROLE_NONE");
+  @Test
+  public void givenInvalidAuthentication_whenRootAccessed_thenOk() throws Exception {
+    super.givenInvalidAuthentication_whenRootAccessed_thenStatus(SC_OK);
+  }
 
-    @Test
-    public void givenInvalidAuthentication_whenRootAccessed_thenOk() throws Exception {
-        super.givenInvalidAuthentication_whenRootAccessed_thenStatus(SC_OK);
-    }
+  @Test
+  public void givenInvalidAuthentication_whenShortLinkAccessed_thenOk() throws Exception {
+    super.givenInvalidAuthentication_whenShortLinkAccessed_thenStatus(SC_OK);
+  }
 
-    @Test
-    public void givenInvalidAuthentication_whenShortLinkAccessed_thenOk() throws Exception {
-        super.givenInvalidAuthentication_whenShortLinkAccessed_thenStatus(SC_OK);
-    }
+  @Test
+  public void givenInvalidAuthentication_whenApiAccessed_thenForbidden() throws Exception {
+    super.givenInvalidAuthentication_whenApiAccessed_thenStatus(SC_FORBIDDEN);
+  }
 
-    @Test
-    public void givenInvalidAuthentication_whenApiAccessed_thenForbidden() throws Exception {
-        super.givenInvalidAuthentication_whenApiAccessed_thenStatus(SC_FORBIDDEN);
-    }
+  @Override
+  protected void withValidAuthentication() {
+    withAuthentication(AUTHORIZED_AUTHENTICATION_TOKEN);
+  }
 
-    @Override
-    protected void withValidAuthentication() {
-        withAuthentication(AUTHORIZED_AUTHENTICATION_TOKEN);
-    }
+  @Override
+  protected void withInvalidAuthentication() {
+    withAuthentication(UNAUTHORIZED_AUTHENTICATION_TOKEN);
+  }
 
-    @Override
-    protected void withInvalidAuthentication() {
-        withAuthentication(UNAUTHORIZED_AUTHENTICATION_TOKEN);
-    }
-
-    private void withAuthentication(Authentication authentication) {
-        SecurityContext context = createEmptyContext();
-        context.setAuthentication(authentication);
-        setContext(context);
-    }
+  private void withAuthentication(Authentication authentication) {
+    SecurityContext context = createEmptyContext();
+    context.setAuthentication(authentication);
+    setContext(context);
+  }
 
 }

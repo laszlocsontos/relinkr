@@ -6,6 +6,6 @@ import org.springframework.lang.NonNull;
 
 public interface VisitorService {
 
-    VisitorId ensureVisitor(VisitorId visitorId, @NonNull UserId userId);
+  VisitorId ensureVisitor(VisitorId visitorId, @NonNull UserId userId);
 
 }

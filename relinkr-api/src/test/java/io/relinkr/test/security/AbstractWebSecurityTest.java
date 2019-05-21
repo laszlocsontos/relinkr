@@ -22,25 +22,25 @@ import org.springframework.test.web.servlet.MockMvc;
 @ContextConfiguration(classes = TestConfig.class)
 public abstract class AbstractWebSecurityTest {
 
-    @Autowired
-    protected MockMvc mockMvc;
+  @Autowired
+  protected MockMvc mockMvc;
 
-    @MockBean
-    protected UserProfileFactory userProfileFactory;
+  @MockBean
+  protected UserProfileFactory userProfileFactory;
 
-    @MockBean
-    protected UserService userService;
+  @MockBean
+  protected UserService userService;
 
-    @MockBean
-    protected ClientRegistrationRepository clientRegistrationRepository;
+  @MockBean
+  protected ClientRegistrationRepository clientRegistrationRepository;
 
-    @MockBean
-    protected OAuth2AuthorizationRequestsCookieResolver authorizationRequestsCookieResolver;
+  @MockBean
+  protected OAuth2AuthorizationRequestsCookieResolver authorizationRequestsCookieResolver;
 
-    @TestConfiguration
-    @Import({WebSecurityConfig.class, JwtConfig.class})
-    public static class TestConfig {
+  @TestConfiguration
+  @Import({WebSecurityConfig.class, JwtConfig.class})
+  public static class TestConfig {
 
-    }
+  }
 
 }

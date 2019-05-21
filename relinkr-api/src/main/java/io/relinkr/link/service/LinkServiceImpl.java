@@ -20,134 +20,134 @@ import org.springframework.util.Assert;
 @RequiredArgsConstructor
 class LinkServiceImpl implements LinkService {
 
-    private final LinkRepository linkRepository;
+  private final LinkRepository linkRepository;
 
-    @Override
-    public Link getLink(LinkId id) throws EntityNotFoundException {
-        Assert.notNull(id, "id cannot be null");
+  @Override
+  public Link getLink(LinkId id) throws EntityNotFoundException {
+    Assert.notNull(id, "id cannot be null");
 
-        return linkRepository
-                .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("id", id));
+    return linkRepository
+        .findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("id", id));
 
+  }
+
+  @Override
+  public Link getLink(String path) {
+    Assert.hasText(path, "path must contain text");
+
+    Link link = linkRepository
+        .findByPath(path)
+        .orElseThrow(() -> new EntityNotFoundException("path", path));
+
+    if (!LinkStatus.ACTIVE.equals(link.getLinkStatus())) {
+      throw new EntityNotFoundException("path", path);
     }
 
-    @Override
-    public Link getLink(String path) {
-        Assert.hasText(path, "path must contain text");
+    return link;
+  }
 
-        Link link = linkRepository
-                .findByPath(path)
-                .orElseThrow(() -> new EntityNotFoundException("path", path));
+  @Override
+  public Page<Link> listLinks(UserId userId, Pageable pageable) {
+    return linkRepository.findByUserId(userId, pageable);
+  }
 
-        if (!LinkStatus.ACTIVE.equals(link.getLinkStatus())) {
-            throw new EntityNotFoundException("path", path);
-        }
+  @Override
+  public void activateLink(LinkId id) throws ApplicationException {
+    Assert.notNull(id, "id cannot be null");
 
-        return link;
-    }
+    Link link = getLink(id);
+    verifyLinkBeforeUpdate(link);
+    link.markActive();
 
-    @Override
-    public Page<Link> listLinks(UserId userId, Pageable pageable) {
-        return linkRepository.findByUserId(userId, pageable);
-    }
+    linkRepository.save(link);
+  }
 
-    @Override
-    public void activateLink(LinkId id) throws ApplicationException {
-        Assert.notNull(id, "id cannot be null");
+  @Override
+  public void archiveLink(LinkId id) throws ApplicationException {
+    Assert.notNull(id, "id cannot be null");
 
-        Link link = getLink(id);
-        verifyLinkBeforeUpdate(link);
-        link.markActive();
+    Link link = getLink(id);
+    verifyLinkBeforeUpdate(link);
+    link.markArchived();
 
-        linkRepository.save(link);
-    }
+    linkRepository.save(link);
+  }
 
-    @Override
-    public void archiveLink(LinkId id) throws ApplicationException {
-        Assert.notNull(id, "id cannot be null");
+  @Override
+  public void addTag(LinkId id, String tagName) throws ApplicationException {
+    Assert.notNull(id, "id cannot be null");
+    Assert.hasText(tagName, "tagName must contain text");
 
-        Link link = getLink(id);
-        verifyLinkBeforeUpdate(link);
-        link.markArchived();
+    Link link = getLink(id);
+    verifyLinkBeforeUpdate(link);
+    link.addTag(new Tag(tagName));
 
-        linkRepository.save(link);
-    }
+    linkRepository.save(link);
+  }
 
-    @Override
-    public void addTag(LinkId id, String tagName) throws ApplicationException {
-        Assert.notNull(id, "id cannot be null");
-        Assert.hasText(tagName, "tagName must contain text");
+  @Override
+  public void removeTag(LinkId id, String tagName) throws ApplicationException {
+    Assert.notNull(id, "id cannot be null");
+    Assert.hasText(tagName, "tagName must contain text");
 
-        Link link = getLink(id);
-        verifyLinkBeforeUpdate(link);
-        link.addTag(new Tag(tagName));
+    Link link = getLink(id);
+    verifyLinkBeforeUpdate(link);
+    link.removeTag(new Tag(tagName));
+    linkRepository.save(link);
+  }
 
-        linkRepository.save(link);
-    }
+  @Override
+  public Link updateLongUrl(LinkId id, String longUrl) {
+    Assert.notNull(id, "id cannot be null");
+    Assert.hasText(longUrl, "longUrl must contain text");
 
-    @Override
-    public void removeTag(LinkId id, String tagName) throws ApplicationException {
-        Assert.notNull(id, "id cannot be null");
-        Assert.hasText(tagName, "tagName must contain text");
+    Link link = getLink(id);
+    link.updateLongUrl(longUrl);
+    return linkRepository.save(link);
+  }
 
-        Link link = getLink(id);
-        verifyLinkBeforeUpdate(link);
-        link.removeTag(new Tag(tagName));
-        linkRepository.save(link);
-    }
+  @Override
+  public URI getTargetUrl(String path) throws EntityNotFoundException {
+    return getLink(path).getTargetUrl();
+  }
 
-    @Override
-    public Link updateLongUrl(LinkId id, String longUrl) {
-        Assert.notNull(id, "id cannot be null");
-        Assert.hasText(longUrl, "longUrl must contain text");
+  @Override
+  public Link addLink(String longUrl, UtmParameters utmParameters, UserId userId)
+      throws InvalidUrlException {
 
-        Link link = getLink(id);
-        link.updateLongUrl(longUrl);
-        return linkRepository.save(link);
-    }
+    Assert.hasText(longUrl, "longUrl must contain text");
+    Assert.notNull(userId, "userId cannot be null");
 
-    @Override
-    public URI getTargetUrl(String path) throws EntityNotFoundException {
-        return getLink(path).getTargetUrl();
-    }
+    Link link = new Link(longUrl, utmParameters, userId);
+    return linkRepository.save(link);
+  }
 
-    @Override
-    public Link addLink(String longUrl, UtmParameters utmParameters, UserId userId)
-            throws InvalidUrlException {
+  @Override
+  public Link updateLongUrl(LinkId linkId, String longUrl, UtmParameters utmParameters) {
+    Assert.notNull(linkId, "linkId cannot be null");
+    Assert.hasText(longUrl, "longUrl must contain text");
 
-        Assert.hasText(longUrl, "longUrl must contain text");
-        Assert.notNull(userId, "userId cannot be null");
+    Link link = getLink(linkId);
+    verifyLinkBeforeUpdate(link);
+    link.updateLongUrl(longUrl, utmParameters);
+    return linkRepository.save(link);
+  }
 
-        Link link = new Link(longUrl, utmParameters, userId);
-        return linkRepository.save(link);
-    }
+  @Override
+  public Link updateUtmParameters(LinkId linkId, UtmParameters utmParameters)
+      throws ApplicationException {
 
-    @Override
-    public Link updateLongUrl(LinkId linkId, String longUrl, UtmParameters utmParameters) {
-        Assert.notNull(linkId, "linkId cannot be null");
-        Assert.hasText(longUrl, "longUrl must contain text");
+    Assert.notNull(linkId, "linkId cannot be null");
 
-        Link link = getLink(linkId);
-        verifyLinkBeforeUpdate(link);
-        link.updateLongUrl(longUrl, utmParameters);
-        return linkRepository.save(link);
-    }
+    Link link = getLink(linkId);
+    verifyLinkBeforeUpdate(link);
+    link.apply(utmParameters);
+    return linkRepository.save(link);
+  }
 
-    @Override
-    public Link updateUtmParameters(LinkId linkId, UtmParameters utmParameters)
-            throws ApplicationException {
-
-        Assert.notNull(linkId, "linkId cannot be null");
-
-        Link link = getLink(linkId);
-        verifyLinkBeforeUpdate(link);
-        link.apply(utmParameters);
-        return linkRepository.save(link);
-    }
-
-    protected void verifyLinkBeforeUpdate(Link link) {
-        // TODO: I don't remember what this was supposed to be doing
-    }
+  protected void verifyLinkBeforeUpdate(Link link) {
+    // TODO: I don't remember what this was supposed to be doing
+  }
 
 }

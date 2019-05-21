@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface GeoLocator {
 
-    Optional<Country> lookupCountry(IpAddress ipAddress);
+  Optional<Country> lookupCountry(IpAddress ipAddress);
 
 }

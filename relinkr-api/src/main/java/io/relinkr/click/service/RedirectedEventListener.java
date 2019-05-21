@@ -17,20 +17,20 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RedirectedEventListener implements ApplicationListener<RedirectedEvent> {
 
-    private final ClickService clickService;
+  private final ClickService clickService;
 
-    @Async
-    @Override
-    public void onApplicationEvent(RedirectedEvent redirectedEvent) {
-        Click click = Click.of(
-                redirectedEvent.getLinkId(),
-                redirectedEvent.getVisitorId(),
-                redirectedEvent.getUserId(),
-                IpAddress.fromString(redirectedEvent.getIpAddress()),
-                LocalDateTime.ofInstant(redirectedEvent.getInstant(), UTC)
-        );
+  @Async
+  @Override
+  public void onApplicationEvent(RedirectedEvent redirectedEvent) {
+    Click click = Click.of(
+        redirectedEvent.getLinkId(),
+        redirectedEvent.getVisitorId(),
+        redirectedEvent.getUserId(),
+        IpAddress.fromString(redirectedEvent.getIpAddress()),
+        LocalDateTime.ofInstant(redirectedEvent.getInstant(), UTC)
+    );
 
-        clickService.logClick(click);
-    }
+    clickService.logClick(click);
+  }
 
 }

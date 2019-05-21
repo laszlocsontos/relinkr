@@ -20,83 +20,83 @@ import org.springframework.util.StringUtils;
  */
 @RequiredArgsConstructor
 public final class HttpCookieOAuth2AuthorizationRequestRepository
-        implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
+    implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 
-    private final OAuth2AuthorizationRequestsCookieResolver authorizationRequestCookieResolver;
+  private final OAuth2AuthorizationRequestsCookieResolver authorizationRequestCookieResolver;
 
-    @Override
-    public OAuth2AuthorizationRequest loadAuthorizationRequest(
-            @NonNull HttpServletRequest request) {
+  @Override
+  public OAuth2AuthorizationRequest loadAuthorizationRequest(
+      @NonNull HttpServletRequest request) {
 
-        Optional<String> stateParameter = getStateParameter(request);
-        if (!stateParameter.isPresent()) {
-            return null;
-        }
-
-        Map<String, OAuth2AuthorizationRequest> authorizationRequests =
-                getAuthorizationRequests(request);
-
-        return authorizationRequests.get(stateParameter.get());
+    Optional<String> stateParameter = getStateParameter(request);
+    if (!stateParameter.isPresent()) {
+      return null;
     }
 
-    @Override
-    public void saveAuthorizationRequest(
-            OAuth2AuthorizationRequest authorizationRequest,
-            @NonNull HttpServletRequest request, @NonNull HttpServletResponse response) {
+    Map<String, OAuth2AuthorizationRequest> authorizationRequests =
+        getAuthorizationRequests(request);
 
-        if (authorizationRequest == null) {
-            removeAuthorizationRequest(request, response);
-            return;
-        }
+    return authorizationRequests.get(stateParameter.get());
+  }
 
-        String state = authorizationRequest.getState();
-        Assert.hasText(state, "authorizationRequest.state cannot be empty");
+  @Override
+  public void saveAuthorizationRequest(
+      OAuth2AuthorizationRequest authorizationRequest,
+      @NonNull HttpServletRequest request, @NonNull HttpServletResponse response) {
 
-        Map<String, OAuth2AuthorizationRequest> authorizationRequests =
-                getAuthorizationRequests(request);
-
-        authorizationRequests.put(state, authorizationRequest);
-        authorizationRequestCookieResolver.setRequests(response, authorizationRequests);
+    if (authorizationRequest == null) {
+      removeAuthorizationRequest(request, response);
+      return;
     }
 
-    @Override
-    public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request) {
-        throw new UnsupportedOperationException();
+    String state = authorizationRequest.getState();
+    Assert.hasText(state, "authorizationRequest.state cannot be empty");
+
+    Map<String, OAuth2AuthorizationRequest> authorizationRequests =
+        getAuthorizationRequests(request);
+
+    authorizationRequests.put(state, authorizationRequest);
+    authorizationRequestCookieResolver.setRequests(response, authorizationRequests);
+  }
+
+  @Override
+  public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public OAuth2AuthorizationRequest removeAuthorizationRequest(
+      @NonNull HttpServletRequest request, @NonNull HttpServletResponse response) {
+
+    Optional<String> stateParameter = this.getStateParameter(request);
+    if (!stateParameter.isPresent()) {
+      return null;
     }
 
-    @Override
-    public OAuth2AuthorizationRequest removeAuthorizationRequest(
-            @NonNull HttpServletRequest request, @NonNull HttpServletResponse response) {
+    Map<String, OAuth2AuthorizationRequest> authorizationRequests =
+        getAuthorizationRequests(request);
 
-        Optional<String> stateParameter = this.getStateParameter(request);
-        if (!stateParameter.isPresent()) {
-            return null;
-        }
+    OAuth2AuthorizationRequest originalRequest =
+        authorizationRequests.remove(stateParameter.get());
 
-        Map<String, OAuth2AuthorizationRequest> authorizationRequests =
-                getAuthorizationRequests(request);
-
-        OAuth2AuthorizationRequest originalRequest =
-                authorizationRequests.remove(stateParameter.get());
-
-        if (!authorizationRequests.isEmpty()) {
-            authorizationRequestCookieResolver.setRequests(response, authorizationRequests);
-        } else {
-            authorizationRequestCookieResolver.setRequests(response, null);
-        }
-
-        return originalRequest;
+    if (!authorizationRequests.isEmpty()) {
+      authorizationRequestCookieResolver.setRequests(response, authorizationRequests);
+    } else {
+      authorizationRequestCookieResolver.setRequests(response, null);
     }
 
-    private Optional<String> getStateParameter(HttpServletRequest request) {
-        return Optional.ofNullable(request.getParameter(STATE)).filter(StringUtils::hasText);
-    }
+    return originalRequest;
+  }
 
-    private Map<String, OAuth2AuthorizationRequest> getAuthorizationRequests(
-            HttpServletRequest request) {
+  private Optional<String> getStateParameter(HttpServletRequest request) {
+    return Optional.ofNullable(request.getParameter(STATE)).filter(StringUtils::hasText);
+  }
 
-        return authorizationRequestCookieResolver.resolveRequests(request)
-                .map(HashMap::new).orElse(new HashMap<>());
-    }
+  private Map<String, OAuth2AuthorizationRequest> getAuthorizationRequests(
+      HttpServletRequest request) {
+
+    return authorizationRequestCookieResolver.resolveRequests(request)
+        .map(HashMap::new).orElse(new HashMap<>());
+  }
 
 }

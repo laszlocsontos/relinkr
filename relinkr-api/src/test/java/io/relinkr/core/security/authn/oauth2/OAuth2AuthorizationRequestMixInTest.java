@@ -12,40 +12,40 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
 @Slf4j
 public class OAuth2AuthorizationRequestMixInTest {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Before
-    public void setUp() {
-        objectMapper.addMixIn(
-                OAuth2AuthorizationRequest.class, OAuth2AuthorizationRequestMixIn.class
-        );
-    }
+  @Before
+  public void setUp() {
+    objectMapper.addMixIn(
+        OAuth2AuthorizationRequest.class, OAuth2AuthorizationRequestMixIn.class
+    );
+  }
 
-    @Test
-    public void shouldDeserializeCorrectly() throws Exception {
-        String json = objectMapper.writeValueAsString(OAUTH2_AUTHORIZATION_REQUEST);
-        log.info(json);
+  @Test
+  public void shouldDeserializeCorrectly() throws Exception {
+    String json = objectMapper.writeValueAsString(OAUTH2_AUTHORIZATION_REQUEST);
+    log.info(json);
 
-        OAuth2AuthorizationRequest deserializedRequest =
-                objectMapper.readValue(json, OAuth2AuthorizationRequest.class);
+    OAuth2AuthorizationRequest deserializedRequest =
+        objectMapper.readValue(json, OAuth2AuthorizationRequest.class);
 
-        assertEquals(OAUTH2_AUTHORIZATION_REQUEST.getGrantType(),
-                deserializedRequest.getGrantType());
-        assertEquals(OAUTH2_AUTHORIZATION_REQUEST.getResponseType(),
-                deserializedRequest.getResponseType());
-        assertEquals(OAUTH2_AUTHORIZATION_REQUEST.getClientId(), deserializedRequest.getClientId());
-        assertEquals(OAUTH2_AUTHORIZATION_REQUEST.getScopes(), deserializedRequest.getScopes());
-        assertEquals(OAUTH2_AUTHORIZATION_REQUEST.getState(), deserializedRequest.getState());
-        assertEquals(
-                OAUTH2_AUTHORIZATION_REQUEST.getAuthorizationUri(),
-                deserializedRequest.getAuthorizationUri()
-        );
-        assertEquals(OAUTH2_AUTHORIZATION_REQUEST.getRedirectUri(),
-                deserializedRequest.getRedirectUri());
-        assertEquals(
-                OAUTH2_AUTHORIZATION_REQUEST.getAdditionalParameters(),
-                deserializedRequest.getAdditionalParameters()
-        );
-    }
+    assertEquals(OAUTH2_AUTHORIZATION_REQUEST.getGrantType(),
+        deserializedRequest.getGrantType());
+    assertEquals(OAUTH2_AUTHORIZATION_REQUEST.getResponseType(),
+        deserializedRequest.getResponseType());
+    assertEquals(OAUTH2_AUTHORIZATION_REQUEST.getClientId(), deserializedRequest.getClientId());
+    assertEquals(OAUTH2_AUTHORIZATION_REQUEST.getScopes(), deserializedRequest.getScopes());
+    assertEquals(OAUTH2_AUTHORIZATION_REQUEST.getState(), deserializedRequest.getState());
+    assertEquals(
+        OAUTH2_AUTHORIZATION_REQUEST.getAuthorizationUri(),
+        deserializedRequest.getAuthorizationUri()
+    );
+    assertEquals(OAUTH2_AUTHORIZATION_REQUEST.getRedirectUri(),
+        deserializedRequest.getRedirectUri());
+    assertEquals(
+        OAUTH2_AUTHORIZATION_REQUEST.getAdditionalParameters(),
+        deserializedRequest.getAdditionalParameters()
+    );
+  }
 
 }

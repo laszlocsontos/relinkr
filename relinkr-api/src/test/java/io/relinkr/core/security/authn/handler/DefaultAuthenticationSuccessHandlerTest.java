@@ -24,54 +24,54 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultAuthenticationSuccessHandlerTest extends BaseServletTest {
 
-    private ObjectMapper objectMapper;
+  private ObjectMapper objectMapper;
 
-    @Mock
-    private JwtAuthenticationService jwtAuthenticationService;
+  @Mock
+  private JwtAuthenticationService jwtAuthenticationService;
 
-    private AuthenticationSuccessHandler authenticationSuccessHandler;
+  private AuthenticationSuccessHandler authenticationSuccessHandler;
 
-    @Before
-    public void setUp() {
-        super.setUp();
+  @Before
+  public void setUp() {
+    super.setUp();
 
-        objectMapper = new ObjectMapper();
+    objectMapper = new ObjectMapper();
 
-        authenticationSuccessHandler =
-                new DefaultAuthenticationSuccessHandler(objectMapper, jwtAuthenticationService);
-    }
+    authenticationSuccessHandler =
+        new DefaultAuthenticationSuccessHandler(objectMapper, jwtAuthenticationService);
+  }
 
-    @Test
-    public void givenJwtCreated_whenOnSuccess_thenTokenSent() throws Exception {
-        given(jwtAuthenticationService.createJwtToken(any(Authentication.class), anyInt()))
-                .willReturn("token");
+  @Test
+  public void givenJwtCreated_whenOnSuccess_thenTokenSent() throws Exception {
+    given(jwtAuthenticationService.createJwtToken(any(Authentication.class), anyInt()))
+        .willReturn("token");
 
-        Authentication testAuthentication = new TestingAuthenticationToken("test", null);
+    Authentication testAuthentication = new TestingAuthenticationToken("test", null);
 
-        authenticationSuccessHandler.onAuthenticationSuccess(request, response, testAuthentication);
+    authenticationSuccessHandler.onAuthenticationSuccess(request, response, testAuthentication);
 
-        JsonNode tokenResponse =
-                objectMapper.readValue(response.getContentAsByteArray(), JsonNode.class);
+    JsonNode tokenResponse =
+        objectMapper.readValue(response.getContentAsByteArray(), JsonNode.class);
 
-        assertEquals("token", tokenResponse.path("token").asText());
-    }
+    assertEquals("token", tokenResponse.path("token").asText());
+  }
 
-    @Test
-    public void givenJwtCreationFailed_whenOnSuccess_thenErrorSent() throws Exception {
-        final String errorMessage = "Couldn't create JWT";
+  @Test
+  public void givenJwtCreationFailed_whenOnSuccess_thenErrorSent() throws Exception {
+    final String errorMessage = "Couldn't create JWT";
 
-        given(jwtAuthenticationService.createJwtToken(any(Authentication.class), anyInt()))
-                .willThrow(new InternalAuthenticationServiceException(errorMessage));
+    given(jwtAuthenticationService.createJwtToken(any(Authentication.class), anyInt()))
+        .willThrow(new InternalAuthenticationServiceException(errorMessage));
 
-        Authentication testAuthentication = new TestingAuthenticationToken("test", null);
+    Authentication testAuthentication = new TestingAuthenticationToken("test", null);
 
-        authenticationSuccessHandler.onAuthenticationSuccess(request, response, testAuthentication);
+    authenticationSuccessHandler.onAuthenticationSuccess(request, response, testAuthentication);
 
-        RestErrorResponse tokenResponse =
-                objectMapper.readValue(response.getContentAsByteArray(), RestErrorResponse.class);
+    RestErrorResponse tokenResponse =
+        objectMapper.readValue(response.getContentAsByteArray(), RestErrorResponse.class);
 
-        assertEquals(SC_INTERNAL_SERVER_ERROR, tokenResponse.getStatusCode());
-        assertEquals(errorMessage, tokenResponse.getDetailMessage());
-    }
+    assertEquals(SC_INTERNAL_SERVER_ERROR, tokenResponse.getStatusCode());
+    assertEquals(errorMessage, tokenResponse.getDetailMessage());
+  }
 
 }

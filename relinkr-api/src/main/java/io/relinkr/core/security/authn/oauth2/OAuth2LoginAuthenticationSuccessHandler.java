@@ -13,23 +13,23 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RequiredArgsConstructor
 public class OAuth2LoginAuthenticationSuccessHandler
-        extends AbstractOAuth2LoginAuthenticationHandler implements AuthenticationSuccessHandler {
+    extends AbstractOAuth2LoginAuthenticationHandler implements AuthenticationSuccessHandler {
 
-    static final int HALF_AN_HOUR = 30;
+  static final int HALF_AN_HOUR = 30;
 
-    private final JwtAuthenticationService jwtAuthenticationService;
-    private final JwtAuthenticationTokenCookieResolver authenticationTokenCookieResolver;
+  private final JwtAuthenticationService jwtAuthenticationService;
+  private final JwtAuthenticationTokenCookieResolver authenticationTokenCookieResolver;
 
-    @Override
-    public void onAuthenticationSuccess(
-            HttpServletRequest request, HttpServletResponse response,
-            @NonNull Authentication authentication)
-            throws IOException {
+  @Override
+  public void onAuthenticationSuccess(
+      HttpServletRequest request, HttpServletResponse response,
+      @NonNull Authentication authentication)
+      throws IOException {
 
-        String bearerToken = jwtAuthenticationService.createJwtToken(authentication, HALF_AN_HOUR);
-        authenticationTokenCookieResolver.setToken(response, bearerToken);
+    String bearerToken = jwtAuthenticationService.createJwtToken(authentication, HALF_AN_HOUR);
+    authenticationTokenCookieResolver.setToken(response, bearerToken);
 
-        sendRedirect(request, response, UriComponentsBuilder::build);
-    }
+    sendRedirect(request, response, UriComponentsBuilder::build);
+  }
 
 }

@@ -25,50 +25,50 @@ import org.springframework.hateoas.Identifiable;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 public class AbstractEntity<ID extends AbstractId<? extends AbstractEntity<ID>>>
-        extends AbstractAggregateRoot implements Identifiable<ID>, Persistable<ID>, Serializable {
+    extends AbstractAggregateRoot implements Identifiable<ID>, Persistable<ID>, Serializable {
 
-    @EmbeddedId
-    @GeneratedValue(generator = "time-based")
-    @GenericGenerator(
-            name = "time-based",
-            strategy = "io.relinkr.core.orm.TimeBasedIdentifierGenerator"
-    )
-    private ID id;
+  @EmbeddedId
+  @GeneratedValue(generator = "time-based")
+  @GenericGenerator(
+      name = "time-based",
+      strategy = "io.relinkr.core.orm.TimeBasedIdentifierGenerator"
+  )
+  private ID id;
 
-    @CreatedDate
-    private LocalDateTime createdDate;
+  @CreatedDate
+  private LocalDateTime createdDate;
 
-    @LastModifiedDate
-    private LocalDateTime lastModifiedDate;
+  @LastModifiedDate
+  private LocalDateTime lastModifiedDate;
 
-    @Version
-    @Column(name = "version_")
-    private Integer version;
+  @Version
+  @Column(name = "version_")
+  private Integer version;
 
-    @Override
-    public boolean isNew() {
-        return getId() == null;
-    }
+  @Override
+  public boolean isNew() {
+    return getId() == null;
+  }
 
-    @Override
-    public ID getId() {
-        return id;
-    }
+  @Override
+  public ID getId() {
+    return id;
+  }
 
-    public void setId(ID id) {
-        this.id = id;
-    }
+  public void setId(ID id) {
+    this.id = id;
+  }
 
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
+  public LocalDateTime getCreatedDate() {
+    return createdDate;
+  }
 
-    public LocalDateTime getLastModifiedDate() {
-        return lastModifiedDate;
-    }
+  public LocalDateTime getLastModifiedDate() {
+    return lastModifiedDate;
+  }
 
-    public Integer getVersion() {
-        return version;
-    }
+  public Integer getVersion() {
+    return version;
+  }
 
 }

@@ -10,17 +10,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PACKAGE)
 public class ClickId extends AbstractId<Click> {
 
-    public ClickId(long id) {
-        super(id);
-    }
+  public ClickId(long id) {
+    super(id);
+  }
 
-    public static ClickId of(long id) {
-        return new ClickId(id);
-    }
+  public static ClickId of(long id) {
+    return new ClickId(id);
+  }
 
-    @Override
-    public Class<Click> getEntityClass() {
-        return Click.class;
-    }
+  @Override
+  public Class<Click> getEntityClass() {
+    return Click.class;
+  }
 
 }

@@ -14,19 +14,19 @@ import io.relinkr.test.orm.BaseRepositoryTest;
 
 public class ClickRepositoryTest extends BaseRepositoryTest<Click, ClickId, ClickRepository> {
 
-    @Override
-    protected Click createEntity() {
-        return Click.of(LINK_ID, VISITOR_ID, USER_ID, VISITOR_IP, TIMESTAMP);
-    }
+  @Override
+  protected Click createEntity() {
+    return Click.of(LINK_ID, VISITOR_ID, USER_ID, VISITOR_IP, TIMESTAMP);
+  }
 
-    @Override
-    protected ClickId getId() {
-        return CLICK_ID;
-    }
+  @Override
+  protected ClickId getId() {
+    return CLICK_ID;
+  }
 
-    @Override
-    protected ClickId getNonExistentId() {
-        return CLICK_ID_ZERO;
-    }
+  @Override
+  protected ClickId getNonExistentId() {
+    return CLICK_ID_ZERO;
+  }
 
 }

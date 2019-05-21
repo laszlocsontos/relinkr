@@ -37,94 +37,94 @@ import org.springframework.web.client.RestOperations;
 @ContextConfiguration(classes = TestConfig.class)
 public class GeoLocatorTest {
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
-    @Autowired
-    private RestOperations restOperations;
+  @Autowired
+  private RestOperations restOperations;
 
-    @Autowired
-    private GeoLocator geoLocator;
+  @Autowired
+  private GeoLocator geoLocator;
 
-    @After
-    public void tearDown() {
-        reset(restOperations);
+  @After
+  public void tearDown() {
+    reset(restOperations);
+  }
+
+  @Test
+  public void givenNullIpAddress_whenLookupCountry_thenIllegalArgumentExceptionAndNotRetried() {
+    expectedException.expect(IllegalArgumentException.class);
+    expectedException.expectMessage("ipAddress is marked @NonNull but is null");
+
+    try {
+      geoLocator.lookupCountry(null);
+    } finally {
+      then(restOperations).should(never())
+          .getForObject(anyString(), any(), anyMap());
+    }
+  }
+
+  @Test
+  public void givenIllegalCountyCodeReceived_whenLookupCountry_thenEmpty() {
+    given(restOperations.getForObject(anyString(), any(), anyMap())).willReturn("bad");
+    Optional<Country> country = geoLocator.lookupCountry(VISITOR_IP);
+    assertFalse(country.isPresent());
+    then(restOperations).should().getForObject(anyString(), any(), anyMap());
+  }
+
+  @Test
+  public void givenUnknownCountyCodeReceived_whenLookupCountry_thenEmpty() {
+    given(restOperations.getForObject(anyString(), any(), anyMap())).willReturn("SU");
+    Optional<Country> country = geoLocator.lookupCountry(VISITOR_IP);
+    assertEquals(Country.ZZ, country.get());
+    then(restOperations).should().getForObject(anyString(), any(), anyMap());
+  }
+
+  @Test
+  public void givenIOError_whenLookupCountry_thenRetriedAndExceptionPropagated() {
+    assertRetried(REST_IO_ERROR, GeoLocatorImpl.MAX_ATTEMPTS);
+  }
+
+  @Test
+  public void givenServerError_whenLookupCountry_thenRetriedAndExceptionPropagated() {
+    assertRetried(REST_SERVER_ERROR, GeoLocatorImpl.MAX_ATTEMPTS);
+  }
+
+  @Test
+  public void givenClientError_whenLookupCountry_thenRetriedAndExceptionPropagated() {
+    assertRetried(REST_CLIENT_ERROR, 1);
+  }
+
+  private void assertRetried(Exception retryableException, int expectedAttempts) {
+    given(restOperations.getForObject(anyString(), any(), anyMap()))
+        .willThrow(retryableException);
+
+    expectedException.expect(retryableException.getClass());
+    expectedException.expectMessage(retryableException.getMessage());
+
+    try {
+      geoLocator.lookupCountry(VISITOR_IP);
+    } finally {
+      then(restOperations).should(times(expectedAttempts)).getForObject(
+          anyString(), any(), anyMap()
+      );
+    }
+  }
+
+  @Configuration
+  @Import(RetryConfig.class)
+  static class TestConfig {
+
+    @Bean
+    RestOperations restOperations() {
+      return mock(RestOperations.class);
     }
 
-    @Test
-    public void givenNullIpAddress_whenLookupCountry_thenIllegalArgumentExceptionAndNotRetried() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("ipAddress is marked @NonNull but is null");
-
-        try {
-            geoLocator.lookupCountry(null);
-        } finally {
-            then(restOperations).should(never())
-                    .getForObject(anyString(), any(), anyMap());
-        }
+    @Bean
+    GeoLocator geoLocator(RestOperations restOperations) {
+      return new GeoLocatorImpl(restOperations);
     }
 
-    @Test
-    public void givenIllegalCountyCodeReceived_whenLookupCountry_thenEmpty() {
-        given(restOperations.getForObject(anyString(), any(), anyMap())).willReturn("bad");
-        Optional<Country> country = geoLocator.lookupCountry(VISITOR_IP);
-        assertFalse(country.isPresent());
-        then(restOperations).should().getForObject(anyString(), any(), anyMap());
-    }
-
-    @Test
-    public void givenUnknownCountyCodeReceived_whenLookupCountry_thenEmpty() {
-        given(restOperations.getForObject(anyString(), any(), anyMap())).willReturn("SU");
-        Optional<Country> country = geoLocator.lookupCountry(VISITOR_IP);
-        assertEquals(Country.ZZ, country.get());
-        then(restOperations).should().getForObject(anyString(), any(), anyMap());
-    }
-
-    @Test
-    public void givenIOError_whenLookupCountry_thenRetriedAndExceptionPropagated() {
-        assertRetried(REST_IO_ERROR, GeoLocatorImpl.MAX_ATTEMPTS);
-    }
-
-    @Test
-    public void givenServerError_whenLookupCountry_thenRetriedAndExceptionPropagated() {
-        assertRetried(REST_SERVER_ERROR, GeoLocatorImpl.MAX_ATTEMPTS);
-    }
-
-    @Test
-    public void givenClientError_whenLookupCountry_thenRetriedAndExceptionPropagated() {
-        assertRetried(REST_CLIENT_ERROR, 1);
-    }
-
-    private void assertRetried(Exception retryableException, int expectedAttempts) {
-        given(restOperations.getForObject(anyString(), any(), anyMap()))
-                .willThrow(retryableException);
-
-        expectedException.expect(retryableException.getClass());
-        expectedException.expectMessage(retryableException.getMessage());
-
-        try {
-            geoLocator.lookupCountry(VISITOR_IP);
-        } finally {
-            then(restOperations).should(times(expectedAttempts)).getForObject(
-                    anyString(), any(), anyMap()
-            );
-        }
-    }
-
-    @Configuration
-    @Import(RetryConfig.class)
-    static class TestConfig {
-
-        @Bean
-        RestOperations restOperations() {
-            return mock(RestOperations.class);
-        }
-
-        @Bean
-        GeoLocator geoLocator(RestOperations restOperations) {
-            return new GeoLocatorImpl(restOperations);
-        }
-
-    }
+  }
 
 }

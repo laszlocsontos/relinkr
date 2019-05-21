@@ -12,19 +12,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class VisitorServiceImpl implements VisitorService {
 
-    private final VisitorRepository visitorRepository;
+  private final VisitorRepository visitorRepository;
 
-    public VisitorServiceImpl(VisitorRepository visitorRepository) {
-        this.visitorRepository = visitorRepository;
-    }
+  public VisitorServiceImpl(VisitorRepository visitorRepository) {
+    this.visitorRepository = visitorRepository;
+  }
 
-    @Override
-    public VisitorId ensureVisitor(VisitorId visitorId, @NonNull UserId userId) {
-        Visitor visitor = Optional.ofNullable(visitorId)
-                .flatMap(visitorRepository::findById)
-                .orElseGet(() -> Visitor.of(userId));
+  @Override
+  public VisitorId ensureVisitor(VisitorId visitorId, @NonNull UserId userId) {
+    Visitor visitor = Optional.ofNullable(visitorId)
+        .flatMap(visitorRepository::findById)
+        .orElseGet(() -> Visitor.of(userId));
 
-        return visitorRepository.save(visitor).getId();
-    }
+    return visitorRepository.save(visitor).getId();
+  }
 
 }

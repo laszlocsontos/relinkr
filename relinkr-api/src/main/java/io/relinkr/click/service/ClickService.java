@@ -4,6 +4,6 @@ import io.relinkr.click.model.Click;
 
 public interface ClickService {
 
-    void logClick(Click click);
+  void logClick(Click click);
 
 }

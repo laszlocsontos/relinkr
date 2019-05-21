@@ -66,247 +66,247 @@ import org.springframework.test.web.servlet.ResultMatcher;
 @WebMvcTest(controllers = TestController.class)
 public class OAuth2LoginTest extends AbstractWebSecurityTest {
 
-    private static final String CLIENT_ID = "1234";
-    private static final String CLIENT_REG_ID = "google";
-    private static final String STATE = "state";
+  private static final String CLIENT_ID = "1234";
+  private static final String CLIENT_REG_ID = "google";
+  private static final String STATE = "state";
 
-    private static final String BASE_URI = "http://localhost";
+  private static final String BASE_URI = "http://localhost";
 
-    private static final String REDIRECT_URI =
-            BASE_URI + OAUTH2_LOGIN_PROCESSES_BASE_URI + "/" + CLIENT_REG_ID;
-    private static final String CLIENT_SECRET = "1234";
+  private static final String REDIRECT_URI =
+      BASE_URI + OAUTH2_LOGIN_PROCESSES_BASE_URI + "/" + CLIENT_REG_ID;
+  private static final String CLIENT_SECRET = "1234";
 
-    @Autowired
-    private JwtAuthenticationService jwtAuthenticationService;
+  @Autowired
+  private JwtAuthenticationService jwtAuthenticationService;
 
-    @Autowired
-    private JwtAuthenticationTokenCookieResolver jwtAuthenticationTokenCookieResolver;
+  @Autowired
+  private JwtAuthenticationTokenCookieResolver jwtAuthenticationTokenCookieResolver;
 
-    @MockBean
-    private OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient;
+  @MockBean
+  private OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient;
 
-    @MockBean
-    private AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
+  @MockBean
+  private AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
 
-    @MockBean(name = "defaultOAuth2UserService")
-    private OAuth2UserService<OAuth2UserRequest, OAuth2User> defaultOAuth2UserService;
+  @MockBean(name = "defaultOAuth2UserService")
+  private OAuth2UserService<OAuth2UserRequest, OAuth2User> defaultOAuth2UserService;
 
-    private User user;
-    private String[] roles;
-    private UserProfile userProfile;
+  private User user;
+  private String[] roles;
+  private UserProfile userProfile;
 
-    @Before
-    public void setUp() {
-        ClientRegistration clientRegistration = GOOGLE.getBuilder(CLIENT_REG_ID)
-                .authorizationGrantType(AUTHORIZATION_CODE)
-                .clientId(CLIENT_ID)
-                .clientSecret(CLIENT_SECRET)
-                .scope("email")
-                .build();
+  @Before
+  public void setUp() {
+    ClientRegistration clientRegistration = GOOGLE.getBuilder(CLIENT_REG_ID)
+        .authorizationGrantType(AUTHORIZATION_CODE)
+        .clientId(CLIENT_ID)
+        .clientSecret(CLIENT_SECRET)
+        .scope("email")
+        .build();
 
-        given(clientRegistrationRepository.findByRegistrationId(CLIENT_REG_ID))
-                .willReturn(clientRegistration);
+    given(clientRegistrationRepository.findByRegistrationId(CLIENT_REG_ID))
+        .willReturn(clientRegistration);
 
-        OAuth2AuthorizationRequest authorizationRequest = OAuth2AuthorizationRequest
-                .authorizationCode()
-                .authorizationUri(clientRegistration.getProviderDetails().getAuthorizationUri())
-                .clientId(CLIENT_ID)
-                .state(STATE)
-                .redirectUri(REDIRECT_URI)
-                .additionalParameters(singletonMap(REGISTRATION_ID, CLIENT_REG_ID))
-                .build();
+    OAuth2AuthorizationRequest authorizationRequest = OAuth2AuthorizationRequest
+        .authorizationCode()
+        .authorizationUri(clientRegistration.getProviderDetails().getAuthorizationUri())
+        .clientId(CLIENT_ID)
+        .state(STATE)
+        .redirectUri(REDIRECT_URI)
+        .additionalParameters(singletonMap(REGISTRATION_ID, CLIENT_REG_ID))
+        .build();
 
-        given(authorizationRequestRepository.removeAuthorizationRequest(
-                any(HttpServletRequest.class), any(HttpServletResponse.class)
-        )).willReturn(authorizationRequest);
+    given(authorizationRequestRepository.removeAuthorizationRequest(
+        any(HttpServletRequest.class), any(HttpServletResponse.class)
+    )).willReturn(authorizationRequest);
 
-        OAuth2AccessTokenResponse accessTokenResponse = OAuth2AccessTokenResponse.withToken("1234")
-                .tokenType(BEARER).build();
+    OAuth2AccessTokenResponse accessTokenResponse = OAuth2AccessTokenResponse.withToken("1234")
+        .tokenType(BEARER).build();
 
-        given(accessTokenResponseClient.getTokenResponse(
-                any(OAuth2AuthorizationCodeGrantRequest.class))).willReturn(accessTokenResponse);
+    given(accessTokenResponseClient.getTokenResponse(
+        any(OAuth2AuthorizationCodeGrantRequest.class))).willReturn(accessTokenResponse);
 
-        OAuth2User oAuth2User = new DefaultOAuth2User(
-                Sets.newLinkedHashSet(new SimpleGrantedAuthority("ROLE_USER")),
-                singletonMap("email", EMAIL_ADDRESS.getValue()),
-                "email"
+    OAuth2User oAuth2User = new DefaultOAuth2User(
+        Sets.newLinkedHashSet(new SimpleGrantedAuthority("ROLE_USER")),
+        singletonMap("email", EMAIL_ADDRESS.getValue()),
+        "email"
+    );
+
+    given(defaultOAuth2UserService.loadUser(any(OAuth2UserRequest.class)))
+        .willReturn(oAuth2User);
+
+    user = createUser();
+    roles = user.getRoles()
+        .stream()
+        .map(Role::name)
+        .toArray(String[]::new);
+
+    given(userService.saveUser(any(EmailAddress.class), any(UserProfile.class)))
+        .willReturn(user);
+
+    userProfile = createUserProfile();
+
+    given(userProfileFactory.create(any(UserProfileType.class), anyMap()))
+        .willReturn(userProfile);
+  }
+
+  @Test
+  public void givenSuccessfulCallback_whenLogin_thenJwtSetAndUserSaved()
+      throws Exception {
+
+    performLoginWithState(STATE)
+        .andExpect(status().isFound())
+        .andExpect(redirectedUrlTemplate("https://localhost:9443/login"))
+        .andExpect(
+            new JwtMatcher(jwtAuthenticationService)
+                .withAuthenticationName(String.valueOf(USER_ID))
+                .withRoles(roles)
         );
 
-        given(defaultOAuth2UserService.loadUser(any(OAuth2UserRequest.class)))
-                .willReturn(oAuth2User);
+    then(userService).should().saveUser(EMAIL_ADDRESS, userProfile);
+  }
 
-        user = createUser();
-        roles = user.getRoles()
-                .stream()
-                .map(Role::name)
-                .toArray(String[]::new);
+  @Test
+  public void givenInvalidState_whenLogin_thenUnauthorizedAndUserIsNotSaved()
+      throws Exception {
 
-        given(userService.saveUser(any(EmailAddress.class), any(UserProfile.class)))
-                .willReturn(user);
+    performLoginWithState("bad")
+        .andExpect(status().isFound())
+        .andExpect(
+            redirectedUrlTemplate(
+                "https://localhost:9443/login?error={error}",
+                "[invalid_state_parameter] "
+            )
+        )
+        .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication());
 
-        userProfile = createUserProfile();
+    then(userService).should(never()).saveUser(EMAIL_ADDRESS, userProfile);
+  }
 
-        given(userProfileFactory.create(any(UserProfileType.class), anyMap()))
-                .willReturn(userProfile);
-    }
+  @Test
+  public void givenInvalidEmailAddress_whenLogin_thenUnauthorizedAndUserIsNotSaved()
+      throws Exception {
 
-    @Test
-    public void givenSuccessfulCallback_whenLogin_thenJwtSetAndUserSaved()
-            throws Exception {
+    // We expect that spring.security.oauth2.client.provider.<provider_name>.userNameAttribute
+    // be always set to email and hence we expect a valid email address from the OAuth2 server.
+    OAuth2User oAuth2User = new DefaultOAuth2User(
+        Sets.newLinkedHashSet(new SimpleGrantedAuthority("ROLE_USER")),
+        singletonMap("email", "bad"),
+        "email"
+    );
 
-        performLoginWithState(STATE)
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrlTemplate("https://localhost:9443/login"))
-                .andExpect(
-                        new JwtMatcher(jwtAuthenticationService)
-                                .withAuthenticationName(String.valueOf(USER_ID))
-                                .withRoles(roles)
-                );
+    given(defaultOAuth2UserService.loadUser(any(OAuth2UserRequest.class)))
+        .willReturn(oAuth2User);
 
-        then(userService).should().saveUser(EMAIL_ADDRESS, userProfile);
-    }
+    performLoginWithState(STATE)
+        .andExpect(status().isFound())
+        .andExpect(
+            redirectedUrlTemplate(
+                "https://localhost:9443/login?error={error}",
+                "[invalid_email_address] Invalid email address: bad"
+            )
+        )
+        .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication());
 
-    @Test
-    public void givenInvalidState_whenLogin_thenUnauthorizedAndUserIsNotSaved()
-            throws Exception {
+    then(userService).should(never()).saveUser(EMAIL_ADDRESS, userProfile);
+  }
 
-        performLoginWithState("bad")
-                .andExpect(status().isFound())
-                .andExpect(
-                        redirectedUrlTemplate(
-                                "https://localhost:9443/login?error={error}",
-                                "[invalid_state_parameter] "
-                        )
-                )
-                .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication());
+  private ResultActions performLoginWithState(String state) throws Exception {
+    return mockMvc.perform(
+        get(OAUTH2_LOGIN_PROCESSES_BASE_URI + "/{regId}", CLIENT_REG_ID)
+            .param("code", "code")
+            .param("state", state)
+            .param("redirectUri", REDIRECT_URI))
+        .andDo(print());
+  }
 
-        then(userService).should(never()).saveUser(EMAIL_ADDRESS, userProfile);
-    }
+  @Controller
+  public static class TestController {
 
-    @Test
-    public void givenInvalidEmailAddress_whenLogin_thenUnauthorizedAndUserIsNotSaved()
-            throws Exception {
+  }
 
-        // We expect that spring.security.oauth2.client.provider.<provider_name>.userNameAttribute
-        // be always set to email and hence we expect a valid email address from the OAuth2 server.
-        OAuth2User oAuth2User = new DefaultOAuth2User(
-                Sets.newLinkedHashSet(new SimpleGrantedAuthority("ROLE_USER")),
-                singletonMap("email", "bad"),
-                "email"
+  @RequiredArgsConstructor
+  private class JwtMatcher implements ResultMatcher {
+
+    private final JwtAuthenticationService jwtAuthenticationService;
+
+    private boolean expectNoAuthentication = false;
+
+    private String expectedAuthenticationName;
+    private Collection<? extends GrantedAuthority> expectedGrantedAuthorities;
+
+    @Override
+    public void match(MvcResult result) {
+      Authentication auth = load(result);
+
+      if (expectNoAuthentication) {
+        assertTrue("Authentication should be null", auth == null);
+        return;
+      }
+
+      assertTrue("Authentication should not be null", auth != null);
+
+      if (this.expectedAuthenticationName != null) {
+        String name = auth.getName();
+        assertEquals(
+            this.expectedAuthenticationName + " does not equal " + name,
+            this.expectedAuthenticationName,
+            name
+        );
+      }
+
+      if (this.expectedGrantedAuthorities != null) {
+        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+        assertTrue(
+            authorities + " does not contain the same authorities as "
+                + this.expectedGrantedAuthorities,
+            authorities.containsAll(this.expectedGrantedAuthorities)
         );
 
-        given(defaultOAuth2UserService.loadUser(any(OAuth2UserRequest.class)))
-                .willReturn(oAuth2User);
-
-        performLoginWithState(STATE)
-                .andExpect(status().isFound())
-                .andExpect(
-                        redirectedUrlTemplate(
-                                "https://localhost:9443/login?error={error}",
-                                "[invalid_email_address] Invalid email address: bad"
-                        )
-                )
-                .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication());
-
-        then(userService).should(never()).saveUser(EMAIL_ADDRESS, userProfile);
+        assertTrue(
+            this.expectedGrantedAuthorities
+                + " does not contain the same authorities as " + authorities,
+            this.expectedGrantedAuthorities.containsAll(authorities)
+        );
+      }
     }
 
-    private ResultActions performLoginWithState(String state) throws Exception {
-        return mockMvc.perform(
-                get(OAUTH2_LOGIN_PROCESSES_BASE_URI + "/{regId}", CLIENT_REG_ID)
-                        .param("code", "code")
-                        .param("state", state)
-                        .param("redirectUri", REDIRECT_URI))
-                .andDo(print());
+    JwtMatcher withoutAuthentication() {
+      this.expectNoAuthentication = true;
+      this.expectedAuthenticationName = null;
+      this.expectedGrantedAuthorities = null;
+      return this;
     }
 
-    @RequiredArgsConstructor
-    private class JwtMatcher implements ResultMatcher {
-
-        private final JwtAuthenticationService jwtAuthenticationService;
-
-        private boolean expectNoAuthentication = false;
-
-        private String expectedAuthenticationName;
-        private Collection<? extends GrantedAuthority> expectedGrantedAuthorities;
-
-        @Override
-        public void match(MvcResult result) {
-            Authentication auth = load(result);
-
-            if (expectNoAuthentication) {
-                assertTrue("Authentication should be null", auth == null);
-                return;
-            }
-
-            assertTrue("Authentication should not be null", auth != null);
-
-            if (this.expectedAuthenticationName != null) {
-                String name = auth.getName();
-                assertEquals(
-                        this.expectedAuthenticationName + " does not equal " + name,
-                        this.expectedAuthenticationName,
-                        name
-                );
-            }
-
-            if (this.expectedGrantedAuthorities != null) {
-                Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
-                assertTrue(
-                        authorities + " does not contain the same authorities as "
-                                + this.expectedGrantedAuthorities,
-                        authorities.containsAll(this.expectedGrantedAuthorities)
-                );
-
-                assertTrue(
-                        this.expectedGrantedAuthorities
-                                + " does not contain the same authorities as " + authorities,
-                        this.expectedGrantedAuthorities.containsAll(authorities)
-                );
-            }
-        }
-
-        JwtMatcher withoutAuthentication() {
-            this.expectNoAuthentication = true;
-            this.expectedAuthenticationName = null;
-            this.expectedGrantedAuthorities = null;
-            return this;
-        }
-
-        JwtMatcher withAuthenticationName(String expected) {
-            this.expectedAuthenticationName = expected;
-            return this;
-        }
-
-        JwtMatcher withAuthorities(Collection<? extends GrantedAuthority> expected) {
-            this.expectedGrantedAuthorities = expected;
-            return this;
-        }
-
-        JwtMatcher withRoles(String... roles) {
-            Collection<GrantedAuthority> authorities = new ArrayList<>();
-            for (String role : roles) {
-                authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-            }
-            return withAuthorities(authorities);
-        }
-
-        private Authentication load(MvcResult result) {
-            MockHttpServletRequest request =
-                    new MockHttpServletRequest(result.getRequest().getServletContext());
-
-            request.setCookies(result.getResponse().getCookies());
-
-            return jwtAuthenticationTokenCookieResolver.resolveToken(request)
-                    .map(jwtAuthenticationService::parseJwtToken)
-                    .orElse(null);
-        }
-
+    JwtMatcher withAuthenticationName(String expected) {
+      this.expectedAuthenticationName = expected;
+      return this;
     }
 
-    @Controller
-    public static class TestController {
-
+    JwtMatcher withAuthorities(Collection<? extends GrantedAuthority> expected) {
+      this.expectedGrantedAuthorities = expected;
+      return this;
     }
+
+    JwtMatcher withRoles(String... roles) {
+      Collection<GrantedAuthority> authorities = new ArrayList<>();
+      for (String role : roles) {
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+      }
+      return withAuthorities(authorities);
+    }
+
+    private Authentication load(MvcResult result) {
+      MockHttpServletRequest request =
+          new MockHttpServletRequest(result.getRequest().getServletContext());
+
+      request.setCookies(result.getResponse().getCookies());
+
+      return jwtAuthenticationTokenCookieResolver.resolveToken(request)
+          .map(jwtAuthenticationService::parseJwtToken)
+          .orElse(null);
+    }
+
+  }
 
 }

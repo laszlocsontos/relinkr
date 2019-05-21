@@ -32,181 +32,181 @@ import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class JwtAuthenticationFilterTest extends BaseFilterTest {
 
-    private static final Authentication AUTHENTICATED_TOKEN =
-            UserIdAuthenticationToken.of(1L, emptySet());
+  private static final Authentication AUTHENTICATED_TOKEN =
+      UserIdAuthenticationToken.of(1L, emptySet());
 
-    private static final String PUBLIC_PATH = "/public";
+  private static final String PUBLIC_PATH = "/public";
 
-    @Mock
-    private AuthenticationManager authenticationManager;
+  @Mock
+  private AuthenticationManager authenticationManager;
 
-    @Mock
-    private JwtAuthenticationTokenCookieResolver authenticationTokenCookieResolver;
+  @Mock
+  private JwtAuthenticationTokenCookieResolver authenticationTokenCookieResolver;
 
-    @Mock
-    private SecurityContext securityContext;
+  @Mock
+  private SecurityContext securityContext;
 
-    @Captor
-    private ArgumentCaptor<JwtAuthenticationToken> jwtAuthenticationTokenCaptor;
+  @Captor
+  private ArgumentCaptor<JwtAuthenticationToken> jwtAuthenticationTokenCaptor;
 
-    private JwtAuthenticationFilter jwtTokenFilter;
+  private JwtAuthenticationFilter jwtTokenFilter;
 
-    @Before
-    public void setUp() {
-        super.setUp();
+  @Before
+  public void setUp() {
+    super.setUp();
 
-        SecurityContextHolder.setContext(securityContext);
+    SecurityContextHolder.setContext(securityContext);
 
-        jwtTokenFilter = new JwtAuthenticationFilter(
-                new NegatedRequestMatcher(new AntPathRequestMatcher(PUBLIC_PATH)),
-                authenticationManager,
-                (request, response, authentication) -> response.sendError(SC_UNAUTHORIZED),
-                authenticationTokenCookieResolver
-        );
-    }
+    jwtTokenFilter = new JwtAuthenticationFilter(
+        new NegatedRequestMatcher(new AntPathRequestMatcher(PUBLIC_PATH)),
+        authenticationManager,
+        (request, response, authentication) -> response.sendError(SC_UNAUTHORIZED),
+        authenticationTokenCookieResolver
+    );
+  }
 
-    // JWT Token is given in the Authorization header
+  // JWT Token is given in the Authorization header
 
-    @Test
-    public void givenValidJwtTokenInHeader_whenDoFilter_thenOkAndContextSet() throws Exception {
-        request.addHeader(AUTHORIZATION_HEADER, BEARER_TOKEN_PREFIX + " valid");
-        given(authenticationManager.authenticate(any(JwtAuthenticationToken.class)))
-                .willReturn(AUTHENTICATED_TOKEN);
+  @Test
+  public void givenValidJwtTokenInHeader_whenDoFilter_thenOkAndContextSet() throws Exception {
+    request.addHeader(AUTHORIZATION_HEADER, BEARER_TOKEN_PREFIX + " valid");
+    given(authenticationManager.authenticate(any(JwtAuthenticationToken.class)))
+        .willReturn(AUTHENTICATED_TOKEN);
 
-        jwtTokenFilter.doFilter(request, response, filterChain);
+    jwtTokenFilter.doFilter(request, response, filterChain);
 
-        assertEquals(SC_OK, response.getStatus());
-        assertJwtAuthenticationToken("valid");
+    assertEquals(SC_OK, response.getStatus());
+    assertJwtAuthenticationToken("valid");
 
-        then(securityContext).should().setAuthentication(AUTHENTICATED_TOKEN);
-    }
+    then(securityContext).should().setAuthentication(AUTHENTICATED_TOKEN);
+  }
 
-    @Test
-    public void givenValidJwtTokenInHeaderAndIgnoredPath_whenDoFilter_thenOkAndContextSet()
-            throws Exception {
+  @Test
+  public void givenValidJwtTokenInHeaderAndIgnoredPath_whenDoFilter_thenOkAndContextSet()
+      throws Exception {
 
-        request.addHeader(AUTHORIZATION_HEADER, BEARER_TOKEN_PREFIX + " valid");
+    request.addHeader(AUTHORIZATION_HEADER, BEARER_TOKEN_PREFIX + " valid");
 
-        // TODO: In newer Mockito versions, there's a better way to enable lenient stubbing for a specific test method
-        // Ref: http://blog.mockito.org/2018/07/new-mockito-api-lenient.html
-        given(authenticationManager.authenticate(any(JwtAuthenticationToken.class)))
-                .willReturn(AUTHENTICATED_TOKEN);
+    // TODO: In newer Mockito versions, there's a better way to enable lenient stubbing for a specific test method
+    // Ref: http://blog.mockito.org/2018/07/new-mockito-api-lenient.html
+    given(authenticationManager.authenticate(any(JwtAuthenticationToken.class)))
+        .willReturn(AUTHENTICATED_TOKEN);
 
-        request.setPathInfo(PUBLIC_PATH);
-        jwtTokenFilter.doFilter(request, response, filterChain);
+    request.setPathInfo(PUBLIC_PATH);
+    jwtTokenFilter.doFilter(request, response, filterChain);
 
-        assertEquals(SC_OK, response.getStatus());
+    assertEquals(SC_OK, response.getStatus());
 
-        then(authenticationManager).shouldHaveZeroInteractions();
-        then(securityContext).shouldHaveZeroInteractions();
-    }
+    then(authenticationManager).shouldHaveZeroInteractions();
+    then(securityContext).shouldHaveZeroInteractions();
+  }
 
-    @Test
-    public void givenInvalidJwtTokenInHeader_whenDoFilter_thenUnauthorizedAndNoContextSet()
-            throws Exception {
+  @Test
+  public void givenInvalidJwtTokenInHeader_whenDoFilter_thenUnauthorizedAndNoContextSet()
+      throws Exception {
 
-        request.addHeader(AUTHORIZATION_HEADER, BEARER_TOKEN_PREFIX + " invalid");
-        given(authenticationManager.authenticate(any(JwtAuthenticationToken.class)))
-                .willThrow(BadCredentialsException.class);
+    request.addHeader(AUTHORIZATION_HEADER, BEARER_TOKEN_PREFIX + " invalid");
+    given(authenticationManager.authenticate(any(JwtAuthenticationToken.class)))
+        .willThrow(BadCredentialsException.class);
 
-        jwtTokenFilter.doFilter(request, response, filterChain);
+    jwtTokenFilter.doFilter(request, response, filterChain);
 
-        assertEquals(SC_UNAUTHORIZED, response.getStatus());
-        assertJwtAuthenticationToken("invalid");
+    assertEquals(SC_UNAUTHORIZED, response.getStatus());
+    assertJwtAuthenticationToken("invalid");
 
-        then(securityContext).shouldHaveZeroInteractions();
-    }
+    then(securityContext).shouldHaveZeroInteractions();
+  }
 
-    // JWT Token is given in two cookies + X-Requested-With is set
+  // JWT Token is given in two cookies + X-Requested-With is set
 
-    @Test
-    public void givenValidJwtTokenInCookie_whenDoFilter_thenOkAndContextSet() throws Exception {
-        request.addHeader(
-                AjaxRequestMatcher.X_REQUESTED_WITH_HEADER,
-                AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
+  @Test
+  public void givenValidJwtTokenInCookie_whenDoFilter_thenOkAndContextSet() throws Exception {
+    request.addHeader(
+        AjaxRequestMatcher.X_REQUESTED_WITH_HEADER,
+        AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
 
-        given(authenticationTokenCookieResolver.resolveToken(request))
-                .willReturn(Optional.of("valid"));
+    given(authenticationTokenCookieResolver.resolveToken(request))
+        .willReturn(Optional.of("valid"));
 
-        given(authenticationManager.authenticate(any(JwtAuthenticationToken.class)))
-                .willReturn(AUTHENTICATED_TOKEN);
+    given(authenticationManager.authenticate(any(JwtAuthenticationToken.class)))
+        .willReturn(AUTHENTICATED_TOKEN);
 
-        jwtTokenFilter.doFilter(request, response, filterChain);
+    jwtTokenFilter.doFilter(request, response, filterChain);
 
-        assertEquals(SC_OK, response.getStatus());
-        assertJwtAuthenticationToken("valid");
+    assertEquals(SC_OK, response.getStatus());
+    assertJwtAuthenticationToken("valid");
 
-        then(securityContext).should().setAuthentication(AUTHENTICATED_TOKEN);
-    }
+    then(securityContext).should().setAuthentication(AUTHENTICATED_TOKEN);
+  }
 
-    @Test
-    public void givenValidJwtTokenInCookieAndIgnoredPath_whenDoFilter_thenOkAndContextSet()
-            throws Exception {
+  @Test
+  public void givenValidJwtTokenInCookieAndIgnoredPath_whenDoFilter_thenOkAndContextSet()
+      throws Exception {
 
-        request.addHeader(
-                AjaxRequestMatcher.X_REQUESTED_WITH_HEADER,
-                AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
+    request.addHeader(
+        AjaxRequestMatcher.X_REQUESTED_WITH_HEADER,
+        AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
 
-        given(authenticationTokenCookieResolver.resolveToken(request))
-                .willReturn(Optional.of("valid"));
+    given(authenticationTokenCookieResolver.resolveToken(request))
+        .willReturn(Optional.of("valid"));
 
-        // TODO: In newer Mockito versions, there's a better way to enable lenient stubbing for a specific test method
-        // Ref: http://blog.mockito.org/2018/07/new-mockito-api-lenient.html
-        given(authenticationManager.authenticate(any(JwtAuthenticationToken.class)))
-                .willReturn(AUTHENTICATED_TOKEN);
+    // TODO: In newer Mockito versions, there's a better way to enable lenient stubbing for a specific test method
+    // Ref: http://blog.mockito.org/2018/07/new-mockito-api-lenient.html
+    given(authenticationManager.authenticate(any(JwtAuthenticationToken.class)))
+        .willReturn(AUTHENTICATED_TOKEN);
 
-        request.setPathInfo(PUBLIC_PATH);
-        jwtTokenFilter.doFilter(request, response, filterChain);
+    request.setPathInfo(PUBLIC_PATH);
+    jwtTokenFilter.doFilter(request, response, filterChain);
 
-        assertEquals(SC_OK, response.getStatus());
+    assertEquals(SC_OK, response.getStatus());
 
-        then(authenticationManager).shouldHaveZeroInteractions();
-        then(securityContext).shouldHaveZeroInteractions();
-    }
+    then(authenticationManager).shouldHaveZeroInteractions();
+    then(securityContext).shouldHaveZeroInteractions();
+  }
 
-    @Test
-    public void givenInvalidJwtTokenInCookie_whenDoFilter_thenUnauthorizedAndNoContextSet()
-            throws Exception {
+  @Test
+  public void givenInvalidJwtTokenInCookie_whenDoFilter_thenUnauthorizedAndNoContextSet()
+      throws Exception {
 
-        request.addHeader(
-                AjaxRequestMatcher.X_REQUESTED_WITH_HEADER,
-                AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
+    request.addHeader(
+        AjaxRequestMatcher.X_REQUESTED_WITH_HEADER,
+        AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
 
-        given(authenticationTokenCookieResolver.resolveToken(request))
-                .willReturn(Optional.of("invalid"));
+    given(authenticationTokenCookieResolver.resolveToken(request))
+        .willReturn(Optional.of("invalid"));
 
-        given(authenticationManager.authenticate(any(JwtAuthenticationToken.class)))
-                .willThrow(BadCredentialsException.class);
+    given(authenticationManager.authenticate(any(JwtAuthenticationToken.class)))
+        .willThrow(BadCredentialsException.class);
 
-        jwtTokenFilter.doFilter(request, response, filterChain);
+    jwtTokenFilter.doFilter(request, response, filterChain);
 
-        assertEquals(SC_UNAUTHORIZED, response.getStatus());
-        assertJwtAuthenticationToken("invalid");
+    assertEquals(SC_UNAUTHORIZED, response.getStatus());
+    assertJwtAuthenticationToken("invalid");
 
-        then(securityContext).shouldHaveZeroInteractions();
-    }
+    then(securityContext).shouldHaveZeroInteractions();
+  }
 
-    @Test
-    public void givenNoJwtToken_whenDoFilter_thenFilterProceeds() throws Exception {
-        jwtTokenFilter.doFilter(request, response, filterChain);
+  @Test
+  public void givenNoJwtToken_whenDoFilter_thenFilterProceeds() throws Exception {
+    jwtTokenFilter.doFilter(request, response, filterChain);
 
-        then(authenticationManager).shouldHaveZeroInteractions();
-        then(securityContext).shouldHaveZeroInteractions();
-    }
+    then(authenticationManager).shouldHaveZeroInteractions();
+    then(securityContext).shouldHaveZeroInteractions();
+  }
 
-    @Test
-    public void givenNoJwtTokenAndIgnoredPath_whenDoFilter_thenFilterProceeds() throws Exception {
-        request.setPathInfo(PUBLIC_PATH);
-        jwtTokenFilter.doFilter(request, response, filterChain);
+  @Test
+  public void givenNoJwtTokenAndIgnoredPath_whenDoFilter_thenFilterProceeds() throws Exception {
+    request.setPathInfo(PUBLIC_PATH);
+    jwtTokenFilter.doFilter(request, response, filterChain);
 
-        then(authenticationManager).shouldHaveZeroInteractions();
-        then(securityContext).shouldHaveZeroInteractions();
-    }
+    then(authenticationManager).shouldHaveZeroInteractions();
+    then(securityContext).shouldHaveZeroInteractions();
+  }
 
-    private void assertJwtAuthenticationToken(String expectedTokenValue) {
-        then(authenticationManager).should().authenticate(jwtAuthenticationTokenCaptor.capture());
-        JwtAuthenticationToken jwtAuthenticationToken = jwtAuthenticationTokenCaptor.getValue();
-        assertEquals(expectedTokenValue, jwtAuthenticationToken.getPrincipal());
-    }
+  private void assertJwtAuthenticationToken(String expectedTokenValue) {
+    then(authenticationManager).should().authenticate(jwtAuthenticationTokenCaptor.capture());
+    JwtAuthenticationToken jwtAuthenticationToken = jwtAuthenticationTokenCaptor.getValue();
+    assertEquals(expectedTokenValue, jwtAuthenticationToken.getPrincipal());
+  }
 
 }

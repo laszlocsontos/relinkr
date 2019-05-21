@@ -17,21 +17,21 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = JwtConfig.class)
 public class JwtConfigTest {
 
-    @Autowired
-    private JwtProperties jwtProperties;
+  @Autowired
+  private JwtProperties jwtProperties;
 
-    @Test
-    public void shouldLoadPrivateKey() {
-        PrivateKey privateKey = jwtProperties.getPrivateKey();
-        assertEquals("RSA", privateKey.getAlgorithm());
-        assertEquals("PKCS#8", privateKey.getFormat());
-    }
+  @Test
+  public void shouldLoadPrivateKey() {
+    PrivateKey privateKey = jwtProperties.getPrivateKey();
+    assertEquals("RSA", privateKey.getAlgorithm());
+    assertEquals("PKCS#8", privateKey.getFormat());
+  }
 
-    @Test
-    public void shouldLoadPublicKey() {
-        PublicKey publicKey = jwtProperties.getPublicKey();
-        assertEquals("RSA", publicKey.getAlgorithm());
-        assertEquals("X.509", publicKey.getFormat());
-    }
+  @Test
+  public void shouldLoadPublicKey() {
+    PublicKey publicKey = jwtProperties.getPublicKey();
+    assertEquals("RSA", publicKey.getAlgorithm());
+    assertEquals("X.509", publicKey.getFormat());
+  }
 
 }

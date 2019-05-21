@@ -20,52 +20,52 @@ import org.springframework.mock.env.MockEnvironment;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
 public class OAuth2AuthorizationRequestTest
-        extends AbstractCookieValueResolverTest<Map<String, OAuth2AuthorizationRequest>> {
+    extends AbstractCookieValueResolverTest<Map<String, OAuth2AuthorizationRequest>> {
 
-    public OAuth2AuthorizationRequestTest() {
-        super(
-                COOKIE_NAME,
-                COOKIE_MAX_AGE,
-                singletonMap(OAUTH2_STATE, OAUTH2_AUTHORIZATION_REQUEST),
-                JWS_OAUTH2_AUTHORIZATION_REQUEST_COOKIE_VALUE
-        );
-    }
+  public OAuth2AuthorizationRequestTest() {
+    super(
+        COOKIE_NAME,
+        COOKIE_MAX_AGE,
+        singletonMap(OAUTH2_STATE, OAUTH2_AUTHORIZATION_REQUEST),
+        JWS_OAUTH2_AUTHORIZATION_REQUEST_COOKIE_VALUE
+    );
+  }
 
-    @Override
-    protected void setUpEnvironment(MockEnvironment environment) {
-        environment.setProperty(
-                OAUTH2_REQUEST_COOKIE_SECRET_KEY_PROPERTY,
-                OAUTH2_AUTHORIZATION_REQUEST_COOKIE_SECRET_KEY
-        );
-    }
+  @Override
+  protected void setUpEnvironment(MockEnvironment environment) {
+    environment.setProperty(
+        OAUTH2_REQUEST_COOKIE_SECRET_KEY_PROPERTY,
+        OAUTH2_AUTHORIZATION_REQUEST_COOKIE_SECRET_KEY
+    );
+  }
 
-    @Override
-    protected AbstractCookieValueResolver<Map<String, OAuth2AuthorizationRequest>> createCookieValueResolver(
-            Environment environment) {
+  @Override
+  protected AbstractCookieValueResolver<Map<String, OAuth2AuthorizationRequest>> createCookieValueResolver(
+      Environment environment) {
 
-        return new OAuth2AuthorizationRequestCookieResolverImpl(environment);
-    }
+    return new OAuth2AuthorizationRequestCookieResolverImpl(environment);
+  }
 
-    @Override
-    protected void assertCookieValue(
-            Map<String, OAuth2AuthorizationRequest> expectedRequests,
-            Map<String, OAuth2AuthorizationRequest> actualRequests) {
+  @Override
+  protected void assertCookieValue(
+      Map<String, OAuth2AuthorizationRequest> expectedRequests,
+      Map<String, OAuth2AuthorizationRequest> actualRequests) {
 
-        // Sanity check
-        assertThat(expectedRequests, Matchers.hasKey(OAUTH2_STATE));
-        assertThat(actualRequests, Matchers.hasKey(OAUTH2_STATE));
+    // Sanity check
+    assertThat(expectedRequests, Matchers.hasKey(OAUTH2_STATE));
+    assertThat(actualRequests, Matchers.hasKey(OAUTH2_STATE));
 
-        OAuth2AuthorizationRequest expected = expectedRequests.get(OAUTH2_STATE);
-        OAuth2AuthorizationRequest actual = actualRequests.get(OAUTH2_STATE);
+    OAuth2AuthorizationRequest expected = expectedRequests.get(OAUTH2_STATE);
+    OAuth2AuthorizationRequest actual = actualRequests.get(OAUTH2_STATE);
 
-        assertEquals(expected.getGrantType(), actual.getGrantType());
-        assertEquals(expected.getResponseType(), actual.getResponseType());
-        assertEquals(expected.getClientId(), actual.getClientId());
-        assertEquals(expected.getScopes(), actual.getScopes());
-        assertEquals(expected.getState(), actual.getState());
-        assertEquals(expected.getAuthorizationUri(), actual.getAuthorizationUri());
-        assertEquals(expected.getRedirectUri(), actual.getRedirectUri());
-        assertEquals(expected.getAdditionalParameters(), actual.getAdditionalParameters());
-    }
+    assertEquals(expected.getGrantType(), actual.getGrantType());
+    assertEquals(expected.getResponseType(), actual.getResponseType());
+    assertEquals(expected.getClientId(), actual.getClientId());
+    assertEquals(expected.getScopes(), actual.getScopes());
+    assertEquals(expected.getState(), actual.getState());
+    assertEquals(expected.getAuthorizationUri(), actual.getAuthorizationUri());
+    assertEquals(expected.getRedirectUri(), actual.getRedirectUri());
+    assertEquals(expected.getAdditionalParameters(), actual.getAdditionalParameters());
+  }
 
 }

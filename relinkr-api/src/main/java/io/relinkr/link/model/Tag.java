@@ -12,16 +12,16 @@ import lombok.ToString;
 @ToString(of = "tagName")
 public class Tag implements Serializable {
 
-    private String tagName;
+  private String tagName;
 
-    public Tag(String tagName) {
-        this.tagName = tagName;
-    }
+  public Tag(String tagName) {
+    this.tagName = tagName;
+  }
 
-    /*
-     * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
-     */
-    Tag() {
-    }
+  /*
+   * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
+   */
+  Tag() {
+  }
 
 }

@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public interface EntityClassAwareId<E> extends Serializable {
 
-    Class<E> getEntityClass();
+  Class<E> getEntityClass();
 
-    Long getId();
+  Long getId();
 
 }

@@ -40,97 +40,97 @@ import org.springframework.util.StringUtils;
  */
 public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
-    private static final String AUTHORITIES = "authorities";
+  private static final String AUTHORITIES = "authorities";
 
-    private final JWSSigner signer;
-    private final JWSVerifier verifier;
+  private final JWSSigner signer;
+  private final JWSVerifier verifier;
 
-    private final IdentityGenerator identityGenerator;
+  private final IdentityGenerator identityGenerator;
 
-    public JwtAuthenticationServiceImpl(
-            PrivateKey privateKey, PublicKey publicKey, IdentityGenerator identityGenerator) {
+  public JwtAuthenticationServiceImpl(
+      PrivateKey privateKey, PublicKey publicKey, IdentityGenerator identityGenerator) {
 
-        this.verifier = new RSASSAVerifier((RSAPublicKey) publicKey);
-        this.signer = new RSASSASigner(privateKey);
-        this.identityGenerator = identityGenerator;
+    this.verifier = new RSASSAVerifier((RSAPublicKey) publicKey);
+    this.signer = new RSASSASigner(privateKey);
+    this.identityGenerator = identityGenerator;
+  }
+
+  @Override
+  public String createJwtToken(@NonNull Authentication authentication, int minutes) {
+    String authorities = authentication.getAuthorities()
+        .stream()
+        .map(GrantedAuthority::getAuthority)
+        .map(String::toUpperCase)
+        .collect(Collectors.joining(","));
+
+    JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+        .jwtID(String.valueOf(identityGenerator.generate()))
+        .subject(authentication.getName())
+        .expirationTime(new Date(currentTimeMillis() + minutes * 60 * 1000))
+        .issueTime(new Date())
+        .claim(AUTHORITIES, authorities)
+        .build();
+
+    SignedJWT signedJWT = new SignedJWT(new JWSHeader.Builder(RS256).build(), claimsSet);
+
+    // Compute the RSA signature
+    try {
+      signedJWT.sign(signer);
+    } catch (JOSEException e) {
+      throw new InternalAuthenticationServiceException(e.getMessage(), e);
     }
 
-    @Override
-    public String createJwtToken(@NonNull Authentication authentication, int minutes) {
-        String authorities = authentication.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .map(String::toUpperCase)
-                .collect(Collectors.joining(","));
+    return signedJWT.serialize();
+  }
 
-        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .jwtID(String.valueOf(identityGenerator.generate()))
-                .subject(authentication.getName())
-                .expirationTime(new Date(currentTimeMillis() + minutes * 60 * 1000))
-                .issueTime(new Date())
-                .claim(AUTHORITIES, authorities)
-                .build();
-
-        SignedJWT signedJWT = new SignedJWT(new JWSHeader.Builder(RS256).build(), claimsSet);
-
-        // Compute the RSA signature
-        try {
-            signedJWT.sign(signer);
-        } catch (JOSEException e) {
-            throw new InternalAuthenticationServiceException(e.getMessage(), e);
-        }
-
-        return signedJWT.serialize();
+  @Override
+  public Authentication parseJwtToken(String jwtToken) throws AuthenticationException {
+    if (!StringUtils.hasText(jwtToken)) {
+      throw new BadCredentialsException("Null or empty token.");
     }
 
-    @Override
-    public Authentication parseJwtToken(String jwtToken) throws AuthenticationException {
-        if (!StringUtils.hasText(jwtToken)) {
-            throw new BadCredentialsException("Null or empty token.");
-        }
+    JWTClaimsSet claimsSet;
+    try {
+      SignedJWT signedJWT = SignedJWT.parse(jwtToken);
 
-        JWTClaimsSet claimsSet;
-        try {
-            SignedJWT signedJWT = SignedJWT.parse(jwtToken);
+      if (!signedJWT.verify(verifier)) {
+        throw new BadCredentialsException("Token verification failed.");
+      }
 
-            if (!signedJWT.verify(verifier)) {
-                throw new BadCredentialsException("Token verification failed.");
-            }
-
-            claimsSet = signedJWT.getJWTClaimsSet();
-        } catch (JOSEException | ParseException e) {
-            throw new BadCredentialsException(e.getMessage(), e);
-        } catch (Exception e) {
-            throw new InternalAuthenticationServiceException(e.getMessage(), e);
-        }
-
-        long userId;
-        try {
-            userId = Long.valueOf(claimsSet.getSubject());
-        } catch (NumberFormatException e) {
-            throw new BadCredentialsException(e.getMessage(), e);
-        }
-
-        Instant expiration = Optional.ofNullable(claimsSet.getExpirationTime())
-                .map(Date::toInstant)
-                .orElseThrow(() -> new BadCredentialsException("Missing expiration date."));
-
-        Instant now = Instant.now();
-        if (now.isAfter(expiration)) {
-            throw new NonceExpiredException("Token has expired.");
-        }
-
-        Collection<? extends GrantedAuthority> authorities =
-                Optional.ofNullable(claimsSet.getClaim(AUTHORITIES))
-                        .map(String::valueOf)
-                        .map(it -> it.split(","))
-                        .map(Arrays::stream)
-                        .map(it -> it.map(String::trim).map(String::toUpperCase))
-                        .map(it -> it.map(SimpleGrantedAuthority::new))
-                        .map(it -> it.collect(toSet()))
-                        .orElse(emptySet());
-
-        return UserIdAuthenticationToken.of(userId, authorities);
+      claimsSet = signedJWT.getJWTClaimsSet();
+    } catch (JOSEException | ParseException e) {
+      throw new BadCredentialsException(e.getMessage(), e);
+    } catch (Exception e) {
+      throw new InternalAuthenticationServiceException(e.getMessage(), e);
     }
+
+    long userId;
+    try {
+      userId = Long.valueOf(claimsSet.getSubject());
+    } catch (NumberFormatException e) {
+      throw new BadCredentialsException(e.getMessage(), e);
+    }
+
+    Instant expiration = Optional.ofNullable(claimsSet.getExpirationTime())
+        .map(Date::toInstant)
+        .orElseThrow(() -> new BadCredentialsException("Missing expiration date."));
+
+    Instant now = Instant.now();
+    if (now.isAfter(expiration)) {
+      throw new NonceExpiredException("Token has expired.");
+    }
+
+    Collection<? extends GrantedAuthority> authorities =
+        Optional.ofNullable(claimsSet.getClaim(AUTHORITIES))
+            .map(String::valueOf)
+            .map(it -> it.split(","))
+            .map(Arrays::stream)
+            .map(it -> it.map(String::trim).map(String::toUpperCase))
+            .map(it -> it.map(SimpleGrantedAuthority::new))
+            .map(it -> it.collect(toSet()))
+            .orElse(emptySet());
+
+    return UserIdAuthenticationToken.of(userId, authorities);
+  }
 
 }

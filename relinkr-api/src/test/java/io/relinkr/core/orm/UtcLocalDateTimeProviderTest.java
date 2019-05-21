@@ -11,15 +11,15 @@ import org.springframework.data.auditing.DateTimeProvider;
 
 public class UtcLocalDateTimeProviderTest {
 
-    private static final int OFFSET = 1;
+  private static final int OFFSET = 1;
 
-    private DateTimeProvider dateTimeProvider = new UtcLocalDateTimeProvider();
+  private DateTimeProvider dateTimeProvider = new UtcLocalDateTimeProvider();
 
-    @Test
-    public void getNow() {
-        TemporalAccessor now = dateTimeProvider.getNow().get();
-        TemporalAccessor nowWithOffset = LocalDateTime.now(ZoneOffset.ofHours(OFFSET));
-        assertEquals(nowWithOffset.get(HOUR_OF_DAY) - OFFSET, now.get(HOUR_OF_DAY));
-    }
+  @Test
+  public void getNow() {
+    TemporalAccessor now = dateTimeProvider.getNow().get();
+    TemporalAccessor nowWithOffset = LocalDateTime.now(ZoneOffset.ofHours(OFFSET));
+    assertEquals(nowWithOffset.get(HOUR_OF_DAY) - OFFSET, now.get(HOUR_OF_DAY));
+  }
 
 }

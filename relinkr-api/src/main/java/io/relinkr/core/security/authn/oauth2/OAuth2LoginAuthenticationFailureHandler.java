@@ -11,24 +11,24 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 @RequiredArgsConstructor
 public class OAuth2LoginAuthenticationFailureHandler
-        extends AbstractOAuth2LoginAuthenticationHandler implements AuthenticationFailureHandler {
+    extends AbstractOAuth2LoginAuthenticationHandler implements AuthenticationFailureHandler {
 
-    private final JwtAuthenticationTokenCookieResolver authenticationTokenCookieResolver;
+  private final JwtAuthenticationTokenCookieResolver authenticationTokenCookieResolver;
 
-    @Override
-    public void onAuthenticationFailure(
-            HttpServletRequest request, HttpServletResponse response,
-            @NonNull AuthenticationException exception)
-            throws IOException {
+  @Override
+  public void onAuthenticationFailure(
+      HttpServletRequest request, HttpServletResponse response,
+      @NonNull AuthenticationException exception)
+      throws IOException {
 
-        authenticationTokenCookieResolver.removeToken(response);
+    authenticationTokenCookieResolver.removeToken(response);
 
-        sendRedirect(
-                request, response,
-                builder -> builder.queryParam("error", "{error}")
-                        .buildAndExpand(exception.getMessage())
-                        .encode()
-        );
-    }
+    sendRedirect(
+        request, response,
+        builder -> builder.queryParam("error", "{error}")
+            .buildAndExpand(exception.getMessage())
+            .encode()
+    );
+  }
 
 }

@@ -28,69 +28,69 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = JwtConfig.class)
 public class JwtAuthenticationServiceTest {
 
-    private static final SimpleGrantedAuthority AUTHORITY_USER =
-            new SimpleGrantedAuthority("USER");
+  private static final SimpleGrantedAuthority AUTHORITY_USER =
+      new SimpleGrantedAuthority("USER");
 
-    @Autowired
-    private JwtAuthenticationService jwtAuthenticationService;
+  @Autowired
+  private JwtAuthenticationService jwtAuthenticationService;
 
-    @Test(expected = IllegalArgumentException.class)
-    public void givenNullPrincipal_whenCreateJwtToken_thenBadCredentialsException() {
-        String jwtToken = jwtAuthenticationService.createJwtToken(null, 1);
-        jwtAuthenticationService.parseJwtToken(jwtToken);
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void givenNullPrincipal_whenCreateJwtToken_thenBadCredentialsException() {
+    String jwtToken = jwtAuthenticationService.createJwtToken(null, 1);
+    jwtAuthenticationService.parseJwtToken(jwtToken);
+  }
 
-    @Test(expected = BadCredentialsException.class)
-    public void givenInvalidPrincipal_whenCreateJwtToken_thenBadCredentialsException() {
-        Authentication authentication =
-                new UsernamePasswordAuthenticationToken(
-                        "invalid",
-                        null,
-                        singletonList(AUTHORITY_USER)
-                );
+  @Test(expected = BadCredentialsException.class)
+  public void givenInvalidPrincipal_whenCreateJwtToken_thenBadCredentialsException() {
+    Authentication authentication =
+        new UsernamePasswordAuthenticationToken(
+            "invalid",
+            null,
+            singletonList(AUTHORITY_USER)
+        );
 
-        String jwtToken = jwtAuthenticationService.createJwtToken(authentication, 1);
-        jwtAuthenticationService.parseJwtToken(jwtToken);
-    }
+    String jwtToken = jwtAuthenticationService.createJwtToken(authentication, 1);
+    jwtAuthenticationService.parseJwtToken(jwtToken);
+  }
 
-    @Test
-    public void givenValidPrincipal_whenCreateJwtToken_thenParsed() {
-        Authentication authentication =
-                new UsernamePasswordAuthenticationToken(
-                        "53245345345345",
-                        null,
-                        singletonList(AUTHORITY_USER)
-                );
+  @Test
+  public void givenValidPrincipal_whenCreateJwtToken_thenParsed() {
+    Authentication authentication =
+        new UsernamePasswordAuthenticationToken(
+            "53245345345345",
+            null,
+            singletonList(AUTHORITY_USER)
+        );
 
-        String jwtToken = jwtAuthenticationService.createJwtToken(authentication, 1);
+    String jwtToken = jwtAuthenticationService.createJwtToken(authentication, 1);
 
-        authentication = jwtAuthenticationService.parseJwtToken(jwtToken);
+    authentication = jwtAuthenticationService.parseJwtToken(jwtToken);
 
-        assertEquals("53245345345345", authentication.getName());
-        assertThat(authentication.getAuthorities(), contains(AUTHORITY_USER));
-    }
+    assertEquals("53245345345345", authentication.getName());
+    assertThat(authentication.getAuthorities(), contains(AUTHORITY_USER));
+  }
 
-    @Test
-    public void givenValidPrincipal_whenParseJwtToken_thenAuthenticated() {
-        Authentication authentication = jwtAuthenticationService.parseJwtToken(JWT_TOKEN_VALID);
-        assertEquals("53245345345345", authentication.getName());
-        assertThat(authentication.getAuthorities(), contains(AUTHORITY_USER));
-        assertTrue(authentication.isAuthenticated());
-    }
+  @Test
+  public void givenValidPrincipal_whenParseJwtToken_thenAuthenticated() {
+    Authentication authentication = jwtAuthenticationService.parseJwtToken(JWT_TOKEN_VALID);
+    assertEquals("53245345345345", authentication.getName());
+    assertThat(authentication.getAuthorities(), contains(AUTHORITY_USER));
+    assertTrue(authentication.isAuthenticated());
+  }
 
-    @Test(expected = BadCredentialsException.class)
-    public void givenInvalidPrincipal_whenParseJwtToken_thenBadCredentialsException() {
-        jwtAuthenticationService.parseJwtToken(JWT_TOKEN_INVALID);
-    }
+  @Test(expected = BadCredentialsException.class)
+  public void givenInvalidPrincipal_whenParseJwtToken_thenBadCredentialsException() {
+    jwtAuthenticationService.parseJwtToken(JWT_TOKEN_INVALID);
+  }
 
-    @Test(expected = BadCredentialsException.class)
-    public void givenNullPrincipal_whenParseJwtToken_thenBadCredentialsException() {
-        jwtAuthenticationService.parseJwtToken(null);
-    }
+  @Test(expected = BadCredentialsException.class)
+  public void givenNullPrincipal_whenParseJwtToken_thenBadCredentialsException() {
+    jwtAuthenticationService.parseJwtToken(null);
+  }
 
-    @Test(expected = NonceExpiredException.class)
-    public void givenExpiredPrincipal_whenParseJwtToken_thenNonceExpiredException() {
-        jwtAuthenticationService.parseJwtToken(JWT_TOKEN_EXPIRED);
-    }
+  @Test(expected = NonceExpiredException.class)
+  public void givenExpiredPrincipal_whenParseJwtToken_thenNonceExpiredException() {
+    jwtAuthenticationService.parseJwtToken(JWT_TOKEN_EXPIRED);
+  }
 
 }

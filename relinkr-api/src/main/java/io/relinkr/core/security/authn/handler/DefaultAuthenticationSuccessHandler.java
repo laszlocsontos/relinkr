@@ -17,32 +17,32 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
  */
 @Slf4j
 public class DefaultAuthenticationSuccessHandler
-        extends AbstractAuthenticationRequestHandler implements AuthenticationSuccessHandler {
+    extends AbstractAuthenticationRequestHandler implements AuthenticationSuccessHandler {
 
-    static final int ONE_DAY_MINUTES = 24 * 60;
+  static final int ONE_DAY_MINUTES = 24 * 60;
 
-    private final JwtAuthenticationService jwtAuthenticationService;
+  private final JwtAuthenticationService jwtAuthenticationService;
 
-    public DefaultAuthenticationSuccessHandler(
-            ObjectMapper objectMapper, JwtAuthenticationService jwtAuthenticationService) {
+  public DefaultAuthenticationSuccessHandler(
+      ObjectMapper objectMapper, JwtAuthenticationService jwtAuthenticationService) {
 
-        super(objectMapper.writer());
-        this.jwtAuthenticationService = jwtAuthenticationService;
+    super(objectMapper.writer());
+    this.jwtAuthenticationService = jwtAuthenticationService;
+  }
+
+  @Override
+  public void onAuthenticationSuccess(
+      HttpServletRequest request, HttpServletResponse response,
+      Authentication authentication) throws IOException {
+
+    try {
+      String jwtToken = jwtAuthenticationService
+          .createJwtToken(authentication, ONE_DAY_MINUTES);
+
+      handle(response, OK, singletonMap("token", jwtToken));
+    } catch (Exception e) {
+      handleError(response, e);
     }
-
-    @Override
-    public void onAuthenticationSuccess(
-            HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication) throws IOException {
-
-        try {
-            String jwtToken = jwtAuthenticationService
-                    .createJwtToken(authentication, ONE_DAY_MINUTES);
-
-            handle(response, OK, singletonMap("token", jwtToken));
-        } catch (Exception e) {
-            handleError(response, e);
-        }
-    }
+  }
 
 }

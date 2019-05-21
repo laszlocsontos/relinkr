@@ -12,10 +12,10 @@ import org.springframework.core.annotation.AliasFor;
 @Inherited
 public @interface AuthorizeRolesOrOwner {
 
-    @AliasFor("value")
-    String[] roles() default {"ROLE_ADMIN"};
+  @AliasFor("value")
+  String[] roles() default {"ROLE_ADMIN"};
 
-    @AliasFor("roles")
-    String[] value() default {"ROLE_ADMIN"};
+  @AliasFor("roles")
+  String[] value() default {"ROLE_ADMIN"};
 
 }

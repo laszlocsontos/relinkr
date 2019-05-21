@@ -18,34 +18,34 @@ import org.springframework.web.client.RestOperations;
 @Component
 public class GeoLocatorImpl implements GeoLocator {
 
-    static final String GEOJS_COUNTRY_ENDPOINT = "https://get.geojs.io/v1/ip/country/{ip_address}";
-    static final int MAX_ATTEMPTS = 5;
+  static final String GEOJS_COUNTRY_ENDPOINT = "https://get.geojs.io/v1/ip/country/{ip_address}";
+  static final int MAX_ATTEMPTS = 5;
 
-    private final RestOperations restOperations;
+  private final RestOperations restOperations;
 
-    @Autowired
-    public GeoLocatorImpl(RestTemplateBuilder restTemplateBuilder) {
-        this(restTemplateBuilder.build());
-    }
+  @Autowired
+  public GeoLocatorImpl(RestTemplateBuilder restTemplateBuilder) {
+    this(restTemplateBuilder.build());
+  }
 
-    GeoLocatorImpl(RestOperations restOperations) {
-        this.restOperations = restOperations;
-    }
+  GeoLocatorImpl(RestOperations restOperations) {
+    this.restOperations = restOperations;
+  }
 
-    @Override
-    @Retryable(
-            include = {ResourceAccessException.class, HttpServerErrorException.class},
-            maxAttempts = MAX_ATTEMPTS,
-            backoff = @Backoff(delay = 1_000, multiplier = 2, maxDelay = 4_000)
-    )
-    public Optional<Country> lookupCountry(@NonNull IpAddress ipAddress) {
-        String countryCode = restOperations.getForObject(
-                GEOJS_COUNTRY_ENDPOINT,
-                String.class,
-                singletonMap("ip_address", ipAddress.getIpAddress())
-        );
+  @Override
+  @Retryable(
+      include = {ResourceAccessException.class, HttpServerErrorException.class},
+      maxAttempts = MAX_ATTEMPTS,
+      backoff = @Backoff(delay = 1_000, multiplier = 2, maxDelay = 4_000)
+  )
+  public Optional<Country> lookupCountry(@NonNull IpAddress ipAddress) {
+    String countryCode = restOperations.getForObject(
+        GEOJS_COUNTRY_ENDPOINT,
+        String.class,
+        singletonMap("ip_address", ipAddress.getIpAddress())
+    );
 
-        return Optional.ofNullable(countryCode).flatMap(Country::fromString);
-    }
+    return Optional.ofNullable(countryCode).flatMap(Country::fromString);
+  }
 
 }

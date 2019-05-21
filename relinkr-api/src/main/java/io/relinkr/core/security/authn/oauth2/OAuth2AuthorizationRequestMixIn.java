@@ -16,14 +16,14 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationResp
 @JsonIgnoreProperties(ignoreUnknown = true)
 abstract class OAuth2AuthorizationRequestMixIn {
 
-    @JsonUnwrapped(prefix = "grantType.")
-    AuthorizationGrantType getGrantType() {
-        return null;
-    }
+  @JsonUnwrapped(prefix = "grantType.")
+  AuthorizationGrantType getGrantType() {
+    return null;
+  }
 
-    @JsonIgnore
-    OAuth2AuthorizationResponseType getResponseType() {
-        return null;
-    }
+  @JsonIgnore
+  OAuth2AuthorizationResponseType getResponseType() {
+    return null;
+  }
 
 }

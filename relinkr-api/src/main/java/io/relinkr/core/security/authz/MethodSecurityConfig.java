@@ -24,37 +24,37 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 @EnableGlobalMethodSecurity
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
-    private final EntityManager entityManager;
+  private final EntityManager entityManager;
 
-    public MethodSecurityConfig(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+  public MethodSecurityConfig(EntityManager entityManager) {
+    this.entityManager = entityManager;
+  }
 
-    @Bean
-    AuthorizeOwnerVerifier authorizeOwnerVerifier() {
-        return new AuthorizeOwnerVerifierImpl(entityManager);
-    }
+  @Bean
+  AuthorizeOwnerVerifier authorizeOwnerVerifier() {
+    return new AuthorizeOwnerVerifierImpl(entityManager);
+  }
 
-    @Bean
-    AuthorizeOwnerVoter authorizeOwnerVoter() {
-        return new AuthorizeOwnerVoter(authorizeOwnerVerifier());
-    }
+  @Bean
+  AuthorizeOwnerVoter authorizeOwnerVoter() {
+    return new AuthorizeOwnerVoter(authorizeOwnerVerifier());
+  }
 
-    @Override
-    protected AccessDecisionManager accessDecisionManager() {
-        List<AccessDecisionVoter<?>> decisionVoters = new ArrayList<>();
-        decisionVoters.add(new RoleVoter());
-        decisionVoters.add(authorizeOwnerVoter());
-        return new ConsensusBased(decisionVoters);
-    }
+  @Override
+  protected AccessDecisionManager accessDecisionManager() {
+    List<AccessDecisionVoter<?>> decisionVoters = new ArrayList<>();
+    decisionVoters.add(new RoleVoter());
+    decisionVoters.add(authorizeOwnerVoter());
+    return new ConsensusBased(decisionVoters);
+  }
 
-    @Bean
-    @Override
-    public MethodSecurityMetadataSource methodSecurityMetadataSource() {
-        List<MethodSecurityMetadataSource> sources =
-                singletonList(new AuthorizeRolesOrOwnerSecurityMetadataSource());
+  @Bean
+  @Override
+  public MethodSecurityMetadataSource methodSecurityMetadataSource() {
+    List<MethodSecurityMetadataSource> sources =
+        singletonList(new AuthorizeRolesOrOwnerSecurityMetadataSource());
 
-        return new DelegatingMethodSecurityMetadataSource(sources);
-    }
+    return new DelegatingMethodSecurityMetadataSource(sources);
+  }
 
 }

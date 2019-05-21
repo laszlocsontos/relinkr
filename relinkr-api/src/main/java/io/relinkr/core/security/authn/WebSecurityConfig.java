@@ -51,139 +51,139 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public static final String OAUTH2_INIT_REQUEST_BASE_URI = "/oauth2/init";
-    public static final String OAUTH2_INIT_REQUEST_URI =
-            OAUTH2_INIT_REQUEST_BASE_URI + "/*";
+  public static final String OAUTH2_INIT_REQUEST_BASE_URI = "/oauth2/init";
+  public static final String OAUTH2_INIT_REQUEST_URI =
+      OAUTH2_INIT_REQUEST_BASE_URI + "/*";
 
-    public static final String OAUTH2_LOGIN_PROCESSES_BASE_URI = "/oauth2/login";
-    public static final String OAUTH2_LOGIN_PROCESSES_URI =
-            OAUTH2_LOGIN_PROCESSES_BASE_URI + "/*";
+  public static final String OAUTH2_LOGIN_PROCESSES_BASE_URI = "/oauth2/login";
+  public static final String OAUTH2_LOGIN_PROCESSES_URI =
+      OAUTH2_LOGIN_PROCESSES_BASE_URI + "/*";
 
-    public static final List<RequestMatcher> PUBLIC_REQUEST_MATCHERS = unmodifiableList(
-            asList(
-                    new AntPathRequestMatcher("/", "GET"),
-                    new AntPathRequestMatcher("/", "HEAD"),
-                    new AntPathRequestMatcher(OAUTH2_LOGIN_PROCESSES_URI, "GET"),
-                    new AntPathRequestMatcher(OAUTH2_INIT_REQUEST_URI, "GET"),
-                    new RegexRequestMatcher("/[a-zA-Z0-9_-]{11}", "GET")
-            )
+  public static final List<RequestMatcher> PUBLIC_REQUEST_MATCHERS = unmodifiableList(
+      asList(
+          new AntPathRequestMatcher("/", "GET"),
+          new AntPathRequestMatcher("/", "HEAD"),
+          new AntPathRequestMatcher(OAUTH2_LOGIN_PROCESSES_URI, "GET"),
+          new AntPathRequestMatcher(OAUTH2_INIT_REQUEST_URI, "GET"),
+          new RegexRequestMatcher("/[a-zA-Z0-9_-]{11}", "GET")
+      )
+  );
+
+  public static final List<RequestMatcher> PROTECTED_REQUEST_MATCHERS = unmodifiableList(
+      singletonList(new RegexRequestMatcher("/api/.*", null))
+  );
+
+  private final ObjectMapper objectMapper;
+  private final UserProfileFactory userProfileFactory;
+  private final UserService userService;
+  private final JwtAuthenticationService jwtAuthenticationService;
+  private final JwtAuthenticationTokenCookieResolver jwtAuthenticationTokenCookieResolver;
+  private final OAuth2AuthorizationRequestsCookieResolver authorizationRequestsCookieResolver;
+
+  @Bean
+  public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
+    return new NimbusAuthorizationCodeTokenResponseClient();
+  }
+
+  @Bean
+  public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
+    return new HttpCookieOAuth2AuthorizationRequestRepository(
+        authorizationRequestsCookieResolver);
+  }
+
+  @Bean
+  public OAuth2UserService<OAuth2UserRequest, OAuth2User> defaultOAuth2UserService() {
+    return new DefaultOAuth2UserService();
+  }
+
+  @Bean
+  public OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService() {
+    return new PersistentOAuth2UserService(
+        defaultOAuth2UserService(), userProfileFactory, userService
     );
+  }
 
-    public static final List<RequestMatcher> PROTECTED_REQUEST_MATCHERS = unmodifiableList(
-            singletonList(new RegexRequestMatcher("/api/.*", null))
+  @Bean
+  @Override
+  public AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
+  }
+
+  @Bean
+  public AuthenticationSuccessHandler oauth2LoginAuthenticationSuccessHandler() {
+    return new OAuth2LoginAuthenticationSuccessHandler(
+        jwtAuthenticationService, jwtAuthenticationTokenCookieResolver
     );
+  }
 
-    private final ObjectMapper objectMapper;
-    private final UserProfileFactory userProfileFactory;
-    private final UserService userService;
-    private final JwtAuthenticationService jwtAuthenticationService;
-    private final JwtAuthenticationTokenCookieResolver jwtAuthenticationTokenCookieResolver;
-    private final OAuth2AuthorizationRequestsCookieResolver authorizationRequestsCookieResolver;
+  @Bean
+  public AuthenticationFailureHandler oauth2LoginAuthenticationFailureHandler() {
+    return new OAuth2LoginAuthenticationFailureHandler(jwtAuthenticationTokenCookieResolver);
+  }
 
-    @Bean
-    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
-        return new NimbusAuthorizationCodeTokenResponseClient();
-    }
+  @Bean
+  public AuthenticationFailureHandler jwtAuthenticationFailureHandler() {
+    return new DefaultAuthenticationFailureHandler(objectMapper);
+  }
 
-    @Bean
-    public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
-        return new HttpCookieOAuth2AuthorizationRequestRepository(
-                authorizationRequestsCookieResolver);
-    }
+  @Bean
+  public AuthenticationEntryPoint authenticationEntryPoint() {
+    return new JwtAuthenticationEntryPoint(objectMapper);
+  }
 
-    @Bean
-    public OAuth2UserService<OAuth2UserRequest, OAuth2User> defaultOAuth2UserService() {
-        return new DefaultOAuth2UserService();
-    }
+  @Bean
+  public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+    RequestMatcher requiresAuthenticationRequestMatcher =
+        new NegatedRequestMatcher(new OrRequestMatcher(PUBLIC_REQUEST_MATCHERS));
 
-    @Bean
-    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService() {
-        return new PersistentOAuth2UserService(
-                defaultOAuth2UserService(), userProfileFactory, userService
-        );
-    }
+    return new JwtAuthenticationFilter(
+        requiresAuthenticationRequestMatcher,
+        authenticationManagerBean(),
+        jwtAuthenticationFailureHandler(),
+        jwtAuthenticationTokenCookieResolver
+    );
+  }
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.authenticationProvider(jwtAuthenticationService);
+  }
 
-    @Bean
-    public AuthenticationSuccessHandler oauth2LoginAuthenticationSuccessHandler() {
-        return new OAuth2LoginAuthenticationSuccessHandler(
-                jwtAuthenticationService, jwtAuthenticationTokenCookieResolver
-        );
-    }
+  @Override
+  protected void configure(HttpSecurity httpSecurity) throws Exception {
+    httpSecurity
+        .csrf().disable()
+        .cors()
+        .and()
+        .sessionManagement().sessionCreationPolicy(STATELESS)
+        .and()
+        .oauth2Login()
+        .successHandler(oauth2LoginAuthenticationSuccessHandler())
+        .failureHandler(oauth2LoginAuthenticationFailureHandler())
+        .redirectionEndpoint()
+        .baseUri(OAUTH2_LOGIN_PROCESSES_URI)
+        .and()
+        .authorizationEndpoint()
+        .baseUri(OAUTH2_INIT_REQUEST_BASE_URI)
+        .authorizationRequestRepository(authorizationRequestRepository())
+        .and()
+        .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
+        .and()
+        .userInfoEndpoint().userService(oauth2UserService()).and()
+        .and()
+        .exceptionHandling()
+        .authenticationEntryPoint(authenticationEntryPoint())
+        .and()
+        .addFilterBefore(jwtAuthenticationFilter(), LogoutFilter.class)
+        .authorizeRequests()
+        .requestMatchers(asArray(PUBLIC_REQUEST_MATCHERS)).permitAll()
+        .requestMatchers(asArray(PROTECTED_REQUEST_MATCHERS)).hasAuthority("ROLE_USER")
+        .anyRequest().denyAll()
+        .and();
+  }
 
-    @Bean
-    public AuthenticationFailureHandler oauth2LoginAuthenticationFailureHandler() {
-        return new OAuth2LoginAuthenticationFailureHandler(jwtAuthenticationTokenCookieResolver);
-    }
-
-    @Bean
-    public AuthenticationFailureHandler jwtAuthenticationFailureHandler() {
-        return new DefaultAuthenticationFailureHandler(objectMapper);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new JwtAuthenticationEntryPoint(objectMapper);
-    }
-
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        RequestMatcher requiresAuthenticationRequestMatcher =
-                new NegatedRequestMatcher(new OrRequestMatcher(PUBLIC_REQUEST_MATCHERS));
-
-        return new JwtAuthenticationFilter(
-                requiresAuthenticationRequestMatcher,
-                authenticationManagerBean(),
-                jwtAuthenticationFailureHandler(),
-                jwtAuthenticationTokenCookieResolver
-        );
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(jwtAuthenticationService);
-    }
-
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .csrf().disable()
-                .cors()
-                .and()
-                .sessionManagement().sessionCreationPolicy(STATELESS)
-                .and()
-                .oauth2Login()
-                .successHandler(oauth2LoginAuthenticationSuccessHandler())
-                .failureHandler(oauth2LoginAuthenticationFailureHandler())
-                .redirectionEndpoint()
-                .baseUri(OAUTH2_LOGIN_PROCESSES_URI)
-                .and()
-                .authorizationEndpoint()
-                .baseUri(OAUTH2_INIT_REQUEST_BASE_URI)
-                .authorizationRequestRepository(authorizationRequestRepository())
-                .and()
-                .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
-                .and()
-                .userInfoEndpoint().userService(oauth2UserService()).and()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint())
-                .and()
-                .addFilterBefore(jwtAuthenticationFilter(), LogoutFilter.class)
-                .authorizeRequests()
-                .requestMatchers(asArray(PUBLIC_REQUEST_MATCHERS)).permitAll()
-                .requestMatchers(asArray(PROTECTED_REQUEST_MATCHERS)).hasAuthority("ROLE_USER")
-                .anyRequest().denyAll()
-                .and();
-    }
-
-    private RequestMatcher[] asArray(List<RequestMatcher> requestMatchers) {
-        return requestMatchers.toArray(new RequestMatcher[0]);
-    }
+  private RequestMatcher[] asArray(List<RequestMatcher> requestMatchers) {
+    return requestMatchers.toArray(new RequestMatcher[0]);
+  }
 
 }

@@ -7,6 +7,6 @@ import java.util.Optional;
 
 interface LinkRepository extends OwnableRepository<Link, LinkId> {
 
-    Optional<Link> findByPath(String path);
+  Optional<Link> findByPath(String path);
 
 }

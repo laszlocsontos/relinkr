@@ -9,21 +9,21 @@ import io.relinkr.visitor.model.Visitor;
 import io.relinkr.visitor.model.VisitorId;
 
 public class VisitorRepositoryTest extends
-        BaseRepositoryTest<Visitor, VisitorId, VisitorRepository> {
+    BaseRepositoryTest<Visitor, VisitorId, VisitorRepository> {
 
-    @Override
-    protected Visitor createEntity() {
-        return Visitor.of(USER_ID);
-    }
+  @Override
+  protected Visitor createEntity() {
+    return Visitor.of(USER_ID);
+  }
 
-    @Override
-    protected VisitorId getId() {
-        return VISITOR_ID;
-    }
+  @Override
+  protected VisitorId getId() {
+    return VISITOR_ID;
+  }
 
-    @Override
-    protected VisitorId getNonExistentId() {
-        return VISITOR_ID_ZERO;
-    }
+  @Override
+  protected VisitorId getNonExistentId() {
+    return VISITOR_ID_ZERO;
+  }
 
 }

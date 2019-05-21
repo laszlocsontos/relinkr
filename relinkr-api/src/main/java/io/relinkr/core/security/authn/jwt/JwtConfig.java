@@ -27,104 +27,104 @@ import org.springframework.validation.annotation.Validated;
 @EnableConfigurationProperties(JwtProperties.class)
 public class JwtConfig {
 
-    private static final Base64.Decoder BASE64_DECODER = Base64.getDecoder();
-    private static final KeyFactory RSA_KEY_FACTORY;
+  private static final Base64.Decoder BASE64_DECODER = Base64.getDecoder();
+  private static final KeyFactory RSA_KEY_FACTORY;
 
-    static {
-        try {
-            RSA_KEY_FACTORY = KeyFactory.getInstance("RSA");
-        } catch (NoSuchAlgorithmException e) {
-            throw new AssertionError("Couldn't create RSA key factory", e);
-        }
+  static {
+    try {
+      RSA_KEY_FACTORY = KeyFactory.getInstance("RSA");
+    } catch (NoSuchAlgorithmException e) {
+      throw new AssertionError("Couldn't create RSA key factory", e);
+    }
+  }
+
+  @Bean
+  @ConfigurationPropertiesBinding
+  public Converter<String, PrivateKey> base64EncodedDerToPrivateKeyConverter() {
+    return new Base64EncodedDerToPrivateKeyConverter();
+  }
+
+  @Bean
+  @ConfigurationPropertiesBinding
+  public Converter<String, PublicKey> base64EncodedDerToPublicKeyConverter() {
+    return new Base64EncodedDerToPublicKeyConverter();
+  }
+
+  @Bean
+  public JwtAuthenticationService jwtTokenService(JwtProperties jwtProperties) {
+    return new JwtAuthenticationServiceImpl(
+        jwtProperties.getPrivateKey(), jwtProperties.getPublicKey(),
+        IdentityGenerator.getInstance()
+    );
+  }
+
+  @Bean
+  public JwtAuthenticationTokenCookieResolver jwtAuthenticationTokenCookieResolver() {
+    return new JwtAuthenticationTokenCookieResolverImpl();
+  }
+
+  @Data
+  @Validated
+  @ConfigurationProperties("relinkr.jwt")
+  static class JwtProperties {
+
+    @NotNull
+    private PrivateKey privateKey;
+
+    @NotNull
+    private PublicKey publicKey;
+
+  }
+
+  @RequiredArgsConstructor
+  private abstract static class Base64EncodedDerToKeyConverter<K extends Key>
+      implements Converter<String, K> {
+
+    @Override
+    public K convert(String source) {
+      byte[] encodedKey = BASE64_DECODER.decode(source);
+      KeySpec keySpec = decodeKey(encodedKey);
+      try {
+        return generateKey(keySpec);
+      } catch (InvalidKeySpecException e) {
+        throw new IllegalArgumentException("Couldn't generate key", e);
+      }
     }
 
-    @Bean
-    @ConfigurationPropertiesBinding
-    public Converter<String, PrivateKey> base64EncodedDerToPrivateKeyConverter() {
-        return new Base64EncodedDerToPrivateKeyConverter();
+    abstract KeySpec decodeKey(byte[] encodedKey);
+
+    abstract K generateKey(KeySpec keySpec) throws InvalidKeySpecException;
+
+  }
+
+  private static class Base64EncodedDerToPrivateKeyConverter
+      extends Base64EncodedDerToKeyConverter<PrivateKey> {
+
+    @Override
+    KeySpec decodeKey(byte[] encodedKey) {
+      return new PKCS8EncodedKeySpec(encodedKey);
     }
 
-    @Bean
-    @ConfigurationPropertiesBinding
-    public Converter<String, PublicKey> base64EncodedDerToPublicKeyConverter() {
-        return new Base64EncodedDerToPublicKeyConverter();
+    @Override
+    PrivateKey generateKey(KeySpec keySpec) throws InvalidKeySpecException {
+      return RSA_KEY_FACTORY.generatePrivate(keySpec);
     }
 
-    @Bean
-    public JwtAuthenticationService jwtTokenService(JwtProperties jwtProperties) {
-        return new JwtAuthenticationServiceImpl(
-                jwtProperties.getPrivateKey(), jwtProperties.getPublicKey(),
-                IdentityGenerator.getInstance()
-        );
+  }
+
+  private static class Base64EncodedDerToPublicKeyConverter
+      extends Base64EncodedDerToKeyConverter<PublicKey> {
+
+    @Override
+    KeySpec decodeKey(byte[] encodedKey) {
+      return new X509EncodedKeySpec(encodedKey);
     }
 
-    @Bean
-    public JwtAuthenticationTokenCookieResolver jwtAuthenticationTokenCookieResolver() {
-        return new JwtAuthenticationTokenCookieResolverImpl();
+    @Override
+    PublicKey generateKey(KeySpec keySpec) throws InvalidKeySpecException {
+      return RSA_KEY_FACTORY.generatePublic(keySpec);
     }
 
-    @Data
-    @Validated
-    @ConfigurationProperties("relinkr.jwt")
-    static class JwtProperties {
-
-        @NotNull
-        private PrivateKey privateKey;
-
-        @NotNull
-        private PublicKey publicKey;
-
-    }
-
-    @RequiredArgsConstructor
-    private abstract static class Base64EncodedDerToKeyConverter<K extends Key>
-            implements Converter<String, K> {
-
-        @Override
-        public K convert(String source) {
-            byte[] encodedKey = BASE64_DECODER.decode(source);
-            KeySpec keySpec = decodeKey(encodedKey);
-            try {
-                return generateKey(keySpec);
-            } catch (InvalidKeySpecException e) {
-                throw new IllegalArgumentException("Couldn't generate key", e);
-            }
-        }
-
-        abstract KeySpec decodeKey(byte[] encodedKey);
-
-        abstract K generateKey(KeySpec keySpec) throws InvalidKeySpecException;
-
-    }
-
-    private static class Base64EncodedDerToPrivateKeyConverter
-            extends Base64EncodedDerToKeyConverter<PrivateKey> {
-
-        @Override
-        KeySpec decodeKey(byte[] encodedKey) {
-            return new PKCS8EncodedKeySpec(encodedKey);
-        }
-
-        @Override
-        PrivateKey generateKey(KeySpec keySpec) throws InvalidKeySpecException {
-            return RSA_KEY_FACTORY.generatePrivate(keySpec);
-        }
-
-    }
-
-    private static class Base64EncodedDerToPublicKeyConverter
-            extends Base64EncodedDerToKeyConverter<PublicKey> {
-
-        @Override
-        KeySpec decodeKey(byte[] encodedKey) {
-            return new X509EncodedKeySpec(encodedKey);
-        }
-
-        @Override
-        PublicKey generateKey(KeySpec keySpec) throws InvalidKeySpecException {
-            return RSA_KEY_FACTORY.generatePublic(keySpec);
-        }
-
-    }
+  }
 
 }

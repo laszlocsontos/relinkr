@@ -15,100 +15,100 @@ import org.springframework.util.StringUtils;
 @ToString
 public class UtmParameters {
 
-    public static final String UTM_SOURCE = "utm_source";
-    public static final String UTM_MEDIUM = "utm_medium";
-    public static final String UTM_CAMPAIGN = "utm_campaign";
-    public static final String UTM_TERM = "utm_term";
-    public static final String UTM_CONTENT = "utm_content";
+  public static final String UTM_SOURCE = "utm_source";
+  public static final String UTM_MEDIUM = "utm_medium";
+  public static final String UTM_CAMPAIGN = "utm_campaign";
+  public static final String UTM_TERM = "utm_term";
+  public static final String UTM_CONTENT = "utm_content";
 
-    private String utmSource;
-    private String utmMedium;
-    private String utmCampaign;
-    private String utmTerm;
-    private String utmContent;
+  private String utmSource;
+  private String utmMedium;
+  private String utmCampaign;
+  private String utmTerm;
+  private String utmContent;
 
-    public UtmParameters(String utmSource, String utmMedium, String utmCampaign)
-            throws MissingUtmParameterException {
+  public UtmParameters(String utmSource, String utmMedium, String utmCampaign)
+      throws MissingUtmParameterException {
 
-        this(utmSource, utmMedium, utmCampaign, null, null);
+    this(utmSource, utmMedium, utmCampaign, null, null);
+  }
+
+  public UtmParameters(
+      String utmSource, String utmMedium, String utmCampaign, String utmTerm,
+      String utmContent) throws MissingUtmParameterException {
+
+    if (!StringUtils.hasText(utmSource)) {
+      throw MissingUtmParameterException.forUtmParameter(UTM_SOURCE);
     }
 
-    public UtmParameters(
-            String utmSource, String utmMedium, String utmCampaign, String utmTerm,
-            String utmContent) throws MissingUtmParameterException {
-
-        if (!StringUtils.hasText(utmSource)) {
-            throw MissingUtmParameterException.forUtmParameter(UTM_SOURCE);
-        }
-
-        if (!StringUtils.hasText(utmMedium)) {
-            throw MissingUtmParameterException.forUtmParameter(UTM_MEDIUM);
-        }
-
-        if (!StringUtils.hasText(utmCampaign)) {
-            throw MissingUtmParameterException.forUtmParameter(UTM_CAMPAIGN);
-        }
-
-        this.utmSource = utmSource;
-        this.utmMedium = utmMedium;
-        this.utmCampaign = utmCampaign;
-        this.utmTerm = utmTerm;
-        this.utmContent = utmContent;
+    if (!StringUtils.hasText(utmMedium)) {
+      throw MissingUtmParameterException.forUtmParameter(UTM_MEDIUM);
     }
 
-    /*
-     * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
-     */
-    UtmParameters() {
+    if (!StringUtils.hasText(utmCampaign)) {
+      throw MissingUtmParameterException.forUtmParameter(UTM_CAMPAIGN);
     }
 
-    public static UtmParameters of(Map<String, String> utmParameterMap)
-            throws MissingUtmParameterException {
+    this.utmSource = utmSource;
+    this.utmMedium = utmMedium;
+    this.utmCampaign = utmCampaign;
+    this.utmTerm = utmTerm;
+    this.utmContent = utmContent;
+  }
 
-        Assert.notNull(utmParameterMap, "utmParameterMap cannot be null");
+  /*
+   * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
+   */
+  UtmParameters() {
+  }
 
-        return new UtmParameters(
-                utmParameterMap.get(UTM_SOURCE),
-                utmParameterMap.get(UTM_MEDIUM),
-                utmParameterMap.get(UTM_CAMPAIGN),
-                utmParameterMap.get(UTM_TERM),
-                utmParameterMap.get(UTM_CONTENT)
-        );
-    }
+  public static UtmParameters of(Map<String, String> utmParameterMap)
+      throws MissingUtmParameterException {
 
-    public Map<String, String> asMap() {
-        Map<String, String> utmParameterMap = new LinkedHashMap<>();
+    Assert.notNull(utmParameterMap, "utmParameterMap cannot be null");
 
-        // Mandatory UTM parameters
-        utmParameterMap.put(UTM_SOURCE, utmSource);
-        utmParameterMap.put(UTM_MEDIUM, utmMedium);
-        utmParameterMap.put(UTM_CAMPAIGN, utmCampaign);
+    return new UtmParameters(
+        utmParameterMap.get(UTM_SOURCE),
+        utmParameterMap.get(UTM_MEDIUM),
+        utmParameterMap.get(UTM_CAMPAIGN),
+        utmParameterMap.get(UTM_TERM),
+        utmParameterMap.get(UTM_CONTENT)
+    );
+  }
 
-        // Optional UTM parameters
-        getUtmTerm().ifPresent(utmTerm -> utmParameterMap.put(UTM_TERM, utmTerm));
-        getUtmContent().ifPresent(utmContent -> utmParameterMap.put(UTM_CONTENT, utmContent));
+  public Map<String, String> asMap() {
+    Map<String, String> utmParameterMap = new LinkedHashMap<>();
 
-        return Collections.unmodifiableMap(utmParameterMap);
-    }
+    // Mandatory UTM parameters
+    utmParameterMap.put(UTM_SOURCE, utmSource);
+    utmParameterMap.put(UTM_MEDIUM, utmMedium);
+    utmParameterMap.put(UTM_CAMPAIGN, utmCampaign);
 
-    public String getUtmSource() {
-        return utmSource;
-    }
+    // Optional UTM parameters
+    getUtmTerm().ifPresent(utmTerm -> utmParameterMap.put(UTM_TERM, utmTerm));
+    getUtmContent().ifPresent(utmContent -> utmParameterMap.put(UTM_CONTENT, utmContent));
 
-    public String getUtmMedium() {
-        return utmMedium;
-    }
+    return Collections.unmodifiableMap(utmParameterMap);
+  }
 
-    public String getUtmCampaign() {
-        return utmCampaign;
-    }
+  public String getUtmSource() {
+    return utmSource;
+  }
 
-    public Optional<String> getUtmTerm() {
-        return Optional.ofNullable(utmTerm);
-    }
+  public String getUtmMedium() {
+    return utmMedium;
+  }
 
-    public Optional<String> getUtmContent() {
-        return Optional.ofNullable(utmContent);
-    }
+  public String getUtmCampaign() {
+    return utmCampaign;
+  }
+
+  public Optional<String> getUtmTerm() {
+    return Optional.ofNullable(utmTerm);
+  }
+
+  public Optional<String> getUtmContent() {
+    return Optional.ofNullable(utmContent);
+  }
 
 }

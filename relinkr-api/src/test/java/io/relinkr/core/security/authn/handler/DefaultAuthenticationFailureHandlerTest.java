@@ -21,61 +21,61 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultAuthenticationFailureHandlerTest extends BaseServletTest {
 
-    private static final String MESSAGE = "an error occurred";
+  private static final String MESSAGE = "an error occurred";
 
-    private ObjectMapper objectMapper;
-    private AuthenticationFailureHandler handler;
+  private ObjectMapper objectMapper;
+  private AuthenticationFailureHandler handler;
 
-    @Before
-    public void setUp() {
-        super.setUp();
-        objectMapper = new ObjectMapper();
-        handler = new DefaultAuthenticationFailureHandler(objectMapper);
-    }
+  @Before
+  public void setUp() {
+    super.setUp();
+    objectMapper = new ObjectMapper();
+    handler = new DefaultAuthenticationFailureHandler(objectMapper);
+  }
 
-    @Test
-    public void giveBadCredentialsException_whenOnAuthenticationFailure_Unauthorized()
-            throws Exception {
-        handler.onAuthenticationFailure(request, response, new BadCredentialsException(MESSAGE));
+  @Test
+  public void giveBadCredentialsException_whenOnAuthenticationFailure_Unauthorized()
+      throws Exception {
+    handler.onAuthenticationFailure(request, response, new BadCredentialsException(MESSAGE));
 
-        RestErrorResponse errorResponse =
-                objectMapper.readValue(response.getContentAsByteArray(), RestErrorResponse.class);
+    RestErrorResponse errorResponse =
+        objectMapper.readValue(response.getContentAsByteArray(), RestErrorResponse.class);
 
-        assertResponse(errorResponse, UNAUTHORIZED.value(), APPLICATION_JSON_VALUE, MESSAGE);
-    }
+    assertResponse(errorResponse, UNAUTHORIZED.value(), APPLICATION_JSON_VALUE, MESSAGE);
+  }
 
-    @Test
-    public void giveInternalAuthenticationServiceException_whenOnAuthenticationFailure_Unauthorized()
-            throws Exception {
-        handler.onAuthenticationFailure(request, response,
-                new InternalAuthenticationServiceException(MESSAGE));
+  @Test
+  public void giveInternalAuthenticationServiceException_whenOnAuthenticationFailure_Unauthorized()
+      throws Exception {
+    handler.onAuthenticationFailure(request, response,
+        new InternalAuthenticationServiceException(MESSAGE));
 
-        RestErrorResponse errorResponse =
-                objectMapper.readValue(response.getContentAsByteArray(), RestErrorResponse.class);
+    RestErrorResponse errorResponse =
+        objectMapper.readValue(response.getContentAsByteArray(), RestErrorResponse.class);
 
-        assertResponse(errorResponse, INTERNAL_SERVER_ERROR.value(), APPLICATION_JSON_VALUE,
-                MESSAGE);
-    }
+    assertResponse(errorResponse, INTERNAL_SERVER_ERROR.value(), APPLICATION_JSON_VALUE,
+        MESSAGE);
+  }
 
-    @Test
-    public void giveAuthenticationServiceException_whenOnAuthenticationFailure_Unauthorized()
-            throws Exception {
-        handler.onAuthenticationFailure(request, response,
-                new AuthenticationServiceException(MESSAGE));
+  @Test
+  public void giveAuthenticationServiceException_whenOnAuthenticationFailure_Unauthorized()
+      throws Exception {
+    handler.onAuthenticationFailure(request, response,
+        new AuthenticationServiceException(MESSAGE));
 
-        RestErrorResponse errorResponse =
-                objectMapper.readValue(response.getContentAsByteArray(), RestErrorResponse.class);
+    RestErrorResponse errorResponse =
+        objectMapper.readValue(response.getContentAsByteArray(), RestErrorResponse.class);
 
-        assertResponse(errorResponse, SERVICE_UNAVAILABLE.value(), APPLICATION_JSON_VALUE, MESSAGE);
-    }
+    assertResponse(errorResponse, SERVICE_UNAVAILABLE.value(), APPLICATION_JSON_VALUE, MESSAGE);
+  }
 
-    private void assertResponse(
-            RestErrorResponse errorResponse,
-            int expectedStatusCode, String expectedContentType, String expectedDetailMessage) {
+  private void assertResponse(
+      RestErrorResponse errorResponse,
+      int expectedStatusCode, String expectedContentType, String expectedDetailMessage) {
 
-        assertEquals(expectedStatusCode, errorResponse.getStatusCode());
-        assertEquals(expectedContentType, response.getContentType());
-        assertEquals(expectedDetailMessage, errorResponse.getDetailMessage());
-    }
+    assertEquals(expectedStatusCode, errorResponse.getStatusCode());
+    assertEquals(expectedContentType, response.getContentType());
+    assertEquals(expectedDetailMessage, errorResponse.getDetailMessage());
+  }
 
 }

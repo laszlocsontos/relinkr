@@ -28,69 +28,69 @@ import java.time.LocalDateTime;
  */
 public final class IdentityGenerator {
 
-    /**
-     * Custom Epoch (2018-03-01).
-     */
-    public static final Instant EPOCH = LocalDateTime.of(2019, 3, 1, 0, 0, 0, 0).toInstant(UTC);
+  /**
+   * Custom Epoch (2018-03-01).
+   */
+  public static final Instant EPOCH = LocalDateTime.of(2019, 3, 1, 0, 0, 0, 0).toInstant(UTC);
 
-    private static final IdentityGenerator INSTANCE = new IdentityGenerator();
+  private static final IdentityGenerator INSTANCE = new IdentityGenerator();
 
-    private final ThreadLocal<Serial> threadLocalSerial;
+  private final ThreadLocal<Serial> threadLocalSerial;
 
-    private IdentityGenerator(RandomGenerator randomGenerator) {
-        threadLocalSerial = ThreadLocal.withInitial(
-                () -> new Serial(randomGenerator.nextInt(), randomGenerator.nextInt())
-        );
+  private IdentityGenerator(RandomGenerator randomGenerator) {
+    threadLocalSerial = ThreadLocal.withInitial(
+        () -> new Serial(randomGenerator.nextInt(), randomGenerator.nextInt())
+    );
+  }
+
+  private IdentityGenerator() {
+    this(RandomGenerator.getInstance());
+  }
+
+  public static IdentityGenerator getInstance() {
+    return INSTANCE;
+  }
+
+  /**
+   * Extracts the timestamp parts as an {@link Instant} from the given ID.
+   *
+   * @param id ID
+   * @return an {@link Instant}
+   */
+  public static Instant extractInstant(long id) {
+    long time = (id & 0x7ffffffffc000L) >>> 14;
+    return EPOCH.plusMillis(time);
+  }
+
+  static long doGenerate(long time, int serial) {
+    return (time & 0xffffffffffL) << 14 | (serial & 0x3fff);
+  }
+
+  /**
+   * Generates a new unique ID for the given shard.
+   *
+   * @return a new unique ID
+   */
+  public long generate() {
+    long time = MILLIS.between(EPOCH, now());
+    int serial = threadLocalSerial.get().increment();
+    return doGenerate(time, serial);
+  }
+
+  static class Serial {
+
+    final int mask;
+    int value;
+
+    Serial(int value, int mask) {
+      this.value = value;
+      this.mask = mask;
     }
 
-    private IdentityGenerator() {
-        this(RandomGenerator.getInstance());
+    int increment() {
+      return (value++ ^ mask);
     }
 
-    public static IdentityGenerator getInstance() {
-        return INSTANCE;
-    }
-
-    /**
-     * Extracts the timestamp parts as an {@link Instant} from the given ID.
-     *
-     * @param id ID
-     * @return an {@link Instant}
-     */
-    public static Instant extractInstant(long id) {
-        long time = (id & 0x7ffffffffc000L) >>> 14;
-        return EPOCH.plusMillis(time);
-    }
-
-    static long doGenerate(long time, int serial) {
-        return (time & 0xffffffffffL) << 14 | (serial & 0x3fff);
-    }
-
-    /**
-     * Generates a new unique ID for the given shard.
-     *
-     * @return a new unique ID
-     */
-    public long generate() {
-        long time = MILLIS.between(EPOCH, now());
-        int serial = threadLocalSerial.get().increment();
-        return doGenerate(time, serial);
-    }
-
-    static class Serial {
-
-        final int mask;
-        int value;
-
-        Serial(int value, int mask) {
-            this.value = value;
-            this.mask = mask;
-        }
-
-        int increment() {
-            return (value++ ^ mask);
-        }
-
-    }
+  }
 
 }

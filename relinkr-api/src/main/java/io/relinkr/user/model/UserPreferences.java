@@ -21,10 +21,10 @@ import lombok.ToString;
 @ToString(of = {"timeZone", "locale"})
 public class UserPreferences {
 
-    @NonNull
-    private TimeZone timeZone = TimeZone.UTC;
+  @NonNull
+  private TimeZone timeZone = TimeZone.UTC;
 
-    @NonNull
-    private Locale locale = ENGLISH;
+  @NonNull
+  private Locale locale = ENGLISH;
 
 }

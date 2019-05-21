@@ -14,53 +14,53 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class DelegatingUserDetailsTest {
 
-    private User user;
-    private UserDetails userDetails;
+  private User user;
+  private UserDetails userDetails;
 
-    @Before
-    public void setUp() {
-        user = createUser();
-        userDetails = new DelegatingUserDetails(user);
-    }
+  @Before
+  public void setUp() {
+    user = createUser();
+    userDetails = new DelegatingUserDetails(user);
+  }
 
-    @Test
-    public void getAuthorities() {
-        assertThat(
-                userDetails.getAuthorities(),
-                containsInAnyOrder(user.getRoles()
-                        .stream().map(it -> new SimpleGrantedAuthority(it.name())).toArray()
-                )
-        );
-    }
+  @Test
+  public void getAuthorities() {
+    assertThat(
+        userDetails.getAuthorities(),
+        containsInAnyOrder(user.getRoles()
+            .stream().map(it -> new SimpleGrantedAuthority(it.name())).toArray()
+        )
+    );
+  }
 
-    @Test
-    public void getPassword() {
-        assertEquals(user.getEncryptedPassword().get(), userDetails.getPassword());
-    }
+  @Test
+  public void getPassword() {
+    assertEquals(user.getEncryptedPassword().get(), userDetails.getPassword());
+  }
 
-    @Test
-    public void getUsername() {
-        assertEquals(String.valueOf(user.getId()), userDetails.getUsername());
-    }
+  @Test
+  public void getUsername() {
+    assertEquals(String.valueOf(user.getId()), userDetails.getUsername());
+  }
 
-    @Test
-    public void isAccountNonExpired() {
-        assertTrue(userDetails.isAccountNonExpired());
-    }
+  @Test
+  public void isAccountNonExpired() {
+    assertTrue(userDetails.isAccountNonExpired());
+  }
 
-    @Test
-    public void isAccountNonLocked() {
-        assertEquals(!user.isLocked(), userDetails.isAccountNonLocked());
-    }
+  @Test
+  public void isAccountNonLocked() {
+    assertEquals(!user.isLocked(), userDetails.isAccountNonLocked());
+  }
 
-    @Test
-    public void isCredentialsNonExpired() {
-        assertTrue(userDetails.isCredentialsNonExpired());
-    }
+  @Test
+  public void isCredentialsNonExpired() {
+    assertTrue(userDetails.isCredentialsNonExpired());
+  }
 
-    @Test
-    public void isEnabled() {
-        assertEquals(user.isConfirmed(), userDetails.isEnabled());
-    }
+  @Test
+  public void isEnabled() {
+    assertEquals(user.isConfirmed(), userDetails.isEnabled());
+  }
 
 }

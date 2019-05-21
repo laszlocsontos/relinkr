@@ -15,67 +15,67 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class VisitorIdCookieResolverImpl
-        extends AbstractCookieValueResolver<VisitorId> implements VisitorIdCookieResolver {
+    extends AbstractCookieValueResolver<VisitorId> implements VisitorIdCookieResolver {
 
-    static final String COOKIE_NAME = "vid";
+  static final String COOKIE_NAME = "vid";
 
-    // Three years
-    static final Duration COOKIE_MAX_AGE = Duration.ofDays(3 * 365);
+  // Three years
+  static final Duration COOKIE_MAX_AGE = Duration.ofDays(3 * 365);
 
-    static final String VISITOR_SECRET_KEY_PROPERTY = "relinkr.cookie.visitor-secret-key";
+  static final String VISITOR_SECRET_KEY_PROPERTY = "relinkr.cookie.visitor-secret-key";
 
-    private final CookieManager cookieManager;
-    private final ConversionService conversionService;
+  private final CookieManager cookieManager;
+  private final ConversionService conversionService;
 
-    public VisitorIdCookieResolverImpl(
-            ConversionService conversionService, Environment environment) {
+  public VisitorIdCookieResolverImpl(
+      ConversionService conversionService, Environment environment) {
 
-        String secretKey =
-                environment.getRequiredProperty(VISITOR_SECRET_KEY_PROPERTY);
+    String secretKey =
+        environment.getRequiredProperty(VISITOR_SECRET_KEY_PROPERTY);
 
-        cookieManager = new JwsCookieManager(COOKIE_NAME, COOKIE_MAX_AGE, secretKey);
+    cookieManager = new JwsCookieManager(COOKIE_NAME, COOKIE_MAX_AGE, secretKey);
 
-        assertCanConvert(conversionService, String.class, VisitorId.class);
-        assertCanConvert(conversionService, VisitorId.class, String.class);
-        this.conversionService = conversionService;
+    assertCanConvert(conversionService, String.class, VisitorId.class);
+    assertCanConvert(conversionService, VisitorId.class, String.class);
+    this.conversionService = conversionService;
+  }
+
+  private void assertCanConvert(
+      ConversionService conversionService, Class<?> sourceType, Class<?> targetType) {
+
+    isTrue(
+        conversionService.canConvert(sourceType, targetType),
+        "conversionService is not configured for converting ["
+            + sourceType.getSimpleName() + "] to [" + targetType.getSimpleName() + "]"
+    );
+  }
+
+  @Override
+  protected CookieManager getCookieManager() {
+    return cookieManager;
+  }
+
+  @Override
+  protected Optional<VisitorId> fromString(String value) {
+    return Optional.ofNullable(convert(value, VisitorId.class));
+  }
+
+  @Override
+  protected Optional<String> toString(VisitorId value) {
+    return Optional.ofNullable(convert(value, String.class));
+  }
+
+  private <S, T> T convert(S source, Class<T> targetClass) {
+    if (source == null) {
+      return null;
     }
 
-    private void assertCanConvert(
-            ConversionService conversionService, Class<?> sourceType, Class<?> targetType) {
-
-        isTrue(
-                conversionService.canConvert(sourceType, targetType),
-                "conversionService is not configured for converting ["
-                        + sourceType.getSimpleName() + "] to [" + targetType.getSimpleName() + "]"
-        );
+    try {
+      return conversionService.convert(source, targetClass);
+    } catch (ConversionFailedException e) {
+      // Conversion failed for whatever reason
+      return null;
     }
-
-    @Override
-    protected CookieManager getCookieManager() {
-        return cookieManager;
-    }
-
-    @Override
-    protected Optional<VisitorId> fromString(String value) {
-        return Optional.ofNullable(convert(value, VisitorId.class));
-    }
-
-    @Override
-    protected Optional<String> toString(VisitorId value) {
-        return Optional.ofNullable(convert(value, String.class));
-    }
-
-    private <S, T> T convert(S source, Class<T> targetClass) {
-        if (source == null) {
-            return null;
-        }
-
-        try {
-            return conversionService.convert(source, targetClass);
-        } catch (ConversionFailedException e) {
-            // Conversion failed for whatever reason
-            return null;
-        }
-    }
+  }
 
 }

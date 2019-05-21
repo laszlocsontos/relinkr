@@ -9,20 +9,20 @@ import java.util.Optional;
 
 public interface UserService {
 
-    User saveUser(EmailAddress emailAddress, UserProfile userProfile);
+  User saveUser(EmailAddress emailAddress, UserProfile userProfile);
 
-    User getUser(UserId userId);
+  User getUser(UserId userId);
 
-    Optional<User> findUser(EmailAddress emailAddress);
+  Optional<User> findUser(EmailAddress emailAddress);
 
-    void deleteUser(UserId userId);
+  void deleteUser(UserId userId);
 
-    void lockUser(UserId userId);
+  void lockUser(UserId userId);
 
-    void unlockUser(UserId userId);
+  void unlockUser(UserId userId);
 
-    void grantRole(UserId userId, Role role);
+  void grantRole(UserId userId, Role role);
 
-    void revokeRole(UserId userId, Role role);
+  void revokeRole(UserId userId, Role role);
 
 }

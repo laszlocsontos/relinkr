@@ -7,6 +7,6 @@ import lombok.Value;
 @Value(staticConstructor = "of")
 public class TestOwnable implements Ownable {
 
-    private final UserId userId;
+  private final UserId userId;
 
 }

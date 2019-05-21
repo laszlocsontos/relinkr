@@ -29,67 +29,67 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @ContextConfiguration(classes = TestConfig.class)
 public class CorsRequestTest extends AbstractWebSecurityTest {
 
-    private static final String ORIGIN_HEADER_VALUE = "http://localhost:9999";
+  private static final String ORIGIN_HEADER_VALUE = "http://localhost:9999";
 
-    private static final HttpEntity<?> TEST_HTTP_RESPONSE = ok().build();
+  private static final HttpEntity<?> TEST_HTTP_RESPONSE = ok().build();
 
-    @Test
-    public void givenAllowedCorsMethod_whenCorsRequest_thenAllowOriginAddedAndOk()
-            throws Exception {
+  @Test
+  public void givenAllowedCorsMethod_whenCorsRequest_thenAllowOriginAddedAndOk()
+      throws Exception {
 
-        mockMvc.perform(
-                get("/").header(ORIGIN, ORIGIN_HEADER_VALUE))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(header().string(ACCESS_CONTROL_ALLOW_ORIGIN, ALL));
+    mockMvc.perform(
+        get("/").header(ORIGIN, ORIGIN_HEADER_VALUE))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(header().string(ACCESS_CONTROL_ALLOW_ORIGIN, ALL));
+  }
+
+  @Test
+  public void givenAllowedCorsMethod_whenNormalRequest_thenAllowOriginIsNotAddedAndOk()
+      throws Exception {
+
+    mockMvc.perform(
+        get("/"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(header().doesNotExist(ACCESS_CONTROL_ALLOW_ORIGIN));
+  }
+
+  @Test
+  public void givenDisallowedCorsMethod_whenCorsRequest_thenAllowOriginIsNotAddedAndForbidden()
+      throws Exception {
+
+    mockMvc.perform(
+        head("/").header(ORIGIN, ORIGIN_HEADER_VALUE))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(header().doesNotExist(ACCESS_CONTROL_ALLOW_ORIGIN));
+  }
+
+  @Controller
+  public static class TestController {
+
+    @GetMapping
+    public HttpEntity<?> get() {
+      return TEST_HTTP_RESPONSE;
     }
 
-    @Test
-    public void givenAllowedCorsMethod_whenNormalRequest_thenAllowOriginIsNotAddedAndOk()
-            throws Exception {
-
-        mockMvc.perform(
-                get("/"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(header().doesNotExist(ACCESS_CONTROL_ALLOW_ORIGIN));
+    @RequestMapping(method = HEAD)
+    HttpEntity<?> head() {
+      return TEST_HTTP_RESPONSE;
     }
 
-    @Test
-    public void givenDisallowedCorsMethod_whenCorsRequest_thenAllowOriginIsNotAddedAndForbidden()
-            throws Exception {
+  }
 
-        mockMvc.perform(
-                head("/").header(ORIGIN, ORIGIN_HEADER_VALUE))
-                .andDo(print())
-                .andExpect(status().isForbidden())
-                .andExpect(header().doesNotExist(ACCESS_CONTROL_ALLOW_ORIGIN));
+  @TestConfiguration
+  @Import({AbstractWebSecurityTest.TestConfig.class})
+  static class TestConfig {
+
+    @Bean
+    TestController testController() {
+      return new TestController();
     }
 
-    @Controller
-    public static class TestController {
-
-        @GetMapping
-        public HttpEntity<?> get() {
-            return TEST_HTTP_RESPONSE;
-        }
-
-        @RequestMapping(method = HEAD)
-        HttpEntity<?> head() {
-            return TEST_HTTP_RESPONSE;
-        }
-
-    }
-
-    @TestConfiguration
-    @Import({AbstractWebSecurityTest.TestConfig.class})
-    static class TestConfig {
-
-        @Bean
-        TestController testController() {
-            return new TestController();
-        }
-
-    }
+  }
 
 }

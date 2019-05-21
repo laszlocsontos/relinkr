@@ -8,18 +8,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
 public interface OAuth2AuthorizationRequestsCookieResolver
-        extends CookieValueResolver<Map<String, OAuth2AuthorizationRequest>> {
+    extends CookieValueResolver<Map<String, OAuth2AuthorizationRequest>> {
 
-    default Optional<Map<String, OAuth2AuthorizationRequest>> resolveRequests(
-            HttpServletRequest request) {
+  default Optional<Map<String, OAuth2AuthorizationRequest>> resolveRequests(
+      HttpServletRequest request) {
 
-        return resolveValue(request);
-    }
+    return resolveValue(request);
+  }
 
-    default void setRequests(
-            HttpServletResponse response, Map<String, OAuth2AuthorizationRequest> value) {
+  default void setRequests(
+      HttpServletResponse response, Map<String, OAuth2AuthorizationRequest> value) {
 
-        setValue(response, value);
-    }
+    setValue(response, value);
+  }
 
 }

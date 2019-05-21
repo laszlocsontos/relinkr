@@ -10,17 +10,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PROTECTED)
 public class UserId extends AbstractId<User> {
 
-    public UserId(long id) {
-        super(id);
-    }
+  public UserId(long id) {
+    super(id);
+  }
 
-    public static UserId of(long id) {
-        return new UserId(id);
-    }
+  public static UserId of(long id) {
+    return new UserId(id);
+  }
 
-    @Override
-    public Class<User> getEntityClass() {
-        return User.class;
-    }
+  @Override
+  public Class<User> getEntityClass() {
+    return User.class;
+  }
 
 }

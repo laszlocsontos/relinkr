@@ -5,8 +5,8 @@ package io.relinkr.core.model;
  */
 public class EntityAlreadyExistsException extends GeneralEntityException {
 
-    public EntityAlreadyExistsException(String fieldName, Object fieldValue) {
-        super(fieldName, fieldValue);
-    }
+  public EntityAlreadyExistsException(String fieldName, Object fieldValue) {
+    super(fieldName, fieldValue);
+  }
 
 }

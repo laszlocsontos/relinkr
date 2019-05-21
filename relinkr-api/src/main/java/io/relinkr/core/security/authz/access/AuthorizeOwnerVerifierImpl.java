@@ -21,49 +21,49 @@ import org.springframework.util.NumberUtils;
 @Transactional(propagation = SUPPORTS, readOnly = true)
 public class AuthorizeOwnerVerifierImpl implements AuthorizeOwnerVerifier {
 
-    private final EntityManager entityManager;
+  private final EntityManager entityManager;
 
-    public AuthorizeOwnerVerifierImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
+  public AuthorizeOwnerVerifierImpl(EntityManager entityManager) {
+    this.entityManager = entityManager;
+  }
+
+  @Override
+  public int canAccess(
+      @NonNull Principal principal, @NonNull EntityClassAwareId<?> entityClassAwareId) {
+
+    Class<?> entityClass = entityClassAwareId.getEntityClass();
+    if (!Ownable.class.isAssignableFrom(entityClass)) {
+      return ACCESS_ABSTAIN;
     }
 
-    @Override
-    public int canAccess(
-            @NonNull Principal principal, @NonNull EntityClassAwareId<?> entityClassAwareId) {
-
-        Class<?> entityClass = entityClassAwareId.getEntityClass();
-        if (!Ownable.class.isAssignableFrom(entityClass)) {
-            return ACCESS_ABSTAIN;
-        }
-
-        Object entity;
-        try {
-            entity = entityManager.find(entityClass, entityClassAwareId, NONE);
-        } catch (PersistenceException e) {
-            log.error(e.getMessage(), e);
-            return ACCESS_ABSTAIN;
-        }
-
-        if (entity == null) {
-            return ACCESS_ABSTAIN;
-        }
-
-        if (canAccess(principal, (Ownable) entity)) {
-            return ACCESS_GRANTED;
-        }
-
-        return ACCESS_DENIED;
+    Object entity;
+    try {
+      entity = entityManager.find(entityClass, entityClassAwareId, NONE);
+    } catch (PersistenceException e) {
+      log.error(e.getMessage(), e);
+      return ACCESS_ABSTAIN;
     }
 
-    private boolean canAccess(Principal principal, Ownable ownable) {
-        UserId currentUserId = extractUserId(principal);
-        return ownable.getUserId().equals(currentUserId);
+    if (entity == null) {
+      return ACCESS_ABSTAIN;
     }
 
-    private UserId extractUserId(Principal principal) {
-        String name = principal.getName();
-        long userId = NumberUtils.parseNumber(name, Long.class);
-        return UserId.of(userId);
+    if (canAccess(principal, (Ownable) entity)) {
+      return ACCESS_GRANTED;
     }
+
+    return ACCESS_DENIED;
+  }
+
+  private boolean canAccess(Principal principal, Ownable ownable) {
+    UserId currentUserId = extractUserId(principal);
+    return ownable.getUserId().equals(currentUserId);
+  }
+
+  private UserId extractUserId(Principal principal) {
+    String name = principal.getName();
+    long userId = NumberUtils.parseNumber(name, Long.class);
+    return UserId.of(userId);
+  }
 
 }

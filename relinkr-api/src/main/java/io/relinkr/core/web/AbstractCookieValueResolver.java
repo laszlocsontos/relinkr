@@ -6,26 +6,26 @@ import javax.servlet.http.HttpServletResponse;
 
 public abstract class AbstractCookieValueResolver<V> implements CookieValueResolver<V> {
 
-    @Override
-    public Optional<V> resolveValue(HttpServletRequest request) {
-        return getCookieManager().getCookie(request).flatMap(this::fromString);
+  @Override
+  public Optional<V> resolveValue(HttpServletRequest request) {
+    return getCookieManager().getCookie(request).flatMap(this::fromString);
+  }
+
+  @Override
+  public void setValue(HttpServletResponse response, V value) {
+    Optional<String> cookieValue = Optional.ofNullable(value).flatMap(this::toString);
+    if (cookieValue.isPresent()) {
+      getCookieManager().addCookie(response, cookieValue.get());
+      return;
     }
 
-    @Override
-    public void setValue(HttpServletResponse response, V value) {
-        Optional<String> cookieValue = Optional.ofNullable(value).flatMap(this::toString);
-        if (cookieValue.isPresent()) {
-            getCookieManager().addCookie(response, cookieValue.get());
-            return;
-        }
+    getCookieManager().removeCookie(response);
+  }
 
-        getCookieManager().removeCookie(response);
-    }
+  protected abstract Optional<V> fromString(String value);
 
-    protected abstract Optional<V> fromString(String value);
+  protected abstract Optional<String> toString(V value);
 
-    protected abstract Optional<String> toString(V value);
-
-    protected abstract CookieManager getCookieManager();
+  protected abstract CookieManager getCookieManager();
 
 }

@@ -6,13 +6,13 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 public abstract class BaseServletTest {
 
-    protected MockHttpServletRequest request;
-    protected MockHttpServletResponse response;
+  protected MockHttpServletRequest request;
+  protected MockHttpServletResponse response;
 
-    @Before
-    public void setUp() {
-        request = new MockHttpServletRequest();
-        response = new MockHttpServletResponse();
-    }
+  @Before
+  public void setUp() {
+    request = new MockHttpServletRequest();
+    response = new MockHttpServletResponse();
+  }
 
 }

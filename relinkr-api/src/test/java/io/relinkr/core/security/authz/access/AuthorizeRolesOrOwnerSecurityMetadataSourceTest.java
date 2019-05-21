@@ -15,40 +15,40 @@ import org.springframework.security.access.method.MethodSecurityMetadataSource;
 
 public class AuthorizeRolesOrOwnerSecurityMetadataSourceTest {
 
-    private MethodSecurityMetadataSource source = new AuthorizeRolesOrOwnerSecurityMetadataSource();
+  private MethodSecurityMetadataSource source = new AuthorizeRolesOrOwnerSecurityMetadataSource();
 
-    @Test
-    public void givenMethodWithEntityId_whenGetAttributes_thenRoleAndIsOwnerPresent() {
-        Collection<String> attributes = source
-                .getAttributes(MethodSecurityTestController.GET_ENTITY_WITH_ID_METHOD, null)
-                .stream()
-                .map(ConfigAttribute::getAttribute)
-                .collect(toList());
+  @Test
+  public void givenMethodWithEntityId_whenGetAttributes_thenRoleAndIsOwnerPresent() {
+    Collection<String> attributes = source
+        .getAttributes(MethodSecurityTestController.GET_ENTITY_WITH_ID_METHOD, null)
+        .stream()
+        .map(ConfigAttribute::getAttribute)
+        .collect(toList());
 
-        assertThat(attributes, containsInAnyOrder("IS_OWNER", "ROLE_ADMIN"));
-    }
+    assertThat(attributes, containsInAnyOrder("IS_OWNER", "ROLE_ADMIN"));
+  }
 
-    @Test
-    public void givenMethodWithoutEntityId_whenGetAttributes_thenRolePresent() {
-        Collection<String> attributes = source
-                .getAttributes(MethodSecurityTestController.GET_ENTITY_WITHOUT_ID_METHOD, null)
-                .stream()
-                .map(ConfigAttribute::getAttribute)
-                .collect(toList());
+  @Test
+  public void givenMethodWithoutEntityId_whenGetAttributes_thenRolePresent() {
+    Collection<String> attributes = source
+        .getAttributes(MethodSecurityTestController.GET_ENTITY_WITHOUT_ID_METHOD, null)
+        .stream()
+        .map(ConfigAttribute::getAttribute)
+        .collect(toList());
 
-        assertThat(attributes, allOf(contains("ROLE_ADMIN"), not(contains("IS_OWNER"))));
-    }
+    assertThat(attributes, allOf(contains("ROLE_ADMIN"), not(contains("IS_OWNER"))));
+  }
 
-    @Test
-    public void givenMethodWithoutAnnotation_whenGetAttributes_thenNonePresent() {
-        Collection<String> attributes = source
-                .getAttributes(MethodSecurityTestController.GET_ENTITY_WITHOUT_ANNOTATION_METHOD,
-                        null)
-                .stream()
-                .map(ConfigAttribute::getAttribute)
-                .collect(toList());
+  @Test
+  public void givenMethodWithoutAnnotation_whenGetAttributes_thenNonePresent() {
+    Collection<String> attributes = source
+        .getAttributes(MethodSecurityTestController.GET_ENTITY_WITHOUT_ANNOTATION_METHOD,
+            null)
+        .stream()
+        .map(ConfigAttribute::getAttribute)
+        .collect(toList());
 
-        assertThat(attributes, empty());
-    }
+    assertThat(attributes, empty());
+  }
 
 }

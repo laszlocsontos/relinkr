@@ -11,28 +11,28 @@ import org.springframework.core.convert.converter.Converter;
 
 public abstract class AbstractEntityClassAwareIdConverterTest<S extends Serializable, T extends EntityClassAwareId<?>> {
 
-    protected Converter<S, T> converter;
+  protected Converter<S, T> converter;
 
-    @Before
-    public void setUp() throws Exception {
-        converter = createConverter();
-    }
+  @Before
+  public void setUp() throws Exception {
+    converter = createConverter();
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public abstract void create_withWrongClass();
+  @Test(expected = IllegalArgumentException.class)
+  public abstract void create_withWrongClass();
 
-    @Test
-    public void convert_withNull() {
-        assertNull(converter.convert(null));
-    }
+  @Test
+  public void convert_withNull() {
+    assertNull(converter.convert(null));
+  }
 
-    @Test
-    public void convert_withGoodValue() {
-        assertNotNull(converter.convert(getGoodValue()));
-    }
+  @Test
+  public void convert_withGoodValue() {
+    assertNotNull(converter.convert(getGoodValue()));
+  }
 
-    protected abstract Converter<S, T> createConverter();
+  protected abstract Converter<S, T> createConverter();
 
-    protected abstract S getGoodValue();
+  protected abstract S getGoodValue();
 
 }

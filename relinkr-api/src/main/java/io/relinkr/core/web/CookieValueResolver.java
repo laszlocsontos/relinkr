@@ -6,8 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface CookieValueResolver<V> {
 
-    Optional<V> resolveValue(HttpServletRequest request);
+  Optional<V> resolveValue(HttpServletRequest request);
 
-    void setValue(HttpServletResponse response, V value);
+  void setValue(HttpServletResponse response, V value);
 
 }
