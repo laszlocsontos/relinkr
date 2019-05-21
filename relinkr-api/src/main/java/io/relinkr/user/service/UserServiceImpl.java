@@ -36,6 +36,13 @@ class UserServiceImpl implements UserService {
         .orElseThrow(() -> new EntityNotFoundException("id", userId));
   }
 
+  User getUser(EmailAddress emailAddress) {
+    return userRepository.findByEmailAddress(emailAddress)
+        .orElseThrow(
+            () -> new EntityNotFoundException("emailAddress", emailAddress.getValue())
+        );
+  }
+
   @Override
   @Transactional(readOnly = true)
   public Optional<User> findUser(EmailAddress emailAddress) {
@@ -65,13 +72,6 @@ class UserServiceImpl implements UserService {
   @Override
   public void revokeRole(UserId userId, Role role) {
     updateUser(userId, user -> user.revokeRole(role));
-  }
-
-  User getUser(EmailAddress emailAddress) {
-    return userRepository.findByEmailAddress(emailAddress)
-        .orElseThrow(
-            () -> new EntityNotFoundException("emailAddress", emailAddress.getValue())
-        );
   }
 
   User createUser(EmailAddress emailAddress) {

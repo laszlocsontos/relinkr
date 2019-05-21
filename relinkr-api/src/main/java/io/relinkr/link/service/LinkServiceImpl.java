@@ -108,6 +108,17 @@ class LinkServiceImpl implements LinkService {
   }
 
   @Override
+  public Link updateLongUrl(LinkId linkId, String longUrl, UtmParameters utmParameters) {
+    Assert.notNull(linkId, "linkId cannot be null");
+    Assert.hasText(longUrl, "longUrl must contain text");
+
+    Link link = getLink(linkId);
+    verifyLinkBeforeUpdate(link);
+    link.updateLongUrl(longUrl, utmParameters);
+    return linkRepository.save(link);
+  }
+
+  @Override
   public URI getTargetUrl(String path) throws EntityNotFoundException {
     return getLink(path).getTargetUrl();
   }
@@ -120,17 +131,6 @@ class LinkServiceImpl implements LinkService {
     Assert.notNull(userId, "userId cannot be null");
 
     Link link = new Link(longUrl, utmParameters, userId);
-    return linkRepository.save(link);
-  }
-
-  @Override
-  public Link updateLongUrl(LinkId linkId, String longUrl, UtmParameters utmParameters) {
-    Assert.notNull(linkId, "linkId cannot be null");
-    Assert.hasText(longUrl, "longUrl must contain text");
-
-    Link link = getLink(linkId);
-    verifyLinkBeforeUpdate(link);
-    link.updateLongUrl(longUrl, utmParameters);
     return linkRepository.save(link);
   }
 

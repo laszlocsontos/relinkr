@@ -53,6 +53,17 @@ public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
 
   protected abstract void setLinkStatus(LinkStatus linkStatus);
 
+  private void setLinkStatus(LinkStatus linkStatus, Set<LinkStatus> expectedLinkStatuses)
+      throws InvalidLinkStatusException {
+
+    expectedLinkStatuses = getLinkStatus().getNextLinkStatuses();
+    if (!expectedLinkStatuses.contains(linkStatus)) {
+      throw InvalidLinkStatusException.forLinkStatus(linkStatus, expectedLinkStatuses);
+    }
+
+    setLinkStatus(linkStatus);
+  }
+
   /**
    * Gets next possible statuses.
    *
@@ -80,17 +91,6 @@ public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
 
   public void markBroken() throws InvalidLinkStatusException {
     setLinkStatus(LinkStatus.BROKEN, getLinkStatus().getNextLinkStatuses());
-  }
-
-  private void setLinkStatus(LinkStatus linkStatus, Set<LinkStatus> expectedLinkStatuses)
-      throws InvalidLinkStatusException {
-
-    expectedLinkStatuses = getLinkStatus().getNextLinkStatuses();
-    if (!expectedLinkStatuses.contains(linkStatus)) {
-      throw InvalidLinkStatusException.forLinkStatus(linkStatus, expectedLinkStatuses);
-    }
-
-    setLinkStatus(linkStatus);
   }
 
 }
