@@ -60,21 +60,21 @@ public class PersistentOAuth2UserService
   public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
     // We expect that spring.security.oauth2.client.provider.<provider_name>.userNameAttribute
     // be always set to email and hence we expect a valid email address from the OAuth2 server.
-    OAuth2User oAuth2User;
+    OAuth2User oauth2User;
     try {
-      oAuth2User = defaultUserService.loadUser(userRequest);
+      oauth2User = defaultUserService.loadUser(userRequest);
     } catch (IllegalArgumentException iae) {
       throw createOAuth2Error(INVALID_EMAIL_ADDRESS, iae);
     }
 
-    EmailAddress emailAddress = extractEmailAddress(oAuth2User.getName());
+    EmailAddress emailAddress = extractEmailAddress(oauth2User.getName());
 
     String registrationId = userRequest.getClientRegistration().getRegistrationId();
-    UserProfile userProfile = extractUserProfile(registrationId, oAuth2User.getAttributes());
+    UserProfile userProfile = extractUserProfile(registrationId, oauth2User.getAttributes());
 
     User user = saveUser(emailAddress, userProfile);
 
-    return createOAuth2User(oAuth2User.getAttributes(), user, userProfile);
+    return createOAuth2User(oauth2User.getAttributes(), user, userProfile);
   }
 
   EmailAddress extractEmailAddress(String principalName) throws OAuth2AuthenticationException {
@@ -129,10 +129,10 @@ public class PersistentOAuth2UserService
   private RuntimeException createOAuth2Error(String code, Throwable cause) {
     OAuth2Error oauth2Error = new OAuth2Error(code, cause.getMessage(), null);
 
-    OAuth2AuthenticationException oAuth2AuthenticationException =
+    OAuth2AuthenticationException oauth2Authenticationexception =
         new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString(), cause);
 
-    throw oAuth2AuthenticationException;
+    throw oauth2Authenticationexception;
   }
 
 }
