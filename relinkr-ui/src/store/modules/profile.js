@@ -44,8 +44,8 @@ const actions = {
     const {userId} = args || {};
     console.log("fetchProfile", userId);
 
-    get({endpoint: `/v1/users/${userId}`})
-    .then(response => commit('setProfile', response.data))
+    get({endpoint: `v1/users/${userId}`})
+    .then(response => commit('setProfile', response))
     .catch(err => console.log("error", err));
   }
 };
