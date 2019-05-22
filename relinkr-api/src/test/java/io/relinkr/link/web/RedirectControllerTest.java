@@ -16,7 +16,7 @@
 
 package io.relinkr.link.web;
 
-import static io.relinkr.link.web.RedirectController.FRONT_END_URL_PROPERTY;
+import static io.relinkr.link.web.RedirectController.FRONT_END_LOGIN_URL_PROPERTY;
 import static io.relinkr.link.web.RedirectController.HEADER_XFF;
 import static io.relinkr.link.web.RedirectController.REDIRECT_NOT_FOUND_URL_PROPERTY;
 import static io.relinkr.test.Mocks.FIXED_CLOCK;
@@ -76,7 +76,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @TestPropertySource(properties = {
-    FRONT_END_URL_PROPERTY + "=" + FRONTEND_LOGIN_URL,
+    FRONT_END_LOGIN_URL_PROPERTY + "=" + FRONTEND_LOGIN_URL,
     REDIRECT_NOT_FOUND_URL_PROPERTY + "=" + NOT_FOUND_URL
 })
 @WebMvcTest(controllers = RedirectController.class, secure = false)

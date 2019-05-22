@@ -29,9 +29,11 @@ import io.relinkr.user.model.UserId;
 import io.relinkr.visitor.model.VisitorId;
 import java.lang.reflect.Field;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.env.Environment;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -40,12 +42,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
 
   private static final String APPA$BMP_CLASS =
       "org.springframework.hateoas.mvc.AnnotatedParametersParameterAccessor$BoundMethodParameter";
 
   private static final String APPA$BMP_CONVERSION_SERVICE = "CONVERSION_SERVICE";
+
+  static final String FRONT_END_BASE_URL_PROPERTY = "relinkr.frontend.base-url";
+
+  private final Environment environment;
 
   @Override
   public void addFormatters(FormatterRegistry registry) {
@@ -75,8 +82,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
   @Override
   public void addCorsMappings(CorsRegistry registry) {
+    String origin = environment.getRequiredProperty(FRONT_END_BASE_URL_PROPERTY);
+
     registry.addMapping("/**")
-        .allowedOrigins("*")
+        .allowedOrigins(origin)
+        .allowCredentials(true)
         .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE");
   }
 

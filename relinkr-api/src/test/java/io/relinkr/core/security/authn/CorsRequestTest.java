@@ -16,6 +16,7 @@
 
 package io.relinkr.core.security.authn;
 
+import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS;
 import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN;
 import static org.springframework.http.HttpHeaders.ORIGIN;
 import static org.springframework.http.ResponseEntity.ok;
@@ -25,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.web.bind.annotation.RequestMethod.HEAD;
-import static org.springframework.web.cors.CorsConfiguration.ALL;
 
 import io.relinkr.core.security.authn.CorsRequestTest.TestConfig;
 import io.relinkr.core.security.authn.CorsRequestTest.TestController;
@@ -38,11 +38,13 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @WebMvcTest(controllers = TestController.class)
 @ContextConfiguration(classes = TestConfig.class)
+@TestPropertySource(properties = "relinkr.frontend.base-url = http://localhost:9999")
 public class CorsRequestTest extends AbstractWebSecurityTest {
 
   private static final String ORIGIN_HEADER_VALUE = "http://localhost:9999";
@@ -57,7 +59,8 @@ public class CorsRequestTest extends AbstractWebSecurityTest {
         get("/").header(ORIGIN, ORIGIN_HEADER_VALUE))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(header().string(ACCESS_CONTROL_ALLOW_ORIGIN, ALL));
+        .andExpect(header().string(ACCESS_CONTROL_ALLOW_ORIGIN, ORIGIN_HEADER_VALUE))
+        .andExpect(header().string(ACCESS_CONTROL_ALLOW_CREDENTIALS, "true"));
   }
 
   @Test
@@ -68,7 +71,8 @@ public class CorsRequestTest extends AbstractWebSecurityTest {
         get("/"))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(header().doesNotExist(ACCESS_CONTROL_ALLOW_ORIGIN));
+        .andExpect(header().doesNotExist(ACCESS_CONTROL_ALLOW_ORIGIN))
+        .andExpect(header().doesNotExist(ACCESS_CONTROL_ALLOW_CREDENTIALS));
   }
 
   @Test
@@ -79,7 +83,8 @@ public class CorsRequestTest extends AbstractWebSecurityTest {
         head("/").header(ORIGIN, ORIGIN_HEADER_VALUE))
         .andDo(print())
         .andExpect(status().isForbidden())
-        .andExpect(header().doesNotExist(ACCESS_CONTROL_ALLOW_ORIGIN));
+        .andExpect(header().doesNotExist(ACCESS_CONTROL_ALLOW_ORIGIN))
+        .andExpect(header().doesNotExist(ACCESS_CONTROL_ALLOW_CREDENTIALS));
   }
 
   @Controller
