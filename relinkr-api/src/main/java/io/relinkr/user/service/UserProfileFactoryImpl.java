@@ -117,7 +117,7 @@ public class UserProfileFactoryImpl implements UserProfileFactory {
   private static class GoogleUserProfileCreator extends UserProfileCreator {
 
     private static final String[] FIELD_NAMES = {
-        "sub", "name", "given_name", null, "family_name", "link", "picture", null, null
+        "sub", "name", "given_name", null, "family_name", "profile", "picture", null, null
     };
 
     GoogleUserProfileCreator() {

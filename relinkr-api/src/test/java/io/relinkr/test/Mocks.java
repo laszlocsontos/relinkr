@@ -217,7 +217,7 @@ public final class Mocks {
       googleUserAttributes.put("name", "László Csontos");
       googleUserAttributes.put("given_name", "László");
       googleUserAttributes.put("family_name", "Csontos");
-      googleUserAttributes.put("link", "https://plus.google.com/104401221461109262503");
+      googleUserAttributes.put("profile", "https://plus.google.com/104401221461109262503");
       googleUserAttributes.put("picture",
           "https://lh3.googleusercontent.com/-7EVTpxqEgj8/AAAAAAAAAAI/AAAAAAAAAAA/Qo9wrOAoxPU/photo.jpg");
 
