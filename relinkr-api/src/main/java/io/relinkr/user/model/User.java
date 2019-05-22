@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 package io.relinkr.user.model;
 
 import static java.util.Collections.unmodifiableMap;
@@ -42,7 +42,7 @@ import org.springframework.util.CollectionUtils;
 
 @Entity
 @Table(name = "user_")
-public class User extends AbstractEntity<UserId> {
+public class User extends AbstractEntity<UserId> implements Ownable {
 
   @Embedded
   @AttributeOverride(name = "value", column = @Column(name = "email_address"))
@@ -93,6 +93,11 @@ public class User extends AbstractEntity<UserId> {
 
   public static User of(EmailAddress emailAddress) {
     return new User(emailAddress, null);
+  }
+
+  @Override
+  public UserId getUserId() {
+    return getId();
   }
 
   public boolean isConfirmed() {
