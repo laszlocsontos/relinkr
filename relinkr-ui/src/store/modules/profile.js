@@ -14,14 +14,40 @@
   limitations under the License.
 */
 
+/* eslint-disable no-console */
+
+import _ from 'lodash';
+import {get} from '../../api';
+
 // initial state
-const state = {};
+const state = {
+  userProfile: {
+    userProfileType: "",
+    userProfileId: "",
+    fullName: "",
+    profileUrl: "",
+    pictureUrl: ""
+  }
+};
 
 const getters = {};
 
-const mutations = {};
+const mutations = {
+  setProfile(state, response) {
+    state.userProfile = _.assign(state.userProfile, response.userProfile || {});
+  }
+};
 
-const actions = {};
+const actions = {
+  fetchProfile({commit}, args) {
+    const {userId} = args || {};
+    console.log("fetchProfile", userId);
+
+    get({endpoint: `users/${userId}`})
+    .then(response => commit('setProfile', response))
+    .catch(err => console.log("error", err));
+  }
+};
 
 export default {
   state,

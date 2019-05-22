@@ -40,17 +40,18 @@ const getters = {
     return (clockTimestamp <= (state.auth.expiresAt || 0));
   },
 
-  userId: state => state.auth.userId
+  userId: state => state.userId
 };
 
 const mutations = {
   setAuthentication(state, auth) {
-    state.auth = auth;
+    state.auth = _.assign(state.auth, auth || {});
   },
   clearAuthentication(state) {
     state.auth = {
       userId: 0,
-      expiresAt: 0
+      expiresAt: 0,
+      roles: []
     };
     this._vm.$cookies.remove(TOKEN_PAYLOAD_COOKIE_NAME);
   }
@@ -69,19 +70,21 @@ const actions = {
       console.log("token", token);
       let decoded = JSON.parse(atob(token));
       console.log("decoded", decoded);
-      dispatch('login', {
-        auth: {
-          userId: decoded.sub,
-          expiresAt: decoded.exp
-        }
-      });
+
+      const auth = {
+        userId: decoded.sub,
+        expiresAt: decoded.exp
+      };
+
+      dispatch('login', auth);
+      dispatch('fetchProfile', auth);
     } catch (err) {
       dispatch('logout');
     }
   },
 
   login({commit}, args) {
-    const {auth} = args || {};
+    const auth = args || {};
     commit('setAuthentication', auth);
     router.push({path: '/dashboard'});
     console.log("login: ", auth);
