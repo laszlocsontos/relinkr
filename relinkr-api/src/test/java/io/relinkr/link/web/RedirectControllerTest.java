@@ -16,10 +16,12 @@
  
 package io.relinkr.link.web;
 
+import static io.relinkr.link.web.RedirectController.FRONT_END_URL_PROPERTY;
 import static io.relinkr.link.web.RedirectController.HEADER_XFF;
 import static io.relinkr.link.web.RedirectController.REDIRECT_NOT_FOUND_URL_PROPERTY;
 import static io.relinkr.test.Mocks.FIXED_CLOCK;
 import static io.relinkr.test.Mocks.FIXED_INSTANT;
+import static io.relinkr.test.Mocks.FRONTEND_LOGIN_URL;
 import static io.relinkr.test.Mocks.NOT_FOUND_URL;
 import static io.relinkr.test.Mocks.VISITOR_ID;
 import static io.relinkr.test.Mocks.VISITOR_ID_ZERO;
@@ -73,7 +75,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@TestPropertySource(properties = REDIRECT_NOT_FOUND_URL_PROPERTY + "=" + NOT_FOUND_URL)
+@TestPropertySource(properties = {
+    FRONT_END_URL_PROPERTY + "=" + FRONTEND_LOGIN_URL,
+    REDIRECT_NOT_FOUND_URL_PROPERTY + "=" + NOT_FOUND_URL
+})
 @WebMvcTest(controllers = RedirectController.class, secure = false)
 public class RedirectControllerTest {
 
@@ -175,6 +180,11 @@ public class RedirectControllerTest {
     redirect(link.getPath(), NOT_FOUND_URL);
 
     assertTrue(redirectedEventListener.isEmpty());
+  }
+
+  @Test
+  public void givenRootPath_whenHandleRoot_thenRedirectedToLogin() throws Exception {
+    redirect("", FRONTEND_LOGIN_URL);
   }
 
   private void assertRedirectedEvent() throws InterruptedException {

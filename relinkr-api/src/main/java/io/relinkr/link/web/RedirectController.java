@@ -49,6 +49,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 @Controller
 public class RedirectController {
 
+  static final String FRONT_END_URL_PROPERTY = "relinkr.frontend.login-url";
   static final String REDIRECT_NOT_FOUND_URL_PROPERTY = "relinkr.redirect.not-found-url";
 
   static final String HEADER_XFF = "X-Forwarded-For";
@@ -67,6 +68,7 @@ public class RedirectController {
 
   private final ApplicationEventPublisher eventPublisher;
   private final Clock clock;
+  private final URI frontendLoginUrl;
   private final URI notFoundUrl;
   private final LinkService linkService;
   private final VisitorIdCookieResolver visitorIdCookieResolver;
@@ -83,10 +85,16 @@ public class RedirectController {
 
     this.eventPublisher = eventPublisher;
     clock = clockProvider.getIfAvailable(Clock::systemUTC);
+    frontendLoginUrl = environment.getRequiredProperty(FRONT_END_URL_PROPERTY, URI.class);
     notFoundUrl = environment.getRequiredProperty(REDIRECT_NOT_FOUND_URL_PROPERTY, URI.class);
     this.linkService = linkService;
     this.visitorIdCookieResolver = visitorIdCookieResolver;
     this.visitorService = visitorService;
+  }
+
+  @GetMapping("/")
+  ResponseEntity handleRoot() {
+    return buildRedirect(frontendLoginUrl);
   }
 
   @GetMapping("/{path}")

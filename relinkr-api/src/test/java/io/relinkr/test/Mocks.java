@@ -83,6 +83,7 @@ public final class Mocks {
   public static final LongUrl LONG_URL_VALID_UTM;
   public static final LongUrl LONG_URL_INVALID_UTM;
 
+  public static final String FRONTEND_LOGIN_URL = "https://app.relinkr.io/login";
   public static final String NOT_FOUND_URL = "https://relinkr.io/not-found";
 
   public static final String UTM_SOURCE_V = "source";
