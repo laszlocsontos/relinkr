@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 package io.relinkr.core.security.authz.access;
 
 import static io.relinkr.core.security.authz.access.AuthorizeRolesOrOwnerSecurityMetadataSource.IS_OWNER;

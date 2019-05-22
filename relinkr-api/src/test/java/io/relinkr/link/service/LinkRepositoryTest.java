@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 package io.relinkr.link.service;
 
 import static io.relinkr.test.Mocks.USER_ID;

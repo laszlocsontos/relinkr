@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 package io.relinkr.core.security.authn.oauth2;
 
 import io.relinkr.core.security.authn.jwt.JwtAuthenticationTokenCookieResolver;

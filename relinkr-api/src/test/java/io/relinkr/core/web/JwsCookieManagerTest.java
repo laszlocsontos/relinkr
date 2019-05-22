@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 package io.relinkr.core.web;
 
 import static io.relinkr.test.Mocks.JWS_VISITOR_COOKIE_SECRET_KEY;

@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 package io.relinkr.link.model;
 
 import static io.relinkr.link.model.Link.HASHIDS_LENGTH;

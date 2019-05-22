@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 package io.relinkr.core.model;
 
 import java.util.Optional;
@@ -300,8 +300,8 @@ public enum Country {
    *
    * @param countryCode Country code
    * @return A {@code Country} as an {@link Optional} provided that that {@code countryCode} is a
-   *     non-empty, two letter country code. If that code doesn't belong to any valid countries
-   *     above {@link Country#ZZ} is returned. Otherwise an empty {@link Optional} is returned.
+   *        non-empty, two letter country code. If that code doesn't belong to any valid countries
+   *        above {@link Country#ZZ} is returned. Otherwise an empty {@link Optional} is returned.
    */
   public static Optional<Country> fromString(String countryCode) {
     Optional<String> normalizedCountryCode = Optional.ofNullable(countryCode)

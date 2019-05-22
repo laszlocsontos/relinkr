@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 package io.relinkr.core.web;
 
 import java.time.Duration;
@@ -30,12 +30,11 @@ import org.springframework.web.util.WebUtils;
  * original implementations are the following.
  *
  * <ul>
- *   <li>New method {@link CookieManager#getCookie(HttpServletRequest)} returns
- *   {@link Optional}</li>
- *   <li>New method {@link CookieManager#setCookieMaxAge(Duration)} accepts {@link Duration}</li>
- *   <li>Method {@link CookieManager#setCookieSecure(boolean)} enforced cookies being secure</li>
+ *    <li>New method {@link CookieManager#getCookie(HttpServletRequest)} returns
+ *    {@link Optional}</li>
+ *    <li>New method {@link CookieManager#setCookieMaxAge(Duration)} accepts {@link Duration}</li>
+ *    <li>Method {@link CookieManager#setCookieSecure(boolean)} enforced cookies being secure</li>
  * </ul>
- *
  */
 public class CookieManager extends CookieGenerator {
 

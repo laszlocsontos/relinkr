@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 package io.relinkr.link.web;
 
 import static io.relinkr.link.web.RedirectController.FRONT_END_URL_PROPERTY;

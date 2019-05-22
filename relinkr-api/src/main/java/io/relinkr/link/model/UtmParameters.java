@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 package io.relinkr.link.model;
 
 import java.util.Collections;
@@ -57,7 +57,6 @@ public class UtmParameters {
    * @param utmCampaign UTM campaign (cannot be empty)
    * @param utmTerm UTM term (can be null or empty)
    * @param utmContent UTM content (can be null or empty)
-   *
    * @throws MissingUtmParameterException when UTM parameters are invalid, see above
    */
   public UtmParameters(
@@ -94,7 +93,6 @@ public class UtmParameters {
    *
    * @param utmParameterMap Map to convert
    * @return A new {@code UtmParameters} instance
-   *
    * @throws MissingUtmParameterException is thrown if the given map contains invalid values
    */
   public static UtmParameters of(Map<String, String> utmParameterMap)

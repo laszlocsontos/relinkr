@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 package io.relinkr.core.security.authn.oauth2;
 
 import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.STATE;

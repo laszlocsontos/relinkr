@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 package io.relinkr.link.model;
 
 import io.relinkr.core.model.ApplicationException;
@@ -42,7 +42,6 @@ public class InvalidLinkStatusException extends ApplicationException {
    *
    * @param linkStatus That links status which was invalid to use
    * @param expectedLinkStatuses Expected statuses
-   *
    * @return InvalidLinkStatusException (never {@code null}
    */
   public static InvalidLinkStatusException forLinkStatus(
