@@ -27,10 +27,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-import io.relinkr.core.security.authn.user.UserIdAuthenticationToken;
+import io.relinkr.core.security.authn.user.UserAuthenticationToken;
 import io.relinkr.core.web.AjaxRequestMatcher;
 import io.relinkr.test.web.BaseFilterTest;
-import io.relinkr.user.model.UserProfileType;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +50,7 @@ import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 public class JwtAuthenticationFilterTest extends BaseFilterTest {
 
   private static final Authentication AUTHENTICATED_TOKEN =
-      UserIdAuthenticationToken.of(1L, GOOGLE, emptySet());
+      UserAuthenticationToken.of(1L, GOOGLE, emptySet());
 
   private static final String PUBLIC_PATH = "/public";
 

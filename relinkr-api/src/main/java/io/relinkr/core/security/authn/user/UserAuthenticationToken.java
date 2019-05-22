@@ -22,12 +22,12 @@ import lombok.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
-public class UserIdAuthenticationToken extends AbstractAuthenticationToken {
+public class UserAuthenticationToken extends AbstractAuthenticationToken {
 
   private final long userId;
   private final UserProfileType userProfileType;
 
-  private UserIdAuthenticationToken(
+  private UserAuthenticationToken(
       long userId, UserProfileType userProfileType,
       Collection<? extends GrantedAuthority> authorities) {
 
@@ -38,10 +38,10 @@ public class UserIdAuthenticationToken extends AbstractAuthenticationToken {
     this.userProfileType = userProfileType;
   }
 
-  public static UserIdAuthenticationToken of(
+  public static UserAuthenticationToken of(
       long userId, @NonNull UserProfileType userProfileType,
       Collection<? extends GrantedAuthority> authorities) {
-    return new UserIdAuthenticationToken(userId, userProfileType, authorities);
+    return new UserAuthenticationToken(userId, userProfileType, authorities);
   }
 
   @Override

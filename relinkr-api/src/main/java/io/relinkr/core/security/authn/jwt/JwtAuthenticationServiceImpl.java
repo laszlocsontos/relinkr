@@ -31,7 +31,7 @@ import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import io.relinkr.core.security.authn.user.UserIdAuthenticationToken;
+import io.relinkr.core.security.authn.user.UserAuthenticationToken;
 import io.relinkr.core.util.IdentityGenerator;
 import io.relinkr.user.model.UserProfileType;
 import java.security.PrivateKey;
@@ -184,7 +184,7 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
             .map(it -> it.collect(toSet()))
             .orElse(emptySet());
 
-    return UserIdAuthenticationToken.of(userId, userProfileType, authorities);
+    return UserAuthenticationToken.of(userId, userProfileType, authorities);
   }
 
 }
