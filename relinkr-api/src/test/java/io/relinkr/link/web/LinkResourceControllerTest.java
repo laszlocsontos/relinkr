@@ -94,7 +94,7 @@ public class LinkResourceControllerTest {
     given(linkService.getLink(link.getId())).willReturn(link);
 
     ResultActions resultActions = mockMvc
-        .perform(get("/api/links/{linkId}", link.getId()))
+        .perform(get("/v1/links/{linkId}", link.getId()))
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_VALUE))
         .andDo(print());
@@ -119,7 +119,7 @@ public class LinkResourceControllerTest {
     ).willReturn(link);
 
     ResultActions resultActions = mockMvc
-        .perform(post("/api/links").contentType(APPLICATION_JSON)
+        .perform(post("/v1/links").contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(linkResource)))
         .andExpect(status().isOk())
         .andDo(print());
@@ -144,7 +144,7 @@ public class LinkResourceControllerTest {
     ).willReturn(link);
 
     ResultActions resultActions = mockMvc.perform(
-        put("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+        put("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(linkResource)))
         .andExpect(status().isOk())
         .andDo(print());
@@ -162,7 +162,7 @@ public class LinkResourceControllerTest {
     LinkId linkId = link.getId();
 
     ResultActions resultActions = mockMvc.perform(
-        put("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+        put("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(linkResource)))
         .andExpect(status().isBadRequest())
         .andDo(print());
@@ -187,7 +187,7 @@ public class LinkResourceControllerTest {
     ).willReturn(link);
 
     ResultActions resultActions = mockMvc.perform(
-        patch("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+        patch("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(linkResource)))
         .andExpect(status().isOk())
         .andDo(print());
@@ -212,7 +212,7 @@ public class LinkResourceControllerTest {
     ).willReturn(link);
 
     ResultActions resultActions = mockMvc.perform(
-        patch("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+        patch("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(linkResource)))
         .andExpect(status().isOk())
         .andDo(print());
@@ -229,7 +229,7 @@ public class LinkResourceControllerTest {
     LinkId linkId = link.getId();
 
     ResultActions resultActions = mockMvc.perform(
-        patch("/api/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+        patch("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(linkResource)))
         .andExpect(status().isBadRequest())
         .andDo(print());
@@ -246,7 +246,7 @@ public class LinkResourceControllerTest {
     given(linkService.listLinks(USER_ID, PAGEABLE))
         .willReturn(new PageImpl<>(asList(link), PAGEABLE, 1));
 
-    ResultActions resultActions = mockMvc.perform(get("/api/links")
+    ResultActions resultActions = mockMvc.perform(get("/v1/links")
         .param("page", String.valueOf(PAGEABLE.getPageNumber()))
         .param("size", String.valueOf(PAGEABLE.getPageSize())))
         .andExpect(status().isOk())
@@ -257,7 +257,7 @@ public class LinkResourceControllerTest {
 
   @Test
   public void updateLinkStatus_withActive() throws Exception {
-    mockMvc.perform(put("/api/links/{linkId}/linkStatuses/{linkStatus}", link.getId(),
+    mockMvc.perform(put("/v1/links/{linkId}/linkStatuses/{linkStatus}", link.getId(),
         ACTIVE.name()))
         .andExpect(status().isOk())
         .andDo(print());
@@ -268,7 +268,7 @@ public class LinkResourceControllerTest {
 
   @Test
   public void updateLinkStatus_withArchived() throws Exception {
-    mockMvc.perform(put("/api/links/{linkId}/linkStatuses/{linkStatus}", link.getId(),
+    mockMvc.perform(put("/v1/links/{linkId}/linkStatuses/{linkStatus}", link.getId(),
         ARCHIVED.name()))
         .andExpect(status().isOk())
         .andDo(print());
@@ -279,7 +279,7 @@ public class LinkResourceControllerTest {
 
   @Test
   public void addTag() throws Exception {
-    mockMvc.perform(post("/api/links/{linkId}/tags/{tagName}", link.getId(),
+    mockMvc.perform(post("/v1/links/{linkId}/tags/{tagName}", link.getId(),
         TAG_A.getTagName()))
         .andExpect(status().isOk())
         .andDo(print());
@@ -290,7 +290,7 @@ public class LinkResourceControllerTest {
 
   @Test
   public void removeTag() throws Exception {
-    mockMvc.perform(delete("/api/links/{linkId}/tags/{tagName}", link.getId(),
+    mockMvc.perform(delete("/v1/links/{linkId}/tags/{tagName}", link.getId(),
         TAG_A.getTagName()))
         .andExpect(status().isOk())
         .andDo(print());
@@ -334,9 +334,9 @@ public class LinkResourceControllerTest {
         .andExpect(jsonPath(path + ".utmParameters.utmContent",
             is(link.getUtmParameters().get().getUtmContent().orElse(null))))
         .andExpect(jsonPath(path + "._links.self.href",
-            is("http://localhost/api/links/" + link.getId())))
+            is("http://localhost/v1/links/" + link.getId())))
         .andExpect(jsonPath(path + "._links.userLinkStatuses.href",
-            is("http://localhost/api/links/" + link.getId()
+            is("http://localhost/v1/links/" + link.getId()
                 + "/linkStatuses/ARCHIVED")))
         .andExpect(jsonPath(path + "._links.shortLink.href",
             is(shortLinkScheme + "://" + shortLinkDomain + "/" + link.getPath())));

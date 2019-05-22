@@ -33,8 +33,9 @@ const state = {
 const getters = {};
 
 const mutations = {
-  setProfile(state, response) {
-    state.userProfile = _.assign(state.userProfile, response.userProfile || {});
+  setProfile(state, data) {
+    console.log("setProfile", data);
+    state.userProfile = _.assign(state.userProfile, data.userProfile || {});
   }
 };
 
@@ -43,8 +44,8 @@ const actions = {
     const {userId} = args || {};
     console.log("fetchProfile", userId);
 
-    get({endpoint: `users/${userId}`})
-    .then(response => commit('setProfile', response))
+    get({endpoint: `/v1/users/${userId}`})
+    .then(response => commit('setProfile', response.data))
     .catch(err => console.log("error", err));
   }
 };

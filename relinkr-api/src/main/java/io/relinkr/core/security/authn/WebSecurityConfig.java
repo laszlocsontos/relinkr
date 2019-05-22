@@ -86,7 +86,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   );
 
   public static final List<RequestMatcher> PROTECTED_REQUEST_MATCHERS = unmodifiableList(
-      singletonList(new RegexRequestMatcher("/api/.*", null))
+      singletonList(new RegexRequestMatcher("/v1/.*", null))
   );
 
   private final ObjectMapper objectMapper;

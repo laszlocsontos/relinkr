@@ -58,7 +58,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
 
 @RestController
-@RequestMapping("/api/links")
+@RequestMapping("/v1/links")
 public class LinkResourceController {
 
   private static Validator FULL_LINK_VALIDATOR = new FullLinkValidator();

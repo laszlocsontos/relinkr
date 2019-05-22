@@ -69,7 +69,7 @@ public class UserResourceControllerTest extends AbstractResourceControllerTest {
     withUser(user, userProfile.getUserProfileType());
 
     ResultActions resultActions = mockMvc
-        .perform(get("/api/users/{userId}", user.getId()))
+        .perform(get("/v1/users/{userId}", user.getId()))
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(HAL_JSON_VALUE))
         .andDo(print());
@@ -78,7 +78,7 @@ public class UserResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  public void givenOtherUserIdWithAuthenticatedUser_whenGetUser_thenOk() throws Exception {
+  public void givenOtherUserIdWithAuthenticatedUser_whenGetUser_thenForbidden() throws Exception {
     withUser(user, userProfile.getUserProfileType());
 
     User otherUser = createUser();
@@ -88,18 +88,18 @@ public class UserResourceControllerTest extends AbstractResourceControllerTest {
     given(userService.getUser(otherUser.getId())).willReturn(otherUser);
 
     ResultActions resultActions = mockMvc
-        .perform(get("/api/users/{userId}", otherUser.getId()))
+        .perform(get("/v1/users/{userId}", otherUser.getId()))
         .andExpect(status().isForbidden())
         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
         .andDo(print());
   }
 
   @Test
-  public void givenExistingUserIdWithoutAuthenticatedUser_whenGetUser_thenOk() throws Exception {
+  public void givenExistingUserIdWithoutAuthenticatedUser_whenGetUser_thenUnauthorized() throws Exception {
     given(userService.getUser(user.getId())).willReturn(user);
 
     ResultActions resultActions = mockMvc
-        .perform(get("/api/users/{userId}", user.getId()))
+        .perform(get("/v1/users/{userId}", user.getId()))
         .andExpect(status().isUnauthorized())
         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
         .andDo(print());
@@ -109,7 +109,7 @@ public class UserResourceControllerTest extends AbstractResourceControllerTest {
     long userId = user.getId().getId();
 
     resultActions
-        .andExpect(jsonPath("$._links.self.href", is("http://localhost/api/users/" + userId)))
+        .andExpect(jsonPath("$._links.self.href", is("http://localhost/v1/users/" + userId)))
         .andExpect(jsonPath("$.id", is(String.valueOf(userId))))
         .andExpect(jsonPath("$.emailAddress", is(user.getEmailAddress().getValue())))
 

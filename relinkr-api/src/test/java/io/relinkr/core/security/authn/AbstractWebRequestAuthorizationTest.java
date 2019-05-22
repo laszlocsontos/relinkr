@@ -44,7 +44,7 @@ public abstract class AbstractWebRequestAuthorizationTest extends AbstractWebSec
 
   private static final String ROOT_PATH = "/";
   private static final String TEST_SHORT_LINK_PATH = "/lAjKWlW4eJk";
-  private static final String TEST_API_PATH = "/api/links/2";
+  private static final String TEST_API_PATH = "/v1/links/2";
   private static final String TEST_DASHBOARD_PATH = "/pages/dashboard";
 
   private HttpHeaders httpHeaders;
