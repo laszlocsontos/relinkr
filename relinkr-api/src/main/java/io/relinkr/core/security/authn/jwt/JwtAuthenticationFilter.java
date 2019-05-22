@@ -17,7 +17,10 @@
 package io.relinkr.core.security.authn.jwt;
 
 import io.relinkr.core.web.AjaxRequestMatcher;
+import java.io.IOException;
 import java.util.Optional;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -112,28 +115,16 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     return AUTHORIZATION_BEARER_REQUEST_HEADER_MATCHER.matches(request);
   }
 
-  private Optional<String> extractFromAuthorizationHeader(HttpServletRequest request) {
-    String authHeaderValue = request.getHeader(AUTHORIZATION_HEADER);
-    if (StringUtils.isEmpty(authHeaderValue)) {
-      log.debug("Authorization header is empty.");
-      return Optional.empty();
-    }
+  @Override
+  protected void successfulAuthentication(
+      HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+      Authentication authResult)
+      throws IOException, ServletException {
 
-    if (!StringUtils.substringMatch(authHeaderValue, 0, BEARER_TOKEN_PREFIX)) {
-      log.debug(
-          "Token prefix {} in Authorization header was not found.",
-          BEARER_TOKEN_PREFIX
-      );
+    super.successfulAuthentication(request, response, chain, authResult);
 
-      return Optional.empty();
-    }
-
-    String bearerToken = authHeaderValue.substring(BEARER_TOKEN_PREFIX.length() + 1);
-    if (!StringUtils.hasText(bearerToken)) {
-      return Optional.empty();
-    }
-
-    return Optional.of(bearerToken);
+    // Continue filter chain after security context has been set
+    chain.doFilter(request, response);
   }
 
   private static class AuthorizationBearerRequestHeaderMatcher implements RequestMatcher {

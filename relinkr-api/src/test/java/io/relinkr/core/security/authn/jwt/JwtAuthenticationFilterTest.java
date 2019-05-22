@@ -23,6 +23,8 @@ import static java.util.Collections.emptySet;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -96,6 +98,8 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
     assertJwtAuthenticationToken("valid");
 
     then(securityContext).should().setAuthentication(AUTHENTICATED_TOKEN);
+
+    assertFilterChainProceeded(true);
   }
 
   @Test
@@ -116,6 +120,8 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
 
     then(authenticationManager).shouldHaveZeroInteractions();
     then(securityContext).shouldHaveZeroInteractions();
+
+    assertFilterChainProceeded(true);
   }
 
   @Test
@@ -132,6 +138,8 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
     assertJwtAuthenticationToken("invalid");
 
     then(securityContext).shouldHaveZeroInteractions();
+
+    assertFilterChainProceeded(false);
   }
 
   // JWT Token is given in two cookies + X-Requested-With is set
@@ -154,6 +162,8 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
     assertJwtAuthenticationToken("valid");
 
     then(securityContext).should().setAuthentication(AUTHENTICATED_TOKEN);
+
+    assertFilterChainProceeded(true);
   }
 
   @Test
@@ -179,6 +189,8 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
 
     then(authenticationManager).shouldHaveZeroInteractions();
     then(securityContext).shouldHaveZeroInteractions();
+
+    assertFilterChainProceeded(true);
   }
 
   @Test
@@ -201,6 +213,8 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
     assertJwtAuthenticationToken("invalid");
 
     then(securityContext).shouldHaveZeroInteractions();
+
+    assertFilterChainProceeded(false);
   }
 
   @Test
@@ -209,6 +223,8 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
 
     then(authenticationManager).shouldHaveZeroInteractions();
     then(securityContext).shouldHaveZeroInteractions();
+
+    assertFilterChainProceeded(true);
   }
 
   @Test
@@ -218,12 +234,22 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
 
     then(authenticationManager).shouldHaveZeroInteractions();
     then(securityContext).shouldHaveZeroInteractions();
+
+    assertFilterChainProceeded(true);
   }
 
   private void assertJwtAuthenticationToken(String expectedTokenValue) {
     then(authenticationManager).should().authenticate(jwtAuthenticationTokenCaptor.capture());
     JwtAuthenticationToken jwtAuthenticationToken = jwtAuthenticationTokenCaptor.getValue();
     assertEquals(expectedTokenValue, jwtAuthenticationToken.getPrincipal());
+  }
+
+  private void assertFilterChainProceeded(boolean proceeded) {
+    if (proceeded) {
+      assertNotNull("Filter should have proceeded", filterChain.getRequest());
+    } else {
+      assertNull("Filter should not have proceeded", filterChain.getRequest());
+    }
   }
 
 }

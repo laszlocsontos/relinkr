@@ -16,6 +16,7 @@
 
 package io.relinkr.test.web;
 
+import org.junit.After;
 import org.junit.Before;
 import org.springframework.mock.web.MockFilterChain;
 
@@ -27,6 +28,11 @@ public class BaseFilterTest extends BaseServletTest {
   public void setUp() {
     super.setUp();
     filterChain = new MockFilterChain();
+  }
+
+  @After
+  public void tearDown() {
+    filterChain.reset();
   }
 
 }
