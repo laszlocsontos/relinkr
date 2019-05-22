@@ -20,6 +20,12 @@
     <property name="eachLine" value="true"/>
   </module>
 
+  <module name="Header">
+    <property name="headerFile" value="../HEADER"/>
+    <property name="ignoreLines" value="1,15"/>
+    <property name="fileExtensions" value="java"/>
+  </module>
+
   <module name="TreeWalker">
     <module name="OuterTypeFilename"/>
     <module name="IllegalTokenText">
