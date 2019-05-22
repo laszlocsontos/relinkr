@@ -44,8 +44,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 public class PersistentOAuth2UserService
     implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-  static final String USER_ID_ATTRIBUTE = "_user_id";
-  static final String USER_PROFILE_TYPE_ATTRIBUTE = "_user_profile_type";
+  public static final String USER_ID_ATTRIBUTE = "_user_id";
+  public static final String USER_PROFILE_TYPE_ATTRIBUTE = "_user_profile_type";
 
   static final String INVALID_EMAIL_ADDRESS = "invalid_email_address";
   static final String INVALID_PROFILE = "invalid_profile";

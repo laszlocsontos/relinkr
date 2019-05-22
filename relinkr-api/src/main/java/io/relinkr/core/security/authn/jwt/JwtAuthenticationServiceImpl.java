@@ -13,10 +13,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 package io.relinkr.core.security.authn.jwt;
 
 import static com.nimbusds.jose.JWSAlgorithm.RS256;
+import static io.relinkr.core.security.authn.oauth2.PersistentOAuth2UserService.USER_PROFILE_TYPE_ATTRIBUTE;
+import static io.relinkr.user.model.UserProfileType.NATIVE;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toSet;
@@ -31,6 +33,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import io.relinkr.core.security.authn.user.UserIdAuthenticationToken;
 import io.relinkr.core.util.IdentityGenerator;
+import io.relinkr.user.model.UserProfileType;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
@@ -48,7 +51,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -56,7 +61,8 @@ import org.springframework.util.StringUtils;
  */
 public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
-  private static final String AUTHORITIES = "authorities";
+  private static final String CLAIM_AUTHORITIES = "_ath";
+  private static final String CLAIM_USER_PROFILE_TYPE = "_upt";
 
   private final JWSSigner signer;
   private final JWSVerifier verifier;
@@ -80,21 +86,40 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
   @Override
   public String createJwtToken(@NonNull Authentication authentication, int minutes) {
+    Object principal = authentication.getPrincipal();
+    Assert.notNull(principal, "Principal cannot be null");
+
+    JWTClaimsSet.Builder claimsSetBuilder = new JWTClaimsSet.Builder()
+        .jwtID(String.valueOf(identityGenerator.generate()))
+        .subject(authentication.getName())
+        .expirationTime(new Date(currentTimeMillis() + (long) minutes * 60 * 1000))
+        .issueTime(new Date());
+
     String authorities = authentication.getAuthorities()
         .stream()
         .map(GrantedAuthority::getAuthority)
         .map(String::toUpperCase)
         .collect(Collectors.joining(","));
 
-    JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-        .jwtID(String.valueOf(identityGenerator.generate()))
-        .subject(authentication.getName())
-        .expirationTime(new Date(currentTimeMillis() + minutes * 60 * 1000))
-        .issueTime(new Date())
-        .claim(AUTHORITIES, authorities)
-        .build();
+    if (StringUtils.hasText(authorities)) {
+      claimsSetBuilder.claim(CLAIM_AUTHORITIES, authorities);
+    }
 
-    SignedJWT signedJwt = new SignedJWT(new JWSHeader.Builder(RS256).build(), claimsSet);
+    UserProfileType userProfileType = Optional.of(principal)
+        .filter(it -> it instanceof OAuth2User)
+        .map(it -> (OAuth2User) it)
+        .map(OAuth2User::getAttributes)
+        .map(it -> it.get(USER_PROFILE_TYPE_ATTRIBUTE))
+        .map(String::valueOf)
+        .map(UserProfileType::valueOf)
+        .orElse(NATIVE);
+
+    claimsSetBuilder.claim(CLAIM_USER_PROFILE_TYPE, userProfileType);
+
+    SignedJWT signedJwt = new SignedJWT(
+        new JWSHeader.Builder(RS256).build(),
+        claimsSetBuilder.build()
+    );
 
     // Compute the RSA signature
     try {
@@ -127,13 +152,6 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
       throw new InternalAuthenticationServiceException(ex.getMessage(), ex);
     }
 
-    long userId;
-    try {
-      userId = Long.valueOf(claimsSet.getSubject());
-    } catch (NumberFormatException nfe) {
-      throw new BadCredentialsException(nfe.getMessage(), nfe);
-    }
-
     Instant expiration = Optional.ofNullable(claimsSet.getExpirationTime())
         .map(Date::toInstant)
         .orElseThrow(() -> new BadCredentialsException("Missing expiration date."));
@@ -143,8 +161,21 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
       throw new NonceExpiredException("Token has expired.");
     }
 
+    long userId;
+    try {
+      userId = Long.valueOf(claimsSet.getSubject());
+    } catch (NumberFormatException nfe) {
+      throw new BadCredentialsException(nfe.getMessage(), nfe);
+    }
+
+    UserProfileType userProfileType =
+        Optional.ofNullable(claimsSet.getClaim(CLAIM_USER_PROFILE_TYPE))
+            .map(String::valueOf)
+            .map(UserProfileType::valueOf)
+            .orElseThrow(() -> new BadCredentialsException("Missing user profile type."));
+
     Collection<? extends GrantedAuthority> authorities =
-        Optional.ofNullable(claimsSet.getClaim(AUTHORITIES))
+        Optional.ofNullable(claimsSet.getClaim(CLAIM_AUTHORITIES))
             .map(String::valueOf)
             .map(it -> it.split(","))
             .map(Arrays::stream)
@@ -153,7 +184,7 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
             .map(it -> it.collect(toSet()))
             .orElse(emptySet());
 
-    return UserIdAuthenticationToken.of(userId, authorities);
+    return UserIdAuthenticationToken.of(userId, userProfileType, authorities);
   }
 
 }

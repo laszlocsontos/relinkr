@@ -18,6 +18,7 @@ package io.relinkr.core.security.authn.jwt;
 
 import static io.relinkr.core.security.authn.jwt.JwtAuthenticationFilter.AUTHORIZATION_HEADER;
 import static io.relinkr.core.security.authn.jwt.JwtAuthenticationFilter.BEARER_TOKEN_PREFIX;
+import static io.relinkr.user.model.UserProfileType.GOOGLE;
 import static java.util.Collections.emptySet;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
@@ -29,6 +30,7 @@ import static org.mockito.BDDMockito.then;
 import io.relinkr.core.security.authn.user.UserIdAuthenticationToken;
 import io.relinkr.core.web.AjaxRequestMatcher;
 import io.relinkr.test.web.BaseFilterTest;
+import io.relinkr.user.model.UserProfileType;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +51,7 @@ import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 public class JwtAuthenticationFilterTest extends BaseFilterTest {
 
   private static final Authentication AUTHENTICATED_TOKEN =
-      UserIdAuthenticationToken.of(1L, emptySet());
+      UserIdAuthenticationToken.of(1L, GOOGLE, emptySet());
 
   private static final String PUBLIC_PATH = "/public";
 

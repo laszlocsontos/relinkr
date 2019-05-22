@@ -16,25 +16,32 @@
  
 package io.relinkr.core.security.authn.user;
 
+import io.relinkr.user.model.UserProfileType;
 import java.util.Collection;
+import lombok.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
 public class UserIdAuthenticationToken extends AbstractAuthenticationToken {
 
   private final long userId;
+  private final UserProfileType userProfileType;
 
   private UserIdAuthenticationToken(
-      long userId, Collection<? extends GrantedAuthority> authorities) {
+      long userId, UserProfileType userProfileType,
+      Collection<? extends GrantedAuthority> authorities) {
 
     super(authorities);
     setAuthenticated(true);
+
     this.userId = userId;
+    this.userProfileType = userProfileType;
   }
 
-  public static UserIdAuthenticationToken of(long userId,
+  public static UserIdAuthenticationToken of(
+      long userId, @NonNull UserProfileType userProfileType,
       Collection<? extends GrantedAuthority> authorities) {
-    return new UserIdAuthenticationToken(userId, authorities);
+    return new UserIdAuthenticationToken(userId, userProfileType, authorities);
   }
 
   @Override
@@ -45,6 +52,16 @@ public class UserIdAuthenticationToken extends AbstractAuthenticationToken {
   @Override
   public Long getPrincipal() {
     return userId;
+  }
+
+  @Override
+  public UserProfileType getDetails() {
+    return userProfileType;
+  }
+
+  @Override
+  public void setDetails(Object details) {
+    throw new UnsupportedOperationException();
   }
 
 }

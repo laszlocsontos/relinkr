@@ -119,13 +119,13 @@ public final class Mocks {
   public static final Pageable PAGEABLE = PageRequest.of(0, 10);
 
   public static final String JWT_TOKEN_VALID =
-      "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI1MzI0NTM0NTM0NTM0NSIsImV4cCI6OTIyMzM3MjAzNjg1NDc3NSwi"
-          + "aWF0IjoxNTU1MDYwMDY1LCJqdGkiOiI1OTk5MjcyNjYwMTQ4NiIsImF1dGhvcml0aWVzIjoiVVN"
-          + "FUiJ9.qR-9dUgcae_voPS0HDIzGE1aKiIEY6uLkNoZLAmjhuYyte7wdtGZ3uwfDScebZkyG3BoZ"
-          + "iRhx-IDfRJJ18Pv_iFRW-yXR6Oau3U74KLfJQnCshArSKZtHPLwNLKpS3H6dSIaWZEGi0VI2YHG"
-          + "hM7gpbicbjFzCfEurYT6WilLliAhyhx5NXfVOUfxqe-LZoYPFj6Bkk49Q5mxm1hjAIyxgKnYJuy"
-          + "aN_-46kF63JeBjoMChmUD7P4Q3NNCQVAmvmYcdUlRef22ETj-k52nGRQ1HmtXRP6GQzci6HQoGP"
-          + "4RAZzH4tx6kDLKVX2nzCqv8o5FxYztN8CYE9e6vYdaICJCZg";
+      "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI1MzI0NTM0NTM0NTM0NSIsIl91cHQiOiJOQVRJVkUiLCJfYXRoIjoi"
+          + "VVNFUiIsImV4cCI6MTMwNDA3NTM3NTExLCJpYXQiOjE1NTg1MTg2OTEsImp0aSI6IjExNjY1ODg2MjI"
+          + "wMjEwOCJ9.zslvtZVkxYG62xZUudIWMzvCRLtV3reMZYfQSbfM2F674H5E9D_xIVe-IVkutcGLsqwov"
+          + "CQ9ZN-oSjQ1Ijqe4LouvQUvCkeXIYDjlxBjOXuIB8rRsT4i96KZkqXEgg9SQExbmH8hIXGEvxHuSI7Z"
+          + "sk_pXW3ubS9AC3RdG4abhuzs80_aOQjWPjk2pbdIZOtoiIVrv7nw-gmjBKYrAV4waZJws2eTp4mDrnZ"
+          + "oYau74xVPASRwNAgGdJiqjeipW7-25lsYwQGcO9Hhm4XRxNJcW-bwMx7zsfGiXkqXUbpqm9Sf8kdkiHd"
+          + "e1mE6stjORljAlT1twoIE4GYRT3qphXHmSQ";
 
   public static final String JWT_TOKEN_INVALID =
       "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzNDU0MzUzMjQ1MzQ1MyIsInN1YiI6IjUzMjQ1"
