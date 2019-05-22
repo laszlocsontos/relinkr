@@ -20,7 +20,7 @@ import axios from 'axios';
 import { API_BASE_URL } from './config'
 
 const DEFAULT_HEADERS = {
-  'Accept': 'application/json',
+  'Accept': 'application/json, application/hal+json',
   'Content-Type': 'application/json',
   'X-Requested-With': 'XMLHttpRequest'
 };
