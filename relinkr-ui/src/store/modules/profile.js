@@ -21,31 +21,27 @@ import {get} from '../../api';
 
 // initial state
 const state = {
-  userProfile: {
-    userProfileType: "",
-    userProfileId: "",
-    fullName: "",
-    profileUrl: "",
-    pictureUrl: ""
-  }
+  userProfileType: "",
+  userProfileId: "",
+  fullName: "",
+  profileUrl: "",
+  pictureUrl: ""
 };
 
-const getters = {};
+const getters = {
+};
 
 const mutations = {
   setProfile(state, data) {
-    console.log("setProfile", data);
-    state.userProfile = _.assign(state.userProfile, data.userProfile || {});
+    state = _.assign(state, data.userProfile || {});
   }
 };
 
 const actions = {
   fetchProfile({commit}, args) {
     const {userId} = args || {};
-    console.log("fetchProfile", userId);
-
     get({endpoint: `v1/users/${userId}`})
-    .then(response => commit('setProfile', response))
+    .then(response => commit('setProfile', response.data))
     .catch(err => console.log("error", err));
   }
 };

@@ -75,13 +75,13 @@
     <!-- User Profile Dialog -->
     <b-modal id="user-profile-dialog" title="Laszlo's Profile" ok-only>
       <b-form-group label-cols="6" label-cols-lg="3" label-size="sm" label="User ID" label-for="user-id">
-        <b-form-input id="user-id" size="sm" data-lpignore="true"></b-form-input>
+        <b-link v-bind:href="profileUrl">{{ userProfileId }}</b-link>
       </b-form-group>
       <b-form-group label-cols="6" label-cols-lg="3" label-size="sm" label="Full Name" label-for="user-full-name">
-        <b-form-input id="user-full-name" size="sm" data-lpignore="true"></b-form-input>
+        <b-form-input id="user-full-name" size="sm" data-lpignore="true" v-model="fullName"></b-form-input>
       </b-form-group>
       <b-form-group label-cols="6" label-cols-lg="3" label-size="sm" label="Profile Type" label-for="user-profile-type">
-        <b-form-input id="user-profile-type" size="sm" data-lpignore="true"></b-form-input>
+        <b-form-input id="user-profile-type" size="sm" data-lpignore="true" v-model="userProfileType"></b-form-input>
       </b-form-group>
       <b-form-group label-cols="6" label-cols-lg="3" label-size="sm" label="API Key" label-for="user-api-key">
         <b-button id="user-api-key" size="sm" variant="danger">Reset</b-button>
@@ -94,11 +94,30 @@
 </template>
 
 <script>
+//import { mapState } from 'vuex';
+
   export default {
     name: 'PageTemplate',
     methods: {
       logout() {
         this.$store.dispatch('logout');
+      }
+    },
+    computed: {
+      userProfileId() {
+        return this.$store.state.profile.userProfileId;
+      },
+      userProfileType() {
+        return this.$store.state.profile.userProfileType;
+      },
+      fullName() {
+        return this.$store.state.profile.fullName;
+      },
+      profileUrl() {
+        return this.$store.state.profile.profileUrl;
+      },
+      pictureUrl() {
+        return this.$store.state.profile.pictureUrl;
       }
     }
   }
