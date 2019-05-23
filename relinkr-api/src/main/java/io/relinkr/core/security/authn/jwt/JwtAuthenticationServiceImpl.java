@@ -61,6 +61,8 @@ import org.springframework.util.StringUtils;
  */
 public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
+  static final String ROLE_PREFIX = "ROLE_";
+
   private static final String CLAIM_AUTHORITIES = "_ath";
   private static final String CLAIM_USER_PROFILE_TYPE = "_upt";
 
@@ -179,12 +181,25 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
             .map(String::valueOf)
             .map(it -> it.split(","))
             .map(Arrays::stream)
-            .map(it -> it.map(String::trim).map(String::toUpperCase))
+            .map(it -> it.map(String::trim)
+                .map(String::toUpperCase)
+                .map(this::addRolePrefixIfNeeded)
+            )
             .map(it -> it.map(SimpleGrantedAuthority::new))
             .map(it -> it.collect(toSet()))
             .orElse(emptySet());
 
     return UserAuthenticationToken.of(userId, userProfileType, authorities);
+  }
+
+  // TODO: This code duplicates its counterpart in AuthorizeRolesOrOwnerSecurityMetadataSource,
+  //  refactor to a common component
+  private String addRolePrefixIfNeeded(String role) {
+    Assert.hasText(role, "role cannot be blank");
+    if (role.startsWith(ROLE_PREFIX)) {
+      return role;
+    }
+    return ROLE_PREFIX + role;
   }
 
 }

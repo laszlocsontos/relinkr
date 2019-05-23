@@ -55,7 +55,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class JwtAuthenticationServiceTest {
 
   private static final SimpleGrantedAuthority AUTHORITY_USER =
-      new SimpleGrantedAuthority("USER");
+      new SimpleGrantedAuthority("ROLE_USER");
 
   @Autowired
   private JwtAuthenticationService jwtAuthenticationService;
