@@ -20,7 +20,7 @@ import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 
-public class AbstractResourceControllerTest extends AbstractWebSecurityTest {
+public abstract class AbstractResourceControllerTest extends AbstractWebSecurityTest {
 
   @MockBean
   protected EntityManager entityManager;
