@@ -50,25 +50,19 @@
           id="long-url-group"
           description="Let's shorten something"
           label="Long Url"
-          label-for="long-url"
-          :invalid-feedback="invalidFeedback"
-          :valid-feedback="validFeedback"
-          :state="state">
-        <b-form-input id="long-url" v-model="name" :state="state" trim></b-form-input>
+          label-for="long-url">
+        <b-form-input id="long-url" trim></b-form-input>
       </b-form-group>
       <b-form-group
           id="utm-parameters-group"
           description="Let's spice it up for tracking"
           label="UTM Parameters"
-          label-for="input-1"
-          :invalid-feedback="invalidFeedback"
-          :valid-feedback="validFeedback"
-          :state="state">
-        <b-form-input id="utm-source" placeholder="UTM Source" v-model="name" :state="state" trim size="sm" class="my-2"></b-form-input>
-        <b-form-input id="utm-medium" placeholder="UTM Medium" v-model="name" :state="state" trim size="sm" class="my-2"></b-form-input>
-        <b-form-input id="utm-campaign" placeholder="UTM Campaign" v-model="name" :state="state" trim size="sm" class="my-2"></b-form-input>
-        <b-form-input id="utm-term" placeholder="UTM Term" v-model="name" :state="state" trim size="sm" class="my-2"></b-form-input>
-        <b-form-input id="utm-content" placeholder="UTM Content" v-model="name" :state="state" trim size="sm" class="my-2"></b-form-input>
+          label-for="input-1">
+        <b-form-input id="utm-source" placeholder="UTM Source" trim size="sm" class="my-2"></b-form-input>
+        <b-form-input id="utm-medium" placeholder="UTM Medium" trim size="sm" class="my-2"></b-form-input>
+        <b-form-input id="utm-campaign" placeholder="UTM Campaign" trim size="sm" class="my-2"></b-form-input>
+        <b-form-input id="utm-term" placeholder="UTM Term" trim size="sm" class="my-2"></b-form-input>
+        <b-form-input id="utm-content" placeholder="UTM Content" trim size="sm" class="my-2"></b-form-input>
       </b-form-group>
     </b-modal>
 
@@ -94,10 +88,14 @@
 </template>
 
 <script>
+  import { UserIcon } from 'vue-feather-icons'
 //import { mapState } from 'vuex';
 
   export default {
     name: 'PageTemplate',
+    components: {
+      UserIcon
+    },
     methods: {
       logout() {
         this.$store.dispatch('logout');
