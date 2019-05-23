@@ -89,7 +89,8 @@
 
 <script>
   import { UserIcon } from 'vue-feather-icons'
-//import { mapState } from 'vuex';
+  import { mapState } from 'vuex';
+  import { mapActions } from 'vuex';
 
   export default {
     name: 'PageTemplate',
@@ -97,29 +98,11 @@
       UserIcon
     },
     methods: {
-      logout() {
-        this.$store.dispatch('auth/logout');
-      },
-      fetchProfile() {
-        this.$store.dispatch('profile/fetchProfile');
-      }
+      ...mapActions('auth', ['logout']),
+      ...mapActions('profile', ['fetchProfile'])
     },
     computed: {
-      userProfileId() {
-        return this.$store.state.profile.userProfileId;
-      },
-      userProfileType() {
-        return this.$store.state.profile.userProfileType;
-      },
-      fullName() {
-        return this.$store.state.profile.fullName;
-      },
-      profileUrl() {
-        return this.$store.state.profile.profileUrl;
-      },
-      pictureUrl() {
-        return this.$store.state.profile.pictureUrl;
-      }
+      ...mapState('profile', ['userProfileId', 'userProfileType', 'fullName', 'pictureUrl', 'profileUrl'])
     }
   }
 </script>
