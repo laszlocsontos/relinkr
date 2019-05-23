@@ -32,7 +32,7 @@ new Vue({
   router,
   store,
   created() {
-    this.$store.dispatch('checkToken');
+    this.$store.dispatch('auth/checkToken');
   },
   render: h => h(App)
 }).$mount('#app');

@@ -77,7 +77,7 @@ const actions = {
       };
 
       dispatch('login', auth);
-      dispatch('fetchProfile', auth);
+      dispatch('profile/fetchProfile', auth, { root: true });
     } catch (err) {
       dispatch('logout');
     }
@@ -97,6 +97,7 @@ const actions = {
 };
 
 export default {
+  namespaced: true,
   state,
   getters,
   mutations,
