@@ -37,7 +37,7 @@
           <b-nav-item-dropdown right>
             <!-- Using 'button-content' slot -->
             <template slot="button-content"><user-icon class="custom-class"></user-icon></template>
-            <b-dropdown-item v-b-modal.user-profile-dialog>Profile</b-dropdown-item>
+            <b-dropdown-item v-b-modal.user-profile-dialog @click="fetchProfile">Profile</b-dropdown-item>
             <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
@@ -99,6 +99,9 @@
     methods: {
       logout() {
         this.$store.dispatch('auth/logout');
+      },
+      fetchProfile() {
+        this.$store.dispatch('profile/fetchProfile');
       }
     },
     computed: {

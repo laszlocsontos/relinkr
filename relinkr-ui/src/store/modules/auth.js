@@ -40,7 +40,7 @@ const getters = {
     return (clockTimestamp <= (state.auth.expiresAt || 0));
   },
 
-  userId: state => state.userId
+  userId: state => state.auth.userId
 };
 
 const mutations = {
@@ -77,7 +77,6 @@ const actions = {
       };
 
       dispatch('login', auth);
-      dispatch('profile/fetchProfile', auth, { root: true });
     } catch (err) {
       dispatch('logout');
     }

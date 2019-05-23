@@ -38,8 +38,8 @@ const mutations = {
 };
 
 const actions = {
-  fetchProfile({commit}, args) {
-    const {userId} = args || {};
+  fetchProfile({commit, rootGetters}) {
+    const userId = rootGetters['auth/userId'];
     get({endpoint: `v1/users/${userId}`})
     .then(response => commit('setProfile', response.data))
     .catch(err => console.log("error", err));
