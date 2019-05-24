@@ -27,7 +27,8 @@
       <p class="mt-3">Current Page: {{ currentPage }}</p>
 
       <b-table
-          id="my-table"
+          id="linksTable"
+          ref="linksTable"
           :fields="fields"
           :items="onLoad"
           :per-page="perPage"
@@ -171,7 +172,7 @@ export default {
     onArchive(id) {
       // eslint-disable-next-line
       console.log("onArchive", id);
-      this.archiveLink({id: id, callback: () => this.$refs.table.refresh() });
+      this.archiveLink({id: id, callback: () => this.$refs.linksTable.refresh() });
     }
   },
   computed: {
