@@ -25,10 +25,7 @@ const PAGE_SIZE = 10;
 const state = {
   links: [{
     id: 0,
-    longUrl: "",
-    shortLink: {
-      href: ""
-    },
+    longUrl: "aa",
     createdDate: "",
     utmParameters: {
       utmSource: "",
@@ -36,6 +33,11 @@ const state = {
       utmCampaign: "",
       utmTerm: "",
       utmContent: ""
+    },
+    _links: {
+      shortLink: {
+        href: "https://rln.kr/dfadfg3a"
+      }
     }
   }],
   page: {
@@ -47,22 +49,34 @@ const state = {
 };
 
 const getters = {
+  currentPage: state => (state.page.number + 1),
+  totalRows: state => (state.page.totalElements),
+  perPage: () => PAGE_SIZE
 };
 
 const mutations = {
-  setState(state, data) {
-    state.page =  _.assign(state.page, data.page || {});
-    state.links = _.defaultTo(data.links, []);
-    console.log("setState", state);
+  setState(state, {data, callback}) {
+    state.page = _.assign(state.page, data.page || {});
+    state.links = _.defaultTo(_.get(data, "_embedded.links"), []);
+    callback(state.links);
+    console.log("setState", state, data);
   }
 };
 
 const actions = {
   fetchLinks({commit}, args) {
-    const {page} = args || {page: 0};
+    const {page, callback} = args || {
+      page: 0, callback: () => {
+      }
+    };
     get({endpoint: "v1/links", params: {page: (page - 1), size: PAGE_SIZE}})
-      .then(response => commit('setState', response.data))
-      .catch(err => console.log("error", err));
+    .then(response => {
+      commit('setState', {data: response.data, callback: callback});
+    })
+    .catch(err => {
+      console.log("error", err);
+      commit('setState', {data: {}, callback: callback})
+    });
   }
 };
 
