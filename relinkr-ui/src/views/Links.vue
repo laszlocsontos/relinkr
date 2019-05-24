@@ -22,6 +22,7 @@
           :total-rows="rows"
           :per-page="perPage"
           aria-controls="my-table"
+          v-on:change="requestLinks"
       ></b-pagination>
 
       <p class="mt-3">Current Page: {{ currentPage }}</p>
@@ -100,6 +101,9 @@ import DoughnutChart from '@/components/DoughnutChart.js'
 import LineChart from '@/components/LineChart.js'
 import PageTemplate from '@/components/PageTemplate.vue'
 
+import { mapState } from 'vuex';
+import { mapActions } from 'vuex';
+
 export default {
   components: {
     ExternalLinkIcon, Trash2Icon, ChevronsDownIcon, ChevronsUpIcon,
@@ -173,7 +177,16 @@ export default {
       }
     }
   },
+  methods: {
+    ...mapActions('link', ['fetchLinks']),
+    requestLinks(event) {
+      // eslint-disable-next-line
+      console.log("requestLinks", event);
+      this.fetchLinks({page: event});
+    }
+  },
   computed: {
+    ...mapState('link', ['links', 'page']),
     rows() {
       return this.items.length
     }
