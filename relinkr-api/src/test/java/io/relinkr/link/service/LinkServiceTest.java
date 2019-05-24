@@ -177,6 +177,7 @@ public class LinkServiceTest {
 
     Link link = captureSavedLink();
 
+    assertEquals(ACTIVE, link.getLinkStatus());
     assertEquals(USER_ID, link.getUserId());
     assertEquals(URI.create(LONG_URL_BASE_S), link.getLongUrl());
     assertEquals(UTM_PARAMETERS_FULL, link.getUtmParameters().get());

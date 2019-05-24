@@ -147,6 +147,8 @@ class LinkServiceImpl implements LinkService {
     Assert.notNull(userId, "userId cannot be null");
 
     Link link = new Link(longUrl, utmParameters, userId);
+    link.markActive();
+
     return linkRepository.save(link);
   }
 
