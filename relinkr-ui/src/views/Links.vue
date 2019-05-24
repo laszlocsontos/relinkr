@@ -29,7 +29,7 @@
       <b-table
           id="my-table"
           :fields="fields"
-          :items="provideLinks"
+          :items="onLoad"
           :per-page="perPage"
           :current-page="currentPage"
           small striped borderless outlined>
@@ -37,10 +37,10 @@
         <template slot="showDetails" slot-scope="row">
           <chevrons-down-icon v-b-tooltip.hover title="Show Details" @click="row.toggleDetails" v-if="!row.detailsShowing" class="btn-outline-primary"/>
           <chevrons-up-icon v-b-tooltip.hover title="Hide Details" @click="row.toggleDetails" v-if="row.detailsShowing" class="btn-outline-primary"/>
-          <a v-b-tooltip.hover title="View Target" target="_blank" :href="row.item.short_link">
+          <a v-b-tooltip.hover title="View Target" target="_blank" :href="row.item.longUrl">
             <external-link-icon class="btn-outline-primary" />
           </a>
-          <trash-2-icon v-b-tooltip.hover title="Delete Link" class="btn-outline-primary" />
+          <archive-icon v-b-tooltip.hover title="Archive Link" class="btn-outline-primary" @click="onArchive(row.item.id)" />
         </template>
 
         <template slot="shortLink" slot-scope="row">
@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { ExternalLinkIcon, Trash2Icon, ChevronsDownIcon, ChevronsUpIcon } from 'vue-feather-icons'
+import { ExternalLinkIcon, ArchiveIcon, ChevronsDownIcon, ChevronsUpIcon } from 'vue-feather-icons'
 import DoughnutChart from '@/components/DoughnutChart.js'
 import LineChart from '@/components/LineChart.js'
 import PageTemplate from '@/components/PageTemplate.vue'
@@ -109,7 +109,7 @@ import { mapActions } from 'vuex';
 
 export default {
   components: {
-    ExternalLinkIcon, Trash2Icon, ChevronsDownIcon, ChevronsUpIcon,
+    ExternalLinkIcon, ArchiveIcon, ChevronsDownIcon, ChevronsUpIcon,
     DoughnutChart, LineChart, PageTemplate
   },
   data() {
@@ -162,11 +162,16 @@ export default {
     }
   },
   methods: {
-    ...mapActions('link', ['fetchLinks']),
-    provideLinks(ctx, callback) {
+    ...mapActions('link', ['fetchLinks', 'archiveLink']),
+    onLoad(ctx, callback) {
       // eslint-disable-next-line
-      console.log("provideLinks", ctx, callback);
+      console.log("onLoad", ctx, callback);
       this.fetchLinks({page: ctx.currentPage, callback: callback});
+    },
+    onArchive(id) {
+      // eslint-disable-next-line
+      console.log("onArchive", id);
+      this.archiveLink({id: id, callback: () => this.$refs.table.refresh() });
     }
   },
   computed: {
