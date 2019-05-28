@@ -16,47 +16,36 @@
 
 package io.relinkr.link.service;
 
+import static io.relinkr.test.Mocks.LINK_ID;
+import static io.relinkr.test.Mocks.LONG_URL_WITHOUT_UTM_S;
 import static io.relinkr.test.Mocks.USER_ID;
-import static io.relinkr.test.Mocks.createLink;
-import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static io.relinkr.test.Mocks.UTM_PARAMETERS_FULL;
 
+import io.relinkr.core.util.IdentityGenerator;
 import io.relinkr.link.model.Link;
-import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
+import io.relinkr.link.model.LinkId;
+import io.relinkr.test.orm.OwnableRepositoryTest;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
-public class LinkRepositoryTest {
+public class LinkRepositoryTest extends OwnableRepositoryTest<Link, LinkId, LinkRepository> {
 
-  @Autowired
-  private LinkRepository linkRepository;
-
-  private Link link;
-
-  @Before
-  public void setUp() throws Exception {
-    link = linkRepository.save(createLink());
+  @Override
+  protected Link createEntity() {
+    return new Link(LONG_URL_WITHOUT_UTM_S, UTM_PARAMETERS_FULL, USER_ID);
   }
 
-  @Test
-  public void findByUserId() {
-    List<Link> links = linkRepository.findByUserId(USER_ID);
-    assertThat(links, contains(link));
+  @Override
+  protected LinkId getId() {
+    return LinkId.of(IdentityGenerator.getInstance().generate());
   }
 
-  @Test
-  public void findByUserId_withPageRequest() {
-    Page<Link> linkPage = linkRepository.findByUserId(USER_ID, PageRequest.of(0, 10));
-    assertEquals(1, linkPage.getTotalElements());
+  @Override
+  protected LinkId getNonExistentId() {
+    return LINK_ID;
   }
 
 }

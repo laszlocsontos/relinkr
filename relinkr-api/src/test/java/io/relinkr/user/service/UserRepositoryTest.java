@@ -48,13 +48,14 @@ public class UserRepositoryTest extends BaseRepositoryTest<User, UserId, UserRep
 
   @Test
   public void givenSavedUser_whenFindByEmailAddress_thenFound() {
-    saveEntity();
-    assertEquals(entity.getId(), repository.findByEmailAddress(EMAIL_ADDRESS).get().getId());
+    User savedEntity = saveEntity(entity);
+    assertEquals(savedEntity.getId(), repository.findByEmailAddress(EMAIL_ADDRESS).get().getId());
   }
 
   @Test
   public void givenUserWithProfileSaved_whenFindByEmailAddress_thenProfileIsThere() {
-    saveEntity();
+    entity.addUserProfile(userProfile);
+    saveEntity(entity);
     UserProfileType userProfileType = userProfile.getUserProfileType();
     entity = repository.findByEmailAddress(EMAIL_ADDRESS).get();
     assertEquals(userProfile, entity.getUserProfile(userProfileType).get());
@@ -62,7 +63,7 @@ public class UserRepositoryTest extends BaseRepositoryTest<User, UserId, UserRep
 
   @Test
   public void givenSavedUser_whenDeleteById_thenFound() {
-    saveEntity();
+    saveEntity(entity);
     repository.deleteById(entity.getId());
     assertFalse(repository.findById(USER_ID).isPresent());
   }
@@ -75,7 +76,6 @@ public class UserRepositoryTest extends BaseRepositoryTest<User, UserId, UserRep
   @Override
   protected User createEntity() {
     User user = new User(EMAIL_ADDRESS, "Secret");
-    user.addUserProfile(userProfile);
     return user;
   }
 

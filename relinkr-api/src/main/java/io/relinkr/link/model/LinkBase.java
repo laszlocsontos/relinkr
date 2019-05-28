@@ -18,8 +18,8 @@ package io.relinkr.link.model;
 
 import static java.util.Collections.emptySet;
 
-import io.relinkr.core.orm.AbstractEntity;
 import io.relinkr.core.orm.AbstractId;
+import io.relinkr.core.orm.OwnableEntity;
 import io.relinkr.user.model.Ownable;
 import io.relinkr.user.model.UserId;
 import java.net.URI;
@@ -34,25 +34,16 @@ import lombok.NonNull;
 
 @MappedSuperclass
 public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
-    extends AbstractEntity<ID> implements Ownable {
-
-  @Embedded
-  @AttributeOverride(name = "id", column = @Column(name = "user_id"))
-  private UserId userId;
+    extends OwnableEntity<ID> implements Ownable {
 
   LinkBase(@NonNull UserId userId) {
-    this.userId = userId;
+    super(userId);
   }
 
   /*
    * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
    */
   LinkBase() {
-  }
-
-  @Override
-  public UserId getUserId() {
-    return userId;
   }
 
   public abstract URI getLongUrl();

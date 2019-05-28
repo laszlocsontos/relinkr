@@ -40,7 +40,7 @@ import org.springframework.hateoas.Identifiable;
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
-public class AbstractEntity<ID extends AbstractId<? extends AbstractEntity<ID>>>
+public abstract class AbstractEntity<ID extends AbstractId<? extends AbstractEntity<ID>>>
     extends AbstractAggregateRoot implements Identifiable<ID>, Persistable<ID>, Serializable {
 
   @EmbeddedId

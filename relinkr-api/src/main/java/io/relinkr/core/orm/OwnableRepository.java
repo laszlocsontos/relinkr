@@ -16,20 +16,23 @@
 
 package io.relinkr.core.orm;
 
-import io.relinkr.user.model.Ownable;
 import io.relinkr.user.model.UserId;
-import java.io.Serializable;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.data.repository.query.Param;
 
 @NoRepositoryBean
-public interface OwnableRepository<T extends Ownable, ID extends Serializable>
+public interface OwnableRepository
+    <T extends OwnableEntity<ID>, ID extends AbstractId<? extends OwnableEntity<ID>>>
     extends BaseRepository<T, ID> {
 
-  List<T> findByUserId(UserId userId);
+  @Query("select e from #{#entityName} e where e.userId = :userId order by e.createdDate desc")
+  List<T> findByUserId(@Param("userId") UserId userId);
 
-  Page<T> findByUserId(UserId userId, Pageable pageable);
+  @Query("select e from #{#entityName} e where e.userId = :userId order by e.createdDate desc")
+  Page<T> findByUserId(@Param("userId") UserId userId, Pageable pageable);
 
 }

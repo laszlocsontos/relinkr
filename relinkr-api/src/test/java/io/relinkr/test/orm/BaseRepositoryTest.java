@@ -43,7 +43,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @DataJpaTest
 @RunWith(SpringRunner.class)
 @Import(TestConfig.class)
-public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extends AbstractId<? extends AbstractEntity<ID>>, R extends BaseRepository<E, ID>> {
+public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extends AbstractId<E>, R extends BaseRepository<E, ID>> {
 
   @Autowired
   protected R repository;
@@ -61,8 +61,8 @@ public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extend
 
   @Test
   public void givenSavedEntity_whenFindById_thenFound() {
-    saveEntity();
-    Optional<E> entityOptional = repository.findById(entity.getId());
+    E savedEntity = saveEntity(this.entity);
+    Optional<E> entityOptional = repository.findById(savedEntity.getId());
     assertTrue(entityOptional.isPresent());
   }
 
@@ -76,28 +76,28 @@ public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extend
   public void givenEntityWithAssignedId_whenSave_thenAssignedIdUsed() {
     ID id = getId();
     entity.setId(id);
-    saveEntity();
-    assertEquals(id, entity.getId());
-    assertFalse(entity.isNew());
+    E savedEntity = saveEntity(entity);
+    assertEquals(id, savedEntity.getId());
+    assertFalse(savedEntity.isNew());
   }
 
   @Test
   public void givenEntityWithoutId_whenSave_thenIdGenerated() {
     entity.setId(null);
-    saveEntity();
-    assertFalse(entity.isNew());
+    E savedEntity = saveEntity(entity);
+    assertFalse(savedEntity.isNew());
   }
 
   @Test
   public void givenNewEntity_whenSave_thenCreatedDateSet() {
-    saveEntity();
-    assertNotNull(entity.getLastModifiedDate());
+    E savedEntity = saveEntity(entity);
+    assertNotNull(savedEntity.getLastModifiedDate());
   }
 
   @Test
   public void givenNewEntity_whenSave_thenLastModifiedDateSet() {
-    saveEntity();
-    assertNotNull(entity.getLastModifiedDate());
+    E savedEntity = saveEntity(entity);
+    assertNotNull(savedEntity.getLastModifiedDate());
   }
 
   protected abstract E createEntity() throws Exception;
@@ -106,9 +106,10 @@ public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extend
 
   protected abstract ID getNonExistentId();
 
-  protected void saveEntity() {
-    entity = repository.save(entity);
+  protected E saveEntity(E entity) {
+    E savedEntity = repository.save(entity);
     entityManager.flush();
+    return savedEntity;
   }
 
   @TestConfiguration
