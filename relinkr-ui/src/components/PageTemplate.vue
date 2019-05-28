@@ -45,25 +45,36 @@
     </b-navbar>
 
     <!-- New Link Dialog -->
-    <b-modal id="new-link-dialog" title="Add New Link" ok-title="Save">
+    <b-modal
+        id="new-link-dialog"
+        title="Add New Link"
+        ok-title="Save"
+        @show="onShowNewLink"
+        @cancel="onCancelNewLink"
+        @ok="onSaveNewLink">
       <b-form-group
           id="long-url-group"
           description="Let's shorten something"
           label="Long Url"
           label-for="long-url">
-        <b-form-input id="long-url" trim></b-form-input>
+        <b-form-input id="long-url" trim v-model="newLinkDialog.link.longUrl"></b-form-input>
       </b-form-group>
       <b-form-group
           id="utm-parameters-group"
           description="Let's spice it up for tracking"
           label="UTM Parameters"
           label-for="input-1">
-        <b-form-input id="utm-source" placeholder="UTM Source" trim size="sm" class="my-2"></b-form-input>
-        <b-form-input id="utm-medium" placeholder="UTM Medium" trim size="sm" class="my-2"></b-form-input>
-        <b-form-input id="utm-campaign" placeholder="UTM Campaign" trim size="sm" class="my-2"></b-form-input>
-        <b-form-input id="utm-term" placeholder="UTM Term" trim size="sm" class="my-2"></b-form-input>
-        <b-form-input id="utm-content" placeholder="UTM Content" trim size="sm" class="my-2"></b-form-input>
+        <b-form-input id="utm-source" placeholder="UTM Source" trim size="sm" class="my-2" v-model="newLinkDialog.link.utmParameters.utmSource"></b-form-input>
+        <b-form-input id="utm-medium" placeholder="UTM Medium" trim size="sm" class="my-2" v-model="newLinkDialog.link.utmParameters.utmMedium"></b-form-input>
+        <b-form-input id="utm-campaign" placeholder="UTM Campaign" trim size="sm" class="my-2" v-model="newLinkDialog.link.utmParameters.utmCampaign"></b-form-input>
+        <b-form-input id="utm-term" placeholder="UTM Term" trim size="sm" class="my-2" v-model="newLinkDialog.link.utmParameters.utmTerm"></b-form-input>
+        <b-form-input id="utm-content" placeholder="UTM Content" trim size="sm" class="my-2" v-model="newLinkDialog.link.utmParameters.utmContent"></b-form-input>
       </b-form-group>
+      <b-alert variant="danger" :show="newLinkDialog.errors.length > 0">
+        <ul>
+          <li v-for="error in newLinkDialog.errors">{{ error }}</li>
+        </ul>
+      </b-alert>
     </b-modal>
 
     <!-- User Profile Dialog -->
@@ -97,9 +108,59 @@
     components: {
       UserIcon
     },
+    data() {
+      return {
+        newLinkDialog: {
+          errors: [],
+          link: {
+            longUrl: "",
+            utmParameters: {
+              utmSource: "",
+              utmMedium: "",
+              utmCampaign: "",
+              utmTerm: "",
+              utmContent: ""
+            }
+          }
+        }
+      }
+    },
     methods: {
       ...mapActions('auth', ['logout']),
-      ...mapActions('profile', ['fetchProfile'])
+      ...mapActions('profile', ['fetchProfile']),
+      ...mapActions('link', ['saveLink']),
+      onSaveLinkSucceeded() {
+        this.$bvModal.hide("new-link-dialog");
+      },
+      onSaveLinkFailed(error) {
+        this.newLinkDialog.errors.push(error);
+      },
+      onShowNewLink() {
+        this._clearNewLinkDialog();
+      },
+      onCancelNewLink() {
+        this._clearNewLinkDialog();
+      },
+      onSaveNewLink() {
+        this.saveLink({
+          link: this.newLinkDialog.link,
+          successCallback: this.onSaveLinkSucceeded,
+          failureCallback: this.onSaveLinkFailed
+        });
+      },
+      _clearNewLinkDialog() {
+        this.newLinkDialog.errors = [];
+        this.newLinkDialog.link = {
+          longUrl: "",
+          utmParameters: {
+            utmSource: "",
+            utmMedium: "",
+            utmCampaign: "",
+            utmTerm: "",
+            utmContent: ""
+          }
+        };
+      }
     },
     computed: {
       ...mapState('profile', ['userProfileId', 'userProfileType', 'fullName', 'pictureUrl', 'profileUrl'])
