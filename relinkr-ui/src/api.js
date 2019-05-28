@@ -28,7 +28,7 @@ const DEFAULT_HEADERS = {
 const fetch = (method, endpoint, authToken, headers = {}, params = {}, data=null) => {
   const config = {
     method: method,
-    url: `${API_BASE_URL}/${endpoint}`,
+    url: `${API_BASE_URL}${endpoint}`,
     params: _.defaults({}, params || {}, { bust: (Date.now()) }),
     headers: _.defaults(DEFAULT_HEADERS, headers || {}),
     withCredentials: true

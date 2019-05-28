@@ -77,7 +77,7 @@ const actions = {
       }
     };
 
-    get({endpoint: "v1/links", params: {page: (page - 1), size: PAGE_SIZE}})
+    get({endpoint: "/v1/links", params: {page: (page - 1), size: PAGE_SIZE}})
     .then(response => {
       commit('setState', {data: response.data, callback: callback});
     })
@@ -86,18 +86,18 @@ const actions = {
       commit('setState', {data: {}, callback: callback})
     });
   },
-  archiveLink(_, args) {
-    const {id, callback} = args || {
-      id: 0, callback: () => {
-      }
+  setNextStatus(_, args) {
+    const {id, nextStatus, callback} = args || {
+      id: 0, nextStatus: "", callback: () => { }
     };
 
-    put({endpoint: `v1/links/${id}/linkStatuses/ARCHIVED`})
+    put({endpoint: `/v1/links/${id}/linkStatuses/${nextStatus}`})
     .then(() => callback())
     .catch(err => {
       console.log("error", err);
     });
-  }
+  },
+
 };
 
 export default {
