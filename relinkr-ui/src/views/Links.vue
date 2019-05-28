@@ -41,8 +41,8 @@
           <a v-b-tooltip.hover title="View Target" target="_blank" :href="row.item.longUrl">
             <external-link-icon class="btn-outline-primary" />
           </a>
-          <archive-icon v-b-tooltip.hover title="Archive Link" class="btn-outline-primary" v-if="hasNextStatus(row.item.id, 'ARCHIVED')" @click="onArchive(row.item.id)" />
-          <arrow-up-circle-icon v-b-tooltip.hover title="Activate Link" class="btn-outline-primary" v-if="hasNextStatus(row.item.id, 'ACTIVE')"></arrow-up-circle-icon>
+          <archive-icon v-b-tooltip.hover title="Archive Link" class="btn-outline-primary" v-if="hasNextStatus(row.item.id, 'ARCHIVED')" @click="onSetNextStatus(row.item.id, 'ARCHIVED')" />
+          <arrow-up-circle-icon v-b-tooltip.hover title="Activate Link" class="btn-outline-primary" v-if="hasNextStatus(row.item.id, 'ACTIVE')" @click="onSetNextStatus(row.item.id, 'ACTIVE')" />
         </template>
 
         <template slot="shortLink" slot-scope="row">
@@ -164,16 +164,18 @@ export default {
     }
   },
   methods: {
-    ...mapActions('link', ['fetchLinks', 'archiveLink']),
+    ...mapActions('link', ['fetchLinks', 'setNextStatus']),
     onLoad(ctx, callback) {
       // eslint-disable-next-line
       console.log("onLoad", ctx, callback);
       this.fetchLinks({page: ctx.currentPage, callback: callback});
     },
-    onArchive(id) {
-      // eslint-disable-next-line
-      console.log("onArchive", id);
-      this.archiveLink({id: id, callback: () => this.$refs.linksTable.refresh() });
+    onSetNextStatus(id, nextStatus) {
+      this.setNextStatus({
+        id: id,
+        nextStatus: nextStatus,
+        refreshCallback: () => this.$refs.linksTable.refresh()
+      });
     }
   },
   computed: {
