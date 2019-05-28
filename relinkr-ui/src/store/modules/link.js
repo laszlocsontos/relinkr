@@ -23,23 +23,7 @@ const PAGE_SIZE = 10;
 
 // initial state
 const state = {
-  links: [{
-    id: 0,
-    longUrl: "aa",
-    createdDate: "",
-    utmParameters: {
-      utmSource: "",
-      utmMedium: "",
-      utmCampaign: "",
-      utmTerm: "",
-      utmContent: ""
-    },
-    _links: {
-      shortLink: {
-        href: "https://rln.kr/dfadfg3a"
-      }
-    }
-  }],
+  userLinkStatuses: {},
   page: {
     size: 0,
     totalElements: 0,
@@ -49,17 +33,40 @@ const state = {
 };
 
 const getters = {
-  currentPage: state => (state.page.number + 1),
   totalRows: state => (state.page.totalElements),
-  perPage: () => PAGE_SIZE
+  perPage: () => PAGE_SIZE,
+  hasNextStatus: state => (id, nextStatus) => {
+    const paths = state.userLinkStatuses[id];
+    console.log("hasNextStatus", id, nextStatus, paths);
+    return _.some(paths, (path) => _.endsWith(path, nextStatus));
+  }
 };
 
 const mutations = {
   setState(state, {data, callback}) {
     state.page = _.assign(state.page, data.page || {});
-    state.links = _.defaultTo(_.get(data, "_embedded.links"), []);
-    callback(state.links);
-    console.log("setState", state, data);
+
+    const links = _.defaultTo(_.get(data, "_embedded.links"), []);
+    callback(links);
+
+    state.userLinkStatuses = _.reduce(
+        _.map(links, link => {
+          let hrefs =
+              _.defaultTo(_.get(link, "_links.userLinkStatuses.href"), []);
+
+          if (!_.isArray(hrefs)) {
+            hrefs = [hrefs];
+          }
+
+          const paths = _.map(hrefs, href => new URL(href).pathname);
+          return {id: link.id, paths: paths};
+        }),
+        (result, value) => {
+          result[value.id] = value.paths;
+          return result;
+        },
+        {}
+    );
   }
 };
 

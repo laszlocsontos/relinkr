@@ -41,7 +41,8 @@
           <a v-b-tooltip.hover title="View Target" target="_blank" :href="row.item.longUrl">
             <external-link-icon class="btn-outline-primary" />
           </a>
-          <archive-icon v-b-tooltip.hover title="Archive Link" class="btn-outline-primary" @click="onArchive(row.item.id)" />
+          <archive-icon v-b-tooltip.hover title="Archive Link" class="btn-outline-primary" v-if="hasNextStatus(row.item.id, 'ARCHIVED')" @click="onArchive(row.item.id)" />
+          <arrow-up-circle-icon v-b-tooltip.hover title="Activate Link" class="btn-outline-primary" v-if="hasNextStatus(row.item.id, 'ACTIVE')"></arrow-up-circle-icon>
         </template>
 
         <template slot="shortLink" slot-scope="row">
@@ -100,7 +101,7 @@
 </template>
 
 <script>
-import { ExternalLinkIcon, ArchiveIcon, ChevronsDownIcon, ChevronsUpIcon } from 'vue-feather-icons'
+import { ArrowUpCircleIcon, ExternalLinkIcon, ArchiveIcon, ChevronsDownIcon, ChevronsUpIcon } from 'vue-feather-icons'
 import DoughnutChart from '@/components/DoughnutChart.js'
 import LineChart from '@/components/LineChart.js'
 import PageTemplate from '@/components/PageTemplate.vue'
@@ -110,7 +111,7 @@ import { mapActions } from 'vuex';
 
 export default {
   components: {
-    ExternalLinkIcon, ArchiveIcon, ChevronsDownIcon, ChevronsUpIcon,
+    ArrowUpCircleIcon, ExternalLinkIcon, ArchiveIcon, ChevronsDownIcon, ChevronsUpIcon,
     DoughnutChart, LineChart, PageTemplate
   },
   data() {
@@ -176,7 +177,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('link', ['totalRows', 'perPage']),
+    ...mapGetters('link', ['totalRows', 'perPage', 'hasNextStatus']),
     rows() {
       return this.items.length
     }
