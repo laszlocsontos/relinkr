@@ -47,6 +47,7 @@
     <!-- New Link Dialog -->
     <b-modal
         id="new-link-dialog"
+        ref="new-link-dialog"
         title="Add New Link"
         ok-title="Save"
         @show="onShowNewLink"
@@ -64,11 +65,11 @@
           description="Let's spice it up for tracking"
           label="UTM Parameters"
           label-for="input-1">
-        <b-form-input id="utm-source" placeholder="UTM Source" trim size="sm" class="my-2" v-model="newLinkDialog.link.utmParameters.utmSource"></b-form-input>
-        <b-form-input id="utm-medium" placeholder="UTM Medium" trim size="sm" class="my-2" v-model="newLinkDialog.link.utmParameters.utmMedium"></b-form-input>
-        <b-form-input id="utm-campaign" placeholder="UTM Campaign" trim size="sm" class="my-2" v-model="newLinkDialog.link.utmParameters.utmCampaign"></b-form-input>
-        <b-form-input id="utm-term" placeholder="UTM Term" trim size="sm" class="my-2" v-model="newLinkDialog.link.utmParameters.utmTerm"></b-form-input>
-        <b-form-input id="utm-content" placeholder="UTM Content" trim size="sm" class="my-2" v-model="newLinkDialog.link.utmParameters.utmContent"></b-form-input>
+        <b-form-input id="utm-source" placeholder="UTM Source" trim size="sm" class="my-2" v-model="newLinkDialog.utmParameters.utmSource"></b-form-input>
+        <b-form-input id="utm-medium" placeholder="UTM Medium" trim size="sm" class="my-2" v-model="newLinkDialog.utmParameters.utmMedium"></b-form-input>
+        <b-form-input id="utm-campaign" placeholder="UTM Campaign" trim size="sm" class="my-2" v-model="newLinkDialog.utmParameters.utmCampaign"></b-form-input>
+        <b-form-input id="utm-term" placeholder="UTM Term" trim size="sm" class="my-2" v-model="newLinkDialog.utmParameters.utmTerm"></b-form-input>
+        <b-form-input id="utm-content" placeholder="UTM Content" trim size="sm" class="my-2" v-model="newLinkDialog.utmParameters.utmContent"></b-form-input>
       </b-form-group>
       <b-alert variant="danger" :show="newLinkDialog.errors.length > 0">
         <ul>
@@ -103,6 +104,10 @@
   import { mapState } from 'vuex';
   import { mapActions } from 'vuex';
 
+  import _ from 'lodash';
+  import router from "../router";
+  import {validateUrl} from "../util";
+
   export default {
     name: 'PageTemplate',
     components: {
@@ -113,14 +118,14 @@
         newLinkDialog: {
           errors: [],
           link: {
-            longUrl: "",
-            utmParameters: {
-              utmSource: "",
-              utmMedium: "",
-              utmCampaign: "",
-              utmTerm: "",
-              utmContent: ""
-            }
+            longUrl: ""
+          },
+          utmParameters: {
+            utmSource: "",
+            utmMedium: "",
+            utmCampaign: "",
+            utmTerm: "",
+            utmContent: ""
           }
         }
       }
@@ -130,7 +135,9 @@
       ...mapActions('profile', ['fetchProfile']),
       ...mapActions('link', ['saveLink']),
       onSaveLinkSucceeded() {
-        this.$bvModal.hide("new-link-dialog");
+        this.$refs["new-link-dialog"].hide();
+        this.$root.$emit("refreshLinks");
+        router.push({path: "/links"});
       },
       onSaveLinkFailed(error) {
         this.newLinkDialog.errors.push(error);
@@ -141,9 +148,30 @@
       onCancelNewLink() {
         this._clearNewLinkDialog();
       },
-      onSaveNewLink() {
+      onSaveNewLink(bvModalEvt) {
+        bvModalEvt.preventDefault();
+
+        this.newLinkDialog.errors = [];
+
+        if (!validateUrl(this.newLinkDialog.link.longUrl)) {
+          this.newLinkDialog.errors.push("Invalid URL");
+          return;
+        }
+
+        const link = _.clone(this.newLinkDialog.link);
+
+        try {
+          const utmParameters = this._validateUtmParameters();
+          if (utmParameters != null) {
+            link.utmParameters = utmParameters;
+          }
+        } catch (e) {
+          this.newLinkDialog.errors.push(e);
+          return;
+        }
+
         this.saveLink({
-          link: this.newLinkDialog.link,
+          link: link,
           successCallback: this.onSaveLinkSucceeded,
           failureCallback: this.onSaveLinkFailed
         });
@@ -152,14 +180,36 @@
         this.newLinkDialog.errors = [];
         this.newLinkDialog.link = {
           longUrl: "",
-          utmParameters: {
-            utmSource: "",
-            utmMedium: "",
-            utmCampaign: "",
-            utmTerm: "",
-            utmContent: ""
-          }
         };
+        this.newLinkDialog.utmParameters = {
+          utmSource: "",
+          utmMedium: "",
+          utmCampaign: "",
+          utmTerm: "",
+          utmContent: ""
+        };
+      },
+      _validateUtmParameters() {
+        const {utmParameters} = this.newLinkDialog;
+        if (_.isEmpty(utmParameters.utmSource) && _.isEmpty(utmParameters.utmMedium)
+            && _.isEmpty(utmParameters.utmCampaign) &&_.isEmpty(utmParameters.utmTerm)
+            && _.isEmpty(utmParameters.utmContent)) {
+          return null;
+        }
+
+        if (_.isEmpty(utmParameters.utmSource)) {
+          throw "UTM Source is empty";
+        }
+
+        if (_.isEmpty(utmParameters.utmMedium)) {
+          throw "UTM Medium is empty";
+        }
+
+        if (_.isEmpty(utmParameters.utmCampaign)) {
+          throw "UTM Campaign is empty";
+        }
+
+        return utmParameters;
       }
     },
     computed: {

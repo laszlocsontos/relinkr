@@ -114,6 +114,9 @@ export default {
     ArrowUpCircleIcon, ExternalLinkIcon, ArchiveIcon, ChevronsDownIcon, ChevronsUpIcon,
     DoughnutChart, LineChart, PageTemplate
   },
+  mounted () {
+    this.$root.$on("refreshLinks", () => this._refresh());
+  },
   data() {
     return {
       currentPage: 1,
@@ -174,8 +177,11 @@ export default {
       this.setNextStatus({
         id: id,
         nextStatus: nextStatus,
-        refreshCallback: () => this.$refs.linksTable.refresh()
+        refreshCallback: () => this._refresh()
       });
+    },
+    _refresh() {
+      this.$refs.linksTable.refresh();
     }
   },
   computed: {

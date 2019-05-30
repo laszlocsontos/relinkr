@@ -17,7 +17,7 @@
 /* eslint-disable no-console */
 
 import _ from 'lodash';
-import {get, put} from '../../api';
+import {get, post, put} from '../../api';
 
 const PAGE_SIZE = 10;
 
@@ -97,7 +97,12 @@ const actions = {
       console.log("error", err);
     });
   },
-
+  saveLink(_, args) {
+    const {link, successCallback, failureCallback} = args;
+    post({endpoint: "/v1/links", data: link})
+    .then(successCallback)
+    .catch(failureCallback);
+  }
 };
 
 export default {
