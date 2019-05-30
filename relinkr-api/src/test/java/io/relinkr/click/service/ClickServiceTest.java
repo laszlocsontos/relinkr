@@ -35,7 +35,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ClickServiceImplTest {
+public class ClickServiceTest {
 
   @Mock
   private ClickRepository clickRepository;

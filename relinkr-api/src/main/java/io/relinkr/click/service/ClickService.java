@@ -18,8 +18,20 @@ package io.relinkr.click.service;
 
 import io.relinkr.click.model.Click;
 
+/**
+ * Provides the service layer for {@link Click}s, that is, handles incoming clicks and provides
+ * aggregated click data.
+ */
 public interface ClickService {
 
+  /**
+   * Logs the given {@code Click} and looks up the {@link io.relinkr.core.model.Country} of
+   * residence of that {@link io.relinkr.visitor.model.Visitor} who has made the {@code Click}.
+   *
+   * @param click {@code Click} to log
+   */
   void logClick(Click click);
+
+  // TODO: Add further service methods for fetching click statistics
 
 }

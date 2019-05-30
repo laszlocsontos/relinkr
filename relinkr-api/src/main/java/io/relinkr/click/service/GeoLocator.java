@@ -20,8 +20,17 @@ import io.relinkr.click.model.IpAddress;
 import io.relinkr.core.model.Country;
 import java.util.Optional;
 
+/**
+ * Locates the {@link Country} of origin of IP addresses.
+ */
 public interface GeoLocator {
 
+  /**
+   * Given an {@link IpAddress} this method locates its country of origin.
+   *
+   * @param ipAddress IP address
+   * @return
+   */
   Optional<Country> lookupCountry(IpAddress ipAddress);
 
 }

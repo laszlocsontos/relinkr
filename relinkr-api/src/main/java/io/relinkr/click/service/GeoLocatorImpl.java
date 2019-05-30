@@ -31,6 +31,10 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestOperations;
 
+/**
+ * Implementation of {@code GeoLocator} which retries {@link GeoLocator#lookupCountry(IpAddress)}
+ * upon I/O and server errors.
+ */
 @Component
 public class GeoLocatorImpl implements GeoLocator {
 
@@ -55,6 +59,7 @@ public class GeoLocatorImpl implements GeoLocator {
       backoff = @Backoff(delay = 1_000, multiplier = 2, maxDelay = 4_000)
   )
   public Optional<Country> lookupCountry(@NonNull IpAddress ipAddress) {
+    // FIXME: Refactor and wrap RestClientException with GeoLocator and propagate that
     String countryCode = restOperations.getForObject(
         GEOJS_COUNTRY_ENDPOINT,
         String.class,

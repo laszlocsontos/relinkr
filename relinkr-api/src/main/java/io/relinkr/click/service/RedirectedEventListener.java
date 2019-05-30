@@ -28,6 +28,11 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+/**
+ * Listens to {@link RedirectedEvent}s and handles them by calling {@link ClickService}
+ * asynchronously. It's important that such events be handling in the background as
+ * {@code ClickService} needs to talk to the database which incurs in inevitable network latency.
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor

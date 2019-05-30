@@ -20,6 +20,11 @@ import io.relinkr.click.model.Click;
 import io.relinkr.click.model.ClickId;
 import io.relinkr.core.orm.BaseRepository;
 
+/**
+ * Repository of {@link Click}s.
+ */
 interface ClickRepository extends BaseRepository<Click, ClickId> {
+
+  // TODO: Add methods for being able to count the distint number of visitors and clicks of a link
 
 }
