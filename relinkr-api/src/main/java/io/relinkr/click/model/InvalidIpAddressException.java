@@ -18,13 +18,16 @@ package io.relinkr.click.model;
 
 import org.springframework.core.NestedRuntimeException;
 
-public class InvalidIpAddressException extends NestedRuntimeException {
+/**
+ * Thrown when {@link IpAddress#fromString(String)} is given an invalid IP address.
+ */
+class InvalidIpAddressException extends NestedRuntimeException {
 
-  public InvalidIpAddressException(String message) {
+  InvalidIpAddressException(String message) {
     super(message);
   }
 
-  public InvalidIpAddressException(String message, Throwable cause) {
+  InvalidIpAddressException(String message, Throwable cause) {
     super(message, cause);
   }
 

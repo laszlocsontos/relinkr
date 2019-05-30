@@ -16,36 +16,32 @@
 
 package io.relinkr.click.model;
 
-import static java.math.BigInteger.ZERO;
-
-import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.regex.Pattern;
 import javax.persistence.Embeddable;
 import javax.persistence.Enumerated;
 import lombok.Getter;
-import org.springframework.util.Assert;
+import lombok.NonNull;
 
+/**
+ * Represents an
+ */
 @Getter
 @Embeddable
 public class IpAddress {
-
-  private static final BigInteger B_256 = BigInteger.valueOf(256L);
 
   // Preliminary regex match is to avoid hostname lookups when this class is constructed with
   // a non-numeric value.
   private static final Pattern IPV4_AND_6_PATTERN =
       Pattern.compile("([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4}|(\\d{1,3}\\.){3}\\d{1,3}");
 
+  private final static int IPV6_ADDRESS_SIZE = 16;
+
   private String ipAddress;
-  private BigInteger ipAddressDecimal;
 
   @Enumerated
   private IpAddressType ipAddressType;
-  private boolean localAddress;
-
-  private boolean multicastAddress;
 
   /*
    * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
@@ -53,15 +49,9 @@ public class IpAddress {
   IpAddress() {
   }
 
-  private IpAddress(
-      String ipAddress, BigInteger ipAddressDecimal, IpAddressType ipAddressType,
-      boolean localAddress, boolean multicastAddress) {
-
+  private IpAddress(String ipAddress, IpAddressType ipAddressType) {
     this.ipAddress = ipAddress;
-    this.ipAddressDecimal = ipAddressDecimal;
     this.ipAddressType = ipAddressType;
-    this.localAddress = localAddress;
-    this.multicastAddress = multicastAddress;
   }
 
   /**
@@ -71,46 +61,57 @@ public class IpAddress {
    * @return a new {@code IpAddress} instance if {@code ipAddress} is a valid address
    * @throws InvalidIpAddressException is thrown if {@code ipAddress} is an invalid address
    */
-  public static IpAddress fromString(String ipAddress) throws InvalidIpAddressException {
-    Assert.notNull(ipAddress, "ipAddress cannot be null");
-
+  public static IpAddress fromString(@NonNull String ipAddress) throws InvalidIpAddressException {
     if (!IPV4_AND_6_PATTERN.matcher(ipAddress).matches()) {
       throw InvalidIpAddressException.forIpAddress(ipAddress);
     }
 
-    InetAddress inetAddress;
+    InetAddress inetAddress = doGetByName(ipAddress);
+    byte[] address = inetAddress.getAddress();
+
+    // Anonymize IP address
+    anonymizeAddress(address);
+
+    inetAddress = doGetByAddress(address);
+    return new IpAddress(inetAddress.getHostAddress(), IpAddressType.of(address));
+  }
+
+  /**
+   * Sets the last 8 bits of an Ipv4 address to zero
+   * Sets the last 64 bits of an Ipv6 address to zero
+   */
+  private static void anonymizeAddress(byte[] address) {
+    if (address.length == IPV6_ADDRESS_SIZE) {
+      for (int index = address.length - 1; index > address.length - 8; index--) {
+        address[index] = 0;
+      }
+      return;
+    }
+
+    address[address.length - 1] = 0;
+  }
+
+  private static InetAddress doGetByName(String host) {
     try {
-      inetAddress = InetAddress.getByName(ipAddress);
+      return InetAddress.getByName(host);
     } catch (UnknownHostException uhe) {
       throw new InvalidIpAddressException(uhe.getMessage(), uhe);
     }
+  }
 
-    IpAddressType ipAddressType = IpAddressType.of(inetAddress);
-
-    byte[] ipAddressBytes = inetAddress.getAddress();
-    BigInteger ipAddressDecimal = ZERO;
-    for (int index = 0; index < ipAddressBytes.length; index++) {
-      BigInteger value = BigInteger.valueOf(ipAddressBytes[index] & 0xFF);
-      int power = ipAddressBytes.length - index - 1;
-      ipAddressDecimal = ipAddressDecimal.add(B_256.pow(power).multiply(value));
+  private static InetAddress doGetByAddress(byte[] address) {
+    try {
+      return InetAddress.getByAddress(address);
+    } catch (UnknownHostException e) {
+      throw new InvalidIpAddressException(e.getMessage(), e);
     }
-
-    boolean localAddress = inetAddress.isLinkLocalAddress() || inetAddress.isSiteLocalAddress();
-    boolean multicastAddress = inetAddress.isMulticastAddress();
-
-    return new IpAddress(
-        ipAddress, ipAddressDecimal, ipAddressType, localAddress, multicastAddress
-    );
   }
 
   public enum IpAddressType {
 
     IPV4, IPV6;
 
-    static final int IPV6_ADDRESS_SIZE = 16;
-
-    static IpAddressType of(InetAddress inetAddress) {
-      byte[] address = inetAddress.getAddress();
+    static IpAddressType of(byte[] address) {
       if (address.length == IPV6_ADDRESS_SIZE) {
         return IPV6;
       }

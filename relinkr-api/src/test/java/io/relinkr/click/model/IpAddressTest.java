@@ -16,81 +16,37 @@
 
 package io.relinkr.click.model;
 
-import static io.relinkr.test.Mocks.IPV4_ADDRESS;
-import static io.relinkr.test.Mocks.IPV6_ADDRESS;
+import static io.relinkr.click.model.IpAddress.IpAddressType.IPV4;
+import static io.relinkr.click.model.IpAddress.IpAddressType.IPV6;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
-import io.relinkr.click.model.IpAddress.IpAddressType;
-import java.math.BigInteger;
-import org.junit.Before;
 import org.junit.Test;
 
 public class IpAddressTest {
 
-  private IpAddress ipv4Address;
-  private IpAddress ipv6Address;
+  private static final String IPV4_ADDRESS = "184.52.70.179";
+  private static final String IPV4_ADDRESS_ANON = "184.52.70.0";
 
-  @Before
-  public void setUp() {
-    ipv4Address = IpAddress.fromString(IPV4_ADDRESS);
-    ipv6Address = IpAddress.fromString(IPV6_ADDRESS);
-  }
+  private static final String IPV6_ADDRESS = "2001:db8:85a3:0:0:8a2e:370:7334";
+  private static final String IPV6_ADDRESS_ANON = "2001:db8:85a3:0:0:0:0:0";
 
   @Test(expected = InvalidIpAddressException.class)
-  public void create_withInvalid() {
+  public void givenInvalidIpAddress_whenFromString_thenInvalidIpAddressException() {
     IpAddress.fromString("bad");
   }
 
   @Test
-  public void getIpAddress_withIPV4() {
-    assertEquals(IPV4_ADDRESS, ipv4Address.getIpAddress());
+  public void givenIpv4Address_whenFromString_thenAnonymizedAndTypeIsIpv4() {
+    IpAddress ipv4Address = IpAddress.fromString(IPV4_ADDRESS);
+    assertEquals(IPV4_ADDRESS_ANON, ipv4Address.getIpAddress());
+    assertEquals(IPV4, ipv4Address.getIpAddressType());
   }
 
   @Test
-  public void getIpAddressDecimal_withIPV4() {
-    assertEquals(BigInteger.valueOf(3090433715L), ipv4Address.getIpAddressDecimal());
-  }
-
-  @Test
-  public void getIpAddressType_withIPV4() {
-    assertEquals(IpAddressType.IPV4, ipv4Address.getIpAddressType());
-  }
-
-  @Test
-  public void isLocalAddress_withIPV4() {
-    assertFalse(ipv4Address.isLocalAddress());
-  }
-
-  @Test
-  public void isMulticastAddress_withIPV4() {
-    assertFalse(ipv4Address.isMulticastAddress());
-  }
-
-  @Test
-  public void getIpAddress_withIPV6() {
-    assertEquals(IPV6_ADDRESS, ipv6Address.getIpAddress());
-  }
-
-  @Test
-  public void getIpAddressDecimal_withIPV6() {
-    assertEquals(new BigInteger("42540766452641154071740215577757643572"),
-        ipv6Address.getIpAddressDecimal());
-  }
-
-  @Test
-  public void getIpAddressType_withIPV6() {
-    assertEquals(IpAddressType.IPV6, ipv6Address.getIpAddressType());
-  }
-
-  @Test
-  public void isLocalAddress_withIPV6() {
-    assertFalse(ipv6Address.isLocalAddress());
-  }
-
-  @Test
-  public void isMulticastAddress_withIPV6() {
-    assertFalse(ipv6Address.isMulticastAddress());
+  public void givenIpv6Address_whenFromString_thenAnonymizedAndTypeIsIpv6() {
+    IpAddress ipv6Address = IpAddress.fromString(IPV6_ADDRESS);
+    assertEquals(IPV6_ADDRESS_ANON, ipv6Address.getIpAddress());
+    assertEquals(IPV6, ipv6Address.getIpAddressType());
   }
 
 }

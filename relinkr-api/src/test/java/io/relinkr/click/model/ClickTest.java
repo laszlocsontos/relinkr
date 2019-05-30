@@ -16,12 +16,14 @@
 
 package io.relinkr.click.model;
 
+import static io.relinkr.core.model.Country.US;
 import static io.relinkr.test.Mocks.LINK_ID;
 import static io.relinkr.test.Mocks.TIMESTAMP;
 import static io.relinkr.test.Mocks.USER_ID;
 import static io.relinkr.test.Mocks.VISITOR_ID;
 import static io.relinkr.test.Mocks.VISITOR_IP;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 import io.relinkr.core.model.Country;
 import org.junit.Before;
@@ -32,38 +34,44 @@ public class ClickTest {
   private Click click;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     click = Click.of(LINK_ID, VISITOR_ID, USER_ID, VISITOR_IP, TIMESTAMP);
   }
 
   @Test
-  public void shouldHaveVisitDayOfMonth() {
+  public void shouldReturnVisitDayOfMonth() {
     assertEquals(TIMESTAMP.getDayOfMonth(), click.getVisitDayOfMonth());
   }
 
   @Test
-  public void shouldHaveVisitDayOfWeek() {
+  public void shouldReturnVisitDayOfWeek() {
     assertEquals(TIMESTAMP.getDayOfWeek().getValue(), click.getVisitDayOfWeek());
   }
 
   @Test
-  public void shouldHaveVisitHour() {
+  public void shouldReturnVisitHour() {
     assertEquals(TIMESTAMP.getHour(), click.getVisitHour());
   }
 
   @Test
-  public void getVisitMonth() {
+  public void shouldReturnVisitMonth() {
     assertEquals(TIMESTAMP.getMonth().getValue(), click.getVisitMonth());
   }
 
   @Test
-  public void shouldHaveVisitTimestamp() {
+  public void shouldReturnVisitTimestamp() {
     assertEquals(TIMESTAMP, click.getVisitTimestamp());
   }
 
   @Test
-  public void shouldHaveCountry() {
-    assertEquals(Country.US, click.with(Country.US).getCountry().get());
+  public void shouldReturnCountry() {
+    assertEquals(US, click.with(US).getCountry().get());
+  }
+
+  @Test
+  public void shouldCreateNewClick() {
+    Click newClick = click.with(US);
+    assertNotSame(click, newClick);
   }
 
 }

@@ -19,9 +19,8 @@ package io.relinkr.click.model;
 import static javax.persistence.EnumType.STRING;
 
 import io.relinkr.core.model.Country;
-import io.relinkr.core.orm.AbstractEntity;
+import io.relinkr.core.orm.OwnableEntity;
 import io.relinkr.link.model.LinkId;
-import io.relinkr.user.model.Ownable;
 import io.relinkr.user.model.UserId;
 import io.relinkr.visitor.model.VisitorId;
 import java.time.LocalDate;
@@ -35,9 +34,13 @@ import javax.persistence.Enumerated;
 import lombok.Getter;
 import lombok.NonNull;
 
+/**
+ * Represents a single click to a {@link io.relinkr.link.model.Link} performed by a given
+ * {@link io.relinkr.visitor.model.Visitor} from an {@link IpAddress} at a specific point in time.
+ */
 @Getter
 @Entity
-public class Click extends AbstractEntity<ClickId> implements Ownable {
+public class Click extends OwnableEntity<ClickId> {
 
   @Embedded
   @AttributeOverride(name = "id", column = @Column(name = "link_id"))
@@ -49,11 +52,6 @@ public class Click extends AbstractEntity<ClickId> implements Ownable {
 
   @Embedded
   private IpAddress visitorIp;
-
-  @Embedded
-  @AttributeOverride(name = "id", column = @Column(name = "user_id"))
-  private UserId userId;
-
 
   @Enumerated(STRING)
   private Country country;
@@ -76,9 +74,10 @@ public class Click extends AbstractEntity<ClickId> implements Ownable {
       LinkId linkId, VisitorId visitorId, UserId userId, IpAddress visitorIp,
       LocalDateTime visitTimestamp, Country country) {
 
+    super(userId);
+
     this.linkId = linkId;
     this.visitorId = visitorId;
-    this.userId = userId;
     this.visitorIp = visitorIp;
 
     setVisitTimestamp(visitTimestamp);
@@ -88,11 +87,22 @@ public class Click extends AbstractEntity<ClickId> implements Ownable {
 
   private Click(Click click, Country country) {
     this(
-        click.linkId, click.visitorId, click.userId, click.visitorIp, click.visitTimestamp,
+        click.linkId, click.visitorId, click.getUserId(), click.visitorIp, click.visitTimestamp,
         country
     );
   }
 
+  /**
+   * Creates a new {@code Click} instance with the following data.
+   *
+   * @param linkId {@code Link}'s ID
+   * @param visitorId {@code Visitor}'s ID
+   * @param userId {@code User}'s ID who own the link clicked
+   * @param visitorIp {@code Visitor}'s IP address
+   * @param visitTimestamp timestamp of the {@code Click}
+   * @return a new {@code Click} instance
+   * @throws IllegalArgumentException if any of the parameters above is null
+   */
   public static Click of(
       @NonNull LinkId linkId,
       @NonNull VisitorId visitorId,
@@ -103,6 +113,12 @@ public class Click extends AbstractEntity<ClickId> implements Ownable {
     return new Click(linkId, visitorId, userId, visitorIp, visitTimestamp, null);
   }
 
+  /**
+   * Makes a copy of {@code this} Click object and adds a {@link Country} to it.
+   *
+   * @param country {@code Country} to be added
+   * @return a copy of {@code this} Click object
+   */
   public Click with(Country country) {
     return new Click(this, country);
   }
