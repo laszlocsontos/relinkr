@@ -17,12 +17,16 @@
 package io.relinkr.link.model;
 
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.stream.Collectors.toMap;
 
 import java.net.URI;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Transient;
@@ -208,6 +212,11 @@ public class LongUrl {
 
     Optional.ofNullable(utmParameters)
         .map(UtmParameters::asMap)
+        .map(it -> it.entrySet()
+            .stream()
+            .filter(e -> StringUtils.hasText(e.getValue()))
+            .collect(toMap(Entry::getKey, Entry::getValue, (o, n) -> n, LinkedHashMap::new))
+        )
         .ifPresent(queryParams::setAll);
 
     targetUrlBuilder.queryParams(queryParams);

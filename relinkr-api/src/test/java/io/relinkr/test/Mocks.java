@@ -75,12 +75,17 @@ public final class Mocks {
       LONG_URL_BASE_S + "?utm_source=source&utm_medium=medium&utm_campaign=campaign" +
           LONG_URL_FRAGMENT_S;
 
+  public static final String LONG_URL_VALID_UTM_S_EMPTY_TC =
+      LONG_URL_BASE_S + "?utm_source=source&utm_medium=medium&utm_campaign=campaign"
+          + "&utm_term&utm_content=" + LONG_URL_FRAGMENT_S;
+
   public static final String LONG_URL_INVALID_UTM_S =
       LONG_URL_BASE_S + "?utm_source=source" + LONG_URL_FRAGMENT_S;
 
   public static final LongUrl LONG_URL_BASE;
   public static final LongUrl LONG_URL_WITHOUT_UTM;
   public static final LongUrl LONG_URL_VALID_UTM;
+  public static final LongUrl LONG_URL_VALID_UTM_EMPTY_TC;
   public static final LongUrl LONG_URL_INVALID_UTM;
 
   public static final String FRONTEND_LOGIN_URL = "https://app.relinkr.io/login";
@@ -193,6 +198,7 @@ public final class Mocks {
       LONG_URL_BASE = new LongUrl(LONG_URL_BASE_S);
       LONG_URL_WITHOUT_UTM = new LongUrl(LONG_URL_WITHOUT_UTM_S);
       LONG_URL_VALID_UTM = new LongUrl(LONG_URL_VALID_UTM_S);
+      LONG_URL_VALID_UTM_EMPTY_TC = new LongUrl(LONG_URL_VALID_UTM_S_EMPTY_TC);
       LONG_URL_INVALID_UTM = new LongUrl(LONG_URL_INVALID_UTM_S);
 
       UTM_PARAMETERS_FULL = new UtmParameters(

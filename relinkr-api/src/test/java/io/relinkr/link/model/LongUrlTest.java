@@ -20,6 +20,7 @@ import static io.relinkr.test.Mocks.LONG_URL_BASE;
 import static io.relinkr.test.Mocks.LONG_URL_BASE_S;
 import static io.relinkr.test.Mocks.LONG_URL_INVALID_UTM;
 import static io.relinkr.test.Mocks.LONG_URL_VALID_UTM;
+import static io.relinkr.test.Mocks.LONG_URL_VALID_UTM_EMPTY_TC;
 import static io.relinkr.test.Mocks.LONG_URL_VALID_UTM_S;
 import static io.relinkr.test.Mocks.LONG_URL_WITHOUT_UTM;
 import static io.relinkr.test.Mocks.LONG_URL_WITHOUT_UTM_S;
@@ -52,6 +53,11 @@ public class LongUrlTest {
   @Test
   public void create_withLongUrlValidUtm() {
     assertEquals(URI.create(LONG_URL_VALID_UTM_S), LONG_URL_VALID_UTM.getTargetUrl());
+  }
+
+  @Test
+  public void create_withLongUrlValidUtm_withEmptyTermAndContent() {
+    assertEquals(URI.create(LONG_URL_VALID_UTM_S), LONG_URL_VALID_UTM_EMPTY_TC.getTargetUrl());
   }
 
   @Test
