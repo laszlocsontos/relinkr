@@ -38,7 +38,7 @@
         <template slot="showDetails" slot-scope="row">
           <chevrons-down-icon v-b-tooltip.hover title="Show Details" @click="row.toggleDetails" v-if="!row.detailsShowing" class="btn-outline-primary"/>
           <chevrons-up-icon v-b-tooltip.hover title="Hide Details" @click="row.toggleDetails" v-if="row.detailsShowing" class="btn-outline-primary"/>
-          <a v-b-tooltip.hover title="View Target" target="_blank" :href="row.item.longUrl">
+          <a v-b-tooltip.hover title="View Target" target="_blank" :href="row.item.targetUrl">
             <external-link-icon class="btn-outline-primary" />
           </a>
           <archive-icon v-b-tooltip.hover title="Archive Link" class="btn-outline-primary" v-if="hasNextStatus(row.item.id, 'ARCHIVED')" @click="onSetNextStatus(row.item.id, 'ARCHIVED')" />
