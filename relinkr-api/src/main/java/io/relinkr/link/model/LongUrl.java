@@ -215,7 +215,7 @@ public class LongUrl {
         .map(it -> it.entrySet()
             .stream()
             .filter(e -> StringUtils.hasText(e.getValue()))
-            .collect(toMap(Entry::getKey, Entry::getValue, (o, n) -> n, LinkedHashMap::new))
+            .collect(toMap(Entry::getKey, Entry::getValue, (ov, nv) -> nv, LinkedHashMap::new))
         )
         .ifPresent(queryParams::setAll);
 

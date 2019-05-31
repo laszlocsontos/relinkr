@@ -29,7 +29,7 @@ public interface GeoLocator {
    * Given an {@link IpAddress} this method locates its country of origin.
    *
    * @param ipAddress IP address
-   * @return
+   * @return A {@code Country} when it's identifiable, otherwise result will be empty
    */
   Optional<Country> lookupCountry(IpAddress ipAddress);
 

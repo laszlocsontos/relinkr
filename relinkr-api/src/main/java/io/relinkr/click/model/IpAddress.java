@@ -25,7 +25,8 @@ import lombok.Getter;
 import lombok.NonNull;
 
 /**
- * Represents an
+ * Represents an anonymized IP Address, which means that in case of an IPv4 address, the last octet,
+ * and in case of an IPv6 address, the last 64 bits are reset to zero.
  */
 @Getter
 @Embeddable
@@ -36,7 +37,7 @@ public class IpAddress {
   private static final Pattern IPV4_AND_6_PATTERN =
       Pattern.compile("([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4}|(\\d{1,3}\\.){3}\\d{1,3}");
 
-  private final static int IPV6_ADDRESS_SIZE = 16;
+  private static final int IPV6_ADDRESS_SIZE = 16;
 
   private String ipAddress;
 
@@ -76,10 +77,6 @@ public class IpAddress {
     return new IpAddress(inetAddress.getHostAddress(), IpAddressType.of(address));
   }
 
-  /**
-   * Sets the last 8 bits of an Ipv4 address to zero
-   * Sets the last 64 bits of an Ipv6 address to zero
-   */
   private static void anonymizeAddress(byte[] address) {
     if (address.length == IPV6_ADDRESS_SIZE) {
       for (int index = address.length - 1; index > address.length - 8; index--) {
@@ -102,8 +99,8 @@ public class IpAddress {
   private static InetAddress doGetByAddress(byte[] address) {
     try {
       return InetAddress.getByAddress(address);
-    } catch (UnknownHostException e) {
-      throw new InvalidIpAddressException(e.getMessage(), e);
+    } catch (UnknownHostException uhe) {
+      throw new InvalidIpAddressException(uhe.getMessage(), uhe);
     }
   }
 
