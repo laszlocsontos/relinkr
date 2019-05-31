@@ -20,11 +20,32 @@ import java.util.Optional;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
 
+/**
+ * Base interface for repositories. Instead of using full blown interfaces like
+ * {@link org.springframework.data.jpa.repository.JpaRepository}, a hand-picked methods are
+ * implemented instead.
+ *
+ * @param <E> Entity's class
+ * @param <ID> Entity's ID class
+ */
 @NoRepositoryBean
-public interface BaseRepository<E, ID> extends Repository<E, ID> {
+public interface BaseRepository
+    <E extends AbstractEntity<ID>, ID extends AbstractId<E>> extends Repository<E, ID> {
 
+  /**
+   * Find the repository's entity based on its ID.
+   *
+   * @param id ID to find by
+   * @return entity is exists
+   */
   Optional<E> findById(ID id);
 
+  /**
+   * Saved the given entity.
+   *
+   * @param entity entity to save
+   * @return saved entity
+   */
   E save(E entity);
 
 }

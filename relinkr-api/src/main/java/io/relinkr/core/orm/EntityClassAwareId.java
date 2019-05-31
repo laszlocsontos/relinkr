@@ -18,10 +18,26 @@ package io.relinkr.core.orm;
 
 import java.io.Serializable;
 
+/**
+ * Represents a numeric identifier of an entity, which is also aware the entity's class being
+ * identified by that number.
+ *
+ * @param <E> Entity's type
+ */
 public interface EntityClassAwareId<E> extends Serializable {
 
+  /**
+   * Returns the entity's class.
+   *
+   * @return entity's class
+   */
   Class<E> getEntityClass();
 
+  /**
+   * Returns the entity's ID.
+   *
+   * @return entity's ID
+   */
   Long getId();
 
 }

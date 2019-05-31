@@ -16,19 +16,23 @@
 
 package io.relinkr.core.orm;
 
+import static lombok.AccessLevel.PACKAGE;
+import static org.hibernate.id.IdentifierGenerator.ENTITY_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.never;
 
-import io.relinkr.click.model.ClickId;
+import io.relinkr.core.util.IdGenerator;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.Properties;
+import javax.persistence.Embeddable;
+import lombok.NoArgsConstructor;
 import org.hibernate.MappingException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.id.IdentifierGenerator;
 import org.hibernate.persister.entity.EntityPersister;
 import org.hibernate.type.Type;
 import org.junit.Before;
@@ -40,8 +44,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class TimeBasedIdentifierGeneratorTest {
 
-  private static final String ENTITY_NAME = "test";
-  private static final Object OBJECT = new Object();
+  private static final String TEST_ENTITY_NAME = "test";
+  private static final Object TEST_ENTITY = new TestEntity();
   private static final long ID = 1;
 
   @Mock
@@ -53,78 +57,119 @@ public class TimeBasedIdentifierGeneratorTest {
   @Mock
   private Type type;
 
+  @Mock
+  private IdGenerator idGenerator;
+
   private TimeBasedIdentifierGenerator timeBasedIdentifierGenerator;
 
   @Before
-  public void setUp() throws Exception {
-    timeBasedIdentifierGenerator = new TimeBasedIdentifierGenerator();
-  }
-
-  @Test
-  public void configure() {
-    givenNoIdAssigned();
-
-    timeBasedIdentifierGenerator.generate(session, OBJECT);
-
-    then(session).should().getEntityPersister(ENTITY_NAME, OBJECT);
+  public void setUp() {
+    timeBasedIdentifierGenerator = new TimeBasedIdentifierGenerator(idGenerator);
   }
 
   @Test(expected = MappingException.class)
-  public void configure_withWrongIdClass() {
+  public void givenWrongIdClass_whenConfigure_thenMappingException() {
     given(type.getReturnedClass()).willReturn(Object.class);
 
-    timeBasedIdentifierGenerator.configure(type, getProperties(ENTITY_NAME), null);
+    timeBasedIdentifierGenerator.configure(type, getProperties(TEST_ENTITY_NAME), null);
   }
 
   @Test(expected = MappingException.class)
-  public void configure_withoutEntityName() {
-    configureWithEntityName(null);
+  public void givenNoEntityName_whenConfigure_thenMappingException() {
+    configureEntity(null, TestEntityId.class);
   }
 
   @Test
-  public void assigned() {
-    givenIdAssigned(ID);
+  public void givenAssignedTestEntityId_whenGenerate_thenAssignedIdUsed() {
+    assignId(ID, TestEntityId.class);
 
-    Serializable id = timeBasedIdentifierGenerator.generate(session, OBJECT);
-
+    Serializable id = timeBasedIdentifierGenerator.generate(session, TEST_ENTITY);
     assertEquals(ID, id);
+
+    then(session).should().getEntityPersister(TEST_ENTITY_NAME, TEST_ENTITY);
+    then(idGenerator).should(never()).generate();
   }
 
   @Test
-  public void generated() {
-    givenNoIdAssigned();
+  public void givenAssignedLongId_whenGenerate_thenAssignedIdUsed() {
+    assignId(ID, Long.class);
 
-    Serializable id = timeBasedIdentifierGenerator.generate(session, OBJECT);
+    Serializable id = timeBasedIdentifierGenerator.generate(session, TEST_ENTITY);
+    assertEquals(ID, id);
 
+    then(session).should().getEntityPersister(TEST_ENTITY_NAME, TEST_ENTITY);
+    then(idGenerator).should(never()).generate();
+  }
+
+  @Test
+  public void givenNoTestEntityIdAssigned_whenGenerate_thenIdGenerated() {
+    assignNoId(TestEntityId.class);
+
+    Serializable id = timeBasedIdentifierGenerator.generate(session, TEST_ENTITY);
     assertNotNull(id);
     assertNotEquals(ID, id);
+
+    then(session).should().getEntityPersister(TEST_ENTITY_NAME, TEST_ENTITY);
+    then(idGenerator).should().generate();
   }
 
-  private void configureWithEntityName(String entityName) {
+  @Test
+  public void givenNoLongIdAssigned_whenGenerate_thenIdGenerated() {
+    assignNoId(Long.class);
+
+    Serializable id = timeBasedIdentifierGenerator.generate(session, TEST_ENTITY);
+    assertNotNull(id);
+    assertNotEquals(ID, id);
+
+    then(session).should().getEntityPersister(TEST_ENTITY_NAME, TEST_ENTITY);
+    then(idGenerator).should().generate();
+  }
+
+  private void configureEntity(String entityName, Class<?> entityIdClass) {
     Properties properties = getProperties(entityName);
 
-    given(type.getReturnedClass()).willReturn(ClickId.class);
+    given(type.getReturnedClass()).willReturn(entityIdClass);
 
     timeBasedIdentifierGenerator.configure(type, properties, null);
   }
 
-  private void givenIdAssigned(Long id) {
-    configureWithEntityName(ENTITY_NAME);
-    given(session.getEntityPersister(ENTITY_NAME, OBJECT)).willReturn(entityPersister);
-    given(entityPersister.getIdentifier(OBJECT, session)).willReturn(id);
+  private void assignId(Long idValue, Class<?> idClass) {
+    configureEntity(TEST_ENTITY_NAME, idClass);
+    given(session.getEntityPersister(TEST_ENTITY_NAME, TEST_ENTITY)).willReturn(entityPersister);
+    given(entityPersister.getIdentifier(TEST_ENTITY, session)).willReturn(idValue);
   }
 
-  private void givenNoIdAssigned() {
-    givenIdAssigned(null);
+  private void assignNoId(Class<?> idClass) {
+    assignId(null, idClass);
   }
 
   private Properties getProperties(String entityName) {
     Properties properties = new Properties();
 
     Optional.ofNullable(entityName)
-        .ifPresent(it -> properties.put(IdentifierGenerator.ENTITY_NAME, entityName));
+        .ifPresent(it -> properties.put(ENTITY_NAME, entityName));
 
     return properties;
   }
+
+  private static class TestEntity extends AbstractEntity<TestEntityId> {
+
+  }
+
+  @Embeddable
+  @NoArgsConstructor(access = PACKAGE)
+  private static class TestEntityId extends AbstractId<TestEntity> {
+
+    public TestEntityId(long id) {
+      super(id);
+    }
+
+    @Override
+    public Class<TestEntity> getEntityClass() {
+      return TestEntity.class;
+    }
+
+  }
+
 
 }

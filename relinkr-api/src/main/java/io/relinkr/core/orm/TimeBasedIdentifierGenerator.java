@@ -17,6 +17,7 @@
 package io.relinkr.core.orm;
 
 import io.relinkr.core.convert.LongToEntityClassAwareIdConverter;
+import io.relinkr.core.util.IdGenerator;
 import io.relinkr.core.util.IdentityGenerator;
 import java.io.Serializable;
 import java.util.Optional;
@@ -33,14 +34,27 @@ import org.hibernate.service.ServiceRegistry;
 import org.hibernate.type.Type;
 import org.springframework.core.convert.converter.Converter;
 
+/**
+ * Identifier generation strategy based upon {@link IdentityGenerator}. It leverages
+ * {@link LongToEntityClassAwareIdConverter} for converting simple long value to type-safe
+ * identifier objects.
+ */
 public class TimeBasedIdentifierGenerator implements Configurable, IdentifierGenerator {
 
   private final ConcurrentMap<String, EntityPersister> cache = new ConcurrentHashMap<>();
 
-  private final IdentityGenerator identityGenerator = IdentityGenerator.getInstance();
+  private final IdGenerator idGenerator;
 
   private Converter<Long, ? extends Serializable> conversionStrategy;
   private String entityName;
+
+  public TimeBasedIdentifierGenerator() {
+    this(IdentityGenerator.getInstance());
+  }
+
+  TimeBasedIdentifierGenerator(IdGenerator idGenerator) {
+    this.idGenerator = idGenerator;
+  }
 
   @Override
   public void configure(Type type, Properties params, ServiceRegistry serviceRegistry)
@@ -73,7 +87,7 @@ public class TimeBasedIdentifierGenerator implements Configurable, IdentifierGen
 
     return Optional
         .ofNullable(id)
-        .orElseGet(() -> conversionStrategy.convert(identityGenerator.generate()));
+        .orElseGet(() -> conversionStrategy.convert(idGenerator.generate()));
   }
 
 }

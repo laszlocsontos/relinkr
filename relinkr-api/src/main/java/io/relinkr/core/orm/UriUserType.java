@@ -30,6 +30,11 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.type.StringRepresentableType;
 import org.hibernate.usertype.UserType;
 
+/**
+ * Custom {@link UserType} for being able to save {@link URI} values as
+ * {@link java.sql.Types#VARCHAR} to the database and to get {@code URI} value back when data is
+ * fetched.
+ */
 public class UriUserType implements UserType, StringRepresentableType<URI> {
 
   private static final Class<URI> URI_CLASS = URI.class;
@@ -45,8 +50,27 @@ public class UriUserType implements UserType, StringRepresentableType<URI> {
     try {
       return Optional.ofNullable(value).map(URI::create).orElse(null);
     } catch (IllegalArgumentException iae) {
-      throw translateException(iae);
+      throw new HibernateException("URI has invalid syntax - could not read entity", iae);
     }
+  }
+
+  @Override
+  public Object nullSafeGet(
+      ResultSet rs, String[] names,
+      SharedSessionContractImplementor session, Object owner)
+      throws HibernateException, SQLException {
+
+    String value = (String) STRING.nullSafeGet(rs, names, session, owner);
+    return fromStringValue(value);
+  }
+
+  @Override
+  public void nullSafeSet(
+      PreparedStatement st, Object value, int index,
+      SharedSessionContractImplementor session) throws HibernateException, SQLException {
+
+    String stringValue = toString((URI) value);
+    STRING.nullSafeSet(st, stringValue, index, session);
   }
 
   @Override
@@ -67,30 +91,6 @@ public class UriUserType implements UserType, StringRepresentableType<URI> {
   @Override
   public int hashCode(Object obj) throws HibernateException {
     return Objects.hashCode(obj);
-  }
-
-  @Override
-  public Object nullSafeGet(
-      ResultSet rs, String[] names,
-      SharedSessionContractImplementor session, Object owner)
-      throws HibernateException, SQLException {
-
-    String value = (String) STRING.nullSafeGet(rs, names, session, owner);
-
-    try {
-      return Optional.ofNullable(value).map(URI::create).orElse(null);
-    } catch (IllegalArgumentException iae) {
-      throw translateException(iae);
-    }
-  }
-
-  @Override
-  public void nullSafeSet(
-      PreparedStatement st, Object value, int index,
-      SharedSessionContractImplementor session) throws HibernateException, SQLException {
-
-    String stringValue = Optional.ofNullable(value).map(Object::toString).orElse(null);
-    STRING.nullSafeSet(st, stringValue, index, session);
   }
 
   @Override
@@ -119,10 +119,6 @@ public class UriUserType implements UserType, StringRepresentableType<URI> {
   public Object replace(Object original, Object target, Object owner) throws HibernateException {
     // For immutable objects, or null values, it is safe to simply return the first parameter.
     return original;
-  }
-
-  private HibernateException translateException(IllegalArgumentException iae) {
-    return new HibernateException("URI has invalid syntax - could not read entity", iae);
   }
 
 }

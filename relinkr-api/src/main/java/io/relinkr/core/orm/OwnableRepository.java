@@ -24,15 +24,21 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
 
+/**
+ * Specialization of {@link BaseRepository} in that that this one adds subsequent methods for
+ * fetching entities by their owner.
+ *
+ * @param <E> Entity's class
+ * @param <ID> Entity's ID class
+ */
 @NoRepositoryBean
 public interface OwnableRepository
-    <T extends OwnableEntity<ID>, ID extends AbstractId<? extends OwnableEntity<ID>>>
-    extends BaseRepository<T, ID> {
+    <E extends OwnableEntity<ID>, ID extends AbstractId<E>> extends BaseRepository<E, ID> {
 
   @Query("select e from #{#entityName} e where e.userId = :userId order by e.createdDate desc")
-  List<T> findByUserId(@Param("userId") UserId userId);
+  List<E> findByUserId(@Param("userId") UserId userId);
 
   @Query("select e from #{#entityName} e where e.userId = :userId order by e.createdDate desc")
-  Page<T> findByUserId(@Param("userId") UserId userId, Pageable pageable);
+  Page<E> findByUserId(@Param("userId") UserId userId, Pageable pageable);
 
 }

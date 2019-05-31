@@ -26,6 +26,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Abstract base class which implements {@link EntityClassAwareId}.
+ *
+ * @param <E> Entity's type
+ */
 @Getter
 @Setter(PROTECTED)
 @MappedSuperclass

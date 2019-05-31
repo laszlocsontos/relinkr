@@ -42,7 +42,7 @@ import java.time.LocalDateTime;
  *
  * <p>With this technique 16.384 unique IDs can be generated per millisecond.
  */
-public final class IdentityGenerator {
+public final class IdentityGenerator implements IdGenerator {
 
   /**
    * Custom Epoch (2018-03-01).

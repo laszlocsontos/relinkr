@@ -14,18 +14,19 @@
   limitations under the License.
 */
 
-package io.relinkr.core.orm;
-
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+package io.relinkr.core.util;
 
 /**
- * JPA configuration; it enabled auditing, that is, setting the
- * {@link AbstractEntity#getCreatedDate()} and {@link AbstractEntity#getLastModifiedDate()}
- * fields by utilizing {@link UtcLocalDateTimeProvider}.
+ * Inspired by Spring's {@link org.springframework.util.IdGenerator}, but the main difference is
+ * that this one generates longs instead of {@link java.util.UUID}s.
  */
-@Configuration
-@EnableJpaAuditing(dateTimeProviderRef = "utcLocalDateTimeProvider")
-public class JpaConfig {
+public interface IdGenerator {
+
+  /**
+   * Generates a new, unique long ID.
+   *
+   * @return a new, unique long ID
+   */
+  long generate();
 
 }

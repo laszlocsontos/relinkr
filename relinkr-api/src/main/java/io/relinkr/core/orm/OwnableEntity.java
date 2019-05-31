@@ -24,8 +24,14 @@ import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;
 import lombok.NonNull;
 
+/**
+ * Abstract based class for entities which are owned by a specific user, that is, they have an
+ * {@code userId} property.
+ *
+ * @param <ID> ID type, must be a descendant of {@link AbstractId}.
+ */
 @MappedSuperclass
-public class OwnableEntity<ID extends AbstractId<? extends OwnableEntity<ID>>>
+public abstract class OwnableEntity<ID extends AbstractId<? extends OwnableEntity<ID>>>
     extends AbstractEntity<ID> implements Ownable {
 
   @Embedded
