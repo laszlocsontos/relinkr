@@ -57,7 +57,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
- * Created by lcsontos on 5/17/17.
+ * Concrete implementation of {@link JwtAuthenticationService} that leverages
+ * <a href="https://connect2id.com/products/nimbus-jose-jwt">Nimbus JOSE + JWT</a>.
  */
 public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
@@ -101,6 +102,7 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
         .stream()
         .map(GrantedAuthority::getAuthority)
         .map(String::toUpperCase)
+        .map(this::removeRolePrefix)
         .collect(Collectors.joining(","));
 
     if (StringUtils.hasText(authorities)) {
@@ -183,7 +185,7 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
             .map(Arrays::stream)
             .map(it -> it.map(String::trim)
                 .map(String::toUpperCase)
-                .map(this::addRolePrefixIfNeeded)
+                .map(this::addRolePrefix)
             )
             .map(it -> it.map(SimpleGrantedAuthority::new))
             .map(it -> it.collect(toSet()))
@@ -194,12 +196,15 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
   // TODO: This code duplicates its counterpart in AuthorizeRolesOrOwnerSecurityMetadataSource,
   //  refactor to a common component
-  private String addRolePrefixIfNeeded(String role) {
-    Assert.hasText(role, "role cannot be blank");
-    if (role.startsWith(ROLE_PREFIX)) {
-      return role;
-    }
+
+  private String addRolePrefix(String role) {
+    Assert.isTrue(!role.startsWith(ROLE_PREFIX), "Role starts with " + ROLE_PREFIX);
     return ROLE_PREFIX + role;
+  }
+
+  private String removeRolePrefix(String role) {
+    Assert.isTrue(role.startsWith(ROLE_PREFIX), "Role doesn't start with " + ROLE_PREFIX);
+    return role.substring(ROLE_PREFIX.length());
   }
 
 }

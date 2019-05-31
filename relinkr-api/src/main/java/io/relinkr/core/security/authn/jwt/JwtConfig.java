@@ -39,6 +39,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.validation.annotation.Validated;
 
+/**
+ * JWT related bean wiring and reading pertinent configuration options from application's
+ * properties.
+ */
 @Configuration
 @EnableConfigurationProperties(JwtProperties.class)
 public class JwtConfig {

@@ -22,12 +22,28 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.Assert;
 
 /**
- * Created by lcsontos on 5/17/17.
+ * Wrapper layer around the actual JWT implementation; also acts as an authentication strategy by
+ * extending {@link AuthenticationProvider}.
  */
 public interface JwtAuthenticationService extends AuthenticationProvider {
 
-  String createJwtToken(Authentication authentication, int minutes);
+  /**
+   * Creates a JWT token from the given {@link Authentication} and that will be valid for
+   * {@code minutes} minutes.
+   *
+   * @param authentication Authentication
+   * @param minutes validation time in minutes
+   * @return String representation of the created JWT token
+   * @throws AuthenticationException When creating the JWT token was not possible
+   */
+  String createJwtToken(Authentication authentication, int minutes) throws AuthenticationException;
 
+  /**
+   * Parses the string representation of a JWT token and converts it to an {@link Authentication}.
+   * @param jwtToken JWT token to parse
+   * @return Authentication
+   * @throws AuthenticationException when parsing the JWT token was not possible
+   */
   Authentication parseJwtToken(String jwtToken) throws AuthenticationException;
 
   @Override

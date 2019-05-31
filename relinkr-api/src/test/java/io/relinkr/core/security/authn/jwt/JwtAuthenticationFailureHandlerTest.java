@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-package io.relinkr.core.security.authn.handler;
+package io.relinkr.core.security.authn.jwt;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -25,7 +25,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.relinkr.core.web.RestErrorResponse;
 import io.relinkr.test.web.BaseServletTest;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -35,22 +34,16 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DefaultAuthenticationFailureHandlerTest extends BaseServletTest {
+public class JwtAuthenticationFailureHandlerTest extends BaseServletTest {
 
   private static final String MESSAGE = "an error occurred";
 
-  private ObjectMapper objectMapper;
-  private AuthenticationFailureHandler handler;
-
-  @Before
-  public void setUp() {
-    super.setUp();
-    objectMapper = new ObjectMapper();
-    handler = new DefaultAuthenticationFailureHandler(objectMapper);
-  }
+  private final ObjectMapper objectMapper = new ObjectMapper();
+  private final AuthenticationFailureHandler handler =
+      new JwtAuthenticationFailureHandler(objectMapper);
 
   @Test
-  public void giveBadCredentialsException_whenOnAuthenticationFailure_Unauthorized()
+  public void givenBadCredentialsException_whenOnAuthenticationFailure_Unauthorized()
       throws Exception {
     handler.onAuthenticationFailure(request, response, new BadCredentialsException(MESSAGE));
 
@@ -61,7 +54,7 @@ public class DefaultAuthenticationFailureHandlerTest extends BaseServletTest {
   }
 
   @Test
-  public void giveInternalAuthenticationServiceException_whenOnAuthenticationFailure_Unauthorized()
+  public void givenInternalAuthenticationServiceException_whenOnAuthenticationFailure_Unauthorized()
       throws Exception {
     handler.onAuthenticationFailure(request, response,
         new InternalAuthenticationServiceException(MESSAGE));
@@ -74,7 +67,7 @@ public class DefaultAuthenticationFailureHandlerTest extends BaseServletTest {
   }
 
   @Test
-  public void giveAuthenticationServiceException_whenOnAuthenticationFailure_Unauthorized()
+  public void givenAuthenticationServiceException_whenOnAuthenticationFailure_Unauthorized()
       throws Exception {
     handler.onAuthenticationFailure(request, response,
         new AuthenticationServiceException(MESSAGE));

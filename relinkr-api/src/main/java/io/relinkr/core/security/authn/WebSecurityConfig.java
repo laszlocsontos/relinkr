@@ -22,7 +22,7 @@ import static java.util.Collections.unmodifiableList;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.relinkr.core.security.authn.handler.DefaultAuthenticationFailureHandler;
+import io.relinkr.core.security.authn.jwt.JwtAuthenticationFailureHandler;
 import io.relinkr.core.security.authn.jwt.JwtAuthenticationEntryPoint;
 import io.relinkr.core.security.authn.jwt.JwtAuthenticationFilter;
 import io.relinkr.core.security.authn.jwt.JwtAuthenticationService;
@@ -143,7 +143,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   public AuthenticationFailureHandler jwtAuthenticationFailureHandler() {
-    return new DefaultAuthenticationFailureHandler(objectMapper);
+    return new JwtAuthenticationFailureHandler(objectMapper);
   }
 
   @Bean

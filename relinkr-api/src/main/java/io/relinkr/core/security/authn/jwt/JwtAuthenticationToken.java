@@ -17,9 +17,12 @@
 package io.relinkr.core.security.authn.jwt;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.Authentication;
 
 /**
- * Created by lcsontos on 5/17/17.
+ * Represents an {@link Authentication} which holds a JWT token. Note that this
+ * {@code Authentication} is never authenticated, it's up to {@link JwtAuthenticationService} to
+ * verify it.
  */
 class JwtAuthenticationToken extends AbstractAuthenticationToken {
 

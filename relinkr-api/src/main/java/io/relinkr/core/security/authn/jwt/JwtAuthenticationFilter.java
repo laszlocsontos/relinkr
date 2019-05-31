@@ -34,7 +34,19 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.StringUtils;
 
 /**
- * Created by lcsontos on 5/18/17.
+ * Processes authentication when a JWT token is supplied as part of an HTTP request.
+ * Leverages {@link AbstractAuthenticationProcessingFilter} for dealing with the details of handling
+ * successful and failed authentication requests, so that the actual implementation only need to
+ * focus on extracting JWT tokens from HTTP header {@code Authorization} or from cookies.
+ *
+ * <p>In case of AJAX requests HTTP header {@code X-Requested-With} is set by the front-end and
+ * the actual JWT token is sent through two cookies.
+ *
+ * <p>In case of API requests header {@code Authorization} with {@code Bearer} is used.
+ *
+ * @see AjaxRequestMatcher
+ * @see JwtAuthenticationService
+ * @see JwtAuthenticationTokenCookieResolver
  */
 @Slf4j
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
@@ -60,13 +72,13 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
    * Creates a new {@code JwtAuthenticationFilter}.
    *
    * @param requiresAuthenticationRequestMatcher a possibly (compound matcher) which indicates for
-   *        which {@link HttpServletRequest} this filter must be activated.
+   *          which {@link HttpServletRequest} this filter must be activated.
    * @param authenticationManager An {@link AuthenticationManager} to delegate the authentication
-   *        request to
+   *          request to
    * @param authenticationFailureHandler An {@link AuthenticationFailureHandler} for processing
-   *        failed authentication requests
+   *          failed authentication requests
    * @param authenticationTokenCookieResolver An {@link AuthenticationSuccessHandler} for processing
-   *        successful authentication requests
+   *          successful authentication requests
    */
   public JwtAuthenticationFilter(
       RequestMatcher requiresAuthenticationRequestMatcher,
@@ -100,6 +112,16 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         .orElse(null);
   }
 
+  /**
+   * {@code JwtAuthenticationFilter} required authentication in two cases. When HTTP header
+   * {@code X-Requested-With} is present or when HTTP header {@code Authorization} with
+   * {@code Bearer} token is sent; unless the super class' overridden method returns {@code false}.
+   *
+   * @param request HTTP request
+   * @param response HTTP response
+   * @return {@code true} if {@code JwtAuthenticationFilter} has to proceed with authentication the
+   *          current request, false otherwise
+   */
   @Override
   protected boolean requiresAuthentication(
       HttpServletRequest request, HttpServletResponse response) {
@@ -115,26 +137,48 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     return AUTHORIZATION_BEARER_REQUEST_HEADER_MATCHER.matches(request);
   }
 
+  /**
+   * Sets {@code authResult} to the current security context and proceeds the filter chain.
+   *
+   * @param request HTTP request
+   * @param response HTTP response
+   * @param chain filter chain
+   * @param authResult authentication result
+   *
+   * @throws IOException Upon I/O errors
+   * @throws ServletException Upon unrecoverable servlet errors
+   */
   @Override
   protected void successfulAuthentication(
       HttpServletRequest request, HttpServletResponse response, FilterChain chain,
       Authentication authResult)
       throws IOException, ServletException {
 
+    // Set authentication here in the current security context
     super.successfulAuthentication(request, response, chain, authResult);
 
     // Continue filter chain after security context has been set
     chain.doFilter(request, response);
   }
 
+  /**
+   * Matches those HTTP requests where HTTP header {@code Authorization} with
+   * {@code Bearer} token is sent.
+   */
   private static class AuthorizationBearerRequestHeaderMatcher implements RequestMatcher {
 
     @Override
     public boolean matches(HttpServletRequest request) {
+      Optional<String> bearerToken = extractBearerToken(request);
+      bearerToken.ifPresent(it -> request.setAttribute(BEARER_TOKEN_ATTRIBUTE, bearerToken.get()));
+      return bearerToken.isPresent();
+    }
+
+    private Optional<String> extractBearerToken(HttpServletRequest request) {
       String authHeaderValue = request.getHeader(AUTHORIZATION_HEADER);
       if (StringUtils.isEmpty(authHeaderValue)) {
         log.debug("Authorization header is empty.");
-        return false;
+        return Optional.empty();
       }
 
       if (!StringUtils.substringMatch(authHeaderValue, 0, BEARER_TOKEN_PREFIX)) {
@@ -143,17 +187,11 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
             BEARER_TOKEN_PREFIX
         );
 
-        return false;
+        return Optional.empty();
       }
 
-      String bearerToken = authHeaderValue.substring(BEARER_TOKEN_PREFIX.length() + 1);
-      if (!StringUtils.hasText(bearerToken)) {
-        return false;
-      }
-
-      request.setAttribute(BEARER_TOKEN_ATTRIBUTE, bearerToken);
-
-      return true;
+      return Optional.of(authHeaderValue.substring(BEARER_TOKEN_PREFIX.length() + 1))
+          .filter(StringUtils::hasText);
     }
 
   }

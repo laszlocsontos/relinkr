@@ -29,6 +29,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+/**
+ * JWT tokens are encoded in the form of {@code header.payload.signature}. What this resolver
+ * implementation does is that it splits tokens to two parts, stores {@code header.signature} in
+ * a HTTPOnly cookie {@code ats} and the {@code payload} part in normal cookie {@code atp}.
+ *
+ * <p>This way XSS attacks cannot be used to extract the full token, yet the front-end is able to
+ * de-serialize the payload to normal JS object and obtain authentication information, like User ID.
+ */
 @Slf4j
 public class JwtAuthenticationTokenCookieResolverImpl
     implements JwtAuthenticationTokenCookieResolver {

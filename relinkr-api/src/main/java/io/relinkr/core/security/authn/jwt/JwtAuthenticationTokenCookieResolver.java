@@ -21,6 +21,10 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Resolution strategy for extracting JWT tokens from HTTP cookies based on
+ * {@link CookieValueResolver}.
+ */
 public interface JwtAuthenticationTokenCookieResolver extends CookieValueResolver<String> {
 
   default Optional<String> resolveToken(HttpServletRequest request) {

@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
-package io.relinkr.core.security.authn.handler;
+package io.relinkr.core.security.authn.jwt;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import io.relinkr.core.web.RestErrorResponse;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
@@ -33,14 +35,16 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 /**
- * General authentication failure handler.
+ * Used by {@link JwtAuthenticationFilter} when the given JWT token cannot be used to grant access
+ * to a protected resource.
  */
 @Slf4j
-public class DefaultAuthenticationFailureHandler
-    extends AbstractAuthenticationRequestHandler implements AuthenticationFailureHandler {
+public class JwtAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-  public DefaultAuthenticationFailureHandler(ObjectMapper objectMapper) {
-    super(objectMapper.writer());
+  private final ObjectWriter objectWriter;
+
+  public JwtAuthenticationFailureHandler(ObjectMapper objectMapper) {
+    this.objectWriter = objectMapper.writer();
   }
 
   @Override
@@ -52,7 +56,11 @@ public class DefaultAuthenticationFailureHandler
     log.warn(exception.getMessage());
 
     HttpStatus httpStatus = translateAuthenticationException(exception);
-    handle(response, httpStatus, RestErrorResponse.of(httpStatus, exception));
+
+    response.setStatus(httpStatus.value());
+    response.setContentType(APPLICATION_JSON_VALUE);
+
+    objectWriter.writeValue(response.getWriter(), RestErrorResponse.of(httpStatus, exception));
   }
 
   private HttpStatus translateAuthenticationException(AuthenticationException exception) {
