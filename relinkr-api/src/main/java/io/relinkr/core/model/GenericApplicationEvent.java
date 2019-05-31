@@ -19,7 +19,17 @@ package io.relinkr.core.model;
 import java.time.Instant;
 import org.springframework.context.ApplicationEvent;
 
-public class GenericApplicationEvent<S> extends ApplicationEvent {
+/**
+ * Abstract base class of application level events; it differs from {@link ApplicationEvent} in two
+ * ways. It's generic and accepts type parameter {@code S} and
+ * {@link GenericApplicationEvent#getSource()} returns a value of that type. Other than that, it
+ * also provides {@link GenericApplicationEvent#getInstant()} method for getting that point in time
+ * when the event occurred. {@link ApplicationEvent} also has got
+ * a {@link ApplicationEvent#getTimestamp()} method, but its value cannot be set freely.
+ *
+ * @param <S> Event source's type
+ */
+public abstract class GenericApplicationEvent<S> extends ApplicationEvent {
 
   private final Instant instant;
 

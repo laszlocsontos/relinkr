@@ -17,7 +17,8 @@
 package io.relinkr.core.model;
 
 /**
- * Created by lcsontos on 5/10/17.
+ * Should be thrown in that case when an entity with the given identifier has already been modified,
+ * while the current one had been checked out for being modified.
  */
 public class EntityConflictsException extends GeneralEntityException {
 

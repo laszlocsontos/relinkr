@@ -17,7 +17,7 @@
 package io.relinkr.core.model;
 
 /**
- * Created by lcsontos on 5/10/17.
+ * Should be thrown in that case when an entity with the given identifier already exists.
  */
 public class EntityAlreadyExistsException extends GeneralEntityException {
 

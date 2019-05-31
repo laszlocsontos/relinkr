@@ -17,9 +17,10 @@
 package io.relinkr.core.model;
 
 /**
- * Created by lcsontos on 5/10/17.
+ * Abstract {@code RuntimeException} representing the ancestor of all other application-level
+ * error conditions, eg. missing entity, bad request, etc.
  */
-public class ApplicationException extends RuntimeException {
+public abstract class ApplicationException extends RuntimeException {
 
   public ApplicationException() {
     super();
