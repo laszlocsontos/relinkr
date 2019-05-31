@@ -22,9 +22,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation for marking {@link io.relinkr.user.model.UserId} typed controller method arguments.
+ * At such places {@link io.relinkr.core.web.CurrentUserArgumentResolver} will take care of
+ * extracting the ID of that user who's performing the current request.
+ */
+@Documented
 @Target({ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Documented
 public @interface CurrentUser {
 
 }
