@@ -26,30 +26,32 @@ import java.util.Optional;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.util.Assert;
 
+/**
+ * Abstract base class for converting a simple value (usually a {@code Long} or {@code String} to
+ * an instance of {@link EntityClassAwareId}.
+ *
+ * @param <S> Value's type to convert from
+ * @param <T> {@code EntityClassAwareId}'s descendant to convert to
+ */
 abstract class AbstractEntityClassAwareIdConverter
     <S extends Serializable, T extends EntityClassAwareId<?>> implements Converter<S, T> {
 
   private final Constructor<T> targetConstructor;
 
-  AbstractEntityClassAwareIdConverter(Class<?> targetClass) {
-    checkTargetClass(targetClass);
-    targetConstructor = findConstructor((Class<T>) targetClass);
+  AbstractEntityClassAwareIdConverter(Class<T> targetClass) {
+    targetConstructor = findConstructor(targetClass);
   }
 
   @Override
   public T convert(S source) {
-    if (source == null) {
-      return null;
-    }
-
-    return instantiateTarget(targetConstructor, preProcessSource(source));
+    return Optional.ofNullable(source)
+        .map(it -> instantiateTarget(targetConstructor, preProcessSource(it)))
+        .orElse(null);
   }
 
-  protected void checkTargetClass(Class<?> targetClass) {
-    Assert.isAssignable(EntityClassAwareId.class, targetClass);
-  }
+  protected abstract Serializable preProcessSource(S source);
 
-  protected Constructor<T> findConstructor(Class<T> targetClass) {
+  private Constructor<T> findConstructor(Class<T> targetClass) {
     Constructor<T> constructor = Optional
         .ofNullable(getConstructorIfAvailable(targetClass, long.class))
         .orElseGet(() -> getConstructorIfAvailable(targetClass, Long.class));
@@ -59,10 +61,8 @@ abstract class AbstractEntityClassAwareIdConverter
         .orElseThrow(() -> new IllegalArgumentException("No constructor found"));
   }
 
-  protected T instantiateTarget(Constructor<T> targetConstructor, Serializable source) {
+  private T instantiateTarget(Constructor<T> targetConstructor, Serializable source) {
     return instantiateClass(targetConstructor, source);
   }
-
-  protected abstract Serializable preProcessSource(S source);
 
 }

@@ -22,7 +22,7 @@ import java.io.Serializable;
 public class LongToEntityClassAwareIdConverter<T extends EntityClassAwareId<?>>
     extends AbstractEntityClassAwareIdConverter<Long, T> {
 
-  public LongToEntityClassAwareIdConverter(Class<?> targetClass) {
+  public LongToEntityClassAwareIdConverter(Class<T> targetClass) {
     super(targetClass);
   }
 

@@ -18,13 +18,14 @@ package io.relinkr.core.convert;
 
 import io.relinkr.click.model.ClickId;
 import io.relinkr.core.orm.EntityClassAwareId;
+import org.junit.Test;
 import org.springframework.core.convert.converter.Converter;
 
 public class LongToEntityClassAwareIdConverterTest<T extends EntityClassAwareId<?>>
     extends AbstractEntityClassAwareIdConverterTest<Long, T> {
 
-  @Override
-  public void create_withWrongClass() {
+  @Test(expected = IllegalArgumentException.class)
+  public void givenWrongClass_whenCreate_thenIllegalArgumentException() {
     new LongToEntityClassAwareIdConverter(Object.class);
   }
 

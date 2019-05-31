@@ -30,20 +30,17 @@ public abstract class AbstractEntityClassAwareIdConverterTest<S extends Serializ
   protected Converter<S, T> converter;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     converter = createConverter();
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public abstract void create_withWrongClass();
-
   @Test
-  public void convert_withNull() {
+  public void givenNull_whenConvert_thenNull() {
     assertNull(converter.convert(null));
   }
 
   @Test
-  public void convert_withGoodValue() {
+  public void givenGoodValue_whenConvert_thenConverted() {
     assertNotNull(converter.convert(getGoodValue()));
   }
 

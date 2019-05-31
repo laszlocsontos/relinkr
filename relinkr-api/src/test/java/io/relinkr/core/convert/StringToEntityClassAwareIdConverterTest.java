@@ -24,13 +24,13 @@ import org.springframework.core.convert.converter.Converter;
 public class StringToEntityClassAwareIdConverterTest<T extends EntityClassAwareId<?>>
     extends AbstractEntityClassAwareIdConverterTest<String, T> {
 
-  @Override
-  public void create_withWrongClass() {
+  @Test(expected = IllegalArgumentException.class)
+  public void givenWrongClass_whenCreate_thenIllegalArgumentException() {
     new StringToEntityClassAwareIdConverter(Object.class);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void convert_withBadValue() {
+  public void givenBadValue_whenConvert_thenIllegalArgumentException() {
     converter.convert("bad");
   }
 

@@ -20,26 +20,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import io.relinkr.click.model.ClickId;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.convert.converter.Converter;
 
 public class EntityClassAwareIdToStringConverterTest {
 
-  Converter<ClickId, String> converter;
-
-  @Before
-  public void setUp() throws Exception {
-    converter = new EntityClassAwareIdToStringConverter<ClickId>();
-  }
+  private final Converter<ClickId, String> converter = new EntityClassAwareIdToStringConverter<>();
 
   @Test
-  public void convert_withNull() {
+  public void givenNull_whenConvert_thenNull() {
     assertNull(converter.convert(null));
   }
 
   @Test
-  public void convert() {
+  public void givenEntityClassAwareId_whenConvert_thenString() {
     assertEquals("123", converter.convert(ClickId.of(123L)));
   }
 
