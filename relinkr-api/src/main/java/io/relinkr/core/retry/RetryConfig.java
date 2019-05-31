@@ -19,6 +19,11 @@ package io.relinkr.core.retry;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.annotation.EnableRetry;
 
+/**
+ * Spring configuration to enable retries, that is methods annotated with
+ * {@link org.springframework.retry.annotation.Retryable} will be retried upon certain error
+ * conditions.
+ */
 @EnableRetry
 @Configuration
 public class RetryConfig {
