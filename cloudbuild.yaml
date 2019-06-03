@@ -1,0 +1,5 @@
+steps:
+  # Run unit tests
+  - name: maven:3.6.1-jdk-11-slim
+    entrypoint: 'mvn'
+    args: ['-f', 'relinkr-api', '-B', 'verify']

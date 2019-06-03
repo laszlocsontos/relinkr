@@ -21,7 +21,7 @@
   </module>
 
   <module name="Header">
-    <property name="headerFile" value="../HEADER"/>
+    <property name="headerFile" value="${checkstyle.header.file}"/>
     <property name="ignoreLines" value="1,15"/>
     <property name="fileExtensions" value="java"/>
   </module>
