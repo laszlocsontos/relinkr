@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
  * @see <a href="https://www.2uo.de/myths-about-urandom/#man-page">Myths about /dev/urandom</a>
  */
 @Slf4j
-public final class RandomGenerator {
+final class RandomGenerator {
 
   // The default algorithm NativePRNG uses /dev/random which might block when there is no
   // sufficient entropy in the entropy pool. As a result the system could stall upon startup. Here
@@ -59,7 +59,7 @@ public final class RandomGenerator {
     threadLocalRandom = ThreadLocal.withInitial(this::createSecureRandom);
   }
 
-  public static RandomGenerator getInstance() {
+  static RandomGenerator getInstance() {
     return INSTANCE;
   }
 
@@ -73,7 +73,7 @@ public final class RandomGenerator {
       randomGenerator = new SecureRandom();
     }
 
-    log.info("Created random generator with algorithm {}.", randomGenerator.getAlgorithm());
+    log.debug("Created random generator with algorithm {}.", randomGenerator.getAlgorithm());
     return randomGenerator;
   }
 
@@ -85,7 +85,7 @@ public final class RandomGenerator {
     threadLocalRandom.get().nextBytes(bytes);
   }
 
-  public int nextInt() {
+  int nextInt() {
     return threadLocalRandom.get().nextInt();
   }
 

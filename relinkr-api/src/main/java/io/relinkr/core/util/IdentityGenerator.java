@@ -47,7 +47,7 @@ public final class IdentityGenerator implements IdGenerator {
   /**
    * Custom Epoch (2018-03-01).
    */
-  public static final Instant EPOCH = LocalDateTime.of(2019, 3, 1, 0, 0, 0, 0).toInstant(UTC);
+  static final Instant EPOCH = LocalDateTime.of(2019, 3, 1, 0, 0, 0, 0).toInstant(UTC);
 
   private static final IdentityGenerator INSTANCE = new IdentityGenerator();
 
