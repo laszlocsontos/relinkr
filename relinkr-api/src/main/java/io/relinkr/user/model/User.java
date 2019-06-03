@@ -137,6 +137,11 @@ public class User extends AbstractEntity<UserId> implements Ownable {
     return roles.contains(Role.ADMIN);
   }
 
+  /**
+   * Returns the list this user's authorities prefixed with {@code ROLE_}.
+   *
+   * @return list this user's authorities prefixed with {@code ROLE_}.
+   */
   public Set<String> getAuthorities() {
     return getRoles().stream()
         .map(Role::name)

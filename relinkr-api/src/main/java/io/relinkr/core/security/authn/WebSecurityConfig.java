@@ -63,7 +63,7 @@ import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /**
- * Web security configuration
+ * Web security configuration.
  */
 @Configuration
 @EnableWebSecurity(debug = true)
@@ -102,14 +102,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest>
-  accessTokenResponseClient() {
+      accessTokenResponseClient() {
 
     return new DefaultAuthorizationCodeTokenResponseClient();
   }
 
   @Bean
   public AuthorizationRequestRepository<OAuth2AuthorizationRequest>
-  authorizationRequestRepository() {
+      authorizationRequestRepository() {
 
     return new HttpCookieOAuth2AuthorizationRequestRepository(
         authorizationRequestsCookieResolver);

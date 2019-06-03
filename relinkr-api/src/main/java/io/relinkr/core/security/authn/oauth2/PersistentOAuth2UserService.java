@@ -86,7 +86,9 @@ public class PersistentOAuth2UserService
     return createOAuth2User(oauth2User.getAttributes(), user, userProfile);
   }
 
-  private EmailAddress extractEmailAddress(String principalName) throws OAuth2AuthenticationException {
+  private EmailAddress extractEmailAddress(String principalName)
+      throws OAuth2AuthenticationException {
+
     try {
       return EmailAddress.of(principalName);
     } catch (IllegalArgumentException iae) {

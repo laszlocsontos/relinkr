@@ -58,7 +58,7 @@ public class DelegatingUserDetailsService implements UserDetailsService {
     try {
       User user = delegate.getUser(UserId.of(userId));
       return DelegatingUserDetails.of(user);
-    } catch (EntityNotFoundException e) {
+    } catch (EntityNotFoundException enfe) {
       throw new UsernameNotFoundException("User with ID " + username + " doesn't exist");
     }
   }
