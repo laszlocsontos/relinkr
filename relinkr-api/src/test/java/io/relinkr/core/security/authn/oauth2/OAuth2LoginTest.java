@@ -162,7 +162,7 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
 
     userProfile = createUserProfile();
 
-    given(userProfileFactory.create(any(UserProfileType.class), anyMap()))
+    given(userProfileFactory.create(any(String.class), anyMap()))
         .willReturn(userProfile);
   }
 
