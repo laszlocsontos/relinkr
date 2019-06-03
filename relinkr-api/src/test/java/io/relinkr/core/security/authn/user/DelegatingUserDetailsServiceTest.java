@@ -16,16 +16,22 @@
 
 package io.relinkr.core.security.authn.user;
 
+import static io.relinkr.test.Mocks.USER_ID_ZERO;
 import static io.relinkr.test.Mocks.createUser;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.never;
 
-import io.relinkr.user.model.EmailAddress;
+import io.relinkr.core.model.EntityNotFoundException;
 import io.relinkr.user.model.User;
+import io.relinkr.user.model.UserId;
 import io.relinkr.user.service.UserService;
-import java.util.Optional;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -36,43 +42,69 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @RunWith(MockitoJUnitRunner.class)
 public class DelegatingUserDetailsServiceTest {
 
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
+
+  private final User user = createUser();
+
   @Mock
   private UserService userService;
 
-  private User user;
   private UserDetailsService userDetailsService;
 
   @Before
   public void setUp() {
-    user = createUser();
     userDetailsService = new DelegatingUserDetailsService(userService);
   }
 
   @Test
-  public void loadUserByUsername() {
-    EmailAddress emailAddress = user.getEmailAddress();
-    given(userService.findUser(emailAddress)).willReturn(Optional.of(user));
+  public void givenExistingUserId_whenLoadUserByUsername_thenLoaded() {
+    UserId userId = user.getId();
+    given(userService.getUser(userId)).willReturn(user);
 
-    UserDetails userDetails = userDetailsService.loadUserByUsername(emailAddress.getValue());
+    UserDetails userDetails = userDetailsService.loadUserByUsername(String.valueOf(user.getId()));
 
     assertEquals(String.valueOf(user.getId()), userDetails.getUsername());
+    then(userService).should().getUser(userId);
   }
 
-  @Test(expected = UsernameNotFoundException.class)
-  public void loadUserByUsername_withEmptyUserName() {
-    userDetailsService.loadUserByUsername("");
+  @Test
+  public void givenEmptyUsername_whenLoadUserByUsername_thenUsernameNotFoundException() {
+    expectedException.expect(UsernameNotFoundException.class);
+    expectedException.expectMessage("Empty user name");
+
+    try {
+      userDetailsService.loadUserByUsername("");
+    } finally {
+      then(userService).should(never()).getUser(any(UserId.class));
+    }
   }
 
-  @Test(expected = UsernameNotFoundException.class)
-  public void loadUserByUsername_withNonNumericUserName() {
-    userDetailsService.loadUserByUsername("bad");
+  @Test
+  public void givenNonNumericUsername_whenLoadUserByUsername_thenUsernameNotFoundException() {
+    expectedException.expect(UsernameNotFoundException.class);
+    expectedException.expectMessage("Invalid user ID");
+
+    try {
+      userDetailsService.loadUserByUsername("bad");
+    } finally {
+      then(userService).should(never()).getUser(any(UserId.class));
+    }
   }
 
-  @Test(expected = UsernameNotFoundException.class)
-  public void loadUserByUsername_withNonExistentUser() {
-    EmailAddress emailAddress = user.getEmailAddress();
-    given(userService.findUser(emailAddress)).willReturn(Optional.empty());
-    userDetailsService.loadUserByUsername(emailAddress.getValue());
+  @Test
+  public void givenExistingUserId_whenLoadUserByUsername_thenUsernameNotFoundException() {
+    expectedException.expect(UsernameNotFoundException.class);
+    expectedException.expectMessage("User with ID 0 doesn't exist");
+
+    given(userService.getUser(USER_ID_ZERO))
+        .willThrow(new EntityNotFoundException("id", USER_ID_ZERO));
+
+    try {
+      userDetailsService.loadUserByUsername(String.valueOf(USER_ID_ZERO));
+    } finally {
+      then(userService).should().getUser(USER_ID_ZERO);
+    }
   }
 
 }

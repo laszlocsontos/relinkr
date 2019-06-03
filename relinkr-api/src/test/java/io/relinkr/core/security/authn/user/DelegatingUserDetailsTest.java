@@ -17,65 +17,59 @@
 package io.relinkr.core.security.authn.user;
 
 import static io.relinkr.test.Mocks.createUser;
+import static io.relinkr.user.model.User.ROLE_PREFIX;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import io.relinkr.user.model.User;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class DelegatingUserDetailsTest {
 
-  private User user;
-  private UserDetails userDetails;
-
-  @Before
-  public void setUp() {
-    user = createUser();
-    userDetails = new DelegatingUserDetails(user);
-  }
+  private final User user = createUser();
+  private final UserDetails userDetails = DelegatingUserDetails.of(user);
 
   @Test
-  public void getAuthorities() {
+  public void shouldHaveSameAuthorities() {
     assertThat(
         userDetails.getAuthorities(),
         containsInAnyOrder(user.getRoles()
-            .stream().map(it -> new SimpleGrantedAuthority(it.name())).toArray()
+            .stream().map(it -> new SimpleGrantedAuthority(ROLE_PREFIX + it.name())).toArray()
         )
     );
   }
 
   @Test
-  public void getPassword() {
+  public void shouldHaveSamePassword() {
     assertEquals(user.getEncryptedPassword().get(), userDetails.getPassword());
   }
 
   @Test
-  public void getUsername() {
+  public void shouldHaveSameUsername() {
     assertEquals(String.valueOf(user.getId()), userDetails.getUsername());
   }
 
   @Test
-  public void isAccountNonExpired() {
+  public void shouldBeAccountNonExpired() {
     assertTrue(userDetails.isAccountNonExpired());
   }
 
   @Test
-  public void isAccountNonLocked() {
+  public void shouldBeNonLocked() {
     assertEquals(!user.isLocked(), userDetails.isAccountNonLocked());
   }
 
   @Test
-  public void isCredentialsNonExpired() {
+  public void shouldBeCredentialsNonExpired() {
     assertTrue(userDetails.isCredentialsNonExpired());
   }
 
   @Test
-  public void isEnabled() {
+  public void shouldBeEnabled() {
     assertEquals(user.isConfirmed(), userDetails.isEnabled());
   }
 

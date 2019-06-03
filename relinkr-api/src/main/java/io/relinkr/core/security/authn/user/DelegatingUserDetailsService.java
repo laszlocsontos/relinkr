@@ -16,16 +16,22 @@
 
 package io.relinkr.core.security.authn.user;
 
-import io.relinkr.user.model.EmailAddress;
+import io.relinkr.core.model.EntityNotFoundException;
+import io.relinkr.user.model.User;
+import io.relinkr.user.model.UserId;
 import io.relinkr.user.service.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Created by lcsontos on 5/24/17.
+ * Delegates to {@link UserService} in order to comply with the contact of
+ * {@link UserDetailsService}. This component is used by
+ * {@link org.springframework.security.web.authentication.www.BasicAuthenticationFilter} thought
+ * {@link org.springframework.security.authentication.dao.DaoAuthenticationProvider}.
  */
 @Component
 public class DelegatingUserDetailsService implements UserDetailsService {
@@ -42,16 +48,19 @@ public class DelegatingUserDetailsService implements UserDetailsService {
       throw new UsernameNotFoundException("Empty user name");
     }
 
-    EmailAddress emailAddress;
+    long userId = 0;
     try {
-      emailAddress = EmailAddress.of(username);
+      userId = NumberUtils.parseNumber(username, Long.class);
     } catch (IllegalArgumentException iae) {
-      throw new UsernameNotFoundException("Invalid email address", iae);
+      throw new UsernameNotFoundException("Invalid user ID", iae);
     }
 
-    return delegate.findUser(emailAddress)
-        .map(DelegatingUserDetails::new)
-        .orElseThrow(() -> new UsernameNotFoundException(username));
+    try {
+      User user = delegate.getUser(UserId.of(userId));
+      return DelegatingUserDetails.of(user);
+    } catch (EntityNotFoundException e) {
+      throw new UsernameNotFoundException("User with ID " + username + " doesn't exist");
+    }
   }
 
 }

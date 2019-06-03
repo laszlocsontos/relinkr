@@ -18,10 +18,13 @@ package io.relinkr.user.model;
 
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toSet;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
 
 import io.relinkr.core.orm.AbstractEntity;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -43,6 +46,8 @@ import org.springframework.util.CollectionUtils;
 @Entity
 @Table(name = "user_")
 public class User extends AbstractEntity<UserId> implements Ownable {
+
+  public static final String ROLE_PREFIX = "ROLE_";
 
   @Embedded
   @AttributeOverride(name = "value", column = @Column(name = "email_address"))
@@ -130,6 +135,13 @@ public class User extends AbstractEntity<UserId> implements Ownable {
       return false;
     }
     return roles.contains(Role.ADMIN);
+  }
+
+  public Set<String> getAuthorities() {
+    return getRoles().stream()
+        .map(Role::name)
+        .map(ROLE_PREFIX::concat)
+        .collect(collectingAndThen(toSet(), Collections::unmodifiableSet));
   }
 
   public Set<Role> getRoles() {

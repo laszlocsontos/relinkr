@@ -18,6 +18,7 @@ package io.relinkr.core.security.authn.jwt;
 
 import static com.nimbusds.jose.JWSAlgorithm.RS256;
 import static io.relinkr.core.security.authn.oauth2.PersistentOAuth2UserService.USER_PROFILE_TYPE_ATTRIBUTE;
+import static io.relinkr.user.model.User.ROLE_PREFIX;
 import static io.relinkr.user.model.UserProfileType.NATIVE;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Collections.emptySet;
@@ -61,8 +62,6 @@ import org.springframework.util.StringUtils;
  * <a href="https://connect2id.com/products/nimbus-jose-jwt">Nimbus JOSE + JWT</a>.
  */
 public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
-
-  static final String ROLE_PREFIX = "ROLE_";
 
   private static final String CLAIM_AUTHORITIES = "_ath";
   private static final String CLAIM_USER_PROFILE_TYPE = "_upt";

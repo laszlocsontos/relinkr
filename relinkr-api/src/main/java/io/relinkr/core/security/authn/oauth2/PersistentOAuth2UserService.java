@@ -117,9 +117,7 @@ public class PersistentOAuth2UserService
   private OAuth2User createOAuth2User(
       Map<String, Object> originalAttributes, User user, UserProfile userProfile) {
 
-    Set<GrantedAuthority> authorities = user.getRoles().stream()
-        .map(Role::name)
-        .map("ROLE_"::concat)
+    Set<GrantedAuthority> authorities = user.getAuthorities().stream()
         .map(SimpleGrantedAuthority::new)
         .collect(toSet());
 

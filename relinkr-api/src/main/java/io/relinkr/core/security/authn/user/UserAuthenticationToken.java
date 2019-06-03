@@ -22,6 +22,10 @@ import lombok.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
+/**
+ * Represents an authenticated {@link io.relinkr.user.model.User} by their
+ * {@link io.relinkr.user.model.UserId} and {@link UserProfileType}.
+ */
 public class UserAuthenticationToken extends AbstractAuthenticationToken {
 
   private final long userId;
