@@ -33,6 +33,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.NumberUtils;
 
+/**
+ * Implementation of {@link AuthorizeOwnerVerifier}.
+ */
 @Slf4j
 @Transactional(propagation = SUPPORTS, readOnly = true)
 public class AuthorizeOwnerVerifierImpl implements AuthorizeOwnerVerifier {

@@ -31,12 +31,20 @@ import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.method.AbstractMethodSecurityMetadataSource;
 import org.springframework.util.Assert;
 
+/**
+ * Implementation of {@link org.springframework.security.access.method.MethodSecurityMetadataSource}
+ * that performs a collection of {@link ConfigAttribute} lookup based on secured methods, that is,
+ * based on the actually {@code Class} and {@code Method}.
+ */
 public class AuthorizeRolesOrOwnerSecurityMetadataSource
     extends AbstractMethodSecurityMetadataSource {
 
   static final String IS_OWNER = "IS_OWNER";
-  static final String ROLE_PREFIX = "ROLE_";
 
+  /**
+   * Special {@link ConfigAttribute} used to signal to {@link AuthorizeOwnerVoter} that is has to
+   * to vote on method calls which this attribute is assosiated with.
+   */
   private static final ConfigAttribute IS_OWNER_CONFIG_ATTRIBUTE = new SecurityConfig(IS_OWNER);
 
   @Override
@@ -64,19 +72,10 @@ public class AuthorizeRolesOrOwnerSecurityMetadataSource
     return configAttributes;
   }
 
-  private String addRolePrefixIfNeeded(String role) {
-    Assert.hasText(role, "role cannot be blank");
-    if (role.startsWith(ROLE_PREFIX)) {
-      return role;
-    }
-    return ROLE_PREFIX + role;
-  }
-
   private Collection<ConfigAttribute> createRoleAttributes(
       AuthorizeRolesOrOwner authorizeRolesOrOwner) {
 
     return Arrays.stream(authorizeRolesOrOwner.roles())
-        .map(this::addRolePrefixIfNeeded)
         .map(SecurityConfig::new)
         .collect(toList());
   }

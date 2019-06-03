@@ -53,7 +53,7 @@ public class AuthorizeOwnerVoterTest {
   private AccessDecisionVoter<MethodInvocation> voter;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     voter = new AuthorizeOwnerVoter(ownerVerifier);
   }
 

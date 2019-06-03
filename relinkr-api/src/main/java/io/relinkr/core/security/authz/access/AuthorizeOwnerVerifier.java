@@ -20,8 +20,21 @@ import io.relinkr.core.orm.EntityClassAwareId;
 import java.security.Principal;
 import org.springframework.aop.framework.AopInfrastructureBean;
 
+/**
+ * Used by {@link AuthorizeOwnerVoter} for checking if an entity is owned by a certain user.
+ */
 public interface AuthorizeOwnerVerifier extends AopInfrastructureBean {
 
+  /**
+   * Examines if {@code principal} is the owner of entity identified by {@code entityClassAwareId}.
+   *
+   * @param principal {@link Principal} which represents the currently authenticated user.
+   * @param entityClassAwareId An {@link EntityClassAwareId} representing a resource being accessed.
+   * @return Returns {@code ACCESS_ABSTAIN} if the entity isn't
+   *        {@link io.relinkr.user.model.Ownable}, doesn't exists or if there was an error in
+   *        accessing that entity; {@code ACCESS_GRANTED} if the current user is the owner;
+   *        {@code ACCESS_DENIED} otherwise.
+   */
   int canAccess(Principal principal, EntityClassAwareId<?> entityClassAwareId);
 
 }

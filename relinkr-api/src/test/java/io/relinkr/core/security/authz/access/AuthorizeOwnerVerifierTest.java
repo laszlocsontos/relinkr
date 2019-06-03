@@ -50,7 +50,7 @@ public class AuthorizeOwnerVerifierTest {
   private AuthorizeOwnerVerifier ownerVerifier;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     ownerVerifier = new AuthorizeOwnerVerifierImpl(entityManager);
   }
 

@@ -28,6 +28,12 @@ import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 
+/**
+ * An {@link AccessDecisionVoter} implementation which is queried by
+ * {@link org.springframework.security.access.AccessDecisionManager} when a protected method is
+ * invoked. It delegates deciding if the currently authenticated user is the owner of a resource
+ * being accessed to {@link AuthorizeOwnerVerifier}.
+ */
 public class AuthorizeOwnerVoter implements AccessDecisionVoter<MethodInvocation> {
 
   private final AuthorizeOwnerVerifier ownerVerifier;
@@ -36,6 +42,12 @@ public class AuthorizeOwnerVoter implements AccessDecisionVoter<MethodInvocation
     this.ownerVerifier = ownerVerifier;
   }
 
+  /**
+   * Decides whether this voter should be used to vote for accessing a secured method.
+   *
+   * @param attribute A {@link ConfigAttribute}.
+   * @return {@code true} if {@code attribute} is an {@code IS_OWNER} attribute.
+   */
   @Override
   public boolean supports(ConfigAttribute attribute) {
     return Optional.ofNullable(attribute.getAttribute())
@@ -43,11 +55,29 @@ public class AuthorizeOwnerVoter implements AccessDecisionVoter<MethodInvocation
         .orElse(false);
   }
 
+  /**
+   * Decides whether this voter should be used to vote for accessing a secured method.
+   *
+   * @param clazz A {@link Class}.
+   * @return {@code true} if {@code Class} is a {@link MethodInvocation}.
+   */
   @Override
   public boolean supports(Class<?> clazz) {
     return MethodInvocation.class.isAssignableFrom(clazz);
   }
 
+  /**
+   * Returns the vote based on the following parameters.
+   *
+   * @param authentication {@link Authentication} of the current request
+   * @param methodInvocation {@link MethodInvocation} of the currently invoked secured method
+   * @param attributes the configuration attributes associated with the secured method
+   * @return {@code ACCESS_DENIED} if {@code authentication} is {@code null}; {@code ACCESS_ABSTAIN}
+   *        if the secured method doesn't have such a parameter which is assignable to
+   *        {@link EntityClassAwareId} or if that value is {@code null} or if the secured method
+   *        doesn't support such a decision to be made; otherwise the decision will be delegated to
+   *        {@link AuthorizeOwnerVerifier}
+   */
   @Override
   public int vote(
       Authentication authentication, MethodInvocation methodInvocation,
