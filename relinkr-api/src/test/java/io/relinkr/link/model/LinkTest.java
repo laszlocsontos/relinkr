@@ -43,7 +43,7 @@ public class LinkTest {
   private Link link;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     link = new Link(LONG_URL_WITHOUT_UTM, USER_ID);
   }
 
