@@ -20,6 +20,11 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Abstract support class for implementing cookie value resolvers.
+ *
+ * @param <V> Cookie value's type
+ */
 public abstract class AbstractCookieValueResolver<V> implements CookieValueResolver<V> {
 
   @Override

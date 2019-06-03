@@ -21,6 +21,10 @@ import lombok.NonNull;
 import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+/**
+ * A {@link RequestMatcher} that matches those HTTP requests which contain the HTTP header
+ * {@code X-Requested-With} with value {@code XMLHttpRequest}.
+ */
 public class AjaxRequestMatcher implements RequestMatcher {
 
   public static final String X_REQUESTED_WITH_HEADER = "X-Requested-With";

@@ -20,10 +20,27 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Strategy interface for resolving cookie values from an {@link HttpServletRequest}.
+ *
+ * @param <V> Cookie value's type
+ */
 public interface CookieValueResolver<V> {
 
+  /**
+   * Resolve value from a cookie.
+   *
+   * @param request an {@link HttpServletRequest} to resolve the value from
+   * @return the cookie's value if exists, empty otherwise
+   */
   Optional<V> resolveValue(HttpServletRequest request);
 
+  /**
+   * Set the cookie's value and send it along with the given {@link HttpServletResponse}.
+   *
+   * @param response an {@link HttpServletRequest} to send the cookie's value with
+   * @param value cookie value to set
+   */
   void setValue(HttpServletResponse response, V value);
 
 }

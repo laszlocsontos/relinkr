@@ -22,6 +22,8 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NOT_IMPLEMENTED;
+import static org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST;
+import static org.springframework.web.util.WebUtils.ERROR_EXCEPTION_ATTRIBUTE;
 
 import io.relinkr.core.model.ApplicationException;
 import io.relinkr.core.model.EntityAlreadyExistsException;
@@ -39,7 +41,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import org.springframework.web.util.WebUtils;
 
 /**
- * Created by lcsontos on 5/10/17.
+ * Common error handler for the controller layer, where custom, application specific exceptions
+ * (eg. {@link EntityNotFoundException}) are mapped to appropriate response codes.
  */
 @Slf4j
 @RestControllerAdvice
@@ -90,8 +93,8 @@ public class RestErrorHandler extends ResponseEntityExceptionHandler {
       Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
     // Request may be null in test cases
-    if (request != null && HttpStatus.INTERNAL_SERVER_ERROR.equals(status)) {
-      request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
+    if (request != null && INTERNAL_SERVER_ERROR.equals(status)) {
+      request.setAttribute(ERROR_EXCEPTION_ATTRIBUTE, ex, SCOPE_REQUEST);
     }
 
     return new ResponseEntity<>(RestErrorResponse.of(status, ex), headers, status);

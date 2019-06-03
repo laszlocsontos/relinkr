@@ -22,7 +22,7 @@ import lombok.NonNull;
 import org.springframework.http.HttpStatus;
 
 /**
- * Created by lcsontos on 5/10/17.
+ * DTO class used to send the details of a HTTP error in JSON format to the client.
  */
 @Getter
 @NoArgsConstructor

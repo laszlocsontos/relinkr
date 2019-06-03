@@ -27,6 +27,12 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+/**
+ * Such a {@link HandlerMethodArgumentResolver} that is able to resolve the currently authenticated
+ * user's {@link UserId} when annotated with {@link CurrentUser}. This is useful in the controller
+ * layer, where using {@link org.springframework.security.core.Authentication} or {@link Principal}
+ * would require custom logic to extract this piece of information.
+ */
 public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolver {
 
   @Override
