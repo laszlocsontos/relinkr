@@ -23,6 +23,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
+/**
+ * By default {@link OAuth2AuthorizationRequest} is stored in the session, so that
+ * {@link org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter} can pick
+ * it up when the OAuth2 provider redirects back after an authentication success or failure. As this
+ * application is completely stateless and it doesn't maintain a session, that piece of information
+ * is stored in a HTTP cookie.
+ */
 public interface OAuth2AuthorizationRequestsCookieResolver
     extends CookieValueResolver<Map<String, OAuth2AuthorizationRequest>> {
 

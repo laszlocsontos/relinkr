@@ -29,6 +29,13 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+/**
+ * Abstract base class for handling authentication success and failure reported by
+ * {@link org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter}. In both
+ * cases a redirect is sent to the front-end's login page. That is further specialized by
+ * {@link OAuth2LoginAuthenticationSuccessHandler} and
+ * {@link OAuth2LoginAuthenticationFailureHandler}.
+ */
 abstract class AbstractOAuth2LoginAuthenticationHandler implements EnvironmentAware {
 
   static final String FRONTEND_LOGIN_URL_PROPERTY = "relinkr.frontend.login-url";

@@ -25,6 +25,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
+/**
+ * Upon OAuth2 login failure, sends a redirect to the front-end's login page with stating the nature
+ * of the error by appending a and {@code error} parameter in the URL. Authentication token stored
+ * in the cookies managed by {@link JwtAuthenticationTokenCookieResolver} are also cleared.
+ */
 @RequiredArgsConstructor
 public class OAuth2LoginAuthenticationFailureHandler
     extends AbstractOAuth2LoginAuthenticationHandler implements AuthenticationFailureHandler {

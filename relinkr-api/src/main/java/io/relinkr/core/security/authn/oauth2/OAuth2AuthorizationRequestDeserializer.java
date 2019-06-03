@@ -33,6 +33,9 @@ import java.util.Set;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
+/**
+ * Custom deserializer for {@link OAuth2AuthorizationRequest}.
+ */
 class OAuth2AuthorizationRequestDeserializer extends JsonDeserializer<OAuth2AuthorizationRequest> {
 
   @Override

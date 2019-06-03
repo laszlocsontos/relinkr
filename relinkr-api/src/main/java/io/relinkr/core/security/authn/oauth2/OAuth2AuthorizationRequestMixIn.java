@@ -27,6 +27,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationResponseType;
 
+/**
+ * Mix-in for augmenting {@link org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest}
+ * with annotations fine tuning its serialization method to JSON.
+ */
 @JsonDeserialize(using = OAuth2AuthorizationRequestDeserializer.class)
 @JsonAutoDetect(
     fieldVisibility = NONE,

@@ -16,6 +16,7 @@
 
 package io.relinkr.test;
 
+import static java.time.Instant.ofEpochMilli;
 import static java.time.Instant.ofEpochSecond;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Collections.singletonMap;
@@ -23,6 +24,7 @@ import static java.util.Collections.unmodifiableMap;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
+import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER;
 import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.REGISTRATION_ID;
 
 import io.relinkr.click.model.Click;
@@ -52,7 +54,11 @@ import java.util.Map;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -175,7 +181,11 @@ public final class Mocks {
       OAUTH2_BASE_URI + WebSecurityConfig.OAUTH2_LOGIN_PROCESSES_BASE_URI + "/"
           + OAUTH2_CLIENT_REG_ID;
 
+  public static final ClientRegistration OAUTH2_CLIENT_REGISTRATION;
+
   public static final OAuth2AuthorizationRequest OAUTH2_AUTHORIZATION_REQUEST;
+
+  public static final OAuth2UserRequest OAUTH2_USER_REQUEST_REQUEST;
 
   public static final String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_SECRET_KEY =
       "MGBDV!Wu*8G345kddLK8rB!PgLTnSAaQXs";
@@ -192,6 +202,9 @@ public final class Mocks {
           + "hzQWpIQspyJu5bn-Fe0bAlptUxZ0g";
 
   public static final Map<String, Object> GOOGLE_USER_ATTRIBUTES;
+
+  public static final SimpleGrantedAuthority AUTHORITY_USER =
+      new SimpleGrantedAuthority("ROLE_USER");
 
   static {
     try {
@@ -229,7 +242,7 @@ public final class Mocks {
 
       GOOGLE_USER_ATTRIBUTES = unmodifiableMap(googleUserAttributes);
 
-      ClientRegistration clientRegistration = CommonOAuth2Provider.GOOGLE
+      OAUTH2_CLIENT_REGISTRATION = CommonOAuth2Provider.GOOGLE
           .getBuilder(OAUTH2_CLIENT_REG_ID)
           .authorizationGrantType(AUTHORIZATION_CODE)
           .clientId(OAUTH2_CLIENT_ID)
@@ -239,12 +252,22 @@ public final class Mocks {
 
       OAUTH2_AUTHORIZATION_REQUEST = OAuth2AuthorizationRequest
           .authorizationCode()
-          .authorizationUri(clientRegistration.getProviderDetails().getAuthorizationUri())
+          .authorizationUri(OAUTH2_CLIENT_REGISTRATION.getProviderDetails().getAuthorizationUri())
           .clientId(OAUTH2_CLIENT_ID)
           .state(OAUTH2_STATE)
           .redirectUri(OAUTH2_REDIRECT_URI)
           .additionalParameters(singletonMap(REGISTRATION_ID, OAUTH2_CLIENT_REG_ID))
           .build();
+
+      OAUTH2_USER_REQUEST_REQUEST = new OAuth2UserRequest(
+          OAUTH2_CLIENT_REGISTRATION,
+          new OAuth2AccessToken(
+              BEARER,
+              "token",
+              ofEpochMilli(0),
+              ofEpochMilli(Long.MAX_VALUE)
+          )
+      );
     } catch (Exception e) {
       // This shouldn't happen, if it does, make test cases fail.
       throw new AssertionError(e);

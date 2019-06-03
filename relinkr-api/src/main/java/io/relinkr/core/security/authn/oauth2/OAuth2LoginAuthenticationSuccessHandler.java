@@ -27,6 +27,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.util.UriComponentsBuilder;
 
+/**
+ * Upon OAuth2 login success, sends a redirect to the front-end's login page and also sends the
+ * authentication token through {@link JwtAuthenticationTokenCookieResolver}.
+ */
 @RequiredArgsConstructor
 public class OAuth2LoginAuthenticationSuccessHandler
     extends AbstractOAuth2LoginAuthenticationHandler implements AuthenticationSuccessHandler {

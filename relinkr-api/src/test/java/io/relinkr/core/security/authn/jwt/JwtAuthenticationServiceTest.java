@@ -18,6 +18,7 @@ package io.relinkr.core.security.authn.jwt;
 
 import static io.relinkr.core.security.authn.oauth2.PersistentOAuth2UserService.USER_ID_ATTRIBUTE;
 import static io.relinkr.core.security.authn.oauth2.PersistentOAuth2UserService.USER_PROFILE_TYPE_ATTRIBUTE;
+import static io.relinkr.test.Mocks.AUTHORITY_USER;
 import static io.relinkr.test.Mocks.JWT_TOKEN_EXPIRED;
 import static io.relinkr.test.Mocks.JWT_TOKEN_INVALID;
 import static io.relinkr.test.Mocks.JWT_TOKEN_VALID;
@@ -53,9 +54,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ActiveProfiles("test")
 @SpringBootTest(classes = JwtConfig.class)
 public class JwtAuthenticationServiceTest {
-
-  private static final SimpleGrantedAuthority AUTHORITY_USER =
-      new SimpleGrantedAuthority("ROLE_USER");
 
   @Autowired
   private JwtAuthenticationService jwtAuthenticationService;

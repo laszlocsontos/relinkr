@@ -54,6 +54,12 @@ public class UserProfileFactoryImpl implements UserProfileFactory {
   }
 
   @Override
+  public UserProfile create(String userProfileTypeString, Map<String, Object> userAttributes) {
+    UserProfileType userProfileType = UserProfileType.valueOf(userProfileTypeString);
+    return create(userProfileType, userAttributes);
+  }
+
+  @Override
   public UserProfile create(UserProfileType userProfileType, Map<String, Object> userAttributes) {
     Assert.notNull(userProfileType, "userProfileType cannot be null");
     Assert.notNull(userAttributes, "userAttributes cannot be null");

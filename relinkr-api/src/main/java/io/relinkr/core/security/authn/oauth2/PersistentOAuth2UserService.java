@@ -23,7 +23,6 @@ import io.relinkr.user.model.EmailAddress;
 import io.relinkr.user.model.Role;
 import io.relinkr.user.model.User;
 import io.relinkr.user.model.UserProfile;
-import io.relinkr.user.model.UserProfileType;
 import io.relinkr.user.service.UserProfileFactory;
 import io.relinkr.user.service.UserService;
 import java.util.HashMap;
@@ -40,6 +39,12 @@ import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+/**
+ * Delegates obtaining the user attributes of the End-User (Resource Owner) from the UserInfo
+ * Endpoint to {@link org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService}.
+ * From those attributes a {@link UserProfile} is created and along with the {@link User} saved to
+ * the database.
+ */
 @Slf4j
 public class PersistentOAuth2UserService
     implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -65,24 +70,12 @@ public class PersistentOAuth2UserService
     this.userService = userService;
   }
 
-  /*
-   * Used for unit testing only.
-   */
-  PersistentOAuth2UserService(UserProfileFactory userProfileFactory, UserService userService) {
-    this(null, userProfileFactory, userService);
-  }
-
   @Override
   public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+    OAuth2User oauth2User = defaultUserService.loadUser(userRequest);
+
     // We expect that spring.security.oauth2.client.provider.<provider_name>.userNameAttribute
     // be always set to email and hence we expect a valid email address from the OAuth2 server.
-    OAuth2User oauth2User;
-    try {
-      oauth2User = defaultUserService.loadUser(userRequest);
-    } catch (IllegalArgumentException iae) {
-      throw createOAuth2Error(INVALID_EMAIL_ADDRESS, iae);
-    }
-
     EmailAddress emailAddress = extractEmailAddress(oauth2User.getName());
 
     String registrationId = userRequest.getClientRegistration().getRegistrationId();
@@ -93,28 +86,25 @@ public class PersistentOAuth2UserService
     return createOAuth2User(oauth2User.getAttributes(), user, userProfile);
   }
 
-  EmailAddress extractEmailAddress(String principalName) throws OAuth2AuthenticationException {
+  private EmailAddress extractEmailAddress(String principalName) throws OAuth2AuthenticationException {
     try {
       return EmailAddress.of(principalName);
     } catch (IllegalArgumentException iae) {
       throw createOAuth2Error(INVALID_EMAIL_ADDRESS, iae);
     }
-
   }
 
-  UserProfile extractUserProfile(String registrationId, Map<String, Object> userAttributes)
+  private UserProfile extractUserProfile(String registrationId, Map<String, Object> userAttributes)
       throws OAuth2AuthenticationException {
 
     try {
-      UserProfileType userProfileType = UserProfileType.valueOf(registrationId.toUpperCase());
-      return userProfileFactory.create(userProfileType, userAttributes);
+      return userProfileFactory.create(registrationId.toUpperCase(), userAttributes);
     } catch (RuntimeException re) {
       throw createOAuth2Error(INVALID_PROFILE, re);
     }
-
   }
 
-  User saveUser(EmailAddress emailAddress, UserProfile userProfile)
+  private User saveUser(EmailAddress emailAddress, UserProfile userProfile)
       throws OAuth2AuthenticationException {
 
     try {
@@ -124,7 +114,7 @@ public class PersistentOAuth2UserService
     }
   }
 
-  OAuth2User createOAuth2User(
+  private OAuth2User createOAuth2User(
       Map<String, Object> originalAttributes, User user, UserProfile userProfile) {
 
     Set<GrantedAuthority> authorities = user.getRoles().stream()

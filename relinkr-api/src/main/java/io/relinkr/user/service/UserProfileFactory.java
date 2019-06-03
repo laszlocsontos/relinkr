@@ -22,6 +22,8 @@ import java.util.Map;
 
 public interface UserProfileFactory {
 
+  UserProfile create(String userProfileTypeString, Map<String, Object> userAttributes);
+
   UserProfile create(UserProfileType userProfileType, Map<String, Object> userAttributes);
 
 }

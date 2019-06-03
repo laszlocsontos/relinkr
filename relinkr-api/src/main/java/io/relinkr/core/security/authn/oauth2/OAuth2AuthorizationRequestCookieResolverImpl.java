@@ -33,6 +33,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+/**
+ * Concrete implementation that stores JSON serialized forms of {@link OAuth2AuthorizationRequest}
+ * in a JWS signed cookie.
+ */
 @Slf4j
 @Component
 public class OAuth2AuthorizationRequestCookieResolverImpl
