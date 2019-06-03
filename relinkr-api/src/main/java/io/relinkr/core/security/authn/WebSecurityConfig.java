@@ -22,8 +22,8 @@ import static java.util.Collections.unmodifiableList;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.relinkr.core.security.authn.jwt.JwtAuthenticationFailureHandler;
 import io.relinkr.core.security.authn.jwt.JwtAuthenticationEntryPoint;
+import io.relinkr.core.security.authn.jwt.JwtAuthenticationFailureHandler;
 import io.relinkr.core.security.authn.jwt.JwtAuthenticationFilter;
 import io.relinkr.core.security.authn.jwt.JwtAuthenticationService;
 import io.relinkr.core.security.authn.jwt.JwtAuthenticationTokenCookieResolver;
@@ -43,7 +43,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.client.endpoint.NimbusAuthorizationCodeTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -62,20 +62,24 @@ import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+/**
+ * Web security configuration
+ */
 @Configuration
 @EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-  public static final String OAUTH2_INIT_REQUEST_BASE_URI = "/oauth2/init";
-  public static final String OAUTH2_INIT_REQUEST_URI =
+  public static final String OAUTH2_LOGIN_PROCESSES_BASE_URI = "/oauth2/login";
+
+  private static final String OAUTH2_INIT_REQUEST_BASE_URI = "/oauth2/init";
+  private static final String OAUTH2_INIT_REQUEST_URI =
       OAUTH2_INIT_REQUEST_BASE_URI + "/*";
 
-  public static final String OAUTH2_LOGIN_PROCESSES_BASE_URI = "/oauth2/login";
-  public static final String OAUTH2_LOGIN_PROCESSES_URI =
+  private static final String OAUTH2_LOGIN_PROCESSES_URI =
       OAUTH2_LOGIN_PROCESSES_BASE_URI + "/*";
 
-  public static final List<RequestMatcher> PUBLIC_REQUEST_MATCHERS = unmodifiableList(
+  private static final List<RequestMatcher> PUBLIC_REQUEST_MATCHERS = unmodifiableList(
       asList(
           new AntPathRequestMatcher("/", "GET"),
           new AntPathRequestMatcher("/", "HEAD"),
@@ -85,7 +89,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       )
   );
 
-  public static final List<RequestMatcher> PROTECTED_REQUEST_MATCHERS = unmodifiableList(
+  private static final List<RequestMatcher> PROTECTED_REQUEST_MATCHERS = unmodifiableList(
       singletonList(new RegexRequestMatcher("/v1/.*", null))
   );
 
@@ -98,14 +102,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest>
-      accessTokenResponseClient() {
+  accessTokenResponseClient() {
 
-    return new NimbusAuthorizationCodeTokenResponseClient();
+    return new DefaultAuthorizationCodeTokenResponseClient();
   }
 
   @Bean
   public AuthorizationRequestRepository<OAuth2AuthorizationRequest>
-      authorizationRequestRepository() {
+  authorizationRequestRepository() {
 
     return new HttpCookieOAuth2AuthorizationRequestRepository(
         authorizationRequestsCookieResolver);
