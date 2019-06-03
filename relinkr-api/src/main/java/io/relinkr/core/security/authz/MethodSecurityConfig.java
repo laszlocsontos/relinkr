@@ -36,6 +36,9 @@ import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 
+/**
+ * Method configuration
+ */
 @Configuration
 @EnableGlobalMethodSecurity
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
