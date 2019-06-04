@@ -26,16 +26,19 @@ import lombok.ToString;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+/**
+ * Represents a set of <a href="https://en.wikipedia.org/wiki/UTM_parameters">UTM parameters</a>.
+ */
 @Embeddable
 @EqualsAndHashCode
 @ToString
 public class UtmParameters {
 
-  public static final String UTM_SOURCE = "utm_source";
-  public static final String UTM_MEDIUM = "utm_medium";
-  public static final String UTM_CAMPAIGN = "utm_campaign";
-  public static final String UTM_TERM = "utm_term";
-  public static final String UTM_CONTENT = "utm_content";
+  static final String UTM_SOURCE = "utm_source";
+  static final String UTM_MEDIUM = "utm_medium";
+  static final String UTM_CAMPAIGN = "utm_campaign";
+  static final String UTM_TERM = "utm_term";
+  static final String UTM_CONTENT = "utm_content";
 
   private String utmSource;
   private String utmMedium;

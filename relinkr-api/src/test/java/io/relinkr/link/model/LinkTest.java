@@ -48,18 +48,18 @@ public class LinkTest {
   }
 
   @Test
-  public void apply() {
+  public void givenLinkWithoutUtm_whenApplyMinimalUtm_thenApplied() {
     link.apply(UTM_PARAMETERS_MINIMAL);
     assertEquals(UTM_PARAMETERS_MINIMAL, link.longUrl.getUtmParameters().get());
   }
 
   @Test
-  public void getTags() {
+  public void givenLinkWithoutTags_whenGetTags_thenEmpty() {
     assertTrue(link.getTags().isEmpty());
   }
 
   @Test
-  public void addTag() {
+  public void givenLinkWithoutTags_whenAddTag_thenAdded() {
     link.addTag(TAG_A);
     link.addTag(TAG_B);
     Set<Tag> tags = link.getTags();
@@ -67,7 +67,7 @@ public class LinkTest {
   }
 
   @Test
-  public void removeTag() {
+  public void givenLinkWithTags_whenRemoveTag_thenRemoved() {
     link.addTag(TAG_A);
     link.addTag(TAG_B);
     link.removeTag(TAG_B);
@@ -77,66 +77,66 @@ public class LinkTest {
   }
 
   @Test
-  public void getLongUrl() {
+  public void givenLinkWithoutUtm_whenGetLongUrl_thenUtmIsMissing() {
     assertEquals(LONG_URL_WITHOUT_UTM_S, link.getLongUrl().toString());
   }
 
   @Test
-  public void getTargetUrl() {
+  public void givenLinkWithoutUtm_whenGetTargetUrl_thenUtmIsMissing() {
     assertEquals(LONG_URL_WITHOUT_UTM_S, link.getTargetUrl().toString());
   }
 
   @Test
-  public void getPath() {
+  public void givenNewLink_whenGetPath_thenPathHasExpectedLength() {
     assertEquals(HASHIDS_LENGTH, link.getPath().length());
   }
 
   @Test(expected = InvalidUrlException.class)
-  public void updateLongUrl_withInValidUrl() throws Exception {
+  public void givenInvalidUrl_whenUpdateLongUrl_thenInvalidUrlException() {
     link.updateLongUrl("bad");
   }
 
   @Test
-  public void updateLongUrl_withValidUrl() throws Exception {
+  public void givenValidUrl_whenUpdateLongUrl_thenUpdated() {
     link.updateLongUrl(LONG_URL_BASE_S);
     assertEquals(LONG_URL_BASE_S, link.getLongUrl().toString());
     assertEquals(LONG_URL_BASE_S, link.getTargetUrl().toString());
   }
 
   @Test
-  public void markActive() throws InvalidLinkStatusException {
+  public void givenNewLink_whenMarkActive_thenActivated() {
     link.markActive();
     assertEquals(ACTIVE, link.getLinkStatus());
   }
 
   @Test
-  public void markArchived() throws InvalidLinkStatusException {
+  public void givenActiveLink_whenMarkArchived_thenArchived() {
     link.markActive();
     link.markArchived();
     assertEquals(ARCHIVED, link.getLinkStatus());
   }
 
   @Test
-  public void markBroken() throws InvalidLinkStatusException {
+  public void givenNewLink_whenMarkBroken_thenBroken() {
     link.markBroken();
     assertEquals(BROKEN, link.getLinkStatus());
   }
 
   @Test(expected = InvalidLinkStatusException.class)
-  public void markActive_withActive() throws InvalidLinkStatusException {
+  public void givenActiveLink_whenMarkActive_thenInvalidLinkStatusException() {
     link.markActive();
     link.markActive();
     assertEquals(ACTIVE, link.getLinkStatus());
   }
 
   @Test(expected = InvalidLinkStatusException.class)
-  public void markArchived_withPending() throws InvalidLinkStatusException {
+  public void givenPendingLink_whenMarkArchived_thenInvalidLinkStatusException() {
     link.markArchived();
     assertEquals(ARCHIVED, link.getLinkStatus());
   }
 
   @Test(expected = InvalidLinkStatusException.class)
-  public void markBroken_withArchived() throws InvalidLinkStatusException {
+  public void givenArchivedLink_whenMarkBroken_thenInvalidLinkStatusException() {
     link.markArchived();
     link.markBroken();
     assertEquals(BROKEN, link.getLinkStatus());

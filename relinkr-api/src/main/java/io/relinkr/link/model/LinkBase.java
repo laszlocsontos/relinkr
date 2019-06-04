@@ -16,6 +16,10 @@
 
 package io.relinkr.link.model;
 
+import static io.relinkr.link.model.LinkStatus.ACTIVE;
+import static io.relinkr.link.model.LinkStatus.ARCHIVED;
+import static io.relinkr.link.model.LinkStatus.BROKEN;
+import static io.relinkr.link.model.LinkStatus.PENDING;
 import static java.util.Collections.emptySet;
 
 import io.relinkr.core.orm.AbstractId;
@@ -32,6 +36,12 @@ import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;
 import lombok.NonNull;
 
+/**
+ * Abstract base class for links as a future extension point to introduce link sets and standalone
+ * links.
+ *
+ * @param <ID> Link's ID type
+ */
 @MappedSuperclass
 public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
     extends OwnableEntity<ID> implements Ownable {
@@ -48,6 +58,12 @@ public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
 
   public abstract URI getLongUrl();
 
+  /**
+   * Updates this {@code Link} with the given {@code longUrl}.
+   *
+   * @param longUrl A {@link LongUrl} used to update this {@code Link}
+   * @throws InvalidUrlException when the given {@code longUrl} is invalid
+   */
   public abstract void updateLongUrl(@NonNull String longUrl) throws InvalidUrlException;
 
   public abstract Set<Tag> getTags();
@@ -58,7 +74,7 @@ public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
 
   public abstract LinkStatus getLinkStatus();
 
-  protected abstract void setLinkStatus(LinkStatus linkStatus);
+  abstract void setLinkStatus(LinkStatus linkStatus);
 
   private void setLinkStatus(LinkStatus linkStatus, Set<LinkStatus> expectedLinkStatuses)
       throws InvalidLinkStatusException {
@@ -78,7 +94,7 @@ public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
    */
   public Set<LinkStatus> getUserLinkStatuses() {
     // Users cannot change state in PENDING state
-    if (LinkStatus.PENDING.equals(getLinkStatus())) {
+    if (PENDING.equals(getLinkStatus())) {
       return emptySet();
     }
 
@@ -89,15 +105,15 @@ public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
   }
 
   public void markActive() throws InvalidLinkStatusException {
-    setLinkStatus(LinkStatus.ACTIVE, getLinkStatus().getNextLinkStatuses());
+    setLinkStatus(ACTIVE, getLinkStatus().getNextLinkStatuses());
   }
 
   public void markArchived() throws InvalidLinkStatusException {
-    setLinkStatus(LinkStatus.ARCHIVED, getLinkStatus().getNextLinkStatuses());
+    setLinkStatus(ARCHIVED, getLinkStatus().getNextLinkStatuses());
   }
 
   public void markBroken() throws InvalidLinkStatusException {
-    setLinkStatus(LinkStatus.BROKEN, getLinkStatus().getNextLinkStatuses());
+    setLinkStatus(BROKEN, getLinkStatus().getNextLinkStatuses());
   }
 
 }

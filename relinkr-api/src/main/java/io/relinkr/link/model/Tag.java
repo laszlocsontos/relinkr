@@ -22,6 +22,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Represents a tag, that is, an arbitrary piece of text applied to link. Currently unused, future
+ * version will be able to leverage tags to generate custom reports.
+ * TODO: Implement custom reporting based on tags
+ */
 @Embeddable
 @EqualsAndHashCode(of = "tagName")
 @Getter

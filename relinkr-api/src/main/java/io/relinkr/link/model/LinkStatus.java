@@ -22,13 +22,35 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.hateoas.Identifiable;
 
+/**
+ * Represents the {@link Link}'s current status.
+ */
 public enum LinkStatus implements Identifiable<String> {
 
-  // Enum values cannot be forward-referenced here
+  // NOTE: Enum values cannot be forward-referenced here
 
+  /**
+   * The link is currently active, that is, it performs a normal redirect when accessed.
+   */
   ACTIVE(true, "ARCHIVED", "BROKEN"),
+
+  /**
+   * Background check revealed that the link is broken, thus it cannot be accessed.
+   * TODO: Implement background link checks.
+   */
   BROKEN(false, "ACTIVE", "ARCHIVED"),
+
+  /**
+   * Means that the links has been just created and it's waiting to be checked.
+   * NOTE: Currently {@code ACTIVE} is the initial state of links.
+   * TODO: Implement background link checks.
+   */
   PENDING(false, "ACTIVE", "BROKEN"),
+
+  /**
+   * The link is achived by the user.
+   * TODO: Implemented automatic removal of archived links.
+   */
   ARCHIVED(true, "ACTIVE");
 
   private final boolean userSettable;

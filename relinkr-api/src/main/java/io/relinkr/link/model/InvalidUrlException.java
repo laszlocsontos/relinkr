@@ -18,6 +18,9 @@ package io.relinkr.link.model;
 
 import io.relinkr.core.model.ApplicationException;
 
+/**
+ * Thrown by {@link LongUrl} when it's created with a wrong URL.
+ */
 public class InvalidUrlException extends ApplicationException {
 
   public InvalidUrlException() {

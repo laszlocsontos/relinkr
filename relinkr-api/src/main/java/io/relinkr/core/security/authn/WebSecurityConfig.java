@@ -85,7 +85,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
           new AntPathRequestMatcher("/", "HEAD"),
           new AntPathRequestMatcher(OAUTH2_LOGIN_PROCESSES_URI, "GET"),
           new AntPathRequestMatcher(OAUTH2_INIT_REQUEST_URI, "GET"),
-          new RegexRequestMatcher("/[a-zA-Z0-9_-]{11}", "GET")
+          // NOTE: Must match with HASHIDS_LENGTH and HASHIDS_ALPHABET in io.relinkr.link.model.Link
+          new RegexRequestMatcher("/[a-zA-Z0-9_-]{10}", "GET")
       )
   );
 

@@ -47,42 +47,42 @@ public class UtmParametersTest {
   }
 
   @Test(expected = MissingUtmParameterException.class)
-  public void create_withMissingUtmSource() throws Exception {
+  public void givenMissingUtmSource_whenCreate_thenMissingUtmParameterException() {
     new UtmParameters(null, "test", "test");
   }
 
   @Test(expected = MissingUtmParameterException.class)
-  public void create_withMissingUtmMedium() throws Exception {
+  public void givenMissingUtmMedium_whenCreate_thenMissingUtmParameterException() {
     new UtmParameters("test", null, "test");
   }
 
   @Test(expected = MissingUtmParameterException.class)
-  public void create_withMissingUtmCampaign() throws Exception {
+  public void givenMissingUtmCampaign_whenCreate_thenMissingUtmParameterException() {
     new UtmParameters("test", "test", null);
   }
 
   @Test
-  public void getUtmSource() {
+  public void givenAllUtmParamters_whenGetUtmSource_thenReturned() {
     assertEquals(UTM_SOURCE_V, UTM_PARAMETERS_FULL.getUtmSource());
   }
 
   @Test
-  public void getUtmMedium() {
+  public void givenAllUtmParamters_whenGetUtmMedium_thenReturned() {
     assertEquals(UTM_MEDIUM_V, UTM_PARAMETERS_FULL.getUtmMedium());
   }
 
   @Test
-  public void getUtmCampaign() {
+  public void givenAllUtmParamters_whenGetUtmCampaign_thenReturned() {
     assertEquals(UTM_CAMPAIGN_V, UTM_PARAMETERS_FULL.getUtmCampaign());
   }
 
   @Test
-  public void getUtmTerm() {
+  public void givenAllUtmParamters_whenGetUtmTerm_thenReturned() {
     assertEquals(UTM_TERM_V, UTM_PARAMETERS_FULL.getUtmTerm().get());
   }
 
   @Test
-  public void getUtmContent() {
+  public void givenAllUtmParamters_whenGetUtmContent_thenReturned() {
     assertEquals(UTM_CONTENT_V, UTM_PARAMETERS_FULL.getUtmContent().get());
   }
 

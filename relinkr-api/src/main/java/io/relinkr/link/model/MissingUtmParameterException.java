@@ -18,6 +18,10 @@ package io.relinkr.link.model;
 
 import io.relinkr.core.model.ApplicationException;
 
+/**
+ * Thrown by {@link UtmParameters} if {@code utm_source}, {@code utm_medium} or {@code utm_campaign}
+ * is missing.
+ */
 public class MissingUtmParameterException extends ApplicationException {
 
   public MissingUtmParameterException() {

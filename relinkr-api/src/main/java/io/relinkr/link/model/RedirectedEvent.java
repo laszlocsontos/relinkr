@@ -22,6 +22,10 @@ import io.relinkr.visitor.model.VisitorId;
 import java.time.Instant;
 import lombok.Getter;
 
+/**
+ * Emitted by {@link io.relinkr.link.web.RedirectController} when a link was access and the client
+ * was redirected to its target URL.
+ */
 @Getter
 public class RedirectedEvent extends GenericApplicationEvent<LinkId> {
 

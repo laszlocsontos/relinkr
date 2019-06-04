@@ -19,6 +19,10 @@ package io.relinkr.link.model;
 import io.relinkr.core.model.ApplicationException;
 import java.util.Set;
 
+/**
+ * Thrown when a transition to a {@link LinkStatus} isn't supported from the current one; that is
+ * when the new status isn't in {@link LinkStatus#getNextLinkStatuses()}.
+ */
 public class InvalidLinkStatusException extends ApplicationException {
 
   public InvalidLinkStatusException() {

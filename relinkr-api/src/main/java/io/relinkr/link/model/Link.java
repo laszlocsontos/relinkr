@@ -34,11 +34,18 @@ import javax.persistence.Enumerated;
 import lombok.NonNull;
 import org.hashids.Hashids;
 
+/**
+ * Represents a shortened link.
+ */
 @Entity
 public class Link extends LinkBase<LinkId> {
 
-  static final int HASHIDS_LENGTH = 11;
+  // FIXME: The theoretical maximum length could be decreased to 9 characters, according to
+  //    round(log(Hashids.MAX_NUMBER) / log(len(HASHIDS_ALPHABET))).
+  static final int HASHIDS_LENGTH = 10;
+
   private static final String HASHIDS_SALT = "6cY$S!08HpP$pWRpEErhGp7H3307a^67";
+
   private static final String HASHIDS_ALPHABET =
       "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_-";
 
@@ -102,10 +109,15 @@ public class Link extends LinkBase<LinkId> {
   }
 
   @Override
-  protected void setLinkStatus(LinkStatus linkStatus) {
+  void setLinkStatus(LinkStatus linkStatus) {
     this.linkStatus = linkStatus;
   }
 
+  /**
+   * Applied the given {@code utmParameters} to this {@code Link}.
+   *
+   * @param utmParameters UTM parameters to apply
+   */
   public void apply(UtmParameters utmParameters) {
     longUrl = longUrl.apply(utmParameters);
   }
@@ -131,6 +143,13 @@ public class Link extends LinkBase<LinkId> {
     updateLongUrl(longUrl, this.longUrl.getUtmParameters().orElse(null));
   }
 
+  /**
+   * Updates this {@code Link} with the given {@code longUrl} and {@code utmParameters}.
+   *
+   * @param longUrl A {@link LongUrl} used to update this {@code Link}
+   * @param utmParameters An {@link UtmParameters} instance used to update this {@code Link}
+   * @throws InvalidUrlException when the given {@code longUrl} is invalid
+   */
   public void updateLongUrl(String longUrl, UtmParameters utmParameters)
       throws InvalidUrlException {
     this.longUrl = new LongUrl(longUrl, utmParameters);

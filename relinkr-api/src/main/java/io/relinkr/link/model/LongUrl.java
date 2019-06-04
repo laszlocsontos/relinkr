@@ -39,6 +39,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+/**
+ * Represents an original, so called long URL, or in other words that one that will be shortened.
+ * It consists of a base URL and a set of UTM parameters, if they present.
+ */
 @Embeddable
 @EqualsAndHashCode
 public class LongUrl {
