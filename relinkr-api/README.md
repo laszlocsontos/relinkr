@@ -4,7 +4,7 @@
 
 1. Create a PostgreSQL user and database
 ```
-# create user relinkr with unencrypted password 'relinkr';
+# create user relinkr with password 'relinkr';
 # create database relinkr with owner relinkr;
 ```
 
