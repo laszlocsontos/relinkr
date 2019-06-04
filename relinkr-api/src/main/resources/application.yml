@@ -3,6 +3,14 @@ spring:
     url: jdbc:postgresql://${PGSQL_HOST:localhost}:${PGSQL_PORT:5432}/${PGSQL_DB:relinkr}
     username: ${PGSQL_USERNAME:relinkr}
     password: ${PGSQL_PASSWORD:relinkr}
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            # Disable contextual LOB creation as PostgreSQL's JDBC driver doesn't support it
+            # https://github.com/pgjdbc/pgjdbc/blob/REL42.2.5/pgjdbc/src/main/java/org/postgresql/jdbc/PgConnection.java#L1266
+            non_contextual_creation: true
   flyway:
     locations: classpath:db/migration/common, classpath:db/migration/{vendor}
   security:
