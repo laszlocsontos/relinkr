@@ -151,10 +151,10 @@ public class LinkResourceController {
 
   @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
   @GetMapping(produces = HAL_JSON_VALUE)
-  HttpEntity<PagedResources<LinkResource>> listLinks(
+  HttpEntity<PagedResources<LinkResource>> fetchLinks(
       @CurrentUser UserId userId, Pageable pageable) {
 
-    Page<Link> linkPage = linkService.listLinks(userId, pageable);
+    Page<Link> linkPage = linkService.fetchLinks(userId, pageable);
     return ok(pagedResourcesAssembler.toResource(linkPage, linkResourceAssembler));
   }
 

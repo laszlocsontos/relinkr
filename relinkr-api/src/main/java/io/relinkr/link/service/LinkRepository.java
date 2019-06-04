@@ -21,8 +21,17 @@ import io.relinkr.link.model.Link;
 import io.relinkr.link.model.LinkId;
 import java.util.Optional;
 
+/**
+ * Repository of {@link Link}s.
+ */
 interface LinkRepository extends OwnableRepository<Link, LinkId> {
 
+  /**
+   * Returns a link by its {@code path}.
+   *
+   * @param path Path to find by
+   * @return A {@link Link} if exists, empty otherwise
+   */
   Optional<Link> findByPath(String path);
 
 }

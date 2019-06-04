@@ -242,8 +242,8 @@ public class LinkResourceControllerTest {
 
   @Test
   @WithMockUser(username = "1") // USER_ID
-  public void listLinks() throws Exception {
-    given(linkService.listLinks(USER_ID, PAGEABLE))
+  public void fetchLinks() throws Exception {
+    given(linkService.fetchLinks(USER_ID, PAGEABLE))
         .willReturn(new PageImpl<>(asList(link), PAGEABLE, 1));
 
     ResultActions resultActions = mockMvc.perform(get("/v1/links")

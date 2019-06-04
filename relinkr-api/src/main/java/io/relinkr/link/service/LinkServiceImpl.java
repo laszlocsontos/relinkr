@@ -16,8 +16,8 @@
 
 package io.relinkr.link.service;
 
-import io.relinkr.core.model.ApplicationException;
 import io.relinkr.core.model.EntityNotFoundException;
+import io.relinkr.link.model.InvalidLinkStatusException;
 import io.relinkr.link.model.InvalidUrlException;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.model.LinkId;
@@ -26,6 +26,7 @@ import io.relinkr.link.model.Tag;
 import io.relinkr.link.model.UtmParameters;
 import io.relinkr.user.model.UserId;
 import java.net.URI;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,9 +40,7 @@ class LinkServiceImpl implements LinkService {
   private final LinkRepository linkRepository;
 
   @Override
-  public Link getLink(LinkId id) throws EntityNotFoundException {
-    Assert.notNull(id, "id cannot be null");
-
+  public Link getLink(@NonNull LinkId id) throws EntityNotFoundException {
     return linkRepository
         .findById(id)
         .orElseThrow(() -> new EntityNotFoundException("id", id));
@@ -49,7 +48,7 @@ class LinkServiceImpl implements LinkService {
   }
 
   @Override
-  public Link getLink(String path) {
+  public Link getLink(String path) throws EntityNotFoundException {
     Assert.hasText(path, "path must contain text");
 
     Link link = linkRepository
@@ -64,83 +63,12 @@ class LinkServiceImpl implements LinkService {
   }
 
   @Override
-  public Page<Link> listLinks(UserId userId, Pageable pageable) {
+  public Page<Link> fetchLinks(@NonNull UserId userId, Pageable pageable) {
     return linkRepository.findByUserId(userId, pageable);
   }
 
   @Override
-  public void activateLink(LinkId id) throws ApplicationException {
-    Assert.notNull(id, "id cannot be null");
-
-    Link link = getLink(id);
-    verifyLinkBeforeUpdate(link);
-    link.markActive();
-
-    linkRepository.save(link);
-  }
-
-  @Override
-  public void archiveLink(LinkId id) throws ApplicationException {
-    Assert.notNull(id, "id cannot be null");
-
-    Link link = getLink(id);
-    verifyLinkBeforeUpdate(link);
-    link.markArchived();
-
-    linkRepository.save(link);
-  }
-
-  @Override
-  public void addTag(LinkId id, String tagName) throws ApplicationException {
-    Assert.notNull(id, "id cannot be null");
-    Assert.hasText(tagName, "tagName must contain text");
-
-    Link link = getLink(id);
-    verifyLinkBeforeUpdate(link);
-    link.addTag(new Tag(tagName));
-
-    linkRepository.save(link);
-  }
-
-  @Override
-  public void removeTag(LinkId id, String tagName) throws ApplicationException {
-    Assert.notNull(id, "id cannot be null");
-    Assert.hasText(tagName, "tagName must contain text");
-
-    Link link = getLink(id);
-    verifyLinkBeforeUpdate(link);
-    link.removeTag(new Tag(tagName));
-    linkRepository.save(link);
-  }
-
-  @Override
-  public Link updateLongUrl(LinkId id, String longUrl) {
-    Assert.notNull(id, "id cannot be null");
-    Assert.hasText(longUrl, "longUrl must contain text");
-
-    Link link = getLink(id);
-    link.updateLongUrl(longUrl);
-    return linkRepository.save(link);
-  }
-
-  @Override
-  public Link updateLongUrl(LinkId linkId, String longUrl, UtmParameters utmParameters) {
-    Assert.notNull(linkId, "linkId cannot be null");
-    Assert.hasText(longUrl, "longUrl must contain text");
-
-    Link link = getLink(linkId);
-    verifyLinkBeforeUpdate(link);
-    link.updateLongUrl(longUrl, utmParameters);
-    return linkRepository.save(link);
-  }
-
-  @Override
-  public URI getTargetUrl(String path) throws EntityNotFoundException {
-    return getLink(path).getTargetUrl();
-  }
-
-  @Override
-  public Link addLink(String longUrl, UtmParameters utmParameters, UserId userId)
+  public Link addLink(String longUrl, UtmParameters utmParameters, @NonNull UserId userId)
       throws InvalidUrlException {
 
     Assert.hasText(longUrl, "longUrl must contain text");
@@ -153,19 +81,74 @@ class LinkServiceImpl implements LinkService {
   }
 
   @Override
-  public Link updateUtmParameters(LinkId linkId, UtmParameters utmParameters)
-      throws ApplicationException {
+  public void activateLink(@NonNull LinkId id)
+      throws EntityNotFoundException, InvalidLinkStatusException {
+    Link link = getLink(id);
+    link.markActive();
 
-    Assert.notNull(linkId, "linkId cannot be null");
+    linkRepository.save(link);
+  }
 
-    Link link = getLink(linkId);
-    verifyLinkBeforeUpdate(link);
-    link.apply(utmParameters);
+  @Override
+  public void archiveLink(@NonNull LinkId id)
+      throws EntityNotFoundException, InvalidLinkStatusException {
+    Link link = getLink(id);
+    link.markArchived();
+
+    linkRepository.save(link);
+  }
+
+  @Override
+  public void addTag(@NonNull LinkId id, String tagName) throws EntityNotFoundException {
+    Assert.hasText(tagName, "tagName must contain text");
+
+    Link link = getLink(id);
+    link.addTag(new Tag(tagName));
+
+    linkRepository.save(link);
+  }
+
+  @Override
+  public void removeTag(@NonNull LinkId id, String tagName) throws EntityNotFoundException {
+    Assert.hasText(tagName, "tagName must contain text");
+
+    Link link = getLink(id);
+    link.removeTag(new Tag(tagName));
+    linkRepository.save(link);
+  }
+
+  @Override
+  public Link updateLongUrl(@NonNull LinkId id, String longUrl) throws EntityNotFoundException {
+    Assert.hasText(longUrl, "longUrl must contain text");
+
+    Link link = getLink(id);
+    link.updateLongUrl(longUrl);
     return linkRepository.save(link);
   }
 
-  protected void verifyLinkBeforeUpdate(Link link) {
-    // TODO: I don't remember what this was supposed to be doing
+  @Override
+  public Link updateLongUrl(@NonNull LinkId linkId, String longUrl, UtmParameters utmParameters)
+      throws EntityNotFoundException {
+
+    Assert.hasText(longUrl, "longUrl must contain text");
+
+    Link link = getLink(linkId);
+    link.updateLongUrl(longUrl, utmParameters);
+    return linkRepository.save(link);
+  }
+
+  @Override
+  public URI getTargetUrl(String path) throws EntityNotFoundException {
+    return getLink(path).getTargetUrl();
+  }
+
+  @Override
+  public Link updateUtmParameters(@NonNull LinkId linkId, UtmParameters utmParameters)
+      throws EntityNotFoundException {
+
+    Link link = getLink(linkId);
+    link.apply(utmParameters);
+    return linkRepository.save(link);
   }
 
 }

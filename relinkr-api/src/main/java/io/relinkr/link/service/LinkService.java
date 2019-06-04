@@ -16,7 +16,9 @@
 
 package io.relinkr.link.service;
 
-import io.relinkr.core.model.ApplicationException;
+import io.relinkr.core.model.EntityNotFoundException;
+import io.relinkr.link.model.InvalidLinkStatusException;
+import io.relinkr.link.model.InvalidUrlException;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.model.LinkId;
 import io.relinkr.link.model.UtmParameters;
@@ -25,31 +27,127 @@ import java.net.URI;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * Provides the service layer for {@link Link}s, that is, takes care of creating, updating, changing
+ * the status of links.
+ */
 public interface LinkService {
 
-  Link getLink(LinkId linkId);
+  /**
+   * Returns a link by its ID.
+   *
+   * @param linkId link's ID
+   * @return the link if exists
+   * @throws EntityNotFoundException is thrown if the link doesn't exist
+   */
+  Link getLink(LinkId linkId) throws EntityNotFoundException;
 
-  Link getLink(String path);
+  /**
+   * Returns a link by its path.
+   *
+   * @param path link's path
+   * @return the link if exists
+   * @throws EntityNotFoundException is thrown if the link doesn't exist
+   */
+  Link getLink(String path) throws EntityNotFoundException;
 
+  /**
+   * Fetches a paged slice of links by the given {@code userId}.
+   *
+   * @param userId user's ID owning the links to be fetched
+   * @param pageable {@link Pageable} defining the parameters of paging
+   * @return paged links
+   */
+  Page<Link> fetchLinks(UserId userId, Pageable pageable);
+
+  /**
+   * Add a new link.
+   *
+   * @param longUrl long url to shorten
+   * @param utmParameters UTM parameters (can be {@code null}
+   * @param userId user's ID (cannot be {@code null}
+   * @return A newly added link
+   * @throws InvalidUrlException is thrown if {@code longUrl} isn't a valid URL
+   */
   Link addLink(String longUrl, UtmParameters utmParameters, UserId userId)
-      throws ApplicationException;
+      throws InvalidUrlException;
 
-  Page<Link> listLinks(UserId userId, Pageable pageable);
+  /**
+   * Activates the given link.
+   *
+   * @param linkId link's ID to be activated
+   * @throws EntityNotFoundException is thrown if the link doesn't exist
+   * @throws InvalidLinkStatusException is thrown if the link next status cannot be {@code ACTIVE}
+   */
+  void activateLink(LinkId linkId) throws EntityNotFoundException, InvalidLinkStatusException;
 
-  void archiveLink(LinkId linkId);
+  /**
+   * Archived the given link.
+   *
+   * @param linkId link's ID to be activated
+   * @throws EntityNotFoundException is thrown if the link doesn't exist
+   * @throws InvalidLinkStatusException is thrown if the link next status cannot be {@code ARCHIVED}
+   */
+  void archiveLink(LinkId linkId) throws EntityNotFoundException, InvalidLinkStatusException;
 
-  void activateLink(LinkId linkId);
+  /**
+   * Add the given tag to a link.
+   *
+   * @param linkId link's ID to be tagged
+   * @param tagName tag to be added
+   * @throws EntityNotFoundException is thrown if the link doesn't exist
+   */
+  void addTag(LinkId linkId, String tagName) throws EntityNotFoundException;
 
-  void addTag(LinkId linkId, String tagName);
+  /**
+   * Removed the given tag from a link.
+   *
+   * @param linkId link's ID to be de-tagged
+   * @param tagName tag to be removed
+   * @throws EntityNotFoundException is thrown if the link doesn't exist
+   */
+  void removeTag(LinkId linkId, String tagName) throws EntityNotFoundException;
 
-  void removeTag(LinkId linkId, String tagName);
+  /**
+   * Updates a link's {@link io.relinkr.link.model.LongUrl}.
+   *
+   * @param linkId link's ID to be updated
+   * @param longUrl long URL as string
+   * @return the updated link
+   * @throws EntityNotFoundException is thrown if the link doesn't exist
+   */
+  Link updateLongUrl(LinkId linkId, String longUrl) throws EntityNotFoundException;
 
-  Link updateLongUrl(LinkId linkId, String longUrl);
+  /**
+   * Updates a link's {@link io.relinkr.link.model.LongUrl} and {@link UtmParameters}.
+   *
+   * @param linkId link's ID to be updated
+   * @param longUrl long URL as string
+   * @param utmParameters UTM parameters
+   * @return the updated link
+   * @throws EntityNotFoundException is thrown if the link doesn't exist
+   */
+  Link updateLongUrl(LinkId linkId, String longUrl, UtmParameters utmParameters)
+      throws EntityNotFoundException;
 
-  Link updateLongUrl(LinkId linkId, String longUrl, UtmParameters utmParameters);
+  /**
+   * Get's the link target URL.
+   *
+   * @param path identifying the link
+   * @return target URL
+   * @throws EntityNotFoundException is thrown if the link doesn't exist
+   */
+  URI getTargetUrl(String path) throws EntityNotFoundException;
 
-  URI getTargetUrl(String path) throws ApplicationException;
-
-  Link updateUtmParameters(LinkId linkId, UtmParameters utmParameters);
+  /**
+   * Updates a link's {@link UtmParameters}.
+   *
+   * @param linkId link's ID to be updated
+   * @param utmParameters UTM parameters
+   * @return the updated link
+   * @throws EntityNotFoundException is thrown if the link doesn't exist
+   */
+  Link updateUtmParameters(LinkId linkId, UtmParameters utmParameters)
+      throws EntityNotFoundException;
 
 }
