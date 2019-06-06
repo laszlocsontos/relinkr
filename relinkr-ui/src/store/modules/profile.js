@@ -24,6 +24,7 @@ const state = {
   userProfileType: "",
   userProfileId: "",
   fullName: "",
+  givenName: "",
   profileUrl: "",
   pictureUrl: ""
 };

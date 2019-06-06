@@ -87,7 +87,7 @@
     </b-modal>
 
     <!-- User Profile Dialog -->
-    <b-modal id="user-profile-dialog" title="Laszlo's Profile" ok-only>
+    <b-modal id="user-profile-dialog" :title="givenName + '\'s Profile'" ok-only>
       <b-form-group label-cols="6" label-cols-lg="3" label-size="sm" label="User ID"
                     label-for="user-id">
         <b-link v-bind:href="profileUrl">{{ userProfileId }}</b-link>
@@ -226,8 +226,10 @@
       }
     },
     computed: {
-      ...mapState('profile',
-          ['userProfileId', 'userProfileType', 'fullName', 'pictureUrl', 'profileUrl'])
+      ...mapState(
+          'profile',
+          ['userProfileId', 'userProfileType', 'fullName', 'givenName', 'pictureUrl', 'profileUrl']
+      )
     }
   }
 </script>
