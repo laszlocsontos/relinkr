@@ -36,6 +36,9 @@ spring:
             userNameAttribute: email
           facebook:
             userNameAttribute: email
+            # TODO: requesting the profile_pic field breaks login (see issue #54)
+            # gender and birthday fields are not planned to be used
+            userInfoUri: https://graph.facebook.com/v3.3/me?fields=id,name,email,first_name,middle_name,last_name,link
 
 relinkr:
   # openssl rand -base64 32
