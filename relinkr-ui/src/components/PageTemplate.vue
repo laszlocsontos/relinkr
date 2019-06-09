@@ -79,7 +79,7 @@
     </b-modal>
 
     <!-- User Profile Dialog -->
-    <b-modal id="user-profile-dialog" v-bind:title="givenName + '\'s Profile'" ok-only>
+    <b-modal id="user-profile-dialog" v-bind:title="profileTitle" ok-only>
       <b-form-group label-cols="6" label-cols-lg="3" label-size="sm" label="User ID" label-for="user-id">
         <b-link v-bind:href="profileUrl">{{ userProfileId }}</b-link>
       </b-form-group>
@@ -102,6 +102,7 @@
 <script>
   import { UserIcon } from 'vue-feather-icons'
   import { mapState } from 'vuex';
+  import { mapGetters } from 'vuex';
   import { mapActions } from 'vuex';
 
   import _ from 'lodash';
@@ -213,7 +214,8 @@
       }
     },
     computed: {
-      ...mapState('profile', ['userProfileId', 'userProfileType', 'fullName', 'givenName', 'pictureUrl', 'profileUrl'])
+      ...mapState('profile', ['userProfileId', 'userProfileType', 'fullName', 'givenName', 'pictureUrl', 'profileUrl']),
+      ...mapGetters('profile', ['profileTitle'])
     }
   }
 </script>
