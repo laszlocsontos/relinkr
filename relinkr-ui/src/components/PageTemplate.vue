@@ -229,7 +229,11 @@
       ...mapState(
           'profile',
           ['userProfileId', 'userProfileType', 'fullName', 'givenName', 'pictureUrl', 'profileUrl']
-      )
+      ),
+      profileTitle() {
+        const owner = this.givenName ? this.givenName + "'s" : 'User';
+        return owner + ' Profile';
+      }
     }
   }
 </script>
