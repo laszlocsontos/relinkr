@@ -102,7 +102,6 @@
 <script>
   import { UserIcon } from 'vue-feather-icons'
   import { mapState } from 'vuex';
-  import { mapGetters } from 'vuex';
   import { mapActions } from 'vuex';
 
   import _ from 'lodash';
@@ -214,8 +213,11 @@
       }
     },
     computed: {
-      ...mapState('profile', ['userProfileId', 'userProfileType', 'fullName', 'givenName', 'pictureUrl', 'profileUrl']),
-      ...mapGetters('profile', ['profileTitle'])
+      profileTitle() {
+        const owner = this.givenName ? this.givenName + "'s" : 'User';
+        return owner + ' Profile';
+      },
+      ...mapState('profile', ['userProfileId', 'userProfileType', 'fullName', 'givenName', 'pictureUrl', 'profileUrl'])
     }
   }
 </script>

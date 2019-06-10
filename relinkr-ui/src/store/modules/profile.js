@@ -30,10 +30,6 @@ const state = {
 };
 
 const getters = {
-  profileTitle() {
-    const owner = state.givenName ? state.givenName + "'s" : 'User';
-    return owner + ' Profile';
-  }
 };
 
 const mutations = {
