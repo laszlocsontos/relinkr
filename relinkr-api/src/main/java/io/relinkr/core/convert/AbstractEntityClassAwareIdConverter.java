@@ -24,7 +24,6 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.Optional;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.util.Assert;
 
 /**
  * Abstract base class for converting a simple value (usually a {@code Long} or {@code String} to

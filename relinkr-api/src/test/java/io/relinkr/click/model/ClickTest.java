@@ -25,7 +25,6 @@ import static io.relinkr.test.Mocks.VISITOR_IP;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
-import io.relinkr.core.model.Country;
 import org.junit.Before;
 import org.junit.Test;
 

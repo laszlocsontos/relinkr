@@ -20,7 +20,6 @@ import static java.util.stream.Collectors.toSet;
 import static org.springframework.security.oauth2.core.OAuth2ErrorCodes.SERVER_ERROR;
 
 import io.relinkr.user.model.EmailAddress;
-import io.relinkr.user.model.Role;
 import io.relinkr.user.model.User;
 import io.relinkr.user.model.UserProfile;
 import io.relinkr.user.service.UserProfileFactory;

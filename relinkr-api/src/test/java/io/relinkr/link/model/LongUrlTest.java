@@ -19,7 +19,6 @@ package io.relinkr.link.model;
 import static io.relinkr.test.Mocks.LONG_URL_BASE;
 import static io.relinkr.test.Mocks.LONG_URL_BASE_S;
 import static io.relinkr.test.Mocks.LONG_URL_INVALID_UTM;
-import static io.relinkr.test.Mocks.LONG_URL_INVALID_UTM_S;
 import static io.relinkr.test.Mocks.LONG_URL_VALID_UTM;
 import static io.relinkr.test.Mocks.LONG_URL_VALID_UTM_EMPTY_TC;
 import static io.relinkr.test.Mocks.LONG_URL_VALID_UTM_S;

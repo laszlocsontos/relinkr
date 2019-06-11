@@ -16,7 +16,6 @@
 
 package io.relinkr.visitor.service;
 
-import static io.relinkr.test.Mocks.USER_ID;
 import static io.relinkr.test.Mocks.VISITOR_ID_ZERO;
 import static io.relinkr.test.Mocks.createVisitor;
 import static org.junit.Assert.assertEquals;

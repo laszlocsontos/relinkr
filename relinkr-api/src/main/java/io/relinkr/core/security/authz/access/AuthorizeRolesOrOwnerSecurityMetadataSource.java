@@ -29,7 +29,6 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.method.AbstractMethodSecurityMetadataSource;
-import org.springframework.util.Assert;
 
 /**
  * Implementation of {@link org.springframework.security.access.method.MethodSecurityMetadataSource}

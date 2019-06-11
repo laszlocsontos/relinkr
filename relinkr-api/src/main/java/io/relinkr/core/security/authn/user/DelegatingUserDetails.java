@@ -16,10 +16,8 @@
 
 package io.relinkr.core.security.authn.user;
 
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
-import io.relinkr.user.model.Role;
 import io.relinkr.user.model.User;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;

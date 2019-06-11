@@ -30,9 +30,6 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;
 import lombok.NonNull;
 

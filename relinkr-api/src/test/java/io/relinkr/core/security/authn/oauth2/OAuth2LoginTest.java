@@ -46,7 +46,6 @@ import io.relinkr.user.model.EmailAddress;
 import io.relinkr.user.model.Role;
 import io.relinkr.user.model.User;
 import io.relinkr.user.model.UserProfile;
-import io.relinkr.user.model.UserProfileType;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;

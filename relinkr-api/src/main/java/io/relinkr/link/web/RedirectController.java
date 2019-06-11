@@ -27,7 +27,6 @@ import io.relinkr.core.model.EntityNotFoundException;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.model.RedirectedEvent;
 import io.relinkr.link.service.LinkService;
-import io.relinkr.user.model.UserId;
 import io.relinkr.visitor.model.VisitorId;
 import io.relinkr.visitor.service.VisitorService;
 import io.relinkr.visitor.web.VisitorIdCookieResolver;

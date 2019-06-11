@@ -26,7 +26,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Transient;
