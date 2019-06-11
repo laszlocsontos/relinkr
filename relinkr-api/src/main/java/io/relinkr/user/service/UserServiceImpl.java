@@ -30,6 +30,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 @Slf4j
 @Service
@@ -42,21 +43,14 @@ class UserServiceImpl implements UserService {
   @Override
   public User saveUser(EmailAddress emailAddress, UserProfile userProfile) {
     User user = findUser(emailAddress).orElseGet(() -> createUser(emailAddress));
-    return updateUser(user, userProfile);
+    return addUserProfile(user, userProfile);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public User getUser(UserId userId) {
+  public User getUser(UserId userId) throws EntityNotFoundException {
     return userRepository.findById(userId)
         .orElseThrow(() -> new EntityNotFoundException("id", userId));
-  }
-
-  User getUser(EmailAddress emailAddress) {
-    return userRepository.findByEmailAddress(emailAddress)
-        .orElseThrow(
-            () -> new EntityNotFoundException("emailAddress", emailAddress.getValue())
-        );
   }
 
   @Override
@@ -66,62 +60,59 @@ class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void deleteUser(UserId userId) {
-    userRepository.deleteById(userId);
-  }
-
-  @Override
-  public void lockUser(UserId userId) {
+  public void lockUser(UserId userId) throws EntityNotFoundException {
     updateUser(userId, User::lock);
   }
 
   @Override
-  public void unlockUser(UserId userId) {
+  public void unlockUser(UserId userId) throws EntityNotFoundException {
     updateUser(userId, User::unlock);
   }
 
   @Override
-  public void grantRole(UserId userId, Role role) {
+  public void grantRole(UserId userId, Role role) throws EntityNotFoundException {
     updateUser(userId, user -> user.grantRole(role));
   }
 
   @Override
-  public void revokeRole(UserId userId, Role role) {
+  public void revokeRole(UserId userId, Role role) throws EntityNotFoundException {
     updateUser(userId, user -> user.revokeRole(role));
   }
 
-  User createUser(EmailAddress emailAddress) {
+  private User createUser(EmailAddress emailAddress) {
     User user = User.of(emailAddress);
 
     try {
       user = userRepository.save(user);
     } catch (DuplicateKeyException dke) {
-      // User might have been created by another concurrent process
+      // User might have been created by another concurrent process, fetch it if that's the case
       log.warn(dke.getMessage(), dke);
-      user = getUser(emailAddress);
+      user = userRepository.findByEmailAddress(emailAddress).orElse(null);
     }
 
+    // User must exist at this point
+    Assert.notNull(user, "User should have been created");
     return user;
   }
 
-  User updateUser(User user, UserProfile userProfile) {
+  private User addUserProfile(User user, UserProfile userProfile) {
     while (true) {
       user.addUserProfile(userProfile);
 
       try {
         user = userRepository.save(user);
-        break;
+        userRepository.flush();
+
+        return user;
       } catch (OptimisticLockingFailureException olfe) {
         // User might have been altered by another concurrent process
         log.warn(olfe.getMessage(), olfe);
         user = getUser(user.getId());
       }
     }
-
-    return user;
   }
 
-  void updateUser(UserId userId, Consumer<User> updater) {
+  private void updateUser(UserId userId, Consumer<User> updater) {
     User user = getUser(userId);
     updater.accept(user);
     userRepository.save(user);

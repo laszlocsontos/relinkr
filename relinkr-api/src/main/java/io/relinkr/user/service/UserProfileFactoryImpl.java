@@ -38,6 +38,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+/**
+ * FIXME: gender and birthDate are to be removed, the app doesn't need to handle such
+ *   a personal detail.
+ */
 @Component
 public class UserProfileFactoryImpl implements UserProfileFactory {
 

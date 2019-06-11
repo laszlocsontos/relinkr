@@ -24,15 +24,15 @@ import io.relinkr.user.model.UserProfileType;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Before;
 import org.junit.Test;
 
 public class UserProfileFactoryTest {
 
   private final UserProfileFactory userProfileFactory = new UserProfileFactoryImpl();
 
-  @Before
-  public void setUp() throws Exception {
+  @Test(expected = IllegalArgumentException.class)
+  public void givenUnknownProfileType_whenCreate_thenIllegalArgumentException() {
+    userProfileFactory.create("bad", GOOGLE_USER_ATTRIBUTES);
   }
 
   @Test

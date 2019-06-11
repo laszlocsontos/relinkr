@@ -21,7 +21,6 @@ import static io.relinkr.test.Mocks.USER_ID;
 import static io.relinkr.test.Mocks.USER_ID_ZERO;
 import static io.relinkr.test.Mocks.createUserProfile;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 import io.relinkr.test.orm.BaseRepositoryTest;
 import io.relinkr.user.model.User;
@@ -31,7 +30,6 @@ import io.relinkr.user.model.UserProfileType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @DataJpaTest
@@ -59,18 +57,6 @@ public class UserRepositoryTest extends BaseRepositoryTest<User, UserId, UserRep
     UserProfileType userProfileType = userProfile.getUserProfileType();
     entity = repository.findByEmailAddress(EMAIL_ADDRESS).get();
     assertEquals(userProfile, entity.getUserProfile(userProfileType).get());
-  }
-
-  @Test
-  public void givenSavedUser_whenDeleteById_thenFound() {
-    saveEntity(entity);
-    repository.deleteById(entity.getId());
-    assertFalse(repository.findById(USER_ID).isPresent());
-  }
-
-  @Test(expected = EmptyResultDataAccessException.class)
-  public void givenNonExistentUser_whenDeleteById_thenFound() {
-    repository.deleteById(USER_ID);
   }
 
   @Override

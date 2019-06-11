@@ -22,10 +22,22 @@ import io.relinkr.user.model.User;
 import io.relinkr.user.model.UserId;
 import java.util.Optional;
 
+/**
+ * Repository of {@link User}s.
+ */
 interface UserRepository extends BaseRepository<User, UserId> {
 
+  /**
+   * Returns a user by their {@code emailAddress}.
+   *
+   * @param emailAddress email address to find by
+   * @return A {@link User} if exists, empty otherwise
+   */
   Optional<User> findByEmailAddress(EmailAddress emailAddress);
 
-  void deleteById(UserId userId);
+  /**
+   * Flushes all pending changes to the database.
+   */
+  void flush();
 
 }

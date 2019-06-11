@@ -20,10 +20,29 @@ import io.relinkr.user.model.UserProfile;
 import io.relinkr.user.model.UserProfileType;
 import java.util.Map;
 
+/**
+ * Creates {@link UserProfile} instances from attributes returned by that provider which
+ * authenticated the current user.
+ */
 public interface UserProfileFactory {
 
+  /**
+   * Creates a {@code UserProfile}.
+   *
+   * @param userProfileTypeString profile type as a string, see {@link UserProfileType}
+   * @param userAttributes attributes
+   * @return a {@code UserProfile}
+   * @throws IllegalArgumentException if {@code userProfileTypeString} is invalid
+   */
   UserProfile create(String userProfileTypeString, Map<String, Object> userAttributes);
 
+  /**
+   * Creates a {@code UserProfile}.
+   *
+   * @param userProfileType profile type
+   * @param userAttributes attributes
+   * @return a {@code UserProfile}
+   */
   UserProfile create(UserProfileType userProfileType, Map<String, Object> userAttributes);
 
 }

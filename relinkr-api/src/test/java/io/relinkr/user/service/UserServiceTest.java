@@ -29,6 +29,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 
@@ -44,6 +45,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.dao.OptimisticLockingFailureException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
@@ -87,39 +89,84 @@ public class UserServiceTest {
     );
   }
 
+  @Test
+  public void givenExistingUserAlreadyUpdated_whenSaveUser_thenUpdated() {
+    given(userRepository.findById(USER_ID)).willReturn(Optional.of(user));
+    given(userRepository.findByEmailAddress(EMAIL_ADDRESS)).willReturn(Optional.of(user));
+    given(userRepository.save(any(User.class))).willReturn(user);
+
+    // Simulate one failure upon flush
+    doThrow(new OptimisticLockingFailureException("error"))
+        .doNothing()
+        .when(userRepository)
+        .flush();
+
+    userService.saveUser(EMAIL_ADDRESS, userProfile);
+
+    assertUser(
+        2,
+        user -> assertNotNull(user.getUserProfile(userProfile.getUserProfileType()))
+    );
+  }
+
   @Test(expected = EntityNotFoundException.class)
-  public void givenNonExistentUser_whenGetUser_thenException() {
+  public void givenNonExistentUser_whenGetUser_thenEntityNotFoundException() {
     given(userRepository.findById(USER_ID)).willReturn(Optional.empty());
     userService.getUser(USER_ID);
   }
 
   @Test
-  public void givenUnlockedUser_whenLockUser_thenLocked() {
+  public void givenExistingUnlockedUser_whenLockUser_thenLocked() {
     given(userRepository.findById(USER_ID)).willReturn(Optional.of(user));
     userService.lockUser(USER_ID);
     assertUser(1, user -> assertTrue(user.isLocked()));
   }
 
+  @Test(expected = EntityNotFoundException.class)
+  public void givenNonExistentUser_whenLockUser_thenEntityNotFoundException() {
+    given(userRepository.findById(USER_ID)).willReturn(Optional.empty());
+    userService.lockUser(USER_ID);
+  }
+
   @Test
-  public void givenLockedUser_whenUnlockUser_thenUnlocked() {
+  public void givenExistingLockedUser_whenUnlockUser_thenUnlocked() {
     given(userRepository.findById(USER_ID)).willReturn(Optional.of(user));
     userService.unlockUser(USER_ID);
     assertUser(1, user -> assertFalse(user.isLocked()));
   }
 
+  @Test(expected = EntityNotFoundException.class)
+  public void givenNonExistentUser_whenUnlockUser_thenEntityNotFoundException() {
+    given(userRepository.findById(USER_ID)).willReturn(Optional.empty());
+    userService.unlockUser(USER_ID);
+    assertUser(1, user -> assertFalse(user.isLocked()));
+  }
+
   @Test
-  public void givenUserWithoutRole_whenGrantRole_thenGranted() {
+  public void givenExistingUserWithoutRole_whenGrantRole_thenGranted() {
     given(userRepository.findById(USER_ID)).willReturn(Optional.of(user));
     userService.grantRole(USER_ID, Role.ADMIN);
     assertUser(1, user -> assertThat(user.getRoles(), hasItem(Role.ADMIN)));
   }
 
+  @Test(expected = EntityNotFoundException.class)
+  public void givenNonExistentUser_whenGrantRole_thenEntityNotFoundException() {
+    given(userRepository.findById(USER_ID)).willReturn(Optional.empty());
+    userService.grantRole(USER_ID, Role.ADMIN);
+  }
+
   @Test
-  public void givenUserWithRole_whenRevokeRole_thenRevoked() {
+  public void givenExistingUserWithRole_whenRevokeRole_thenRevoked() {
     given(userRepository.findById(USER_ID)).willReturn(Optional.of(user));
     userService.grantRole(USER_ID, Role.ADMIN);
     userService.revokeRole(USER_ID, Role.ADMIN);
     assertUser(2, user -> assertThat(user.getRoles(), not(hasItem(Role.ADMIN))));
+  }
+
+  @Test(expected = EntityNotFoundException.class)
+  public void givenNonExistentUser_whenRevokeRole_thenEntityNotFoundException() {
+    given(userRepository.findById(USER_ID)).willReturn(Optional.empty());
+    userService.revokeRole(USER_ID, Role.ADMIN);
   }
 
   private void assertUser(int invocations, Consumer<User> savedUserAssertor) {
