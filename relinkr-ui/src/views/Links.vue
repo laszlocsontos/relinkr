@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
- 
+
 <template>
   <PageTemplate>
     <b-container fluid class="p-4 w-75">
@@ -36,13 +36,19 @@
           small striped borderless outlined>
 
         <template slot="showDetails" slot-scope="row">
-          <chevrons-down-icon v-b-tooltip.hover title="Show Details" @click="row.toggleDetails" v-if="!row.detailsShowing" class="btn-outline-primary"/>
-          <chevrons-up-icon v-b-tooltip.hover title="Hide Details" @click="row.toggleDetails" v-if="row.detailsShowing" class="btn-outline-primary"/>
+          <chevrons-down-icon v-b-tooltip.hover title="Show Details" @click="row.toggleDetails"
+                              v-if="!row.detailsShowing" class="btn-outline-primary"/>
+          <chevrons-up-icon v-b-tooltip.hover title="Hide Details" @click="row.toggleDetails"
+                            v-if="row.detailsShowing" class="btn-outline-primary"/>
           <a v-b-tooltip.hover title="View Target" target="_blank" :href="row.item.targetUrl">
-            <external-link-icon class="btn-outline-primary" />
+            <external-link-icon class="btn-outline-primary"/>
           </a>
-          <archive-icon v-b-tooltip.hover title="Archive Link" class="btn-outline-primary" v-if="hasNextStatus(row.item.id, 'ARCHIVED')" @click="onSetNextStatus(row.item.id, 'ARCHIVED')" />
-          <arrow-up-circle-icon v-b-tooltip.hover title="Activate Link" class="btn-outline-primary" v-if="hasNextStatus(row.item.id, 'ACTIVE')" @click="onSetNextStatus(row.item.id, 'ACTIVE')" />
+          <archive-icon v-b-tooltip.hover title="Archive Link" class="btn-outline-primary"
+                        v-if="hasNextStatus(row.item.id, 'ARCHIVED')"
+                        @click="onSetNextStatus(row.item.id, 'ARCHIVED')"/>
+          <arrow-up-circle-icon v-b-tooltip.hover title="Activate Link" class="btn-outline-primary"
+                                v-if="hasNextStatus(row.item.id, 'ACTIVE')"
+                                @click="onSetNextStatus(row.item.id, 'ACTIVE')"/>
         </template>
 
         <template slot="shortLink" slot-scope="row">
@@ -87,10 +93,12 @@
                 </b-list-group>
               </b-tab>
               <b-tab title="Clicks">
-                <line-chart :chart-data="clicksData" :chartId="'clicks-chart-' + row.item.id" height=150></line-chart>
+                <line-chart :chart-data="clicksData" :chartId="'clicks-chart-' + row.item.id"
+                            height=150></line-chart>
               </b-tab>
               <b-tab title="Visitors">
-                <doughnut-chart :chart-data="visitorsData" :chartId="'visitors-chart-' +row.item.id" height=150></doughnut-chart>
+                <doughnut-chart :chart-data="visitorsData" :chartId="'visitors-chart-' +row.item.id"
+                                height=150></doughnut-chart>
               </b-tab>
             </b-tabs>
           </b-card>
@@ -101,92 +109,98 @@
 </template>
 
 <script>
-import { ArrowUpCircleIcon, ExternalLinkIcon, ArchiveIcon, ChevronsDownIcon, ChevronsUpIcon } from 'vue-feather-icons'
-import DoughnutChart from '@/components/DoughnutChart.js'
-import LineChart from '@/components/LineChart.js'
-import PageTemplate from '@/components/PageTemplate.vue'
+  import {
+    ArchiveIcon,
+    ArrowUpCircleIcon,
+    ChevronsDownIcon,
+    ChevronsUpIcon,
+    ExternalLinkIcon
+  } from 'vue-feather-icons';
+  import DoughnutChart from '@/components/DoughnutChart.js';
+  import LineChart from '@/components/LineChart.js';
+  import PageTemplate from '@/components/PageTemplate.vue';
 
-import { mapGetters } from 'vuex';
-import { mapActions } from 'vuex';
+  import {mapActions, mapGetters} from 'vuex';
 
-export default {
-  components: {
-    ArrowUpCircleIcon, ExternalLinkIcon, ArchiveIcon, ChevronsDownIcon, ChevronsUpIcon,
-    DoughnutChart, LineChart, PageTemplate
-  },
-  mounted () {
-    this.$root.$on("refreshLinks", () => this._refresh());
-  },
-  data() {
-    return {
-      currentPage: 1,
-      fields: {
-        showDetails: {
-          label: '',
-          sortable: false
+  export default {
+    components: {
+      ArrowUpCircleIcon, ExternalLinkIcon, ArchiveIcon, ChevronsDownIcon, ChevronsUpIcon,
+      DoughnutChart, LineChart, PageTemplate
+    },
+    mounted() {
+      this.$root.$on("refreshLinks", () => this._refresh());
+    },
+    data() {
+      return {
+        currentPage: 1,
+        fields: {
+          showDetails: {
+            label: '',
+            sortable: false
+          },
+          shortLink: {
+            label: 'Link',
+            sortable: false
+          },
+          createdDate: {
+            label: 'Created At',
+            sortable: true
+          },
+          clicks: {
+            label: 'Clicks',
+            sortable: true
+          },
+          visitors: {
+            label: 'Unique Visitors',
+            sortable: true
+          },
+          controls: {
+            label: '',
+            sortable: false
+          }
         },
-        shortLink: {
-          label: 'Link',
-          sortable: false
+        clicksData: {
+          datasets: [{
+            label: "# of clicks",
+            data: [10, 20, 35, 20, 42, 25, 80]
+          }],
+          labels: ['2018-03-06', '2018-03-07', '2018-03-08', '2018-03-09', '2018-03-10',
+            '2018-03-11', '2018-03-12'],
         },
-        createdDate: {
-          label: 'Created At',
-          sortable: true
-        },
-        clicks: {
-          label: 'Clicks',
-          sortable: true
-        },
-        visitors: {
-          label: 'Unique Visitors',
-          sortable: true
-        },
-        controls: {
-          label: '',
-          sortable: false
+        visitorsData: {
+          datasets: [{
+            data: [10, 30]
+          }],
+
+          // These labels appear in the legend and in the tooltips when hovering different arcs
+          labels: [
+            'New',
+            'Returning'
+          ]
         }
+      }
+    },
+    methods: {
+      ...mapActions('link', ['fetchLinks', 'setNextStatus']),
+      onLoad(ctx, callback) {
+        this.fetchLinks({page: ctx.currentPage, callback: callback});
       },
-      clicksData: {
-        datasets: [{
-          label: "# of clicks",
-          data: [10, 20, 35, 20, 42, 25, 80]
-        }],
-        labels: ['2018-03-06', '2018-03-07', '2018-03-08', '2018-03-09', '2018-03-10', '2018-03-11', '2018-03-12'],
+      onSetNextStatus(id, nextStatus) {
+        this.setNextStatus({
+          id: id,
+          nextStatus: nextStatus,
+          refreshCallback: () => this._refresh()
+        });
       },
-      visitorsData: {
-        datasets: [{
-          data: [10, 30]
-        }],
-
-        // These labels appear in the legend and in the tooltips when hovering different arcs
-        labels: [
-          'New',
-          'Returning'
-        ]
+      _refresh() {
+        this.$refs.linksTable.refresh();
+      }
+    },
+    computed: {
+      ...mapGetters('link', ['totalRows', 'perPage', 'hasNextStatus']),
+      rows() {
+        return this.items.length;
       }
     }
-  },
-  methods: {
-    ...mapActions('link', ['fetchLinks', 'setNextStatus']),
-    onLoad(ctx, callback) {
-      this.fetchLinks({page: ctx.currentPage, callback: callback});
-    },
-    onSetNextStatus(id, nextStatus) {
-      this.setNextStatus({
-        id: id,
-        nextStatus: nextStatus,
-        refreshCallback: () => this._refresh()
-      });
-    },
-    _refresh() {
-      this.$refs.linksTable.refresh();
-    }
-  },
-  computed: {
-    ...mapGetters('link', ['totalRows', 'perPage', 'hasNextStatus']),
-    rows() {
-      return this.items.length
-    }
   }
-}
 </script>

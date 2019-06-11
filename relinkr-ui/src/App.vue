@@ -13,20 +13,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
- 
+
 <template>
   <div id="app">
-    <router-view />
+    <router-view/>
   </div>
 </template>
 
 <script>
-export default {
-  mounted () {
-  },
-  methods: {
-  },
-  computed: {
+  export default {
+    mounted() {
+    },
+    methods: {},
+    computed: {}
   }
-}
 </script>
