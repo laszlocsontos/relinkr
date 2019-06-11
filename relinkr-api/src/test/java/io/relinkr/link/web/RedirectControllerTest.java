@@ -117,11 +117,11 @@ public class RedirectControllerTest {
     //  VisitorIdCookieResolver returns null when cookie value is missing or integrity check failed
     given(visitorIdCookieResolver.resolveVisitorId(any(HttpServletRequest.class)))
         .willReturn(Optional.empty());
-    given(visitorService.ensureVisitor(null, link.getUserId())).willReturn(VISITOR_ID);
+    given(visitorService.ensureVisitor(null)).willReturn(VISITOR_ID);
 
     redirect(link);
 
-    then(visitorService).should().ensureVisitor(null, link.getUserId());
+    then(visitorService).should().ensureVisitor(null);
     then(visitorIdCookieResolver).should().setVisitorId(
         any(HttpServletResponse.class),
         eq(VISITOR_ID)
@@ -138,12 +138,12 @@ public class RedirectControllerTest {
     //  VisitorIdCookieResolver returns null when cookie value is missing or integrity check failed
     given(visitorIdCookieResolver.resolveVisitorId(any(HttpServletRequest.class)))
         .willReturn(Optional.of(VISITOR_ID_ZERO));
-    given(visitorService.ensureVisitor(VISITOR_ID_ZERO, link.getUserId()))
+    given(visitorService.ensureVisitor(VISITOR_ID_ZERO))
         .willReturn(VISITOR_ID);
 
     redirect(link);
 
-    then(visitorService).should().ensureVisitor(VISITOR_ID_ZERO, link.getUserId());
+    then(visitorService).should().ensureVisitor(VISITOR_ID_ZERO);
     then(visitorIdCookieResolver).should().setVisitorId(
         any(HttpServletResponse.class),
         eq(VISITOR_ID)
@@ -159,11 +159,11 @@ public class RedirectControllerTest {
     given(linkService.getLink(link.getPath())).willReturn(link);
     given(visitorIdCookieResolver.resolveVisitorId(any(HttpServletRequest.class)))
         .willReturn(Optional.of(VISITOR_ID));
-    given(visitorService.ensureVisitor(VISITOR_ID, link.getUserId())).willReturn(VISITOR_ID);
+    given(visitorService.ensureVisitor(VISITOR_ID)).willReturn(VISITOR_ID);
 
     redirect(link);
 
-    then(visitorService).should().ensureVisitor(VISITOR_ID, link.getUserId());
+    then(visitorService).should().ensureVisitor(VISITOR_ID);
     then(visitorIdCookieResolver).should(never()).setVisitorId(
         any(HttpServletResponse.class),
         any(VisitorId.class)

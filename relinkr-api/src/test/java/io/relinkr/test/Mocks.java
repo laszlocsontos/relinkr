@@ -292,7 +292,7 @@ public final class Mocks {
   }
 
   public static Visitor createVisitor() {
-    Visitor visitor = Visitor.of(USER_ID);
+    Visitor visitor = new Visitor();
     visitor.setId(VISITOR_ID);
     return visitor;
   }

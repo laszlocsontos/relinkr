@@ -16,11 +16,9 @@
 
 package io.relinkr.visitor.service;
 
-import io.relinkr.user.model.UserId;
 import io.relinkr.visitor.model.Visitor;
 import io.relinkr.visitor.model.VisitorId;
 import java.util.Optional;
-import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,10 +33,10 @@ class VisitorServiceImpl implements VisitorService {
   }
 
   @Override
-  public VisitorId ensureVisitor(VisitorId visitorId, @NonNull UserId userId) {
+  public VisitorId ensureVisitor(VisitorId visitorId) {
     Visitor visitor = Optional.ofNullable(visitorId)
         .flatMap(visitorRepository::findById)
-        .orElseGet(() -> Visitor.of(userId));
+        .orElseGet(Visitor::new);
 
     return visitorRepository.save(visitor).getId();
   }

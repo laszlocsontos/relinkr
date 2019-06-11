@@ -20,6 +20,9 @@ import io.relinkr.core.orm.BaseRepository;
 import io.relinkr.visitor.model.Visitor;
 import io.relinkr.visitor.model.VisitorId;
 
+/**
+ * Repository of {@link Visitor}s.
+ */
 interface VisitorRepository extends BaseRepository<Visitor, VisitorId> {
 
 }

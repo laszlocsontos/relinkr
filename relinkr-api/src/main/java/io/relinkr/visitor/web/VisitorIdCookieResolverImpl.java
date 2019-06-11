@@ -30,6 +30,9 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+/**
+ * Resolves a {@link VisitorId} from HTTP cookie named {@code vid}.
+ */
 @Component
 public class VisitorIdCookieResolverImpl
     extends AbstractCookieValueResolver<VisitorId> implements VisitorIdCookieResolver {

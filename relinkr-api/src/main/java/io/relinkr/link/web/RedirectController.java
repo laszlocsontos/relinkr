@@ -130,12 +130,10 @@ public class RedirectController {
   }
 
   private void emitRedirectedEvent(Link link, ServletWebRequest webRequest) {
-    UserId userId = link.getUserId();
-
     VisitorId existingVisitorId =
         visitorIdCookieResolver.resolveVisitorId(webRequest.getRequest()).orElse(null);
 
-    VisitorId visitorId = visitorService.ensureVisitor(existingVisitorId, userId);
+    VisitorId visitorId = visitorService.ensureVisitor(existingVisitorId);
 
     if (!visitorId.equals(existingVisitorId)) {
       visitorIdCookieResolver.setVisitorId(webRequest.getResponse(), visitorId);
@@ -144,7 +142,7 @@ public class RedirectController {
     String ipAddress = extractRemoteAddr(webRequest.getRequest());
 
     RedirectedEvent redirectedEvent =
-        RedirectedEvent.of(link.getId(), visitorId, ipAddress, userId, clock.instant());
+        RedirectedEvent.of(link.getId(), visitorId, ipAddress, link.getUserId(), clock.instant());
 
     webRequest.registerDestructionCallback(
         EMIT_REDIRECT_EVENT_CALLBACK,

@@ -16,12 +16,20 @@
 
 package io.relinkr.visitor.service;
 
-import io.relinkr.user.model.UserId;
 import io.relinkr.visitor.model.VisitorId;
-import org.springframework.lang.NonNull;
 
+/**
+ * Provides the service layer for {@link io.relinkr.visitor.model.Visitor}s. The only operation that
+ * is supported right now is {@link VisitorService#ensureVisitor(VisitorId)}, see below.
+ */
 public interface VisitorService {
 
-  VisitorId ensureVisitor(VisitorId visitorId, @NonNull UserId userId);
+  /**
+   * Ensures that a {@code VisitorId} exists.
+   *
+   * @param visitorId Visitor's ID to check
+   * @return {@code visitorId} if it's exists or a new ID if it didn't exist
+   */
+  VisitorId ensureVisitor(VisitorId visitorId);
 
 }

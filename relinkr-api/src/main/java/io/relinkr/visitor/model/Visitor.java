@@ -17,34 +17,23 @@
 package io.relinkr.visitor.model;
 
 import io.relinkr.core.orm.AbstractEntity;
-import io.relinkr.user.model.Ownable;
-import io.relinkr.user.model.UserId;
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import lombok.Getter;
 
+/**
+ * Represents an anonymous visitor who clicked on a shortened link. We don't wish to record and
+ * keep any personal data; the only goal of tracking visitors is to be able to calculate a new vs.
+ * returning ratio. A {@code Visitor} is merely an ID with some metadata and no personal data
+ * attached.
+ */
 @Getter
 @Entity
-public class Visitor extends AbstractEntity<VisitorId> implements Ownable {
+public class Visitor extends AbstractEntity<VisitorId> {
 
-  @Embedded
-  @AttributeOverride(name = "id", column = @Column(name = "user_id"))
-  private UserId userId;
-
-  /*
-   * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
+  /**
+   * Creates a new {@code Visitor} with an empty ID.
    */
-  Visitor() {
-  }
-
-  private Visitor(UserId userId) {
-    this.userId = userId;
-  }
-
-  public static Visitor of(UserId userId) {
-    return new Visitor(userId);
+  public Visitor() {
   }
 
 }

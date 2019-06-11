@@ -22,6 +22,10 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Resolution strategy for extracting {@link VisitorId}s from HTTP cookies based on
+ * {@link CookieValueResolver}.
+ */
 public interface VisitorIdCookieResolver extends CookieValueResolver<VisitorId> {
 
   default Optional<VisitorId> resolveVisitorId(HttpServletRequest request) {

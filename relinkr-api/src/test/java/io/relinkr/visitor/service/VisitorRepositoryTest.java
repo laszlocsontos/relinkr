@@ -16,7 +16,6 @@
 
 package io.relinkr.visitor.service;
 
-import static io.relinkr.test.Mocks.USER_ID;
 import static io.relinkr.test.Mocks.VISITOR_ID;
 import static io.relinkr.test.Mocks.VISITOR_ID_ZERO;
 
@@ -29,7 +28,7 @@ public class VisitorRepositoryTest extends
 
   @Override
   protected Visitor createEntity() {
-    return Visitor.of(USER_ID);
+    return new Visitor();
   }
 
   @Override

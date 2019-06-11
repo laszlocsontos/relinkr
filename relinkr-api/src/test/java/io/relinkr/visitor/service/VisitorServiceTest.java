@@ -20,6 +20,7 @@ import static io.relinkr.test.Mocks.USER_ID;
 import static io.relinkr.test.Mocks.VISITOR_ID_ZERO;
 import static io.relinkr.test.Mocks.createVisitor;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -61,12 +62,12 @@ public class VisitorServiceTest {
     given(visitorRepository.save(any(Visitor.class))).willReturn(visitor);
 
     // when
-    assertEquals(visitor.getId(), visitorService.ensureVisitor(null, USER_ID));
+    assertEquals(visitor.getId(), visitorService.ensureVisitor(null));
 
     // then
     then(visitorRepository).should(never()).findById(any(VisitorId.class));
     then(visitorRepository).should().save(visitorArgumentCaptor.capture());
-    assertEquals(USER_ID, visitorArgumentCaptor.getValue().getUserId());
+    assertNotNull(visitorArgumentCaptor.getValue());
   }
 
   @Test
@@ -76,12 +77,12 @@ public class VisitorServiceTest {
     given(visitorRepository.save(any(Visitor.class))).willReturn(visitor);
 
     // when
-    assertEquals(visitor.getId(), visitorService.ensureVisitor(VISITOR_ID_ZERO, USER_ID));
+    assertEquals(visitor.getId(), visitorService.ensureVisitor(VISITOR_ID_ZERO));
 
     // then
     then(visitorRepository).should().findById(VISITOR_ID_ZERO);
     then(visitorRepository).should().save(visitorArgumentCaptor.capture());
-    assertEquals(USER_ID, visitorArgumentCaptor.getValue().getUserId());
+    assertNotNull(visitorArgumentCaptor.getValue());
   }
 
   @Test
@@ -91,12 +92,12 @@ public class VisitorServiceTest {
     given(visitorRepository.save(any(Visitor.class))).willReturn(visitor);
 
     // when
-    assertEquals(visitor.getId(), visitorService.ensureVisitor(visitor.getId(), USER_ID));
+    assertEquals(visitor.getId(), visitorService.ensureVisitor(visitor.getId()));
 
     // then
     then(visitorRepository).should().findById(visitor.getId());
     then(visitorRepository).should().save(visitorArgumentCaptor.capture());
-    assertEquals(USER_ID, visitorArgumentCaptor.getValue().getUserId());
+    assertNotNull(visitorArgumentCaptor.getValue());
   }
 
 }
