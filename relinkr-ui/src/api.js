@@ -47,20 +47,20 @@ const fetch = (method, endpoint, authToken, headers = {}, params = {},
   return axios(config);
 };
 
-export const get = ({endpoint, authToken, params, headers}) =>
-    fetch('GET', endpoint, authToken, headers, params);
+export const get = ({endpoint, params, headers}) =>
+    fetch('GET', endpoint, headers, params);
 
-export const head = ({endpoint, authToken, params, headers}) =>
-    fetch('HEAD', endpoint, authToken, headers, params);
+export const head = ({endpoint, params, headers}) =>
+    fetch('HEAD', endpoint, headers, params);
 
-export const del = ({endpoint, authToken, params, headers}) =>
-    fetch('DELETE', endpoint, authToken, headers, params);
+export const del = ({endpoint, params, headers}) =>
+    fetch('DELETE', endpoint, headers, params);
 
-export const post = ({endpoint, authToken, data, params, headers}) =>
-    fetch('POST', endpoint, authToken, headers, params, data);
+export const post = ({endpoint, data, params, headers}) =>
+    fetch('POST', endpoint, headers, params, data);
 
-export const patch = ({endpoint, authToken, data = {}, params, headers}) =>
-    fetch('PATCH', endpoint, authToken, headers, params, data);
+export const patch = ({endpoint, data = {}, params, headers}) =>
+    fetch('PATCH', endpoint, headers, params, data);
 
-export const put = ({endpoint, authToken, data, params, headers}) =>
-    fetch('PUT', endpoint, authToken, headers, params, data);
+export const put = ({endpoint, data, params, headers}) =>
+    fetch('PUT', endpoint, headers, params, data);
