@@ -34,13 +34,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Provides the REST API for managing users.
+ */
 @RestController
 @RequestMapping("/v1/users")
 @RequiredArgsConstructor
 public class UserResourceController {
 
   private final UserService userService;
-  private final UserResourceAssembler userResourceAssembler;
 
   @AuthorizeRolesOrOwner
   @GetMapping(path = "/{userId}", produces = HAL_JSON_VALUE)
@@ -57,7 +59,7 @@ public class UserResourceController {
         "Authentication details should be a UserProfileType instance"
     );
 
-    return ok(userResourceAssembler.toResource(user, (UserProfileType) details));
+    return ok(UserResource.of(user, (UserProfileType) details));
   }
 
 }

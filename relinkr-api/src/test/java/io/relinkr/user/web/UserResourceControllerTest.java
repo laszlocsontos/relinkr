@@ -31,17 +31,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.relinkr.test.security.AbstractResourceControllerTest;
+import io.relinkr.test.security.AbstractResourceControllerTest.TestConfig;
 import io.relinkr.user.model.Gender;
 import io.relinkr.user.model.User;
 import io.relinkr.user.model.UserProfile;
-import io.relinkr.user.web.UserResourceControllerTest.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.ResultActions;
@@ -95,7 +92,8 @@ public class UserResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  public void givenExistingUserIdWithoutAuthenticatedUser_whenGetUser_thenUnauthorized() throws Exception {
+  public void givenExistingUserIdWithoutAuthenticatedUser_whenGetUser_thenUnauthorized()
+      throws Exception {
     given(userService.getUser(user.getId())).willReturn(user);
 
     ResultActions resultActions = mockMvc
@@ -169,17 +167,6 @@ public class UserResourceControllerTest extends AbstractResourceControllerTest {
                 is(user.getUserPreferences().getLocale().getLanguage())
             )
         );
-  }
-
-  @TestConfiguration
-  @Import(AbstractResourceControllerTest.TestConfig.class)
-  public static class TestConfig {
-
-    @Bean
-    UserResourceAssembler userResourceAssembler() {
-      return new UserResourceAssembler();
-    }
-
   }
 
 }

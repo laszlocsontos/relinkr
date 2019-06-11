@@ -17,6 +17,7 @@
 package io.relinkr.user.web;
 
 import static javax.persistence.EnumType.STRING;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -40,6 +41,9 @@ import lombok.Setter;
 import org.springframework.hateoas.core.Relation;
 import org.springframework.util.Assert;
 
+/**
+ * DTO which represents a {@link User} as a REST resource.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -54,7 +58,7 @@ class UserResource extends AbstractResource {
   @JsonProperty("userPreferences")
   private UserPreferencesResource userPreferencesResource;
 
-  UserResource(@NonNull User user, UserProfileType userProfileType) {
+  private UserResource(@NonNull User user, UserProfileType userProfileType) {
     super(user);
 
     this.emailAddress = user.getEmailAddress().getValue();
@@ -65,6 +69,12 @@ class UserResource extends AbstractResource {
         .orElse(null);
 
     userPreferencesResource = new UserPreferencesResource(user.getUserPreferences());
+  }
+
+  static UserResource of(@NonNull User user, UserProfileType userProfileType) {
+    UserResource userResource = new UserResource(user, userProfileType);
+    userResource.add(linkTo(UserResourceController.class).slash(user.getId()).withSelfRel());
+    return userResource;
   }
 
   @JsonIgnore
