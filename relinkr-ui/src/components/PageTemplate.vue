@@ -81,7 +81,7 @@
       </b-form-group>
       <b-alert variant="danger" :show="newLinkDialog.errors.length > 0">
         <ul>
-          <li v-for="error in newLinkDialog.errors">{{ error }}</li>
+          <li v-for="error in newLinkDialog.errors" v-bind:key="error">{{ error }}</li>
         </ul>
       </b-alert>
     </b-modal>
