@@ -37,7 +37,6 @@ const getters = {
   perPage: () => PAGE_SIZE,
   hasNextStatus: state => (id, nextStatus) => {
     const paths = state.userLinkStatuses[id];
-    console.log("hasNextStatus", id, nextStatus, paths);
     return _.some(paths, (path) => _.endsWith(path, nextStatus));
   }
 };

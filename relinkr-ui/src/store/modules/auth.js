@@ -21,8 +21,6 @@ import router from "../../router";
 
 Vue.use(VueCookies);
 
-/* eslint-disable no-console */
-
 const TOKEN_PAYLOAD_COOKIE_NAME = 'atp';
 
 // initial state
@@ -59,7 +57,6 @@ const mutations = {
 
 const actions = {
   checkToken({dispatch}) {
-    console.log("checkToken");
 
     const token = this._vm.$cookies.get(TOKEN_PAYLOAD_COOKIE_NAME);
     if (_.isEmpty(token)) {
@@ -67,9 +64,7 @@ const actions = {
     }
 
     try {
-      console.log("token", token);
       let decoded = JSON.parse(atob(token));
-      console.log("decoded", decoded);
 
       const auth = {
         userId: decoded.sub,
@@ -86,12 +81,10 @@ const actions = {
     const auth = args || {};
     commit('setAuthentication', auth);
     router.push({path: '/dashboard'});
-    console.log("login: ", auth);
   },
   logout({commit}) {
     commit('clearAuthentication');
     router.push({path: '/login'});
-    console.log("logout");
   }
 };
 

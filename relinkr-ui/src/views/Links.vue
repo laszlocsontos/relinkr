@@ -169,8 +169,6 @@ export default {
   methods: {
     ...mapActions('link', ['fetchLinks', 'setNextStatus']),
     onLoad(ctx, callback) {
-      // eslint-disable-next-line
-      console.log("onLoad", ctx, callback);
       this.fetchLinks({page: ctx.currentPage, callback: callback});
     },
     onSetNextStatus(id, nextStatus) {

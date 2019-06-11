@@ -44,7 +44,6 @@ const fetch = (method, endpoint, authToken, headers = {}, params = {},
     config.data = data;
   }
 
-  console.log("opts", config);
   return axios(config);
 };
 
