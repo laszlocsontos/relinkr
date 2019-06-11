@@ -13,11 +13,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 import _ from 'lodash';
 import axios from 'axios';
 
-import { API_BASE_URL } from './config'
+import {API_BASE_URL} from './config'
 
 const DEFAULT_HEADERS = {
   'Accept': 'application/json, application/hal+json',
@@ -25,17 +25,19 @@ const DEFAULT_HEADERS = {
   'X-Requested-With': 'XMLHttpRequest'
 };
 
-const fetch = (method, endpoint, authToken, headers = {}, params = {}, data=null) => {
+const fetch = (method, endpoint, authToken, headers = {}, params = {},
+    data = null) => {
   const config = {
     method: method,
     url: `${API_BASE_URL}${endpoint}`,
-    params: _.defaults({}, params || {}, { bust: (Date.now()) }),
+    params: _.defaults({}, params || {}, {bust: (Date.now())}),
     headers: _.defaults(DEFAULT_HEADERS, headers || {}),
     withCredentials: true
   };
 
   if (!_.isEmpty(authToken)) {
-    config.headers = _.defaults(config.headers, { 'Authorization': `Bearer ${authToken}` });
+    config.headers = _.defaults(config.headers,
+        {'Authorization': `Bearer ${authToken}`});
   }
 
   if (data) {
@@ -46,20 +48,20 @@ const fetch = (method, endpoint, authToken, headers = {}, params = {}, data=null
   return axios(config);
 };
 
-export const get = ({ endpoint, authToken, params, headers }) =>
+export const get = ({endpoint, authToken, params, headers}) =>
     fetch('GET', endpoint, authToken, headers, params);
 
-export const head = ({ endpoint, authToken, params, headers }) =>
+export const head = ({endpoint, authToken, params, headers}) =>
     fetch('HEAD', endpoint, authToken, headers, params);
 
-export const del = ({ endpoint, authToken, params, headers }) =>
+export const del = ({endpoint, authToken, params, headers}) =>
     fetch('DELETE', endpoint, authToken, headers, params);
 
-export const post = ({ endpoint, authToken, data, params, headers }) =>
+export const post = ({endpoint, authToken, data, params, headers}) =>
     fetch('POST', endpoint, authToken, headers, params, data);
 
-export const patch = ({ endpoint, authToken, data={}, params, headers }) =>
+export const patch = ({endpoint, authToken, data = {}, params, headers}) =>
     fetch('PATCH', endpoint, authToken, headers, params, data);
 
-export const put = ({ endpoint, authToken, data, params, headers }) =>
+export const put = ({endpoint, authToken, data, params, headers}) =>
     fetch('PUT', endpoint, authToken, headers, params, data);

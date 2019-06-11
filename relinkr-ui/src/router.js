@@ -14,15 +14,15 @@
   limitations under the License.
 */
  
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
 
 import store from './store';
 
-import Login from '@/views/Login.vue'
-import Dashboard from '@/views/Dashboard.vue'
-import Links from '@/views/Links.vue'
-import Stats from '@/views/Stats.vue'
+import Login from '@/views/Login.vue';
+import Dashboard from '@/views/Dashboard.vue';
+import Links from '@/views/Links.vue';
+import Stats from '@/views/Stats.vue';
 
 Vue.use(Router);
 

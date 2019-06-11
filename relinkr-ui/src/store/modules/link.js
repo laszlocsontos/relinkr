@@ -88,7 +88,8 @@ const actions = {
   },
   setNextStatus(_, args) {
     const {id, nextStatus, refreshCallback} = args || {
-      id: 0, nextStatus: "", refreshCallback: () => { }
+      id: 0, nextStatus: "", refreshCallback: () => {
+      }
     };
 
     put({endpoint: `/v1/links/${id}/linkStatuses/${nextStatus}`})

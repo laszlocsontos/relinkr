@@ -28,8 +28,7 @@ const state = {
   pictureUrl: ""
 };
 
-const getters = {
-};
+const getters = {};
 
 const mutations = {
   setProfile(state, data) {
