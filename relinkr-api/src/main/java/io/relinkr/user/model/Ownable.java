@@ -16,8 +16,16 @@
 
 package io.relinkr.user.model;
 
+/**
+ * Marker interface to be implemented by entities which are owned by a specific {@link User}.
+ */
 public interface Ownable {
 
+  /**
+   * Returns the owner User's ID.
+   *
+   * @return owner User's ID
+   */
   UserId getUserId();
 
 }

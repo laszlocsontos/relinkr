@@ -43,6 +43,10 @@ import javax.persistence.Table;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+/**
+ * A stored user entry created upon OAuth2 login. Every user is uniquely idenfied by their email
+ * address, regardless of what authentication mechanism they used to log in.
+ */
 @Entity
 @Table(name = "user_")
 public class User extends AbstractEntity<UserId> implements Ownable {
@@ -72,32 +76,42 @@ public class User extends AbstractEntity<UserId> implements Ownable {
   @Embedded
   private UserPreferences userPreferences;
 
-  /**
-   * Creates a new user with a single {@link Role} {@code USER} and
-   * with a default {@link UserPreferences}.
+  /*
+   * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
    */
-  public User() {
+  User() {
+  }
+
+  private User(EmailAddress emailAddress, String encryptedPassword) {
     roles = new LinkedHashSet<>();
     roles.add(Role.USER);
 
     userProfiles = new LinkedHashMap<>();
-    userPreferences = new UserPreferences();
-  }
+    userPreferences = UserPreferences.DEFAULT;
 
-  /**
-   * Creates a new user with the given email address and password.
-   *
-   * @param emailAddress email address
-   * @param encryptedPassword password
-   */
-  public User(EmailAddress emailAddress, String encryptedPassword) {
-    this();
     this.emailAddress = emailAddress;
     this.encryptedPassword = encryptedPassword;
   }
 
+  /**
+   * Creates a new user with the given email address with a single {@link Role}
+   * {@code USER} and with a default {@link UserPreferences}.
+   *
+   * @param emailAddress email address
+   */
   public static User of(EmailAddress emailAddress) {
     return new User(emailAddress, null);
+  }
+
+  /**
+   * Creates a new user with the given email address and password with a single {@link Role}
+   * {@code USER} and with a default {@link UserPreferences}.
+   *
+   * @param emailAddress email address
+   * @param encryptedPassword password
+   */
+  public static User of(EmailAddress emailAddress, String encryptedPassword) {
+    return new User(emailAddress, encryptedPassword);
   }
 
   @Override

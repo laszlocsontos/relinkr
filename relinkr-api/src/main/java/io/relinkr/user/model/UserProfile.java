@@ -32,6 +32,10 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
+/**
+ * As {@link User}s are idenfied by their email address, they might have multiple profiles when they
+ * get authenticated through an OAuth2 provider or natively with their password.
+ */
 @Embeddable
 @NoArgsConstructor(access = PACKAGE)
 @AllArgsConstructor(staticName = "of")
@@ -55,6 +59,9 @@ public class UserProfile {
 
   private URI profileUrl;
   private URI pictureUrl;
+
+  // FIXME: gender and birthDate are to be removed, the app doesn't need to handle such a
+  //  personal detail.
 
   @Enumerated(STRING)
   private Gender gender;

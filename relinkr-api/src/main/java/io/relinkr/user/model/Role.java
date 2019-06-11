@@ -16,6 +16,10 @@
 
 package io.relinkr.user.model;
 
+/**
+ * Roles supported by the authorization system. Role {@code USER} is granted to Every newly created
+ * user, while {@code ADMIN} has to be granted manually.
+ */
 public enum Role {
   USER, ADMIN
 }

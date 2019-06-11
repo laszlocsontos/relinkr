@@ -75,8 +75,7 @@ public class UserRepositoryTest extends BaseRepositoryTest<User, UserId, UserRep
 
   @Override
   protected User createEntity() {
-    User user = new User(EMAIL_ADDRESS, "Secret");
-    return user;
+    return User.of(EMAIL_ADDRESS, "Secret");
   }
 
   @Override

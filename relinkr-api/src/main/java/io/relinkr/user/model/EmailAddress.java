@@ -24,6 +24,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Value object that represents an email address.
+ */
 @Getter
 @Embeddable
 @EqualsAndHashCode(of = "value")
@@ -35,7 +38,7 @@ public class EmailAddress {
 
   private String value;
 
-  public EmailAddress(String value) {
+  private EmailAddress(String value) {
     validate(value);
     this.value = value;
   }

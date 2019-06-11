@@ -16,6 +16,11 @@
 
 package io.relinkr.user.model;
 
+/**
+ * {@link User}'s profile type, {@code NATIVE} means that the user has registered on their own and
+ * filled their profile details out themselves.
+ * TODO: Implement registration and add support for native profiles.
+ */
 public enum UserProfileType {
   FACEBOOK, GOOGLE, NATIVE;
 }

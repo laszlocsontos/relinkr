@@ -16,6 +16,9 @@
 
 package io.relinkr.user.model;
 
+/**
+ * FIXME: To be removed, the app doesn't need to handle such a personal detail.
+ */
 public enum Gender {
   FEMALE, MALE, UNKNOWN;
 }

@@ -16,6 +16,7 @@
 
 package io.relinkr.user.model;
 
+import static io.relinkr.core.model.TimeZone.UTC;
 import static java.util.Locale.ENGLISH;
 import static lombok.AccessLevel.PACKAGE;
 
@@ -29,6 +30,10 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
 
+/**
+ * TODO: Implement timezone handling and proper internationalization, so that users see timestamps
+ *    in their own local timezone.
+ */
 @Embeddable
 @NoArgsConstructor(access = PACKAGE)
 @AllArgsConstructor(staticName = "of")
@@ -37,8 +42,10 @@ import lombok.ToString;
 @ToString(of = {"timeZone", "locale"})
 public class UserPreferences {
 
+  public static final UserPreferences DEFAULT = UserPreferences.of(UTC, ENGLISH);
+
   @NonNull
-  private TimeZone timeZone = TimeZone.UTC;
+  private TimeZone timeZone = UTC;
 
   @NonNull
   private Locale locale = ENGLISH;

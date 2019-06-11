@@ -21,18 +21,18 @@ import org.junit.Test;
 public class EmailAddressTest {
 
   @Test
-  public void isValid_withValid_newTLD() {
-    new EmailAddress("fabio@disapproved.solutions");
+  public void givenValidAddressWithNewTld_whenCreate_thenCreated() {
+    EmailAddress.of("fabio@disapproved.solutions");
   }
 
   @Test
-  public void isValid_withValid_oldTLD() {
-    new EmailAddress("fabio@disapproved-solutions.com");
+  public void givenValidAddressWithOldTld_whenCreate_thenCreated() {
+    EmailAddress.of("fabio@disapproved-solutions.com");
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void isValid_withInValid() {
-    new EmailAddress("zoé@disapproved-solutions.com");
+  public void givenInvalidAddress_whenCreate_thenIllegalArgumentException() {
+    EmailAddress.of("zoé@disapproved-solutions.com");
   }
 
 }

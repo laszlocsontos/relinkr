@@ -66,7 +66,7 @@ import org.springframework.web.client.ResourceAccessException;
 
 public final class Mocks {
 
-  public static final EmailAddress EMAIL_ADDRESS = new EmailAddress("test@test.com");
+  public static final EmailAddress EMAIL_ADDRESS = EmailAddress.of("test@test.com");
 
   public static final Instant FIXED_INSTANT = ofEpochSecond(1553091772);
   public static final LocalDateTime FIXED_TIMESTAMP = LocalDateTime.ofInstant(FIXED_INSTANT, UTC);
@@ -285,7 +285,7 @@ public final class Mocks {
   }
 
   public static User createUser() {
-    User user = new User(EMAIL_ADDRESS, ENCRYPTED_PASSWORD);
+    User user = User.of(EMAIL_ADDRESS, ENCRYPTED_PASSWORD);
     user.setId(USER_ID);
     user.grantRole(Role.ADMIN);
     return user;
