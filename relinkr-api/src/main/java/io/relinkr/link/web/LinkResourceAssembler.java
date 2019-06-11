@@ -29,6 +29,11 @@ import org.springframework.hateoas.mvc.IdentifiableResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
+/**
+ * Factory for creating {@link LinkResource} instances. Leverages
+ * {@link IdentifiableResourceAssemblerSupport} for adding self links. Furthermore it also adds
+ * links to the shortened link and to possible next link states.
+ */
 @Slf4j
 @Component
 public class LinkResourceAssembler

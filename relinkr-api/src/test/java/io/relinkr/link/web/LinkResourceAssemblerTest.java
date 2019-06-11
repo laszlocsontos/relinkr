@@ -45,7 +45,7 @@ public class LinkResourceAssemblerTest {
   private LinkResourceAssembler linkResourceAssembler;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     linkResource = new LinkResource("https://google.com");
     linkResourceAssembler = new LinkResourceAssembler(environment);
 
@@ -67,9 +67,9 @@ public class LinkResourceAssemblerTest {
 
   @Test
   public void givenShortLinkSchemeAsProperty_whenAddShortLink_thenSchemeUsed() {
-    given(environment.getProperty(SHORT_LINK_DOMAIN)).willReturn("rlr.li");
+    given(environment.getProperty(SHORT_LINK_DOMAIN)).willReturn("rln.kr");
     linkResourceAssembler.addShortLink(linkResource, PATH);
-    assertEquals("http://rlr.li/" + PATH, linkResource.getLink("shortLink").getHref());
+    assertEquals("http://rln.kr/" + PATH, linkResource.getLink("shortLink").getHref());
   }
 
   @Test

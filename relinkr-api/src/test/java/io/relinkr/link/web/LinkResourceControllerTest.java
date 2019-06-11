@@ -23,12 +23,11 @@ import static io.relinkr.test.Mocks.TAG_A;
 import static io.relinkr.test.Mocks.USER_ID;
 import static io.relinkr.test.Mocks.createLink;
 import static java.util.Arrays.asList;
+import static javax.persistence.LockModeType.NONE;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType.HAL;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -46,6 +45,7 @@ import io.relinkr.link.model.LinkId;
 import io.relinkr.link.model.UtmParameters;
 import io.relinkr.link.service.LinkService;
 import io.relinkr.link.web.LinkResourceControllerTest.TestConfig;
+import io.relinkr.test.security.AbstractResourceControllerTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,11 +54,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -67,8 +66,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@WebMvcTest(controllers = LinkResourceController.class, secure = false)
-public class LinkResourceControllerTest {
+@WebMvcTest(controllers = LinkResourceController.class)
+public class LinkResourceControllerTest extends AbstractResourceControllerTest {
 
   @Autowired
   private LinkResourceAssembler linkResourceAssembler;
@@ -85,12 +84,14 @@ public class LinkResourceControllerTest {
   private Link link;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     link = createLink();
+    given(entityManager.find(Link.class, link.getUserId(), NONE)).willReturn(link);
   }
 
   @Test
-  public void getLink() throws Exception {
+  @WithMockUser(username = "1") // USER_ID
+  public void givenLinkOwnedByCurrentUser_whenGetLink_thenOk() throws Exception {
     given(linkService.getLink(link.getId())).willReturn(link);
 
     ResultActions resultActions = mockMvc
@@ -103,20 +104,30 @@ public class LinkResourceControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "0") // USER_ID_ZERO
+  public void givenLinkOwnedByOtherUser_whenGetLink_thenForbidden() throws Exception {
+    given(linkService.getLink(link.getId())).willReturn(link);
+
+    ResultActions resultActions = mockMvc
+        .perform(get("/v1/links/{linkId}", link.getId()))
+        .andExpect(status().isForbidden())
+        .andDo(print());
+
+    assertError(403, "Access is denied", resultActions);
+  }
+
+  @Test
   @WithMockUser(username = "1") // USER_ID
-  public void addLink() throws Exception {
+  public void givenAuthenticatedUser_whenAddLink_thenAddedAndOwnedByUser() throws Exception {
     LinkResource linkResource = new LinkResource(
         link.getLongUrl().toString(),
         link.getUtmParameters().orElse(null)
     );
 
-    given(
-        linkService.addLink(
-            linkResource.getLongUrl(),
-            linkResource.getUtmParameters().orElse(null),
-            USER_ID
-        )
-    ).willReturn(link);
+    String longUrl = linkResource.getLongUrl();
+    UtmParameters utmParameters = linkResource.getUtmParameters().orElse(null);
+
+    given(linkService.addLink(longUrl, utmParameters, USER_ID)).willReturn(link);
 
     ResultActions resultActions = mockMvc
         .perform(post("/v1/links").contentType(APPLICATION_JSON)
@@ -124,24 +135,22 @@ public class LinkResourceControllerTest {
         .andExpect(status().isOk())
         .andDo(print());
 
+    then(linkService).should().addLink(longUrl, utmParameters, USER_ID);
+
     assertLink(resultActions);
   }
 
   @Test
-  public void replaceLink() throws Exception {
+  @WithMockUser(username = "1") // USER_ID
+  public void givenLinkOwnedByCurrentUserWithLongUrl_whenReplaceLink_thenReplaced()
+      throws Exception {
     String longUrl = link.getLongUrl().toString();
     UtmParameters utmParameters = link.getUtmParameters().get();
     LinkResource linkResource = new LinkResource(longUrl, utmParameters);
 
     LinkId linkId = link.getId();
 
-    given(
-        linkService.updateLongUrl(
-            linkId,
-            longUrl,
-            utmParameters
-        )
-    ).willReturn(link);
+    given(linkService.updateLongUrl(linkId, longUrl, utmParameters)).willReturn(link);
 
     ResultActions resultActions = mockMvc.perform(
         put("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
@@ -149,13 +158,41 @@ public class LinkResourceControllerTest {
         .andExpect(status().isOk())
         .andDo(print());
 
+    then(linkService).should().updateLongUrl(linkId, longUrl, utmParameters);
+
     assertLink(resultActions);
 
     then(linkService).should().updateLongUrl(linkId, longUrl, utmParameters);
   }
 
   @Test
-  public void replaceLink_withoutLongUrl() throws Exception {
+  @WithMockUser(username = "0") // USER_ID_ZERO
+  public void givenLinkOwnedByOtherUserWithLongUrl_whenReplaceLink_thenForbidden()
+      throws Exception {
+
+    String longUrl = link.getLongUrl().toString();
+    UtmParameters utmParameters = link.getUtmParameters().get();
+    LinkResource linkResource = new LinkResource(longUrl, utmParameters);
+
+    LinkId linkId = link.getId();
+
+    given(linkService.updateLongUrl(linkId, longUrl, utmParameters)).willReturn(link);
+
+    ResultActions resultActions = mockMvc.perform(
+        put("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(linkResource)))
+        .andDo(print());
+
+    then(linkService).shouldHaveZeroInteractions();
+
+    assertError(403, "Access is denied", resultActions);
+  }
+
+  @Test
+  @WithMockUser(username = "1") // USER_ID
+  public void givenLinkOwnedByCurrentUserWithoutLongUrl_whenReplaceLink_thenBadRequest()
+      throws Exception {
+
     UtmParameters utmParameters = link.getUtmParameters().get();
     LinkResource linkResource = new LinkResource(null, utmParameters);
 
@@ -167,24 +204,20 @@ public class LinkResourceControllerTest {
         .andExpect(status().isBadRequest())
         .andDo(print());
 
-    assertError(400, "Validation failed", resultActions);
-
     then(linkService).shouldHaveZeroInteractions();
+
+    assertError(400, "Validation failed", resultActions);
   }
 
   @Test
-  public void updateLink_withLongUrl() throws Exception {
+  @WithMockUser(username = "1") // USER_ID
+  public void givenLinkOwnedByCurrentUserWithLongUrl_whenUpdateLink_thenUpdated() throws Exception {
     String longUrl = link.getLongUrl().toString();
     LinkResource linkResource = new LinkResource(longUrl);
 
     LinkId linkId = link.getId();
 
-    given(
-        linkService.updateLongUrl(
-            linkId,
-            longUrl
-        )
-    ).willReturn(link);
+    given(linkService.updateLongUrl(linkId, longUrl)).willReturn(link);
 
     ResultActions resultActions = mockMvc.perform(
         patch("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
@@ -198,18 +231,34 @@ public class LinkResourceControllerTest {
   }
 
   @Test
-  public void updateLink_withUtmParameters() throws Exception {
+  @WithMockUser(username = "0") // USER_ID_ZERO
+  public void givenLinkOwnedByOtherUserWithLongUrl_whenUpdateLink_thenForbidden() throws Exception {
+    String longUrl = link.getLongUrl().toString();
+    LinkResource linkResource = new LinkResource(longUrl);
+
+    LinkId linkId = link.getId();
+
+    ResultActions resultActions = mockMvc.perform(
+        patch("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(linkResource)))
+        .andDo(print());
+
+    then(linkService).shouldHaveZeroInteractions();
+
+    assertError(403, "Access is denied", resultActions);
+  }
+
+  @Test
+  @WithMockUser(username = "1") // USER_ID
+  public void givenLinkOwnedByCurrentUserWithUtmParameters_whenUpdateLink_thenUpdated()
+      throws Exception {
+
     UtmParameters utmParameters = link.getUtmParameters().orElse(null);
     LinkResource linkResource = new LinkResource(utmParameters);
 
     LinkId linkId = link.getId();
 
-    given(
-        linkService.updateUtmParameters(
-            linkId,
-            utmParameters
-        )
-    ).willReturn(link);
+    given(linkService.updateUtmParameters(linkId, utmParameters)).willReturn(link);
 
     ResultActions resultActions = mockMvc.perform(
         patch("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
@@ -223,7 +272,10 @@ public class LinkResourceControllerTest {
   }
 
   @Test
-  public void updateLink_withoutParameters() throws Exception {
+  @WithMockUser(username = "1") // USER_ID
+  public void givenLinkOwnedByCurrentUserWithoutUtmParameters_whenUpdateLink_BadRequest()
+      throws Exception {
+
     LinkResource linkResource = new LinkResource();
 
     LinkId linkId = link.getId();
@@ -242,7 +294,7 @@ public class LinkResourceControllerTest {
 
   @Test
   @WithMockUser(username = "1") // USER_ID
-  public void fetchLinks() throws Exception {
+  public void givenAuthenticatedUser_whenFetchLinks_thenFetched() throws Exception {
     given(linkService.fetchLinks(USER_ID, PAGEABLE))
         .willReturn(new PageImpl<>(asList(link), PAGEABLE, 1));
 
@@ -256,7 +308,10 @@ public class LinkResourceControllerTest {
   }
 
   @Test
-  public void updateLinkStatus_withActive() throws Exception {
+  @WithMockUser(username = "1") // USER_ID
+  public void givenLinkOwnedByCurrentUserWithActive_whenUpdateLinkStatus_thenActivated()
+      throws Exception {
+
     mockMvc.perform(put("/v1/links/{linkId}/linkStatuses/{linkStatus}", link.getId(),
         ACTIVE.name()))
         .andExpect(status().isOk())
@@ -267,7 +322,24 @@ public class LinkResourceControllerTest {
   }
 
   @Test
-  public void updateLinkStatus_withArchived() throws Exception {
+  @WithMockUser(username = "0") // USER_ID_ZERO
+  public void givenLinkOwnedByOtherUserWithActive_whenUpdateLinkStatus_thenForbidden()
+      throws Exception {
+
+    ResultActions resultActions = mockMvc.perform(
+        put("/v1/links/{linkId}/linkStatuses/{linkStatus}", link.getId(), ACTIVE.name()))
+        .andDo(print());
+
+    then(linkService).shouldHaveZeroInteractions();
+
+    assertError(403, "Access is denied", resultActions);
+  }
+
+  @Test
+  @WithMockUser(username = "1") // USER_ID
+  public void givenLinkOwnedByCurrentUserWithArchive_whenUpdateLinkStatus_thenArchived()
+      throws Exception {
+
     mockMvc.perform(put("/v1/links/{linkId}/linkStatuses/{linkStatus}", link.getId(),
         ARCHIVED.name()))
         .andExpect(status().isOk())
@@ -278,7 +350,8 @@ public class LinkResourceControllerTest {
   }
 
   @Test
-  public void addTag() throws Exception {
+  @WithMockUser(username = "1") // USER_ID
+  public void givenLinkOwnedByCurrentUser_whenAddTag_thenTagAdded() throws Exception {
     mockMvc.perform(post("/v1/links/{linkId}/tags/{tagName}", link.getId(),
         TAG_A.getTagName()))
         .andExpect(status().isOk())
@@ -289,7 +362,20 @@ public class LinkResourceControllerTest {
   }
 
   @Test
-  public void removeTag() throws Exception {
+  @WithMockUser(username = "0") // USER_ID_ZERO
+  public void givenLinkOwnedByOtherUser_whenAddTag_thenForbidden() throws Exception {
+    ResultActions resultActions = mockMvc.perform(
+        post("/v1/links/{linkId}/tags/{tagName}", link.getId(), TAG_A.getTagName()))
+        .andDo(print());
+
+    then(linkService).shouldHaveZeroInteractions();
+
+    assertError(403, "Access is denied", resultActions);
+  }
+
+  @Test
+  @WithMockUser(username = "1") // USER_ID
+  public void givenLinkOwnedByCurrentUser_whenRemoveTag_thenRemoved() throws Exception {
     mockMvc.perform(delete("/v1/links/{linkId}/tags/{tagName}", link.getId(),
         TAG_A.getTagName()))
         .andExpect(status().isOk())
@@ -299,12 +385,16 @@ public class LinkResourceControllerTest {
     then(linkService).shouldHaveNoMoreInteractions();
   }
 
-  private void assertError(int statusCode, String detailMessage, ResultActions resultActions)
-      throws Exception {
+  @Test
+  @WithMockUser(username = "0") // USER_ID_ZERO
+  public void givenLinkOwnedByOtherUser_whenRemoveTag_thenForbidden() throws Exception {
+    ResultActions resultActions = mockMvc.perform(
+        delete("/v1/links/{linkId}/tags/{tagName}", link.getId(), TAG_A.getTagName()))
+        .andDo(print());
 
-    resultActions
-        .andExpect(jsonPath("$.statusCode", is(statusCode)))
-        .andExpect(jsonPath("$.detailMessage", startsWith(detailMessage)));
+    then(linkService).shouldHaveZeroInteractions();
+
+    assertError(403, "Access is denied", resultActions);
   }
 
   private void assertLink(ResultActions resultActions) throws Exception {
@@ -343,8 +433,7 @@ public class LinkResourceControllerTest {
   }
 
   @TestConfiguration
-  @EnableHypermediaSupport(type = HAL)
-  @EnableSpringDataWebSupport
+  @Import(AbstractResourceControllerTest.TestConfig.class)
   public static class TestConfig {
 
     @Bean

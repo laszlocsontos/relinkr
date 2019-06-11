@@ -46,6 +46,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.context.request.ServletWebRequest;
 
+/**
+ * Entry point for resolving short links to their target URLs.
+ */
 @Controller
 public class RedirectController {
 

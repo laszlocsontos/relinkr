@@ -57,6 +57,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
 
+/**
+ * Provides the REST API for managing links.
+ */
 @RestController
 @RequestMapping("/v1/links")
 public class LinkResourceController {
@@ -66,6 +69,8 @@ public class LinkResourceController {
 
   private final LinkService linkService;
   private final LinkResourceAssembler linkResourceAssembler;
+
+  // FIXME: This could be auto-wired instead of being instantiated here
   private final PagedResourcesAssembler pagedResourcesAssembler =
       new PagedResourcesAssembler(null, null);
 

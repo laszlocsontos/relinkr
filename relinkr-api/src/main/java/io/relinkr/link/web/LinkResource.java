@@ -33,11 +33,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.hateoas.core.Relation;
 
+/**
+ * DTO which represents a {@link Link} as a REST resource.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
 @Relation(value = "link", collectionRelation = "links")
-public class LinkResource extends AbstractResource {
+class LinkResource extends AbstractResource {
 
   private String longUrl;
 
@@ -54,7 +57,7 @@ public class LinkResource extends AbstractResource {
    *
    * @param link that {@code Link} this DTO will represent
    */
-  public LinkResource(Link link) {
+  LinkResource(Link link) {
     super(link);
 
     longUrl = link.getLongUrl().toString();

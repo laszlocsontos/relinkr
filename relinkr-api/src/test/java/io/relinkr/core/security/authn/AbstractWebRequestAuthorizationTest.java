@@ -45,7 +45,6 @@ public abstract class AbstractWebRequestAuthorizationTest extends AbstractWebSec
   private static final String ROOT_PATH = "/";
   private static final String TEST_SHORT_LINK_PATH = "/lAjKWlW4eJ";
   private static final String TEST_API_PATH = "/v1/links/2";
-  private static final String TEST_DASHBOARD_PATH = "/pages/dashboard";
 
   private HttpHeaders httpHeaders;
 
@@ -136,11 +135,6 @@ public abstract class AbstractWebRequestAuthorizationTest extends AbstractWebSec
     @GetMapping(TEST_API_PATH)
     public HttpEntity getApi() {
       return ResponseEntity.ok().build();
-    }
-
-    @GetMapping(TEST_DASHBOARD_PATH)
-    public String dashboard() {
-      return "pages/dashboard";
     }
 
   }
