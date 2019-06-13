@@ -20,8 +20,6 @@ import io.relinkr.core.security.authn.WebSecurityConfig;
 import io.relinkr.core.security.authn.jwt.JwtConfig;
 import io.relinkr.core.security.authn.oauth2.OAuth2AuthorizationRequestsCookieResolver;
 import io.relinkr.test.security.AbstractWebSecurityTest.TestConfig;
-import io.relinkr.user.service.UserProfileFactory;
-import io.relinkr.user.service.UserService;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -40,12 +38,6 @@ public abstract class AbstractWebSecurityTest {
 
   @Autowired
   protected MockMvc mockMvc;
-
-  @MockBean
-  protected UserProfileFactory userProfileFactory;
-
-  @MockBean
-  protected UserService userService;
 
   @MockBean
   protected ClientRegistrationRepository clientRegistrationRepository;
