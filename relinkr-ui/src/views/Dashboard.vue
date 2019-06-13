@@ -113,39 +113,16 @@ import { mapState } from 'vuex';
     components: {
       DoughnutChart, LineChart, PageTemplate
     },
-    data() {
-      return {
-
-      };
-    },
     mounted() {
       this.fetchStats('links');
       this.fetchStats('clicks');
       this.fetchStats('visitors');
-      this.fillData()
     },
     computed: {
-      ...mapState('link', ['linksStats', 'clicksStats', 'visitorsStats']),
+      ...mapState('link', ['linksStats', 'clicksStats', 'visitorsStats'])
     },
     methods: {
-    ...mapActions('link', ['fetchStats']),
-      fillData() {
-        this.datacollection = {
-          labels: [this.getRandomInt(), this.getRandomInt()],
-          datasets: [
-            {
-              label: 'Data One',
-              data: [this.getRandomInt(), this.getRandomInt()]
-            }, {
-              label: 'Data One',
-              data: [this.getRandomInt(), this.getRandomInt()]
-            }
-          ]
-        };
-      },
-      getRandomInt() {
-        return Math.floor(Math.random() * (50 - 5 + 1)) + 5;
-      }
+      ...mapActions('link', ['fetchStats'])
     }
   }
 </script>
