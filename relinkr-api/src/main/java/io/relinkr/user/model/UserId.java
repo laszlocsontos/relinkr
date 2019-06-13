@@ -36,8 +36,18 @@ public class UserId extends AbstractId<User> {
     this.id = id;
   }
 
+  // FIXME: Remove temporal hack for processing longs
+  public UserId(long id) {
+    this.id = BigInteger.valueOf(id);
+  }
+
   public static UserId of(BigInteger id) {
     return new UserId(id);
+  }
+
+  // FIXME: Remove temporal hack for processing longs
+  public static UserId of(long id) {
+    return new UserId(BigInteger.valueOf(id));
   }
 
   @Override
@@ -51,18 +61,9 @@ public class UserId extends AbstractId<User> {
   }
 
   // FIXME: Remove temporal hack for processing longs
-
   @Override
   public Long getId() {
     return id.longValue();
-  }
-
-  public UserId(long id) {
-    this.id = BigInteger.valueOf(id);
-  }
-
-  public static UserId of(long id) {
-    return new UserId(BigInteger.valueOf(id));
   }
 
 }
