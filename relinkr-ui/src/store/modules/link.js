@@ -21,9 +21,42 @@ import {get, post, put} from '../../api';
 
 const PAGE_SIZE = 10;
 
+const mockStats = {
+  linksStats: {
+    datasets: [{
+      label: "# of links",
+      data: [1, 2, 3, 2, 4, 2, 6]
+    }],
+    labels: ['2018-03-06', '2018-03-07', '2018-03-08', '2018-03-09', '2018-03-10',
+      '2018-03-11', '2018-03-12'],
+  },
+  clicksStats: {
+    datasets: [{
+      label: "# of clicks",
+      data: [10, 20, 35, 20, 42, 25, 80]
+    }],
+    labels: ['2018-03-06', '2018-03-07', '2018-03-08', '2018-03-09', '2018-03-10',
+      '2018-03-11', '2018-03-12'],
+  },
+  visitorsStats: {
+    datasets: [{
+      data: [10, 30]
+    }],
+
+    // These labels appear in the legend and in the tooltips when hovering different arcs
+    labels: [
+      'New',
+      'Returning'
+    ]
+  }
+};
+
 // initial state
 const state = {
   userLinkStatuses: {},
+  linksStats: {},
+  clicksStats: {},
+  visitorsStats: {},
   page: {
     size: 0,
     totalElements: 0,
@@ -42,7 +75,7 @@ const getters = {
 };
 
 const mutations = {
-  setState(state, {data, callback}) {
+  setLinks(state, {data, callback}) {
     state.page = _.assign(state.page, data.page || {});
 
     const links = _.get(data, "_embedded.links", []);
@@ -69,6 +102,9 @@ const mutations = {
         },
         {}
     );
+  },
+  setStats(state, {statType, data}) {
+    state[`${statType}Stats`] = data;
   }
 };
 
@@ -81,11 +117,11 @@ const actions = {
 
     get({endpoint: "/v1/links", params: {page: (page - 1), size: PAGE_SIZE}})
     .then(response => {
-      commit('setState', {data: response.data, callback: callback});
+      commit('setLinks', {data: response.data, callback: callback});
     })
     .catch(err => {
       console.log("error", err);
-      commit('setState', {data: {}, callback: callback})
+      commit('setLinks', {data: {}, callback: callback})
     });
   },
   setNextStatus(_, args) {
@@ -105,6 +141,12 @@ const actions = {
     post({endpoint: "/v1/links", data: link})
     .then(successCallback)
     .catch(failureCallback);
+  },
+  fetchStats({commit}, statType) {
+    // statType: links/clicks/visitors
+    // TODO: request data and transform it
+    const data = mockStats[`${statType}Stats`];
+    commit('setStats', {statType: statType, data: data});
   }
 };
 
