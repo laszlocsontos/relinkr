@@ -31,9 +31,6 @@ import io.relinkr.core.security.authn.oauth2.HttpCookieOAuth2AuthorizationReques
 import io.relinkr.core.security.authn.oauth2.OAuth2AuthorizationRequestsCookieResolver;
 import io.relinkr.core.security.authn.oauth2.OAuth2LoginAuthenticationFailureHandler;
 import io.relinkr.core.security.authn.oauth2.OAuth2LoginAuthenticationSuccessHandler;
-import io.relinkr.core.security.authn.oauth2.PersistentOAuth2UserService;
-import io.relinkr.user.service.UserProfileFactory;
-import io.relinkr.user.service.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -95,8 +92,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   );
 
   private final ObjectMapper objectMapper;
-  private final UserProfileFactory userProfileFactory;
-  private final UserService userService;
   private final JwtAuthenticationService jwtAuthenticationService;
   private final JwtAuthenticationTokenCookieResolver jwtAuthenticationTokenCookieResolver;
   private final OAuth2AuthorizationRequestsCookieResolver authorizationRequestsCookieResolver;
@@ -119,13 +114,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public OAuth2UserService<OAuth2UserRequest, OAuth2User> defaultOAuth2UserService() {
     return new DefaultOAuth2UserService();
-  }
-
-  @Bean
-  public OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService() {
-    return new PersistentOAuth2UserService(
-        defaultOAuth2UserService(), userProfileFactory, userService
-    );
   }
 
   @Bean
@@ -194,7 +182,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient())
         .and()
-        .userInfoEndpoint().userService(oauth2UserService()).and()
+        .userInfoEndpoint().userService(defaultOAuth2UserService()).and()
         .and()
         .exceptionHandling()
         .authenticationEntryPoint(authenticationEntryPoint())

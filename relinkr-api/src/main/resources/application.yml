@@ -23,10 +23,9 @@ spring:
             client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET}
             scope:
               - email
-              - profile
         provider:
           google:
-            userNameAttribute: email
+            userNameAttribute: sub
 
 relinkr:
   # openssl rand -base64 32

@@ -17,17 +17,12 @@
 package io.relinkr.core.security.authn.oauth2;
 
 import static io.relinkr.core.security.authn.WebSecurityConfig.OAUTH2_LOGIN_PROCESSES_BASE_URI;
-import static io.relinkr.test.Mocks.EMAIL_ADDRESS;
-import static io.relinkr.test.Mocks.USER_ID;
-import static io.relinkr.test.Mocks.createUser;
-import static io.relinkr.test.Mocks.createUserProfile;
+import static io.relinkr.test.Mocks.GOOGLE_USER_ID;
 import static java.util.Collections.singletonMap;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.never;
 import static org.springframework.security.config.oauth2.client.CommonOAuth2Provider.GOOGLE;
+import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
 import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER;
 import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.REGISTRATION_ID;
@@ -42,17 +37,12 @@ import io.relinkr.core.security.authn.jwt.JwtAuthenticationService;
 import io.relinkr.core.security.authn.jwt.JwtAuthenticationTokenCookieResolver;
 import io.relinkr.core.security.authn.oauth2.OAuth2LoginTest.TestController;
 import io.relinkr.test.security.AbstractWebSecurityTest;
-import io.relinkr.user.model.EmailAddress;
-import io.relinkr.user.model.Role;
-import io.relinkr.user.model.User;
-import io.relinkr.user.model.UserProfile;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Sets;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +81,8 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
       BASE_URI + OAUTH2_LOGIN_PROCESSES_BASE_URI + "/" + CLIENT_REG_ID;
   private static final String CLIENT_SECRET = "1234";
 
+  private static final String[] ROLES = {"ROLE_USER"};
+
   @Autowired
   private JwtAuthenticationService jwtAuthenticationService;
 
@@ -105,10 +97,6 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
 
   @MockBean(name = "defaultOAuth2UserService")
   private OAuth2UserService<OAuth2UserRequest, OAuth2User> defaultOAuth2UserService;
-
-  private User user;
-  private String[] roles;
-  private UserProfile userProfile;
 
   @Before
   public void setUp() {
@@ -141,32 +129,14 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
     given(accessTokenResponseClient.getTokenResponse(
         any(OAuth2AuthorizationCodeGrantRequest.class))).willReturn(accessTokenResponse);
 
-    OAuth2User oAuth2User = new DefaultOAuth2User(
-        Sets.newLinkedHashSet(new SimpleGrantedAuthority("ROLE_USER")),
-        singletonMap("email", EMAIL_ADDRESS.getValue()),
-        "email"
-    );
+    OAuth2User oAuth2User = createOAuth2User(GOOGLE_USER_ID.toString());
 
     given(defaultOAuth2UserService.loadUser(any(OAuth2UserRequest.class)))
         .willReturn(oAuth2User);
-
-    user = createUser();
-    roles = user.getRoles()
-        .stream()
-        .map(Role::name)
-        .toArray(String[]::new);
-
-    given(userService.saveUser(any(EmailAddress.class), any(UserProfile.class)))
-        .willReturn(user);
-
-    userProfile = createUserProfile();
-
-    given(userProfileFactory.create(any(String.class), anyMap()))
-        .willReturn(userProfile);
   }
 
   @Test
-  public void givenSuccessfulCallback_whenLogin_thenJwtSetAndUserSaved()
+  public void givenSuccessfulCallback_whenLogin_thenJwtSet()
       throws Exception {
 
     performLoginWithState(STATE)
@@ -174,15 +144,13 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
         .andExpect(redirectedUrlTemplate("https://localhost:9443/login"))
         .andExpect(
             new JwtMatcher(jwtAuthenticationService)
-                .withAuthenticationName(String.valueOf(USER_ID))
-                .withRoles(roles)
+                .withAuthenticationName(GOOGLE_USER_ID.toString())
+                .withRoles(ROLES)
         );
-
-    then(userService).should().saveUser(EMAIL_ADDRESS, userProfile);
   }
 
   @Test
-  public void givenInvalidState_whenLogin_thenUnauthorizedAndUserIsNotSaved()
+  public void givenInvalidState_whenLogin_thenUnauthorized()
       throws Exception {
 
     performLoginWithState("bad")
@@ -194,21 +162,15 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
             )
         )
         .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication());
-
-    then(userService).should(never()).saveUser(EMAIL_ADDRESS, userProfile);
   }
 
   @Test
-  public void givenInvalidEmailAddress_whenLogin_thenUnauthorizedAndUserIsNotSaved()
+  public void givenInvalidUserId_whenLogin_thenUnauthorized()
       throws Exception {
 
     // We expect that spring.security.oauth2.client.provider.<provider_name>.userNameAttribute
-    // be always set to email and hence we expect a valid email address from the OAuth2 server.
-    OAuth2User oAuth2User = new DefaultOAuth2User(
-        Sets.newLinkedHashSet(new SimpleGrantedAuthority("ROLE_USER")),
-        singletonMap("email", "bad"),
-        "email"
-    );
+    // be always set to sub and hence we expect a valid numeric ID.
+    OAuth2User oAuth2User = createOAuth2User("bad");
 
     given(defaultOAuth2UserService.loadUser(any(OAuth2UserRequest.class)))
         .willReturn(oAuth2User);
@@ -222,8 +184,14 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
             )
         )
         .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication());
+  }
 
-    then(userService).should(never()).saveUser(EMAIL_ADDRESS, userProfile);
+  private OAuth2User createOAuth2User(String userId) {
+    return new DefaultOAuth2User(
+        createAuthorityList(ROLES),
+        singletonMap("sub", userId),
+        "sub"
+    );
   }
 
   private ResultActions performLoginWithState(String state) throws Exception {
@@ -306,7 +274,7 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
     JwtMatcher withRoles(String... roles) {
       Collection<GrantedAuthority> authorities = new ArrayList<>();
       for (String role : roles) {
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+        authorities.add(new SimpleGrantedAuthority(role));
       }
       return withAuthorities(authorities);
     }
