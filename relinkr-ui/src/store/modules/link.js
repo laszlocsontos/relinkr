@@ -18,12 +18,16 @@
 
 import _ from 'lodash';
 import {get, post, put} from '../../api';
+import axios from 'axios';
 
 const PAGE_SIZE = 10;
 
 // initial state
 const state = {
   userLinkStatuses: {},
+  _linksStats: {},
+  _clicksStats: {},
+  _visitorsStats: {},
   page: {
     size: 0,
     totalElements: 0,
@@ -38,11 +42,16 @@ const getters = {
   hasNextStatus: state => (id, nextStatus) => {
     const paths = state.userLinkStatuses[id];
     return _.some(paths, (path) => _.endsWith(path, nextStatus));
-  }
+  },
+  // Pass a copy of the state to prevent "vuex store state modified outside mutation
+  // handlers" error, the Chart modifies this data if there are multiple charts on the page
+  linksStats: () => _.cloneDeep(state._linksStats),
+  clicksStats: () => _.cloneDeep(state._clicksStats),
+  visitorsStats: () => _.cloneDeep(state._visitorsStats)
 };
 
 const mutations = {
-  setState(state, {data, callback}) {
+  setLinks(state, {data, callback}) {
     state.page = _.assign(state.page, data.page || {});
 
     const links = _.get(data, "_embedded.links", []);
@@ -69,6 +78,9 @@ const mutations = {
         },
         {}
     );
+  },
+  setStats(state, {statType, data}) {
+    state[`_${statType}Stats`] = data;
   }
 };
 
@@ -81,11 +93,11 @@ const actions = {
 
     get({endpoint: "/v1/links", params: {page: (page - 1), size: PAGE_SIZE}})
     .then(response => {
-      commit('setState', {data: response.data, callback: callback});
+      commit('setLinks', {data: response.data, callback: callback});
     })
     .catch(err => {
       console.log("error", err);
-      commit('setState', {data: {}, callback: callback})
+      commit('setLinks', {data: {}, callback: callback})
     });
   },
   setNextStatus(_, args) {
@@ -105,6 +117,16 @@ const actions = {
     post({endpoint: "/v1/links", data: link})
     .then(successCallback)
     .catch(failureCallback);
+  },
+  fetchStats({commit}, statType) {
+    // statType: links/clicks/visitors
+    axios({method: 'GET', url: `/mocks/${statType}/1`})
+    .then(response => {
+      commit(`setStats`, {statType: statType, data: response.data});
+    })
+    .catch(err => {
+      console.log("error", err);
+    });
   }
 };
 

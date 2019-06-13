@@ -39,7 +39,7 @@
               </b-dropdown>
             </div>
             <b-card-body>
-              <line-chart :chart-data="linksData"></line-chart>
+              <line-chart :chart-data="linksStats"></line-chart>
             </b-card-body>
             <em slot="footer">Total Links: <strong>26</strong></em>
           </b-card>
@@ -63,7 +63,7 @@
               </b-dropdown>
             </div>
             <b-card-body>
-              <line-chart :chart-data="clicksData"></line-chart>
+              <line-chart :chart-data="clicksStats"></line-chart>
             </b-card-body>
             <em slot="footer">Total Clicks: <strong>259</strong></em>
           </b-card>
@@ -87,7 +87,7 @@
               </b-dropdown>
             </div>
             <b-card-body>
-              <doughnut-chart :chart-data="visitorsData"></doughnut-chart>
+              <doughnut-chart :chart-data="visitorsStats"></doughnut-chart>
             </b-card-body>
             <em slot="footer">Unique Visitors: <strong>50</strong></em>
           </b-card>
@@ -105,63 +105,24 @@
   import LineChart from '@/components/LineChart.js';
   import PageTemplate from '@/components/PageTemplate.vue';
 
+import { mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
+
   export default {
     name: 'home',
     components: {
       DoughnutChart, LineChart, PageTemplate
     },
-    data() {
-      return {
-        linksData: {
-          datasets: [{
-            label: "# of links",
-            data: [1, 2, 3, 2, 4, 2, 6]
-          }],
-          labels: ['2018-03-06', '2018-03-07', '2018-03-08', '2018-03-09', '2018-03-10',
-            '2018-03-11', '2018-03-12'],
-        },
-        clicksData: {
-          datasets: [{
-            label: "# of clicks",
-            data: [10, 20, 35, 20, 42, 25, 80]
-          }],
-          labels: ['2018-03-06', '2018-03-07', '2018-03-08', '2018-03-09', '2018-03-10',
-            '2018-03-11', '2018-03-12'],
-        },
-        visitorsData: {
-          datasets: [{
-            data: [10, 30]
-          }],
-
-          // These labels appear in the legend and in the tooltips when hovering different arcs
-          labels: [
-            'New',
-            'Returning'
-          ]
-        }
-      };
-    },
     mounted() {
-      this.fillData()
+      this.fetchStats('links');
+      this.fetchStats('clicks');
+      this.fetchStats('visitors');
+    },
+    computed: {
+      ...mapGetters('link', ['linksStats', 'clicksStats', 'visitorsStats'])
     },
     methods: {
-      fillData() {
-        this.datacollection = {
-          labels: [this.getRandomInt(), this.getRandomInt()],
-          datasets: [
-            {
-              label: 'Data One',
-              data: [this.getRandomInt(), this.getRandomInt()]
-            }, {
-              label: 'Data One',
-              data: [this.getRandomInt(), this.getRandomInt()]
-            }
-          ]
-        };
-      },
-      getRandomInt() {
-        return Math.floor(Math.random() * (50 - 5 + 1)) + 5;
-      }
+      ...mapActions('link', ['fetchStats'])
     }
   }
 </script>
