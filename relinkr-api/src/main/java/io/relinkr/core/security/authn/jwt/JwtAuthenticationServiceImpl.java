@@ -17,7 +17,6 @@
 package io.relinkr.core.security.authn.jwt;
 
 import static com.nimbusds.jose.JWSAlgorithm.RS256;
-import static io.relinkr.user.model.User.ROLE_PREFIX;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toSet;
@@ -62,7 +61,7 @@ import org.springframework.util.StringUtils;
 public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
   private static final String CLAIM_AUTHORITIES = "_ath";
-  private static final String CLAIM_USER_PROFILE_TYPE = "_upt";
+  private static final String ROLE_PREFIX = "ROLE_";
 
   private final JWSSigner signer;
   private final JWSVerifier verifier;
