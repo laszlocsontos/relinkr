@@ -19,24 +19,50 @@ package io.relinkr.user.model;
 import static lombok.AccessLevel.PROTECTED;
 
 import io.relinkr.core.orm.AbstractId;
+import java.math.BigInteger;
+import java.util.Objects;
 import javax.persistence.Embeddable;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @NoArgsConstructor(access = PROTECTED)
+@EqualsAndHashCode(callSuper = false)
 public class UserId extends AbstractId<User> {
 
-  public UserId(long id) {
-    super(id);
+  private BigInteger id;
+
+  public UserId(BigInteger id) {
+    this.id = id;
   }
 
-  public static UserId of(long id) {
+  public static UserId of(BigInteger id) {
     return new UserId(id);
   }
 
   @Override
   public Class<User> getEntityClass() {
     return User.class;
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toString(id);
+  }
+
+  // FIXME: Remove temporal hack for processing longs
+
+  @Override
+  public Long getId() {
+    return id.longValue();
+  }
+
+  public UserId(long id) {
+    this.id = BigInteger.valueOf(id);
+  }
+
+  public static UserId of(long id) {
+    return new UserId(BigInteger.valueOf(id));
   }
 
 }

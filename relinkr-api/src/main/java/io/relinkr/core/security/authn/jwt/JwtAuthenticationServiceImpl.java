@@ -35,6 +35,7 @@ import com.nimbusds.jwt.SignedJWT;
 import io.relinkr.core.security.authn.user.UserAuthenticationToken;
 import io.relinkr.core.util.IdentityGenerator;
 import io.relinkr.user.model.UserProfileType;
+import java.math.BigInteger;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
@@ -55,6 +56,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
 import org.springframework.util.Assert;
+import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -164,9 +166,9 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
       throw new NonceExpiredException("Token has expired.");
     }
 
-    long userId;
+    BigInteger userId;
     try {
-      userId = Long.valueOf(claimsSet.getSubject());
+      userId = NumberUtils.parseNumber(claimsSet.getSubject(), BigInteger.class);
     } catch (NumberFormatException nfe) {
       throw new BadCredentialsException(nfe.getMessage(), nfe);
     }

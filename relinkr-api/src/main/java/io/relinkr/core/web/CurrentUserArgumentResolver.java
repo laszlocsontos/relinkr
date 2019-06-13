@@ -18,6 +18,7 @@ package io.relinkr.core.web;
 
 import io.relinkr.core.security.authn.annotation.CurrentUser;
 import io.relinkr.user.model.UserId;
+import java.math.BigInteger;
 import java.security.Principal;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,7 +55,7 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
     String principalName = principal.getName();
 
     try {
-      long userId = NumberUtils.parseNumber(principalName, Long.class);
+      BigInteger userId = NumberUtils.parseNumber(principalName, BigInteger.class);
       return UserId.of(userId);
     } catch (IllegalArgumentException iea) {
       throw new IllegalArgumentException(

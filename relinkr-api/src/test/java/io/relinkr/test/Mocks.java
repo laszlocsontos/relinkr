@@ -46,6 +46,7 @@ import io.relinkr.user.model.UserProfile;
 import io.relinkr.user.model.UserProfileType;
 import io.relinkr.visitor.model.Visitor;
 import io.relinkr.visitor.model.VisitorId;
+import java.math.BigInteger;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -204,6 +205,8 @@ public final class Mocks {
 
   public static final SimpleGrantedAuthority AUTHORITY_USER =
       new SimpleGrantedAuthority("ROLE_USER");
+
+  public static final BigInteger GOOGLE_USER_ID = new BigInteger("104401221461109262503");
 
   static {
     try {

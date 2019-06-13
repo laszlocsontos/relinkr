@@ -19,6 +19,7 @@ package io.relinkr.core.security.authn.jwt;
 import static io.relinkr.core.security.authn.oauth2.PersistentOAuth2UserService.USER_ID_ATTRIBUTE;
 import static io.relinkr.core.security.authn.oauth2.PersistentOAuth2UserService.USER_PROFILE_TYPE_ATTRIBUTE;
 import static io.relinkr.test.Mocks.AUTHORITY_USER;
+import static io.relinkr.test.Mocks.GOOGLE_USER_ID;
 import static io.relinkr.test.Mocks.JWT_TOKEN_EXPIRED;
 import static io.relinkr.test.Mocks.JWT_TOKEN_INVALID;
 import static io.relinkr.test.Mocks.JWT_TOKEN_VALID;
@@ -73,32 +74,32 @@ public class JwtAuthenticationServiceTest {
 
   @Test
   public void givenValidAuthentication_whenCreateJwtToken_thenParsed() {
-    Authentication authentication = createAuthentication("53245345345345");
+    Authentication authentication = createAuthentication(GOOGLE_USER_ID);
 
     String jwtToken = jwtAuthenticationService.createJwtToken(authentication, 1);
 
     authentication = jwtAuthenticationService.parseJwtToken(jwtToken);
 
-    assertEquals("53245345345345", authentication.getName());
+    assertEquals(GOOGLE_USER_ID.toString(), authentication.getName());
     assertThat(authentication.getAuthorities(), contains(AUTHORITY_USER));
   }
 
   @Test
   public void givenValidOauth2Authentication_whenCreateJwtToken_thenParsed() {
-    Authentication authentication = createOauth2Authentication(53245345345345L, GOOGLE);
+    Authentication authentication = createOauth2Authentication(GOOGLE_USER_ID, GOOGLE);
 
     String jwtToken = jwtAuthenticationService.createJwtToken(authentication, 1);
 
     authentication = jwtAuthenticationService.parseJwtToken(jwtToken);
 
-    assertEquals("53245345345345", authentication.getName());
+    assertEquals(GOOGLE_USER_ID.toString(), authentication.getName());
     assertThat(authentication.getAuthorities(), contains(AUTHORITY_USER));
     assertEquals(GOOGLE, authentication.getDetails());
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void givenInvalidOauth2Authentication_whenCreateJwtToken_thenIllegalArgumentException() {
-    Authentication authentication = createOauth2Authentication(53245345345345L, "invalid");
+    Authentication authentication = createOauth2Authentication(GOOGLE_USER_ID, "invalid");
 
     String jwtToken = jwtAuthenticationService.createJwtToken(authentication, 1);
     jwtAuthenticationService.parseJwtToken(jwtToken);
