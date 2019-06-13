@@ -17,9 +17,7 @@
 package io.relinkr.core.security.authn.jwt;
 
 import static com.nimbusds.jose.JWSAlgorithm.RS256;
-import static io.relinkr.core.security.authn.oauth2.PersistentOAuth2UserService.USER_PROFILE_TYPE_ATTRIBUTE;
 import static io.relinkr.user.model.User.ROLE_PREFIX;
-import static io.relinkr.user.model.UserProfileType.NATIVE;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toSet;
@@ -34,7 +32,6 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import io.relinkr.core.security.authn.user.UserAuthenticationToken;
 import io.relinkr.core.util.IdentityGenerator;
-import io.relinkr.user.model.UserProfileType;
 import java.math.BigInteger;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -53,7 +50,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
 import org.springframework.util.Assert;
 import org.springframework.util.NumberUtils;
@@ -90,9 +86,6 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
   @Override
   public String createJwtToken(@NonNull Authentication authentication, int minutes) {
-    Object principal = authentication.getPrincipal();
-    Assert.notNull(principal, "Principal cannot be null");
-
     JWTClaimsSet.Builder claimsSetBuilder = new JWTClaimsSet.Builder()
         .jwtID(String.valueOf(identityGenerator.generate()))
         .subject(authentication.getName())
@@ -109,17 +102,6 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
     if (StringUtils.hasText(authorities)) {
       claimsSetBuilder.claim(CLAIM_AUTHORITIES, authorities);
     }
-
-    UserProfileType userProfileType = Optional.of(principal)
-        .filter(it -> it instanceof OAuth2User)
-        .map(it -> (OAuth2User) it)
-        .map(OAuth2User::getAttributes)
-        .map(it -> it.get(USER_PROFILE_TYPE_ATTRIBUTE))
-        .map(String::valueOf)
-        .map(UserProfileType::valueOf)
-        .orElse(NATIVE);
-
-    claimsSetBuilder.claim(CLAIM_USER_PROFILE_TYPE, userProfileType);
 
     SignedJWT signedJwt = new SignedJWT(
         new JWSHeader.Builder(RS256).build(),
@@ -173,12 +155,6 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
       throw new BadCredentialsException(nfe.getMessage(), nfe);
     }
 
-    UserProfileType userProfileType =
-        Optional.ofNullable(claimsSet.getClaim(CLAIM_USER_PROFILE_TYPE))
-            .map(String::valueOf)
-            .map(UserProfileType::valueOf)
-            .orElseThrow(() -> new BadCredentialsException("Missing user profile type."));
-
     Collection<? extends GrantedAuthority> authorities =
         Optional.ofNullable(claimsSet.getClaim(CLAIM_AUTHORITIES))
             .map(String::valueOf)
@@ -192,7 +168,7 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
             .map(it -> it.collect(toSet()))
             .orElse(emptySet());
 
-    return UserAuthenticationToken.of(userId, userProfileType, authorities);
+    return UserAuthenticationToken.of(userId, authorities);
   }
 
   // TODO: This code duplicates its counterpart in AuthorizeRolesOrOwnerSecurityMetadataSource,

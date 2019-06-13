@@ -50,6 +50,12 @@ public class UserAuthenticationToken extends AbstractAuthenticationToken {
   }
 
   public static UserAuthenticationToken of(
+      @NonNull BigInteger userId,
+      Collection<? extends GrantedAuthority> authorities) {
+    return new UserAuthenticationToken(userId, null, authorities);
+  }
+
+  public static UserAuthenticationToken of(
       long userId, @NonNull UserProfileType userProfileType,
       Collection<? extends GrantedAuthority> authorities) {
     return new UserAuthenticationToken(BigInteger.valueOf(userId), userProfileType, authorities);
