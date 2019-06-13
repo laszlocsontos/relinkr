@@ -18,18 +18,20 @@ package io.relinkr.core.model;
 
 import static lombok.AccessLevel.PROTECTED;
 
-import io.relinkr.core.orm.AbstractId;
-import io.relinkr.user.model.User;
 import java.math.BigInteger;
 import java.util.Objects;
 import javax.persistence.Embeddable;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter(PROTECTED)
 @Embeddable
 @NoArgsConstructor(access = PROTECTED)
 @EqualsAndHashCode(callSuper = false)
-public class UserId extends AbstractId<User> {
+public class UserId {
 
   private BigInteger id;
 
@@ -52,19 +54,8 @@ public class UserId extends AbstractId<User> {
   }
 
   @Override
-  public Class<User> getEntityClass() {
-    return User.class;
-  }
-
-  @Override
   public String toString() {
     return Objects.toString(id);
-  }
-
-  // FIXME: Remove temporal hack for processing longs
-  @Override
-  public Long getId() {
-    return id.longValue();
   }
 
 }

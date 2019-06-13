@@ -16,7 +16,6 @@
 
 package io.relinkr.core.security.authn.user;
 
-import io.relinkr.user.model.UserProfileType;
 import java.math.BigInteger;
 import java.util.Collection;
 import lombok.NonNull;
@@ -30,37 +29,22 @@ import org.springframework.security.core.GrantedAuthority;
 public class UserAuthenticationToken extends AbstractAuthenticationToken {
 
   private final BigInteger userId;
-  private final UserProfileType userProfileType;
 
   private UserAuthenticationToken(
-      BigInteger userId, UserProfileType userProfileType,
+      BigInteger userId,
       Collection<? extends GrantedAuthority> authorities) {
 
     super(authorities);
     setAuthenticated(true);
 
     this.userId = userId;
-    this.userProfileType = userProfileType;
-  }
-
-  public static UserAuthenticationToken of(
-      @NonNull BigInteger userId, @NonNull UserProfileType userProfileType,
-      Collection<? extends GrantedAuthority> authorities) {
-    return new UserAuthenticationToken(userId, userProfileType, authorities);
   }
 
   public static UserAuthenticationToken of(
       @NonNull BigInteger userId,
       Collection<? extends GrantedAuthority> authorities) {
-    return new UserAuthenticationToken(userId, null, authorities);
+    return new UserAuthenticationToken(userId, authorities);
   }
-
-  public static UserAuthenticationToken of(
-      long userId, @NonNull UserProfileType userProfileType,
-      Collection<? extends GrantedAuthority> authorities) {
-    return new UserAuthenticationToken(BigInteger.valueOf(userId), userProfileType, authorities);
-  }
-
 
   @Override
   public Object getCredentials() {
@@ -70,11 +54,6 @@ public class UserAuthenticationToken extends AbstractAuthenticationToken {
   @Override
   public BigInteger getPrincipal() {
     return userId;
-  }
-
-  @Override
-  public UserProfileType getDetails() {
-    return userProfileType;
   }
 
   @Override

@@ -16,10 +16,9 @@
 
 package io.relinkr.core.model;
 
-import io.relinkr.user.model.User;
-
 /**
- * Marker interface to be implemented by entities which are owned by a specific {@link User}.
+ * Marker interface to be implemented by entities which are owned by an
+ * {@link org.springframework.security.oauth2.core.user.OAuth2User}.
  */
 public interface Ownable {
 

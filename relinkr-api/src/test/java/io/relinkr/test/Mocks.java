@@ -31,19 +31,14 @@ import io.relinkr.click.model.Click;
 import io.relinkr.click.model.ClickId;
 import io.relinkr.click.model.IpAddress;
 import io.relinkr.core.model.ApplicationException;
+import io.relinkr.core.model.EmailAddress;
+import io.relinkr.core.model.UserId;
 import io.relinkr.core.security.authn.WebSecurityConfig;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.model.LinkId;
 import io.relinkr.link.model.LongUrl;
 import io.relinkr.link.model.Tag;
 import io.relinkr.link.model.UtmParameters;
-import io.relinkr.core.model.EmailAddress;
-import io.relinkr.user.model.Gender;
-import io.relinkr.user.model.Role;
-import io.relinkr.user.model.User;
-import io.relinkr.core.model.UserId;
-import io.relinkr.user.model.UserProfile;
-import io.relinkr.user.model.UserProfileType;
 import io.relinkr.visitor.model.Visitor;
 import io.relinkr.visitor.model.VisitorId;
 import java.math.BigInteger;
@@ -286,13 +281,6 @@ public final class Mocks {
     return link;
   }
 
-  public static User createUser() {
-    User user = User.of(EMAIL_ADDRESS, ENCRYPTED_PASSWORD);
-    user.setId(USER_ID);
-    user.grantRole(Role.ADMIN);
-    return user;
-  }
-
   public static Visitor createVisitor() {
     Visitor visitor = new Visitor();
     visitor.setId(VISITOR_ID);
@@ -301,14 +289,6 @@ public final class Mocks {
 
   public static Click createClick() {
     return Click.of(LINK_ID, VISITOR_ID, USER_ID, VISITOR_IP, FIXED_TIMESTAMP);
-  }
-
-  public static UserProfile createUserProfile() {
-    return UserProfile.of(
-        UserProfileType.GOOGLE, "123456789", "Laszlo Csontos", "Laszlo",
-        null, "Csontos", null, null, Gender.MALE,
-        null
-    );
   }
 
 }

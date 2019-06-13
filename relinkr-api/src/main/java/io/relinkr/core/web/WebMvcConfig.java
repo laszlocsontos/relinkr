@@ -64,10 +64,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         new StringToEntityClassAwareIdConverter<>(LinkId.class));
     registry.addConverter(new EntityClassAwareIdToStringConverter<LinkId>());
 
-    registry.addConverter(String.class, UserId.class,
-        new StringToEntityClassAwareIdConverter<>(UserId.class));
-    registry.addConverter(new EntityClassAwareIdToStringConverter<UserId>());
-
     registry.addConverter(String.class, VisitorId.class,
         new StringToEntityClassAwareIdConverter<>(VisitorId.class));
     registry.addConverter(new EntityClassAwareIdToStringConverter<VisitorId>());
