@@ -86,7 +86,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   @Before
   public void setUp() {
     link = createLink();
-    given(entityManager.find(Link.class, link.getUserId(), NONE)).willReturn(link);
+    given(entityManager.find(Link.class, link.getId(), NONE)).willReturn(link);
   }
 
   @Test
