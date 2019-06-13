@@ -21,7 +21,7 @@ import static javax.persistence.EnumType.STRING;
 import io.relinkr.core.model.Country;
 import io.relinkr.core.orm.OwnableEntity;
 import io.relinkr.link.model.LinkId;
-import io.relinkr.user.model.UserId;
+import io.relinkr.core.model.UserId;
 import io.relinkr.visitor.model.VisitorId;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

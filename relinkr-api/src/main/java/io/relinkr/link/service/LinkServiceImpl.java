@@ -24,7 +24,7 @@ import io.relinkr.link.model.LinkId;
 import io.relinkr.link.model.LinkStatus;
 import io.relinkr.link.model.Tag;
 import io.relinkr.link.model.UtmParameters;
-import io.relinkr.user.model.UserId;
+import io.relinkr.core.model.UserId;
 import java.net.URI;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
-package io.relinkr.user.model;
+package io.relinkr.core.model;
 
 import static lombok.AccessLevel.PROTECTED;
 
 import io.relinkr.core.orm.AbstractId;
+import io.relinkr.user.model.User;
 import java.math.BigInteger;
 import java.util.Objects;
 import javax.persistence.Embeddable;

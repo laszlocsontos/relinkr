@@ -16,6 +16,7 @@
 
 package io.relinkr.core.security.authn.annotation;
 
+import io.relinkr.core.model.UserId;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,7 +24,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for marking {@link io.relinkr.user.model.UserId} typed controller method arguments.
+ * Annotation for marking {@link UserId} typed controller method arguments.
  * At such places {@link io.relinkr.core.web.CurrentUserArgumentResolver} will take care of
  * extracting the ID of that user who's performing the current request.
  */

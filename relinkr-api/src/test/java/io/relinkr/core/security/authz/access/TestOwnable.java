@@ -16,8 +16,8 @@
 
 package io.relinkr.core.security.authz.access;
 
-import io.relinkr.user.model.Ownable;
-import io.relinkr.user.model.UserId;
+import io.relinkr.core.model.Ownable;
+import io.relinkr.core.model.UserId;
 import lombok.Value;
 
 @Value(staticConstructor = "of")

@@ -16,8 +16,8 @@
 
 package io.relinkr.core.orm;
 
-import io.relinkr.user.model.Ownable;
-import io.relinkr.user.model.UserId;
+import io.relinkr.core.model.Ownable;
+import io.relinkr.core.model.UserId;
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Embedded;

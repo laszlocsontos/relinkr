@@ -16,7 +16,7 @@
 
 package io.relinkr.core.orm;
 
-import io.relinkr.user.model.UserId;
+import io.relinkr.core.model.UserId;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

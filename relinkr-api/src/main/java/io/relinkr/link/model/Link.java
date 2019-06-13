@@ -21,7 +21,7 @@ import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.EnumType.STRING;
 
 import io.relinkr.core.util.IdentityGenerator;
-import io.relinkr.user.model.UserId;
+import io.relinkr.core.model.UserId;
 import java.net.URI;
 import java.util.LinkedHashSet;
 import java.util.Optional;

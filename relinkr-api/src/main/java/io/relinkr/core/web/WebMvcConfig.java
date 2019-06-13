@@ -25,7 +25,7 @@ import io.relinkr.click.model.ClickId;
 import io.relinkr.core.convert.EntityClassAwareIdToStringConverter;
 import io.relinkr.core.convert.StringToEntityClassAwareIdConverter;
 import io.relinkr.link.model.LinkId;
-import io.relinkr.user.model.UserId;
+import io.relinkr.core.model.UserId;
 import io.relinkr.visitor.model.VisitorId;
 import java.lang.reflect.Field;
 import java.util.List;

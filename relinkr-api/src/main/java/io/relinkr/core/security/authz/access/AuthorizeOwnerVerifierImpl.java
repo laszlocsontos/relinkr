@@ -23,8 +23,8 @@ import static org.springframework.security.access.AccessDecisionVoter.ACCESS_GRA
 import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 
 import io.relinkr.core.orm.EntityClassAwareId;
-import io.relinkr.user.model.Ownable;
-import io.relinkr.user.model.UserId;
+import io.relinkr.core.model.Ownable;
+import io.relinkr.core.model.UserId;
 import java.security.Principal;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;

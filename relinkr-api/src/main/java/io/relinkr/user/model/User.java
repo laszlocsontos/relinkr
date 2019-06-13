@@ -23,6 +23,9 @@ import static java.util.stream.Collectors.toSet;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
 
+import io.relinkr.core.model.EmailAddress;
+import io.relinkr.core.model.Ownable;
+import io.relinkr.core.model.UserId;
 import io.relinkr.core.orm.AbstractEntity;
 import java.util.Collections;
 import java.util.LinkedHashMap;

@@ -17,7 +17,7 @@
 package io.relinkr.core.web;
 
 import io.relinkr.core.security.authn.annotation.CurrentUser;
-import io.relinkr.user.model.UserId;
+import io.relinkr.core.model.UserId;
 import java.math.BigInteger;
 import java.security.Principal;
 import org.springframework.core.MethodParameter;

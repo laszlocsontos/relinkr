@@ -17,7 +17,7 @@
 package io.relinkr.link.model;
 
 import io.relinkr.core.model.GenericApplicationEvent;
-import io.relinkr.user.model.UserId;
+import io.relinkr.core.model.UserId;
 import io.relinkr.visitor.model.VisitorId;
 import java.time.Instant;
 import lombok.Getter;

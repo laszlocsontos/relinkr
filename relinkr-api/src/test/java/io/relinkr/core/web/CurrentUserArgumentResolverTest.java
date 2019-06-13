@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import io.relinkr.core.security.authn.annotation.CurrentUser;
 import io.relinkr.core.web.CurrentUserArgumentResolverTest.TestConfig;
 import io.relinkr.core.web.CurrentUserArgumentResolverTest.TestController;
-import io.relinkr.user.model.UserId;
+import io.relinkr.core.model.UserId;
 import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;

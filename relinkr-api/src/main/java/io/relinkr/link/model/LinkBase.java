@@ -24,8 +24,8 @@ import static java.util.Collections.emptySet;
 
 import io.relinkr.core.orm.AbstractId;
 import io.relinkr.core.orm.OwnableEntity;
-import io.relinkr.user.model.Ownable;
-import io.relinkr.user.model.UserId;
+import io.relinkr.core.model.Ownable;
+import io.relinkr.core.model.UserId;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Set;

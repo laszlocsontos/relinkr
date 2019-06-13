@@ -31,7 +31,7 @@ import io.relinkr.link.model.LinkId;
 import io.relinkr.link.model.LinkStatus;
 import io.relinkr.link.model.UtmParameters;
 import io.relinkr.link.service.LinkService;
-import io.relinkr.user.model.UserId;
+import io.relinkr.core.model.UserId;
 import java.util.EnumSet;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

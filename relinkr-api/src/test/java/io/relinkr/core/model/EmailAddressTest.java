@@ -14,18 +14,26 @@
   limitations under the License.
 */
 
-package io.relinkr.user.model;
+package io.relinkr.core.model;
 
-/**
- * Marker interface to be implemented by entities which are owned by a specific {@link User}.
- */
-public interface Ownable {
+import io.relinkr.core.model.EmailAddress;
+import org.junit.Test;
 
-  /**
-   * Returns the owner User's ID.
-   *
-   * @return owner User's ID
-   */
-  UserId getUserId();
+public class EmailAddressTest {
+
+  @Test
+  public void givenValidAddressWithNewTld_whenCreate_thenCreated() {
+    EmailAddress.of("fabio@disapproved.solutions");
+  }
+
+  @Test
+  public void givenValidAddressWithOldTld_whenCreate_thenCreated() {
+    EmailAddress.of("fabio@disapproved-solutions.com");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void givenInvalidAddress_whenCreate_thenIllegalArgumentException() {
+    EmailAddress.of("zoé@disapproved-solutions.com");
+  }
 
 }

@@ -22,7 +22,7 @@ import io.relinkr.link.model.InvalidUrlException;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.model.LinkId;
 import io.relinkr.link.model.UtmParameters;
-import io.relinkr.user.model.UserId;
+import io.relinkr.core.model.UserId;
 import java.net.URI;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

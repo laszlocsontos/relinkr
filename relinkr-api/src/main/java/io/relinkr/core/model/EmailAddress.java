@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-package io.relinkr.user.model;
+package io.relinkr.core.model;
 
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
