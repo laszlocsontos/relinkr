@@ -41,6 +41,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -85,9 +86,13 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
   @Override
   public String createJwtToken(@NonNull Authentication authentication, int minutes) {
+    BigInteger userId = parseNumber(
+        authentication.getName(), InternalAuthenticationServiceException::new
+    );
+
     JWTClaimsSet.Builder claimsSetBuilder = new JWTClaimsSet.Builder()
         .jwtID(String.valueOf(identityGenerator.generate()))
-        .subject(authentication.getName())
+        .subject(String.valueOf(userId))
         .expirationTime(new Date(currentTimeMillis() + (long) minutes * 60 * 1000))
         .issueTime(new Date());
 
@@ -147,12 +152,7 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
       throw new NonceExpiredException("Token has expired.");
     }
 
-    BigInteger userId;
-    try {
-      userId = NumberUtils.parseNumber(claimsSet.getSubject(), BigInteger.class);
-    } catch (NumberFormatException nfe) {
-      throw new BadCredentialsException(nfe.getMessage(), nfe);
-    }
+    BigInteger userId = parseNumber(claimsSet.getSubject(), BadCredentialsException::new);
 
     Collection<? extends GrantedAuthority> authorities =
         Optional.ofNullable(claimsSet.getClaim(CLAIM_AUTHORITIES))
@@ -181,6 +181,17 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
   private String removeRolePrefix(String role) {
     Assert.isTrue(role.startsWith(ROLE_PREFIX), "Role doesn't start with " + ROLE_PREFIX);
     return role.substring(ROLE_PREFIX.length());
+  }
+
+  private BigInteger parseNumber(
+      String value,
+      BiFunction<String, ? super Throwable, ? extends AuthenticationException> exceptionCreator) {
+
+    try {
+      return NumberUtils.parseNumber(value, BigInteger.class);
+    } catch (NumberFormatException nfe) {
+      throw exceptionCreator.apply("Invalid number: " + value, nfe);
+    }
   }
 
 }

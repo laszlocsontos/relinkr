@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.function.Function;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -36,6 +37,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * {@link OAuth2LoginAuthenticationSuccessHandler} and
  * {@link OAuth2LoginAuthenticationFailureHandler}.
  */
+@Slf4j
 abstract class AbstractOAuth2LoginAuthenticationHandler implements EnvironmentAware {
 
   static final String FRONTEND_LOGIN_URL_PROPERTY = "relinkr.frontend.login-url";
@@ -57,6 +59,20 @@ abstract class AbstractOAuth2LoginAuthenticationHandler implements EnvironmentAw
     UriComponents uriComponents = uriComponentsCreator.apply(uriComponentsBuilder);
 
     redirectStrategy.sendRedirect(request, response, uriComponents.toString());
+  }
+
+  void sendError(HttpServletRequest request, HttpServletResponse response, Exception ex)
+      throws IOException {
+
+    log.error(ex.getMessage(), ex);
+
+    sendRedirect(
+        request, response,
+        builder -> builder.queryParam("error", "{error}")
+            .buildAndExpand(ex.getMessage())
+            .encode()
+    );
+
   }
 
 }

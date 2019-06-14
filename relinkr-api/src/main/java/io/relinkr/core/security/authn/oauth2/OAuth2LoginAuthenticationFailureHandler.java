@@ -44,12 +44,7 @@ public class OAuth2LoginAuthenticationFailureHandler
 
     authenticationTokenCookieResolver.removeToken(response);
 
-    sendRedirect(
-        request, response,
-        builder -> builder.queryParam("error", "{error}")
-            .buildAndExpand(exception.getMessage())
-            .encode()
-    );
+    sendError(request, response, exception);
   }
 
 }

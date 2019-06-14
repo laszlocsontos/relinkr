@@ -36,6 +36,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.core.Authentication;
@@ -61,8 +62,8 @@ public class JwtAuthenticationServiceTest {
     jwtAuthenticationService.parseJwtToken(jwtToken);
   }
 
-  @Test(expected = BadCredentialsException.class)
-  public void givenInvalidAuthentication_whenCreateJwtToken_thenBadCredentialsException() {
+  @Test(expected = InternalAuthenticationServiceException.class)
+  public void givenInvalidAuthentication_whenCreateJwtToken_thenAuthenticationServiceException() {
     Authentication authentication = createAuthentication("invalid");
 
     String jwtToken = jwtAuthenticationService.createJwtToken(authentication, 1);
@@ -93,8 +94,8 @@ public class JwtAuthenticationServiceTest {
     assertThat(authentication.getAuthorities(), contains(AUTHORITY_USER));
   }
 
-  @Test(expected = BadCredentialsException.class)
-  public void givenInvalidOauth2Authentication_whenCreateJwtToken_thenIllegalArgumentException() {
+  @Test(expected = InternalAuthenticationServiceException.class)
+  public void givenInvalidOauth2Authentication_whenCreateJwtToken_thenAuthenticationException() {
     Authentication authentication = createOauth2Authentication("invalid");
 
     String jwtToken = jwtAuthenticationService.createJwtToken(authentication, 1);

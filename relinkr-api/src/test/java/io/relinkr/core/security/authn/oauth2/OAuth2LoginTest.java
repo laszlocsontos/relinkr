@@ -180,7 +180,7 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
         .andExpect(
             redirectedUrlTemplate(
                 "https://localhost:9443/login?error={error}",
-                "[invalid_email_address] Invalid email address: bad"
+                "Invalid number: bad"
             )
         )
         .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication());

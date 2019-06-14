@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -46,7 +47,14 @@ public class OAuth2LoginAuthenticationSuccessHandler
       @NonNull Authentication authentication)
       throws IOException {
 
-    String bearerToken = jwtAuthenticationService.createJwtToken(authentication, HALF_AN_HOUR);
+    String bearerToken;
+    try {
+      bearerToken = jwtAuthenticationService.createJwtToken(authentication, HALF_AN_HOUR);
+    } catch (AuthenticationException ae) {
+      sendError(request, response, ae);
+      return;
+    }
+
     authenticationTokenCookieResolver.setToken(response, bearerToken);
 
     sendRedirect(request, response, UriComponentsBuilder::build);

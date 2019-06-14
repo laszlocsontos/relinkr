@@ -27,6 +27,7 @@ abstract class AbstractOAuth2LoginAuthenticationHandlerTest<H extends AbstractOA
     extends BaseServletTest {
 
   static final String LOGIN_URL = "https://app.relinkr.com/login";
+  static final String LOGIN_URL_WITH_ERROR = "https://app.relinkr.com/login?error=error";
 
   H handler;
 

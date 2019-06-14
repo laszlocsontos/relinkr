@@ -20,6 +20,7 @@ import static io.relinkr.core.security.authn.oauth2.OAuth2LoginAuthenticationSuc
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.never;
 
 import io.relinkr.core.security.authn.jwt.JwtAuthenticationService;
 import io.relinkr.core.security.authn.jwt.JwtAuthenticationTokenCookieResolver;
@@ -27,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
@@ -48,7 +50,7 @@ public class OAuth2LoginAuthenticationSuccessHandlerTest extends
   }
 
   @Test
-  public void givenAuthenticationException_whenOnAuthenticationSuccess_thenRedirectAndCookieSet()
+  public void givenNoAuthenticationException_whenOnAuthenticationSuccess_thenRedirectAndCookieSet()
       throws Exception {
 
     Authentication authentication = new TestingAuthenticationToken("little", "bunny");
@@ -65,6 +67,26 @@ public class OAuth2LoginAuthenticationSuccessHandlerTest extends
     assertEquals(LOGIN_URL, response.getRedirectedUrl());
 
     then(authenticationTokenCookieResolver).should().setToken(response, "token");
+  }
+
+  @Test
+  public void givenAuthenticationException_whenOnAuthenticationSuccess_thenRedirectAndNoCookieSet()
+      throws Exception {
+
+    Authentication authentication = new TestingAuthenticationToken("little", "bunny");
+
+    given(jwtAuthenticationService.createJwtToken(authentication, HALF_AN_HOUR))
+        .willThrow(new InternalAuthenticationServiceException("error"));
+
+    handler.onAuthenticationSuccess(
+        request,
+        response,
+        authentication
+    );
+
+    assertEquals(LOGIN_URL_WITH_ERROR, response.getRedirectedUrl());
+
+    then(authenticationTokenCookieResolver).should(never()).setToken(response, "token");
   }
 
   @Override
