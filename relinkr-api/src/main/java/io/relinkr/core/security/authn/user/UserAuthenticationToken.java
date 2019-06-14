@@ -56,9 +56,4 @@ public class UserAuthenticationToken extends AbstractAuthenticationToken {
     return userId;
   }
 
-  @Override
-  public void setDetails(Object details) {
-    throw new UnsupportedOperationException();
-  }
-
 }
