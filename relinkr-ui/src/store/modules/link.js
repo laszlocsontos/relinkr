@@ -18,38 +18,9 @@
 
 import _ from 'lodash';
 import {get, post, put} from '../../api';
+import axios from 'axios';
 
 const PAGE_SIZE = 10;
-
-const mockStats = {
-  linksStats: {
-    datasets: [{
-      label: "# of links",
-      data: [1, 2, 3, 2, 4, 2, 6]
-    }],
-    labels: ['2018-03-06', '2018-03-07', '2018-03-08', '2018-03-09', '2018-03-10',
-      '2018-03-11', '2018-03-12'],
-  },
-  clicksStats: {
-    datasets: [{
-      label: "# of clicks",
-      data: [10, 20, 35, 20, 42, 25, 80]
-    }],
-    labels: ['2018-03-06', '2018-03-07', '2018-03-08', '2018-03-09', '2018-03-10',
-      '2018-03-11', '2018-03-12'],
-  },
-  visitorsStats: {
-    datasets: [{
-      data: [10, 30]
-    }],
-
-    // These labels appear in the legend and in the tooltips when hovering different arcs
-    labels: [
-      'New',
-      'Returning'
-    ]
-  }
-};
 
 // initial state
 const state = {
@@ -144,9 +115,13 @@ const actions = {
   },
   fetchStats({commit}, statType) {
     // statType: links/clicks/visitors
-    // TODO: request data and transform it
-    const data = mockStats[`${statType}Stats`];
-    commit('setStats', {statType: statType, data: data});
+    axios({method: 'GET', url: `/mocks/${statType}/1`})
+    .then(response => {
+      commit(`setStats`, {statType: statType, data: response.data});
+    })
+    .catch(err => {
+      console.log("error", err);
+    });
   }
 };
 

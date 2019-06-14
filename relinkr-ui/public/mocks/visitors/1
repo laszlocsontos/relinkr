@@ -1,0 +1,9 @@
+{
+    "datasets": [{
+      "data": [10, 30]
+    }],
+    "labels": [
+      "New",
+      "Returning"
+    ]
+}
