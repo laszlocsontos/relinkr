@@ -25,7 +25,7 @@ const DEFAULT_HEADERS = {
   'X-Requested-With': 'XMLHttpRequest'
 };
 
-const fetch = (method, endpoint, authToken, headers = {}, params = {},
+const fetch = (method, endpoint, headers = {}, params = {},
     data = null) => {
   const config = {
     method: method,
@@ -34,11 +34,6 @@ const fetch = (method, endpoint, authToken, headers = {}, params = {},
     headers: _.defaults(DEFAULT_HEADERS, headers || {}),
     withCredentials: true
   };
-
-  if (!_.isEmpty(authToken)) {
-    config.headers = _.defaults(config.headers,
-        {'Authorization': `Bearer ${authToken}`});
-  }
 
   if (data) {
     config.data = data;
