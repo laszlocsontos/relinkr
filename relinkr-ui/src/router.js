@@ -13,16 +13,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 import Vue from 'vue';
 import Router from 'vue-router';
 
 import store from './store';
 
 import Login from '@/views/Login.vue';
-import Dashboard from '@/views/Dashboard.vue';
 import Links from '@/views/Links.vue';
-import Stats from '@/views/Stats.vue';
 
 Vue.use(Router);
 
@@ -32,7 +30,7 @@ const router = new Router({
   routes: [
     {
       path: '*',
-      redirect: '/dashboard'
+      redirect: '/links'
     },
     {
       path: '/login',
@@ -40,22 +38,10 @@ const router = new Router({
       component: Login
     },
     {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: Dashboard,
-      meta: { requiresAuth: true }
-    },
-    {
       path: '/links',
       name: 'links',
       component: Links,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/stats',
-      name: 'stats',
-      component: Stats,
-      meta: { requiresAuth: true }
+      meta: {requiresAuth: true}
     }
   ]
 });
@@ -64,7 +50,7 @@ router.beforeEach((to, from, next) => {
   // This route requires auth, check if logged in otherwise redirect to login page.
   if (to.meta.requiresAuth) {
     if (!store.getters['auth/isLoggedIn']) {
-      next({ path: '/login' });
+      next({path: '/login'});
     } else {
       next();
     }

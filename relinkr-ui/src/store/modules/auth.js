@@ -80,7 +80,7 @@ const actions = {
   login({commit}, args) {
     const auth = args || {};
     commit('setAuthentication', auth);
-    router.push({path: '/dashboard'});
+    router.push({path: '/links'});
   },
   logout({commit}) {
     commit('clearAuthentication');
