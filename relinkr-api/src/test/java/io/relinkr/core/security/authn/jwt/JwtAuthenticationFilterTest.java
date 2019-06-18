@@ -19,7 +19,6 @@ package io.relinkr.core.security.authn.jwt;
 import static io.relinkr.core.security.authn.jwt.JwtAuthenticationFilter.AUTHORIZATION_HEADER;
 import static io.relinkr.core.security.authn.jwt.JwtAuthenticationFilter.BEARER_TOKEN_PREFIX;
 import static io.relinkr.test.Mocks.EMAIL_ADDRESS;
-import static io.relinkr.test.Mocks.GOOGLE_USER_ID;
 import static java.util.Collections.emptySet;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;

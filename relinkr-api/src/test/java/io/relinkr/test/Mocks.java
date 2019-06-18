@@ -187,8 +187,6 @@ public final class Mocks {
   public static final SimpleGrantedAuthority AUTHORITY_USER =
       new SimpleGrantedAuthority("ROLE_USER");
 
-  public static final BigInteger GOOGLE_USER_ID = new BigInteger("104401221461109262503");
-
   static {
     try {
       LONG_URL_BASE = new LongUrl(LONG_URL_BASE_S);
