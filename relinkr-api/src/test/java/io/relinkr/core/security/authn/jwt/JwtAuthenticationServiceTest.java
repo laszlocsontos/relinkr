@@ -17,7 +17,7 @@
 package io.relinkr.core.security.authn.jwt;
 
 import static io.relinkr.test.Mocks.AUTHORITY_USER;
-import static io.relinkr.test.Mocks.GOOGLE_USER_ID;
+import static io.relinkr.test.Mocks.EMAIL_ADDRESS;
 import static io.relinkr.test.Mocks.JWT_TOKEN_EXPIRED;
 import static io.relinkr.test.Mocks.JWT_TOKEN_INVALID;
 import static io.relinkr.test.Mocks.JWT_TOKEN_VALID;
@@ -72,25 +72,26 @@ public class JwtAuthenticationServiceTest {
 
   @Test
   public void givenValidAuthentication_whenCreateJwtToken_thenParsed() {
-    Authentication authentication = createAuthentication(GOOGLE_USER_ID);
+    Authentication authentication = createAuthentication(EMAIL_ADDRESS.getValue());
 
-    String jwtToken = jwtAuthenticationService.createJwtToken(authentication, 1);
+    String jwtToken = jwtAuthenticationService.createJwtToken(authentication, Integer.MAX_VALUE);
+    log.info(jwtToken);
 
     authentication = jwtAuthenticationService.parseJwtToken(jwtToken);
 
-    assertEquals(GOOGLE_USER_ID.toString(), authentication.getName());
+    assertEquals(EMAIL_ADDRESS.getValue(), authentication.getName());
     assertThat(authentication.getAuthorities(), contains(AUTHORITY_USER));
   }
 
   @Test
   public void givenValidOauth2Authentication_whenCreateJwtToken_thenParsed() {
-    Authentication authentication = createOauth2Authentication(GOOGLE_USER_ID);
+    Authentication authentication = createOauth2Authentication(EMAIL_ADDRESS.getValue());
 
     String jwtToken = jwtAuthenticationService.createJwtToken(authentication, 1);
 
     authentication = jwtAuthenticationService.parseJwtToken(jwtToken);
 
-    assertEquals(GOOGLE_USER_ID.toString(), authentication.getName());
+    assertEquals(EMAIL_ADDRESS.getValue(), authentication.getName());
     assertThat(authentication.getAuthorities(), contains(AUTHORITY_USER));
   }
 
@@ -105,7 +106,7 @@ public class JwtAuthenticationServiceTest {
   @Test
   public void givenValidToken_whenParseJwtToken_thenAuthenticated() {
     Authentication authentication = jwtAuthenticationService.parseJwtToken(JWT_TOKEN_VALID);
-    assertEquals("53245345345345", authentication.getName());
+    assertEquals("test@test.com", authentication.getName());
     assertThat(authentication.getAuthorities(), contains(AUTHORITY_USER));
     assertTrue(authentication.isAuthenticated());
   }

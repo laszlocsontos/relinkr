@@ -16,7 +16,7 @@
 
 package io.relinkr.core.security.authn.user;
 
-import java.math.BigInteger;
+import io.relinkr.core.model.EmailAddress;
 import java.util.Collection;
 import lombok.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -26,24 +26,25 @@ import org.springframework.security.core.GrantedAuthority;
  * Represents an authenticated {@link org.springframework.security.oauth2.core.user.OAuth2User}
  * by their user ID.
  */
-public class UserAuthenticationToken extends AbstractAuthenticationToken {
+public class EmailAddressAuthenticationToken extends AbstractAuthenticationToken {
 
-  private final BigInteger userId;
+  private final EmailAddress principal;
 
-  private UserAuthenticationToken(
-      BigInteger userId,
+  private EmailAddressAuthenticationToken(
+      EmailAddress principal,
       Collection<? extends GrantedAuthority> authorities) {
 
     super(authorities);
     setAuthenticated(true);
 
-    this.userId = userId;
+    this.principal = principal;
   }
 
-  public static UserAuthenticationToken of(
-      @NonNull BigInteger userId,
+  public static EmailAddressAuthenticationToken of(
+      @NonNull EmailAddress principal,
       Collection<? extends GrantedAuthority> authorities) {
-    return new UserAuthenticationToken(userId, authorities);
+
+    return new EmailAddressAuthenticationToken(principal, authorities);
   }
 
   @Override
@@ -52,8 +53,13 @@ public class UserAuthenticationToken extends AbstractAuthenticationToken {
   }
 
   @Override
-  public BigInteger getPrincipal() {
-    return userId;
+  public EmailAddress getPrincipal() {
+    return principal;
+  }
+
+  @Override
+  public String getName() {
+    return principal.getValue();
   }
 
 }

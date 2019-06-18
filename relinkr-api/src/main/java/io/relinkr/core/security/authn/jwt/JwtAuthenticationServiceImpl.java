@@ -29,9 +29,9 @@ import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import io.relinkr.core.security.authn.user.UserAuthenticationToken;
+import io.relinkr.core.model.EmailAddress;
+import io.relinkr.core.security.authn.user.EmailAddressAuthenticationToken;
 import io.relinkr.core.util.IdentityGenerator;
-import java.math.BigInteger;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
@@ -52,7 +52,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
 import org.springframework.util.Assert;
-import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -86,13 +85,12 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
   @Override
   public String createJwtToken(@NonNull Authentication authentication, int minutes) {
-    BigInteger userId = parseNumber(
-        authentication.getName(), InternalAuthenticationServiceException::new
-    );
+    EmailAddress principal =
+        parseEmailAddress(authentication.getName(), InternalAuthenticationServiceException::new);
 
     JWTClaimsSet.Builder claimsSetBuilder = new JWTClaimsSet.Builder()
         .jwtID(String.valueOf(identityGenerator.generate()))
-        .subject(String.valueOf(userId))
+        .subject(principal.getValue())
         .expirationTime(new Date(currentTimeMillis() + (long) minutes * 60 * 1000))
         .issueTime(new Date());
 
@@ -152,7 +150,8 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
       throw new NonceExpiredException("Token has expired.");
     }
 
-    BigInteger userId = parseNumber(claimsSet.getSubject(), BadCredentialsException::new);
+    EmailAddress principal =
+        parseEmailAddress(claimsSet.getSubject(), BadCredentialsException::new);
 
     Collection<? extends GrantedAuthority> authorities =
         Optional.ofNullable(claimsSet.getClaim(CLAIM_AUTHORITIES))
@@ -167,11 +166,8 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
             .map(it -> it.collect(toSet()))
             .orElse(emptySet());
 
-    return UserAuthenticationToken.of(userId, authorities);
+    return EmailAddressAuthenticationToken.of(principal, authorities);
   }
-
-  // TODO: This code duplicates its counterpart in AuthorizeRolesOrOwnerSecurityMetadataSource,
-  //  refactor to a common component
 
   private String addRolePrefix(String role) {
     Assert.isTrue(!role.startsWith(ROLE_PREFIX), "Role starts with " + ROLE_PREFIX);
@@ -183,14 +179,14 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
     return role.substring(ROLE_PREFIX.length());
   }
 
-  private BigInteger parseNumber(
+  private EmailAddress parseEmailAddress(
       String value,
       BiFunction<String, ? super Throwable, ? extends AuthenticationException> exceptionCreator) {
 
     try {
-      return NumberUtils.parseNumber(value, BigInteger.class);
-    } catch (NumberFormatException nfe) {
-      throw exceptionCreator.apply("Invalid number: " + value, nfe);
+      return EmailAddress.of(value);
+    } catch (IllegalArgumentException iae) {
+      throw exceptionCreator.apply(iae.getMessage(), iae);
     }
   }
 

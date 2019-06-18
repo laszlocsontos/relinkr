@@ -17,7 +17,7 @@
 package io.relinkr.core.security.authn.oauth2;
 
 import static io.relinkr.core.security.authn.WebSecurityConfig.OAUTH2_LOGIN_PROCESSES_BASE_URI;
-import static io.relinkr.test.Mocks.GOOGLE_USER_ID;
+import static io.relinkr.test.Mocks.EMAIL_ADDRESS;
 import static java.util.Collections.singletonMap;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -129,7 +129,7 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
     given(accessTokenResponseClient.getTokenResponse(
         any(OAuth2AuthorizationCodeGrantRequest.class))).willReturn(accessTokenResponse);
 
-    OAuth2User oAuth2User = createOAuth2User(GOOGLE_USER_ID.toString());
+    OAuth2User oAuth2User = createOAuth2User(EMAIL_ADDRESS.getValue());
 
     given(defaultOAuth2UserService.loadUser(any(OAuth2UserRequest.class)))
         .willReturn(oAuth2User);
@@ -144,7 +144,7 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
         .andExpect(redirectedUrlTemplate("https://localhost:9443/login"))
         .andExpect(
             new JwtMatcher(jwtAuthenticationService)
-                .withAuthenticationName(GOOGLE_USER_ID.toString())
+                .withAuthenticationName(EMAIL_ADDRESS.getValue())
                 .withRoles(ROLES)
         );
   }
@@ -165,11 +165,11 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
   }
 
   @Test
-  public void givenInvalidUserId_whenLogin_thenUnauthorized()
+  public void givenInvalidEmailAddress_whenLogin_thenUnauthorized()
       throws Exception {
 
     // We expect that spring.security.oauth2.client.provider.<provider_name>.userNameAttribute
-    // be always set to sub and hence we expect a valid numeric ID.
+    // be always set to email and hence we expect a valid email address
     OAuth2User oAuth2User = createOAuth2User("bad");
 
     given(defaultOAuth2UserService.loadUser(any(OAuth2UserRequest.class)))
@@ -180,17 +180,17 @@ public class OAuth2LoginTest extends AbstractWebSecurityTest {
         .andExpect(
             redirectedUrlTemplate(
                 "https://localhost:9443/login?error={error}",
-                "Invalid number: bad"
+                "Invalid email address: bad"
             )
         )
         .andExpect(new JwtMatcher(jwtAuthenticationService).withoutAuthentication());
   }
 
-  private OAuth2User createOAuth2User(String userId) {
+  private OAuth2User createOAuth2User(String emailAddress) {
     return new DefaultOAuth2User(
         createAuthorityList(ROLES),
-        singletonMap("sub", userId),
-        "sub"
+        singletonMap("email", emailAddress),
+        "email"
     );
   }
 
