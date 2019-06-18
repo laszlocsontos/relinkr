@@ -6,20 +6,14 @@ import static org.springframework.hateoas.config.EnableHypermediaSupport.Hyperme
 import static org.springframework.security.test.context.TestSecurityContextHolder.clearContext;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import io.relinkr.core.security.authz.MethodSecurityConfig;
-import javax.persistence.EntityManager;
 import org.junit.After;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.test.web.servlet.ResultActions;
 
 public abstract class AbstractResourceControllerTest extends AbstractWebSecurityTest {
-
-  @MockBean
-  protected EntityManager entityManager;
 
   @After
   public void tearDown() {
@@ -38,7 +32,7 @@ public abstract class AbstractResourceControllerTest extends AbstractWebSecurity
   @TestConfiguration
   @EnableHypermediaSupport(type = HAL)
   @EnableSpringDataWebSupport
-  @Import({AbstractWebSecurityTest.TestConfig.class, MethodSecurityConfig.class})
+  @Import({AbstractWebSecurityTest.TestConfig.class})
   public static class TestConfig {
 
   }
