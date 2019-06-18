@@ -63,11 +63,6 @@
     </dependency>
 
     <dependency>
-      <artifactId>spring-retry</artifactId>
-      <groupId>org.springframework.retry</groupId>
-    </dependency>
-
-    <dependency>
       <artifactId>spring-security-oauth2-client</artifactId>
       <groupId>org.springframework.security</groupId>
     </dependency>
