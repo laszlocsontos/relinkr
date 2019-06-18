@@ -16,20 +16,19 @@
 
 package io.relinkr.core.convert;
 
-import io.relinkr.core.orm.EntityClassAwareId;
+import io.relinkr.core.orm.AbstractId;
 import java.io.Serializable;
-import org.springframework.util.NumberUtils;
 
-public class StringToEntityClassAwareIdConverter<T extends EntityClassAwareId<?>>
-    extends AbstractEntityClassAwareIdConverter<String, T> {
+public class LongToEntityIdConverter<T extends AbstractId<?>>
+    extends AbstractEntityIdConverter<Long, T> {
 
-  public StringToEntityClassAwareIdConverter(Class<T> targetClass) {
+  public LongToEntityIdConverter(Class<T> targetClass) {
     super(targetClass);
   }
 
   @Override
-  protected Serializable preProcessSource(String source) {
-    return NumberUtils.parseNumber(source, Long.class);
+  protected Serializable preProcessSource(Long source) {
+    return source;
   }
 
 }

@@ -32,9 +32,4 @@ public class LinkId extends AbstractId<Link> {
     return new LinkId(id);
   }
 
-  @Override
-  public Class<Link> getEntityClass() {
-    return Link.class;
-  }
-
 }

@@ -18,6 +18,7 @@ package io.relinkr.core.orm;
 
 import static lombok.AccessLevel.PROTECTED;
 
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Abstract base class which implements {@link EntityClassAwareId}.
+ * Abstract base class which entity IDs.
  *
  * @param <E> Entity's type
  */
@@ -37,7 +38,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PROTECTED)
 @EqualsAndHashCode(callSuper = false)
-public abstract class AbstractId<E> implements EntityClassAwareId<E> {
+public abstract class AbstractId<E> implements Serializable {
 
   private Long id;
 

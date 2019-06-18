@@ -19,7 +19,7 @@ package io.relinkr.core.convert;
 import static org.springframework.beans.BeanUtils.instantiateClass;
 import static org.springframework.util.ClassUtils.getConstructorIfAvailable;
 
-import io.relinkr.core.orm.EntityClassAwareId;
+import io.relinkr.core.orm.AbstractId;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.Optional;
@@ -27,17 +27,17 @@ import org.springframework.core.convert.converter.Converter;
 
 /**
  * Abstract base class for converting a simple value (usually a {@code Long} or {@code String} to
- * an instance of {@link EntityClassAwareId}.
+ * an instance of {@link AbstractId}.
  *
  * @param <S> Value's type to convert from
- * @param <T> {@code EntityClassAwareId}'s descendant to convert to
+ * @param <T> {@code AbstractId}'s descendant to convert to
  */
-abstract class AbstractEntityClassAwareIdConverter
-    <S extends Serializable, T extends EntityClassAwareId<?>> implements Converter<S, T> {
+abstract class AbstractEntityIdConverter
+    <S extends Serializable, T extends AbstractId<?>> implements Converter<S, T> {
 
   private final Constructor<T> targetConstructor;
 
-  AbstractEntityClassAwareIdConverter(Class<T> targetClass) {
+  AbstractEntityIdConverter(Class<T> targetClass) {
     targetConstructor = findConstructor(targetClass);
   }
 

@@ -21,8 +21,8 @@ import static org.springframework.util.ReflectionUtils.findField;
 import static org.springframework.util.ReflectionUtils.makeAccessible;
 import static org.springframework.util.ReflectionUtils.setField;
 
-import io.relinkr.core.convert.EntityClassAwareIdToStringConverter;
-import io.relinkr.core.convert.StringToEntityClassAwareIdConverter;
+import io.relinkr.core.convert.EntityIdToStringConverter;
+import io.relinkr.core.convert.StringToEntityIdConverter;
 import io.relinkr.link.model.LinkId;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -54,8 +54,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
   @Override
   public void addFormatters(FormatterRegistry registry) {
     registry.addConverter(String.class, LinkId.class,
-        new StringToEntityClassAwareIdConverter<>(LinkId.class));
-    registry.addConverter(new EntityClassAwareIdToStringConverter<LinkId>());
+        new StringToEntityIdConverter<>(LinkId.class));
+    registry.addConverter(new EntityIdToStringConverter<LinkId>());
 
     workaround((ConversionService) registry);
   }

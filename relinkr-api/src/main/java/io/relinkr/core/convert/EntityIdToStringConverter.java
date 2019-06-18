@@ -14,30 +14,17 @@
   limitations under the License.
 */
 
-package io.relinkr.core.orm;
+package io.relinkr.core.convert;
 
-import java.io.Serializable;
+import io.relinkr.core.orm.AbstractId;
+import java.util.Optional;
+import org.springframework.core.convert.converter.Converter;
 
-/**
- * Represents a numeric identifier of an entity, which is also aware the entity's class being
- * identified by that number.
- *
- * @param <E> Entity's type
- */
-public interface EntityClassAwareId<E> extends Serializable {
+public class EntityIdToStringConverter<T extends AbstractId<?>> implements Converter<T, String> {
 
-  /**
-   * Returns the entity's class.
-   *
-   * @return entity's class
-   */
-  Class<E> getEntityClass();
-
-  /**
-   * Returns the entity's ID.
-   *
-   * @return entity's ID
-   */
-  Long getId();
+  @Override
+  public String convert(T source) {
+    return Optional.ofNullable(source).map(String::valueOf).orElse(null);
+  }
 
 }

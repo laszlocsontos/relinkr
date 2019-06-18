@@ -16,16 +16,25 @@
 
 package io.relinkr.core.convert;
 
-import io.relinkr.core.orm.EntityClassAwareId;
-import java.util.Optional;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+import io.relinkr.link.model.LinkId;
+import org.junit.Test;
 import org.springframework.core.convert.converter.Converter;
 
-public class EntityClassAwareIdToStringConverter<T extends EntityClassAwareId<?>>
-    implements Converter<T, String> {
+public class EntityIdToStringConverterTest {
 
-  @Override
-  public String convert(T source) {
-    return Optional.ofNullable(source).map(String::valueOf).orElse(null);
+  private final Converter<LinkId, String> converter = new EntityIdToStringConverter<>();
+
+  @Test
+  public void givenNull_whenConvert_thenNull() {
+    assertNull(converter.convert(null));
+  }
+
+  @Test
+  public void givenEntityClassAwareId_whenConvert_thenString() {
+    assertEquals("123", converter.convert(LinkId.of(123L)));
   }
 
 }

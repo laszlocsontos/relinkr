@@ -164,11 +164,6 @@ public class TimeBasedIdentifierGeneratorTest {
       super(id);
     }
 
-    @Override
-    public Class<TestEntity> getEntityClass() {
-      return TestEntity.class;
-    }
-
   }
 
 

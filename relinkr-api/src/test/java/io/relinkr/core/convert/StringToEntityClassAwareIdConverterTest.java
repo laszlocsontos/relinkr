@@ -16,17 +16,17 @@
 
 package io.relinkr.core.convert;
 
-import io.relinkr.core.orm.EntityClassAwareId;
+import io.relinkr.core.orm.AbstractId;
 import io.relinkr.link.model.LinkId;
 import org.junit.Test;
 import org.springframework.core.convert.converter.Converter;
 
-public class StringToEntityClassAwareIdConverterTest<T extends EntityClassAwareId<?>>
-    extends AbstractEntityClassAwareIdConverterTest<String, T> {
+public class StringToEntityClassAwareIdConverterTest<T extends AbstractId<?>>
+    extends AbstractEntityIdConverterTest<String, T> {
 
   @Test(expected = IllegalArgumentException.class)
   public void givenWrongClass_whenCreate_thenIllegalArgumentException() {
-    new StringToEntityClassAwareIdConverter(Object.class);
+    new StringToEntityIdConverter(Object.class);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -36,7 +36,7 @@ public class StringToEntityClassAwareIdConverterTest<T extends EntityClassAwareI
 
   @Override
   protected Converter<String, T> createConverter() {
-    return new StringToEntityClassAwareIdConverter(LinkId.class);
+    return new StringToEntityIdConverter(LinkId.class);
   }
 
   @Override

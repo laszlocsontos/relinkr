@@ -16,7 +16,7 @@
 
 package io.relinkr.core.orm;
 
-import io.relinkr.core.convert.LongToEntityClassAwareIdConverter;
+import io.relinkr.core.convert.LongToEntityIdConverter;
 import io.relinkr.core.util.IdGenerator;
 import io.relinkr.core.util.IdentityGenerator;
 import java.io.Serializable;
@@ -36,7 +36,7 @@ import org.springframework.core.convert.converter.Converter;
 
 /**
  * Identifier generation strategy based upon {@link IdentityGenerator}. It leverages
- * {@link LongToEntityClassAwareIdConverter} for converting simple long value to type-safe
+ * {@link LongToEntityIdConverter} for converting simple long value to type-safe
  * identifier objects.
  */
 public class TimeBasedIdentifierGenerator implements Configurable, IdentifierGenerator {
@@ -61,8 +61,8 @@ public class TimeBasedIdentifierGenerator implements Configurable, IdentifierGen
       throws MappingException {
 
     Class<?> idClass = type.getReturnedClass();
-    if (EntityClassAwareId.class.isAssignableFrom(idClass)) {
-      conversionStrategy = new LongToEntityClassAwareIdConverter(idClass);
+    if (AbstractId.class.isAssignableFrom(idClass)) {
+      conversionStrategy = new LongToEntityIdConverter(idClass);
     } else if (Long.class.equals(idClass)) {
       conversionStrategy = (it -> it);
     } else if (long.class.equals(idClass)) {

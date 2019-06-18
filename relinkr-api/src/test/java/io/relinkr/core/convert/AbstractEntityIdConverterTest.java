@@ -19,13 +19,13 @@ package io.relinkr.core.convert;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import io.relinkr.core.orm.EntityClassAwareId;
+import io.relinkr.core.orm.AbstractId;
 import java.io.Serializable;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.convert.converter.Converter;
 
-public abstract class AbstractEntityClassAwareIdConverterTest<S extends Serializable, T extends EntityClassAwareId<?>> {
+public abstract class AbstractEntityIdConverterTest<S extends Serializable, T extends AbstractId<?>> {
 
   protected Converter<S, T> converter;
 

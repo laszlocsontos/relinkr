@@ -16,25 +16,20 @@
 
 package io.relinkr.core.convert;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import io.relinkr.core.orm.AbstractId;
+import java.io.Serializable;
+import org.springframework.util.NumberUtils;
 
-import io.relinkr.link.model.LinkId;
-import org.junit.Test;
-import org.springframework.core.convert.converter.Converter;
+public class StringToEntityIdConverter<T extends AbstractId<?>>
+    extends AbstractEntityIdConverter<String, T> {
 
-public class EntityClassAwareIdToStringConverterTest {
-
-  private final Converter<LinkId, String> converter = new EntityClassAwareIdToStringConverter<>();
-
-  @Test
-  public void givenNull_whenConvert_thenNull() {
-    assertNull(converter.convert(null));
+  public StringToEntityIdConverter(Class<T> targetClass) {
+    super(targetClass);
   }
 
-  @Test
-  public void givenEntityClassAwareId_whenConvert_thenString() {
-    assertEquals("123", converter.convert(LinkId.of(123L)));
+  @Override
+  protected Serializable preProcessSource(String source) {
+    return NumberUtils.parseNumber(source, Long.class);
   }
 
 }
