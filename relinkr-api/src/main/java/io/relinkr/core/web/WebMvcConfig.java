@@ -25,7 +25,6 @@ import io.relinkr.core.convert.EntityIdToStringConverter;
 import io.relinkr.core.convert.StringToEntityIdConverter;
 import io.relinkr.link.model.LinkId;
 import java.lang.reflect.Field;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +32,6 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.env.Environment;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -58,11 +56,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     registry.addConverter(new EntityIdToStringConverter<LinkId>());
 
     workaround((ConversionService) registry);
-  }
-
-  @Override
-  public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-    resolvers.add(new CurrentUserArgumentResolver());
   }
 
   @Override
