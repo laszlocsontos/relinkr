@@ -24,7 +24,6 @@ import static org.springframework.util.ReflectionUtils.setField;
 import io.relinkr.core.convert.EntityClassAwareIdToStringConverter;
 import io.relinkr.core.convert.StringToEntityClassAwareIdConverter;
 import io.relinkr.link.model.LinkId;
-import io.relinkr.visitor.model.VisitorId;
 import java.lang.reflect.Field;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -57,10 +56,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     registry.addConverter(String.class, LinkId.class,
         new StringToEntityClassAwareIdConverter<>(LinkId.class));
     registry.addConverter(new EntityClassAwareIdToStringConverter<LinkId>());
-
-    registry.addConverter(String.class, VisitorId.class,
-        new StringToEntityClassAwareIdConverter<>(VisitorId.class));
-    registry.addConverter(new EntityClassAwareIdToStringConverter<VisitorId>());
 
     workaround((ConversionService) registry);
   }

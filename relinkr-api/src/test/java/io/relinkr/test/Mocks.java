@@ -36,8 +36,6 @@ import io.relinkr.link.model.LinkId;
 import io.relinkr.link.model.LongUrl;
 import io.relinkr.link.model.Tag;
 import io.relinkr.link.model.UtmParameters;
-import io.relinkr.visitor.model.Visitor;
-import io.relinkr.visitor.model.VisitorId;
 import java.math.BigInteger;
 import java.time.Clock;
 import java.time.Instant;
@@ -108,9 +106,6 @@ public final class Mocks {
   public static final String IPV6_ADDRESS = "2001:db8:85a3:0:0:8a2e:370:7334";
 
   public static final LinkId LINK_ID = LinkId.of(1L);
-
-  public static final VisitorId VISITOR_ID = VisitorId.of(27469143961212L);
-  public static final VisitorId VISITOR_ID_ZERO = VisitorId.of(0L);
 
   public static final LocalDateTime TIMESTAMP = LocalDateTime.of(2018, 02, 28, 19, 52);
 
@@ -269,12 +264,6 @@ public final class Mocks {
     link.setId(LINK_ID);
     link.markActive();
     return link;
-  }
-
-  public static Visitor createVisitor() {
-    Visitor visitor = new Visitor();
-    visitor.setId(VISITOR_ID);
-    return visitor;
   }
 
 }

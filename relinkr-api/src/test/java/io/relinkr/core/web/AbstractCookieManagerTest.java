@@ -16,7 +16,6 @@
 
 package io.relinkr.core.web;
 
-import static io.relinkr.test.Mocks.VISITOR_ID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -30,7 +29,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 public abstract class AbstractCookieManagerTest {
 
   private static final String COOKIE_NAME = "test_cookie";
-  private static final String COOKIE_VALUE = String.valueOf(VISITOR_ID);
+  private static final String COOKIE_VALUE = String.valueOf("1223");
   private static final Duration COOKIE_MAX_AGE = Duration.ofHours(24);
 
   private CookieManager cookieManager;

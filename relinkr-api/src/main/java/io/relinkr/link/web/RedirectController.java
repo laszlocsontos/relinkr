@@ -18,21 +18,13 @@ package io.relinkr.link.web;
 
 import static org.springframework.http.HttpHeaders.readOnlyHttpHeaders;
 import static org.springframework.http.HttpStatus.MOVED_PERMANENTLY;
-import static org.springframework.util.StringUtils.isEmpty;
-import static org.springframework.util.StringUtils.tokenizeToStringArray;
-import static org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST;
 
 import io.relinkr.core.model.ApplicationException;
 import io.relinkr.core.model.EntityNotFoundException;
 import io.relinkr.link.model.Link;
-import io.relinkr.link.model.RedirectedEvent;
 import io.relinkr.link.service.LinkService;
-import io.relinkr.visitor.model.VisitorId;
-import io.relinkr.visitor.service.VisitorService;
-import io.relinkr.visitor.web.VisitorIdCookieResolver;
 import java.net.URI;
 import java.time.Clock;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -73,25 +65,19 @@ public class RedirectController {
   private final URI frontendLoginUrl;
   private final URI notFoundUrl;
   private final LinkService linkService;
-  private final VisitorIdCookieResolver visitorIdCookieResolver;
-  private final VisitorService visitorService;
 
   @Autowired
   public RedirectController(
       ApplicationEventPublisher eventPublisher,
       ObjectProvider<Clock> clockProvider,
       Environment environment,
-      LinkService linkService,
-      VisitorIdCookieResolver visitorIdCookieResolver,
-      VisitorService visitorService) {
+      LinkService linkService) {
 
     this.eventPublisher = eventPublisher;
     clock = clockProvider.getIfAvailable(Clock::systemUTC);
     frontendLoginUrl = environment.getRequiredProperty(FRONT_END_LOGIN_URL_PROPERTY, URI.class);
     notFoundUrl = environment.getRequiredProperty(REDIRECT_NOT_FOUND_URL_PROPERTY, URI.class);
     this.linkService = linkService;
-    this.visitorIdCookieResolver = visitorIdCookieResolver;
-    this.visitorService = visitorService;
   }
 
   @GetMapping("/")
@@ -115,8 +101,6 @@ public class RedirectController {
       return buildRedirect(notFoundUrl);
     }
 
-    emitRedirectedEvent(link, webRequest);
-
     return buildRedirect(link.getTargetUrl());
   }
 
@@ -126,42 +110,6 @@ public class RedirectController {
         .headers(HTTP_HEADERS)
         .location(targetUrl)
         .build();
-  }
-
-  private void emitRedirectedEvent(Link link, ServletWebRequest webRequest) {
-    VisitorId existingVisitorId =
-        visitorIdCookieResolver.resolveVisitorId(webRequest.getRequest()).orElse(null);
-
-    VisitorId visitorId = visitorService.ensureVisitor(existingVisitorId);
-
-    if (!visitorId.equals(existingVisitorId)) {
-      visitorIdCookieResolver.setVisitorId(webRequest.getResponse(), visitorId);
-    }
-
-    String ipAddress = extractRemoteAddr(webRequest.getRequest());
-
-    RedirectedEvent redirectedEvent =
-        RedirectedEvent.of(link.getId(), visitorId, ipAddress, link.getUserId(), clock.instant());
-
-    webRequest.registerDestructionCallback(
-        EMIT_REDIRECT_EVENT_CALLBACK,
-        () -> eventPublisher.publishEvent(redirectedEvent),
-        SCOPE_REQUEST
-    );
-  }
-
-  private String extractRemoteAddr(HttpServletRequest request) {
-    String xffHeaderValue = request.getHeader(HEADER_XFF);
-    if (isEmpty(xffHeaderValue)) {
-      return request.getRemoteAddr();
-    }
-
-    String[] xffAddresses = tokenizeToStringArray(xffHeaderValue, ",", true, true);
-    if (xffAddresses.length == 0) {
-      return request.getRemoteAddr();
-    }
-
-    return xffAddresses[0];
   }
 
 }

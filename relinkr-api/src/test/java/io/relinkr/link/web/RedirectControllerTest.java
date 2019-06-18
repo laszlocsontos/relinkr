@@ -20,20 +20,11 @@ import static io.relinkr.link.web.RedirectController.FRONT_END_LOGIN_URL_PROPERT
 import static io.relinkr.link.web.RedirectController.HEADER_XFF;
 import static io.relinkr.link.web.RedirectController.REDIRECT_NOT_FOUND_URL_PROPERTY;
 import static io.relinkr.test.Mocks.FIXED_CLOCK;
-import static io.relinkr.test.Mocks.FIXED_INSTANT;
 import static io.relinkr.test.Mocks.FRONTEND_LOGIN_URL;
 import static io.relinkr.test.Mocks.NOT_FOUND_URL;
-import static io.relinkr.test.Mocks.VISITOR_ID;
-import static io.relinkr.test.Mocks.VISITOR_ID_ZERO;
 import static io.relinkr.test.Mocks.createLink;
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.never;
 import static org.springframework.http.HttpHeaders.CACHE_CONTROL;
 import static org.springframework.http.HttpHeaders.EXPIRES;
 import static org.springframework.http.HttpHeaders.PRAGMA;
@@ -46,19 +37,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import io.relinkr.core.model.EntityNotFoundException;
 import io.relinkr.link.model.Link;
-import io.relinkr.link.model.RedirectedEvent;
 import io.relinkr.link.service.LinkService;
 import io.relinkr.link.web.RedirectControllerTest.TestConfig;
-import io.relinkr.visitor.model.VisitorId;
-import io.relinkr.visitor.service.VisitorService;
-import io.relinkr.visitor.web.VisitorIdCookieResolver;
 import java.time.Clock;
-import java.util.Optional;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,7 +47,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -88,88 +68,11 @@ public class RedirectControllerTest {
   @MockBean
   private LinkService linkService;
 
-  @MockBean
-  private VisitorService visitorService;
-
-  @MockBean
-  private VisitorIdCookieResolver visitorIdCookieResolver;
-
-  @Autowired
-  private RedirectedEventListener redirectedEventListener;
-
   private Link link;
 
   @Before
   public void setUp() {
     link = createLink();
-  }
-
-  @After
-  public void tearDown() {
-    redirectedEventListener.clear();
-  }
-
-  @Test
-  public void givenInvalidVisitorId_whenRedirect_thenRedirectedAndCookieSetAndEventEmitted()
-      throws Exception {
-
-    given(linkService.getLink(link.getPath())).willReturn(link);
-    //  VisitorIdCookieResolver returns null when cookie value is missing or integrity check failed
-    given(visitorIdCookieResolver.resolveVisitorId(any(HttpServletRequest.class)))
-        .willReturn(Optional.empty());
-    given(visitorService.ensureVisitor(null)).willReturn(VISITOR_ID);
-
-    redirect(link);
-
-    then(visitorService).should().ensureVisitor(null);
-    then(visitorIdCookieResolver).should().setVisitorId(
-        any(HttpServletResponse.class),
-        eq(VISITOR_ID)
-    );
-
-    assertRedirectedEvent();
-  }
-
-  @Test
-  public void givenUnknownVisitorId_whenRedirect_thenRedirectedAndCookieSetAndEventEmitted()
-      throws Exception {
-
-    given(linkService.getLink(link.getPath())).willReturn(link);
-    //  VisitorIdCookieResolver returns null when cookie value is missing or integrity check failed
-    given(visitorIdCookieResolver.resolveVisitorId(any(HttpServletRequest.class)))
-        .willReturn(Optional.of(VISITOR_ID_ZERO));
-    given(visitorService.ensureVisitor(VISITOR_ID_ZERO))
-        .willReturn(VISITOR_ID);
-
-    redirect(link);
-
-    then(visitorService).should().ensureVisitor(VISITOR_ID_ZERO);
-    then(visitorIdCookieResolver).should().setVisitorId(
-        any(HttpServletResponse.class),
-        eq(VISITOR_ID)
-    );
-
-    assertRedirectedEvent();
-  }
-
-  @Test
-  public void givenValidVisitorId_whenRedirect_thenRedirectedAndCookieSetAndEventEmitted()
-      throws Exception {
-
-    given(linkService.getLink(link.getPath())).willReturn(link);
-    given(visitorIdCookieResolver.resolveVisitorId(any(HttpServletRequest.class)))
-        .willReturn(Optional.of(VISITOR_ID));
-    given(visitorService.ensureVisitor(VISITOR_ID)).willReturn(VISITOR_ID);
-
-    redirect(link);
-
-    then(visitorService).should().ensureVisitor(VISITOR_ID);
-    then(visitorIdCookieResolver).should(never()).setVisitorId(
-        any(HttpServletResponse.class),
-        any(VisitorId.class)
-    );
-
-    assertRedirectedEvent();
   }
 
   @Test
@@ -179,25 +82,21 @@ public class RedirectControllerTest {
 
     redirect(link.getPath(), NOT_FOUND_URL);
 
-    assertTrue(redirectedEventListener.isEmpty());
+    then(linkService).should().getLink(link.getPath());
+  }
+
+  @Test
+  public void givenExistentPath_whenRedirect_thenNotFound() throws Exception {
+    given(linkService.getLink(link.getPath())).willReturn(link);
+
+    redirect(link.getPath(), link.getTargetUrl().toString());
+
+    then(linkService).should().getLink(link.getPath());
   }
 
   @Test
   public void givenRootPath_whenHandleRoot_thenRedirectedToLogin() throws Exception {
     redirect("", FRONTEND_LOGIN_URL);
-  }
-
-  private void assertRedirectedEvent() throws InterruptedException {
-    RedirectedEvent redirectedEvent = redirectedEventListener.getEvent();
-    assertEquals(link.getId(), redirectedEvent.getLinkId());
-    assertEquals(VISITOR_ID, redirectedEvent.getVisitorId());
-    assertEquals(DEFAULT_SERVER_ADDR, redirectedEvent.getIpAddress());
-    assertEquals(link.getUserId(), redirectedEvent.getUserId());
-    assertEquals(FIXED_INSTANT, redirectedEvent.getInstant());
-  }
-
-  private void redirect(Link link) throws Exception {
-    redirect(link.getPath(), link.getTargetUrl().toString());
   }
 
   private void redirect(String path, String targetUrl) throws Exception {
@@ -211,40 +110,12 @@ public class RedirectControllerTest {
         .andExpect(redirectedUrl(targetUrl));
   }
 
-  static class RedirectedEventListener implements ApplicationListener<RedirectedEvent> {
-
-    final BlockingQueue<RedirectedEvent> redirectedEvents = new LinkedBlockingQueue<>();
-
-    @Override
-    public void onApplicationEvent(RedirectedEvent event) {
-      redirectedEvents.offer(event);
-    }
-
-    void clear() {
-      redirectedEvents.clear();
-    }
-
-    boolean isEmpty() {
-      return redirectedEvents.isEmpty();
-    }
-
-    RedirectedEvent getEvent() throws InterruptedException {
-      return redirectedEvents.poll(1, SECONDS);
-    }
-
-  }
-
   @TestConfiguration
   static class TestConfig {
 
     @Bean
     Clock clock() {
       return FIXED_CLOCK;
-    }
-
-    @Bean
-    RedirectedEventListener redirectedEventListener() {
-      return new RedirectedEventListener();
     }
 
   }
