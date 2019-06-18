@@ -27,6 +27,6 @@ public interface Ownable {
    *
    * @return owner User's ID
    */
-  UserId getUserId();
+  EmailAddress getOwner();
 
 }

@@ -16,13 +16,13 @@
 
 package io.relinkr.link.service;
 
+import io.relinkr.core.model.EmailAddress;
 import io.relinkr.core.model.EntityNotFoundException;
 import io.relinkr.link.model.InvalidLinkStatusException;
 import io.relinkr.link.model.InvalidUrlException;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.model.LinkId;
 import io.relinkr.link.model.UtmParameters;
-import io.relinkr.core.model.UserId;
 import java.net.URI;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,22 +54,22 @@ public interface LinkService {
   /**
    * Fetches a paged slice of links by the given {@code userId}.
    *
-   * @param userId user's ID owning the links to be fetched
+   * @param owner user's ID owning the links to be fetched
    * @param pageable {@link Pageable} defining the parameters of paging
    * @return paged links
    */
-  Page<Link> fetchLinks(UserId userId, Pageable pageable);
+  Page<Link> fetchLinks(EmailAddress owner, Pageable pageable);
 
   /**
    * Add a new link.
    *
    * @param longUrl long url to shorten
    * @param utmParameters UTM parameters (can be {@code null}
-   * @param userId user's ID (cannot be {@code null}
+   * @param owner user's ID (cannot be {@code null}
    * @return A newly added link
    * @throws InvalidUrlException is thrown if {@code longUrl} isn't a valid URL
    */
-  Link addLink(String longUrl, UtmParameters utmParameters, UserId userId)
+  Link addLink(String longUrl, UtmParameters utmParameters, EmailAddress owner)
       throws InvalidUrlException;
 
   /**

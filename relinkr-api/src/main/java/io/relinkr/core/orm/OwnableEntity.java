@@ -16,8 +16,8 @@
 
 package io.relinkr.core.orm;
 
+import io.relinkr.core.model.EmailAddress;
 import io.relinkr.core.model.Ownable;
-import io.relinkr.core.model.UserId;
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -35,11 +35,11 @@ public abstract class OwnableEntity<ID extends AbstractId<? extends OwnableEntit
     extends AbstractEntity<ID> implements Ownable {
 
   @Embedded
-  @AttributeOverride(name = "id", column = @Column(name = "user_id"))
-  private UserId userId;
+  @AttributeOverride(name = "value", column = @Column(name = "owner"))
+  private EmailAddress owner;
 
-  public OwnableEntity(@NonNull UserId userId) {
-    this.userId = userId;
+  public OwnableEntity(@NonNull EmailAddress owner) {
+    this.owner = owner;
   }
 
   /*
@@ -50,8 +50,8 @@ public abstract class OwnableEntity<ID extends AbstractId<? extends OwnableEntit
 
 
   @Override
-  public UserId getUserId() {
-    return userId;
+  public EmailAddress getOwner() {
+    return owner;
   }
 
 }

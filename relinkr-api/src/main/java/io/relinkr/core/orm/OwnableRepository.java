@@ -16,7 +16,7 @@
 
 package io.relinkr.core.orm;
 
-import io.relinkr.core.model.UserId;
+import io.relinkr.core.model.EmailAddress;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,10 +35,10 @@ import org.springframework.data.repository.query.Param;
 public interface OwnableRepository
     <E extends OwnableEntity<ID>, ID extends AbstractId<E>> extends BaseRepository<E, ID> {
 
-  @Query("select e from #{#entityName} e where e.userId = :userId order by e.createdDate desc")
-  List<E> findByUserId(@Param("userId") UserId userId);
+  @Query("select e from #{#entityName} e where e.owner = :owner order by e.createdDate desc")
+  List<E> findByOwner(@Param("owner") EmailAddress owner);
 
-  @Query("select e from #{#entityName} e where e.userId = :userId order by e.createdDate desc")
-  Page<E> findByUserId(@Param("userId") UserId userId, Pageable pageable);
+  @Query("select e from #{#entityName} e where e.owner = :owner order by e.createdDate desc")
+  Page<E> findByOwner(@Param("owner") EmailAddress owner, Pageable pageable);
 
 }

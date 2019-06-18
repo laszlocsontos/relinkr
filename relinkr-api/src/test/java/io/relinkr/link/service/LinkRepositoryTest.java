@@ -16,9 +16,9 @@
 
 package io.relinkr.link.service;
 
+import static io.relinkr.test.Mocks.EMAIL_ADDRESS;
 import static io.relinkr.test.Mocks.LINK_ID;
 import static io.relinkr.test.Mocks.LONG_URL_WITHOUT_UTM_S;
-import static io.relinkr.test.Mocks.USER_ID;
 import static io.relinkr.test.Mocks.UTM_PARAMETERS_FULL;
 
 import io.relinkr.core.util.IdentityGenerator;
@@ -35,7 +35,7 @@ public class LinkRepositoryTest extends OwnableRepositoryTest<Link, LinkId, Link
 
   @Override
   protected Link createEntity() {
-    return new Link(LONG_URL_WITHOUT_UTM_S, UTM_PARAMETERS_FULL, USER_ID);
+    return new Link(LONG_URL_WITHOUT_UTM_S, UTM_PARAMETERS_FULL, EMAIL_ADDRESS);
   }
 
   @Override

@@ -18,9 +18,9 @@ package io.relinkr.link.web;
 
 import static io.relinkr.link.model.LinkStatus.ACTIVE;
 import static io.relinkr.link.model.LinkStatus.ARCHIVED;
+import static io.relinkr.test.Mocks.EMAIL_ADDRESS;
 import static io.relinkr.test.Mocks.PAGEABLE;
 import static io.relinkr.test.Mocks.TAG_A;
-import static io.relinkr.test.Mocks.USER_ID;
 import static io.relinkr.test.Mocks.createLink;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasSize;
@@ -91,7 +91,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "1") // USER_ID
+  @WithMockUser(username = "test@test.com")
   public void givenLinkOwnedByCurrentUser_whenGetLink_thenOk() throws Exception {
     ResultActions resultActions = mockMvc
         .perform(get("/v1/links/{linkId}", link.getId()))
@@ -103,7 +103,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "0") // USER_ID_ZERO
+  @WithMockUser(username = "test2@test.com")
   public void givenLinkOwnedByOtherUser_whenGetLink_thenForbidden() throws Exception {
     ResultActions resultActions = mockMvc
         .perform(get("/v1/links/{linkId}", link.getId()))
@@ -116,7 +116,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "1") // USER_ID
+  @WithMockUser(username = "test@test.com")
   public void givenAuthenticatedUser_whenAddLink_thenAddedAndOwnedByUser() throws Exception {
     LinkResource linkResource = new LinkResource(
         link.getLongUrl().toString(),
@@ -126,7 +126,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
     String longUrl = linkResource.getLongUrl();
     UtmParameters utmParameters = linkResource.getUtmParameters().orElse(null);
 
-    given(linkService.addLink(longUrl, utmParameters, USER_ID)).willReturn(link);
+    given(linkService.addLink(longUrl, utmParameters, EMAIL_ADDRESS)).willReturn(link);
 
     ResultActions resultActions = mockMvc
         .perform(post("/v1/links").contentType(APPLICATION_JSON)
@@ -134,13 +134,13 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
         .andExpect(status().isOk())
         .andDo(print());
 
-    then(linkService).should().addLink(longUrl, utmParameters, USER_ID);
+    then(linkService).should().addLink(longUrl, utmParameters, EMAIL_ADDRESS);
 
     assertLink(resultActions);
   }
 
   @Test
-  @WithMockUser(username = "1") // USER_ID
+  @WithMockUser(username = "test@test.com")
   public void givenLinkOwnedByCurrentUserWithLongUrl_whenReplaceLink_thenReplaced()
       throws Exception {
     String longUrl = link.getLongUrl().toString();
@@ -165,7 +165,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "0") // USER_ID_ZERO
+  @WithMockUser(username = "test2@test.com")
   public void givenLinkOwnedByOtherUserWithLongUrl_whenReplaceLink_thenForbidden()
       throws Exception {
 
@@ -188,7 +188,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "1") // USER_ID
+  @WithMockUser(username = "test@test.com")
   public void givenLinkOwnedByCurrentUserWithoutLongUrl_whenReplaceLink_thenBadRequest()
       throws Exception {
 
@@ -209,7 +209,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "1") // USER_ID
+  @WithMockUser(username = "test@test.com")
   public void givenLinkOwnedByCurrentUserWithLongUrl_whenUpdateLink_thenUpdated() throws Exception {
     String longUrl = link.getLongUrl().toString();
     LinkResource linkResource = new LinkResource(longUrl);
@@ -230,7 +230,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "0") // USER_ID_ZERO
+  @WithMockUser(username = "test2@test.com")
   public void givenLinkOwnedByOtherUserWithLongUrl_whenUpdateLink_thenForbidden() throws Exception {
     String longUrl = link.getLongUrl().toString();
     LinkResource linkResource = new LinkResource(longUrl);
@@ -248,7 +248,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "1") // USER_ID
+  @WithMockUser(username = "test@test.com")
   public void givenLinkOwnedByCurrentUserWithUtmParameters_whenUpdateLink_thenUpdated()
       throws Exception {
 
@@ -271,7 +271,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "1") // USER_ID
+  @WithMockUser(username = "test@test.com")
   public void givenLinkOwnedByCurrentUserWithoutUtmParameters_whenUpdateLink_BadRequest()
       throws Exception {
 
@@ -292,9 +292,9 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
 
 
   @Test
-  @WithMockUser(username = "1") // USER_ID
+  @WithMockUser(username = "test@test.com")
   public void givenAuthenticatedUser_whenFetchLinks_thenFetched() throws Exception {
-    given(linkService.fetchLinks(USER_ID, PAGEABLE))
+    given(linkService.fetchLinks(EMAIL_ADDRESS, PAGEABLE))
         .willReturn(new PageImpl<>(asList(link), PAGEABLE, 1));
 
     ResultActions resultActions = mockMvc.perform(get("/v1/links")
@@ -307,7 +307,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "1") // USER_ID
+  @WithMockUser(username = "test@test.com")
   public void givenLinkOwnedByCurrentUserWithActive_whenUpdateLinkStatus_thenActivated()
       throws Exception {
 
@@ -322,7 +322,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "0") // USER_ID_ZERO
+  @WithMockUser(username = "test2@test.com")
   public void givenLinkOwnedByOtherUserWithActive_whenUpdateLinkStatus_thenForbidden()
       throws Exception {
 
@@ -336,7 +336,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "1") // USER_ID
+  @WithMockUser(username = "test@test.com")
   public void givenLinkOwnedByCurrentUserWithArchive_whenUpdateLinkStatus_thenArchived()
       throws Exception {
 
@@ -351,7 +351,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "1") // USER_ID
+  @WithMockUser(username = "test@test.com")
   public void givenLinkOwnedByCurrentUser_whenAddTag_thenTagAdded() throws Exception {
     mockMvc.perform(post("/v1/links/{linkId}/tags/{tagName}", link.getId(),
         TAG_A.getTagName()))
@@ -365,7 +365,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "0") // USER_ID_ZERO
+  @WithMockUser(username = "test2@test.com")
   public void givenLinkOwnedByOtherUser_whenAddTag_thenForbidden() throws Exception {
     ResultActions resultActions = mockMvc.perform(
         post("/v1/links/{linkId}/tags/{tagName}", link.getId(), TAG_A.getTagName()))
@@ -377,7 +377,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "1") // USER_ID
+  @WithMockUser(username = "test@test.com")
   public void givenLinkOwnedByCurrentUser_whenRemoveTag_thenRemoved() throws Exception {
     mockMvc.perform(delete("/v1/links/{linkId}/tags/{tagName}", link.getId(),
         TAG_A.getTagName()))
@@ -391,7 +391,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "0") // USER_ID_ZERO
+  @WithMockUser(username = "test2@test.com")
   public void givenLinkOwnedByOtherUser_whenRemoveTag_thenForbidden() throws Exception {
     ResultActions resultActions = mockMvc.perform(
         delete("/v1/links/{linkId}/tags/{tagName}", link.getId(), TAG_A.getTagName()))

@@ -16,6 +16,7 @@
 
 package io.relinkr.link.service;
 
+import io.relinkr.core.model.EmailAddress;
 import io.relinkr.core.model.EntityNotFoundException;
 import io.relinkr.link.model.InvalidLinkStatusException;
 import io.relinkr.link.model.InvalidUrlException;
@@ -24,7 +25,6 @@ import io.relinkr.link.model.LinkId;
 import io.relinkr.link.model.LinkStatus;
 import io.relinkr.link.model.Tag;
 import io.relinkr.link.model.UtmParameters;
-import io.relinkr.core.model.UserId;
 import java.net.URI;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -63,18 +63,17 @@ class LinkServiceImpl implements LinkService {
   }
 
   @Override
-  public Page<Link> fetchLinks(@NonNull UserId userId, Pageable pageable) {
-    return linkRepository.findByUserId(userId, pageable);
+  public Page<Link> fetchLinks(@NonNull EmailAddress owner, Pageable pageable) {
+    return linkRepository.findByOwner(owner, pageable);
   }
 
   @Override
-  public Link addLink(String longUrl, UtmParameters utmParameters, @NonNull UserId userId)
+  public Link addLink(String longUrl, UtmParameters utmParameters, @NonNull EmailAddress owner)
       throws InvalidUrlException {
 
     Assert.hasText(longUrl, "longUrl must contain text");
-    Assert.notNull(userId, "userId cannot be null");
 
-    Link link = new Link(longUrl, utmParameters, userId);
+    Link link = new Link(longUrl, utmParameters, owner);
     link.markActive();
 
     return linkRepository.save(link);

@@ -16,7 +16,7 @@
 
 package io.relinkr.test.orm;
 
-import static io.relinkr.test.Mocks.USER_ID;
+import static io.relinkr.test.Mocks.EMAIL_ADDRESS;
 import static java.util.Collections.reverseOrder;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
@@ -47,16 +47,16 @@ public abstract class OwnableRepositoryTest<E extends OwnableEntity<ID>, ID exte
   }
 
   @Test
-  public void givenNoPageRequest_whenFindByUserId_thenFoundAndOrdered() {
+  public void givenNoPageRequest_whenFindByOwner_thenFoundAndOrdered() {
     List<E> savedEntities = saveEntities(entity, entity2);
-    List<E> foundEntities = repository.findByUserId(USER_ID);
+    List<E> foundEntities = repository.findByOwner(EMAIL_ADDRESS);
     assertEntitiesInOrder(savedEntities, foundEntities);
   }
 
   @Test
   public void findByUserId_withPageRequest() {
     List<E> savedEntities = saveEntities(entity, entity2);
-    Page<E> entityPage = repository.findByUserId(USER_ID, PageRequest.of(0, 10));
+    Page<E> entityPage = repository.findByOwner(EMAIL_ADDRESS, PageRequest.of(0, 10));
     assertEntitiesInOrder(savedEntities, entityPage.getContent());
   }
 

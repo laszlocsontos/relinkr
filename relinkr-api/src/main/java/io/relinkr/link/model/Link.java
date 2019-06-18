@@ -20,8 +20,8 @@ import static io.relinkr.link.model.LinkStatus.PENDING;
 import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.EnumType.STRING;
 
+import io.relinkr.core.model.EmailAddress;
 import io.relinkr.core.util.IdentityGenerator;
-import io.relinkr.core.model.UserId;
 import java.net.URI;
 import java.util.LinkedHashSet;
 import java.util.Optional;
@@ -65,18 +65,18 @@ public class Link extends LinkBase<LinkId> {
   private Set<Tag> tags = new LinkedHashSet<>();
 
   public Link(
-      @NonNull String longUrl, UtmParameters utmParameters, @NonNull UserId userId)
+      @NonNull String longUrl, UtmParameters utmParameters, @NonNull EmailAddress owner)
       throws InvalidUrlException {
 
-    this(new LongUrl(longUrl, utmParameters), userId);
+    this(new LongUrl(longUrl, utmParameters), owner);
   }
 
-  public Link(@NonNull String longUrl, @NonNull UserId userId) throws InvalidUrlException {
-    this(longUrl, null, userId);
+  public Link(@NonNull String longUrl, @NonNull EmailAddress owner) throws InvalidUrlException {
+    this(longUrl, null, owner);
   }
 
-  Link(@NonNull LongUrl longUrl, @NonNull UserId userId) {
-    super(userId);
+  Link(@NonNull LongUrl longUrl, @NonNull EmailAddress owner) {
+    super(owner);
     this.longUrl = longUrl;
     path = generatePath();
   }

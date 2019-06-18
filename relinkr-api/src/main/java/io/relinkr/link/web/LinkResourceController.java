@@ -23,7 +23,7 @@ import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.ResponseEntity.ok;
 
 import io.relinkr.core.model.ApplicationException;
-import io.relinkr.core.model.UserId;
+import io.relinkr.core.model.EmailAddress;
 import io.relinkr.link.model.InvalidLinkStatusException;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.model.LinkId;
@@ -41,7 +41,6 @@ import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -224,19 +223,17 @@ public class LinkResourceController {
     return ok().build();
   }
 
-  private UserId getCurrentUser(Principal principal) {
-    String name = principal.getName();
-    long userId = NumberUtils.parseNumber(name, Long.class);
-    return UserId.of(userId);
+  private EmailAddress getCurrentUser(Principal principal) {
+    return EmailAddress.of(principal.getName());
   }
 
   private void checkAccess(Link link, Principal principal) {
-    UserId userId = getCurrentUser(principal);
-    checkAccess(link, userId);
+    EmailAddress owner = getCurrentUser(principal);
+    checkAccess(link, owner);
   }
 
-  private void checkAccess(Link link, UserId userId) {
-    if (link.getUserId().equals(userId)) {
+  private void checkAccess(Link link, EmailAddress owner) {
+    if (link.getOwner().equals(owner)) {
       return;
     }
 

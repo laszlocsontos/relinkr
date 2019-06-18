@@ -8,7 +8,7 @@ CREATE TABLE link (
   utm_source varchar(255) NULL,
   utm_term varchar(255) NULL,
   path_ varchar(255) NOT NULL,
-  user_id decimal(25) NULL,
+  owner varchar(255) NULL,
   created_date timestamp NULL,
   last_modified_date timestamp NULL,
   version_ integer not null,

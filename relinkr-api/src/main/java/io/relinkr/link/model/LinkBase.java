@@ -22,10 +22,10 @@ import static io.relinkr.link.model.LinkStatus.BROKEN;
 import static io.relinkr.link.model.LinkStatus.PENDING;
 import static java.util.Collections.emptySet;
 
+import io.relinkr.core.model.EmailAddress;
+import io.relinkr.core.model.Ownable;
 import io.relinkr.core.orm.AbstractId;
 import io.relinkr.core.orm.OwnableEntity;
-import io.relinkr.core.model.Ownable;
-import io.relinkr.core.model.UserId;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Set;
@@ -43,8 +43,8 @@ import lombok.NonNull;
 public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
     extends OwnableEntity<ID> implements Ownable {
 
-  LinkBase(@NonNull UserId userId) {
-    super(userId);
+  LinkBase(@NonNull EmailAddress owner) {
+    super(owner);
   }
 
   /*

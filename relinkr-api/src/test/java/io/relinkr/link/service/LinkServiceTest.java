@@ -18,10 +18,10 @@ package io.relinkr.link.service;
 
 import static io.relinkr.link.model.LinkStatus.ACTIVE;
 import static io.relinkr.link.model.LinkStatus.ARCHIVED;
+import static io.relinkr.test.Mocks.EMAIL_ADDRESS;
 import static io.relinkr.test.Mocks.LINK_ID;
 import static io.relinkr.test.Mocks.LONG_URL_BASE_S;
 import static io.relinkr.test.Mocks.LONG_URL_VALID_UTM_S;
-import static io.relinkr.test.Mocks.USER_ID;
 import static io.relinkr.test.Mocks.UTM_PARAMETERS_FULL;
 import static io.relinkr.test.Mocks.UTM_PARAMETERS_MINIMAL;
 import static io.relinkr.test.Mocks.createLink;
@@ -82,10 +82,10 @@ public class LinkServiceTest {
   }
 
   @Test
-  public void givenUserIdAndPageable_whenFetchLinks_thenPageReturned() {
+  public void givenOwnerAndPageable_whenFetchLinks_thenPageReturned() {
     Page<Link> linkPage = new PageImpl<>(links);
-    given(linkRepository.findByUserId(USER_ID, unpaged())).willReturn(linkPage);
-    assertEquals(linkPage, linkService.fetchLinks(USER_ID, unpaged()));
+    given(linkRepository.findByOwner(EMAIL_ADDRESS, unpaged())).willReturn(linkPage);
+    assertEquals(linkPage, linkService.fetchLinks(EMAIL_ADDRESS, unpaged()));
   }
 
   @Test
@@ -181,24 +181,24 @@ public class LinkServiceTest {
 
   @Test
   public void givenBaseUrlWithUtmParameters_whenAddLink_thenLinkAdded() {
-    linkService.addLink(LONG_URL_BASE_S, UTM_PARAMETERS_FULL, USER_ID);
+    linkService.addLink(LONG_URL_BASE_S, UTM_PARAMETERS_FULL, EMAIL_ADDRESS);
 
     Link link = captureSavedLink();
 
     assertEquals(ACTIVE, link.getLinkStatus());
-    assertEquals(USER_ID, link.getUserId());
+    assertEquals(EMAIL_ADDRESS, link.getOwner());
     assertEquals(URI.create(LONG_URL_BASE_S), link.getLongUrl());
     assertEquals(UTM_PARAMETERS_FULL, link.getUtmParameters().get());
   }
 
   @Test
   public void givenBaseUrlWithoutUtmParameters_whenAddLink_thenLinkAdded() {
-    linkService.addLink(LONG_URL_BASE_S, null, USER_ID);
+    linkService.addLink(LONG_URL_BASE_S, null, EMAIL_ADDRESS);
 
     Link link = captureSavedLink();
 
     assertEquals(ACTIVE, link.getLinkStatus());
-    assertEquals(USER_ID, link.getUserId());
+    assertEquals(EMAIL_ADDRESS, link.getOwner());
     assertEquals(URI.create(LONG_URL_BASE_S), link.getLongUrl());
     assertFalse(link.getUtmParameters().isPresent());
   }
@@ -210,7 +210,7 @@ public class LinkServiceTest {
 
     Link link = captureSavedLink();
 
-    assertEquals(USER_ID, link.getUserId());
+    assertEquals(EMAIL_ADDRESS, link.getOwner());
     assertEquals(URI.create(LONG_URL_VALID_UTM_S), link.getTargetUrl());
     assertEquals(UTM_PARAMETERS_MINIMAL, link.getUtmParameters().get());
   }

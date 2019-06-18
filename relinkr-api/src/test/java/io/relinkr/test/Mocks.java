@@ -29,14 +29,12 @@ import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterN
 
 import io.relinkr.core.model.ApplicationException;
 import io.relinkr.core.model.EmailAddress;
-import io.relinkr.core.model.UserId;
 import io.relinkr.core.security.authn.WebSecurityConfig;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.model.LinkId;
 import io.relinkr.link.model.LongUrl;
 import io.relinkr.link.model.Tag;
 import io.relinkr.link.model.UtmParameters;
-import java.math.BigInteger;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -95,9 +93,6 @@ public final class Mocks {
 
   public static final UtmParameters UTM_PARAMETERS_MINIMAL;
   public static final UtmParameters UTM_PARAMETERS_FULL;
-
-  public static final UserId USER_ID = UserId.of(1L);
-  public static final UserId USER_ID_ZERO = UserId.of(0L);
 
   public static final Tag TAG_A = new Tag("A");
   public static final Tag TAG_B = new Tag("B");
@@ -257,7 +252,7 @@ public final class Mocks {
   }
 
   public static Link createLink() throws ApplicationException {
-    Link link = new Link(LONG_URL_WITHOUT_UTM_S, UTM_PARAMETERS_FULL, USER_ID);
+    Link link = new Link(LONG_URL_WITHOUT_UTM_S, UTM_PARAMETERS_FULL, EMAIL_ADDRESS);
     link.setId(LINK_ID);
     link.markActive();
     return link;
