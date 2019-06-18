@@ -16,7 +16,6 @@
 
 package io.relinkr.core.model;
 
-import io.relinkr.core.model.EmailAddress;
 import org.junit.Test;
 
 public class EmailAddressTest {
