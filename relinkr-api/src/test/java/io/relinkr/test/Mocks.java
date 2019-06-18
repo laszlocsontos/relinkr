@@ -57,7 +57,6 @@ public final class Mocks {
   public static final EmailAddress EMAIL_ADDRESS = EmailAddress.of("test@test.com");
 
   public static final Instant FIXED_INSTANT = ofEpochSecond(1553091772);
-  public static final LocalDateTime FIXED_TIMESTAMP = LocalDateTime.ofInstant(FIXED_INSTANT, UTC);
   public static final Clock FIXED_CLOCK = Clock.fixed(FIXED_INSTANT, UTC);
 
   public static final String LONG_URL_BASE_S
@@ -97,12 +96,7 @@ public final class Mocks {
   public static final Tag TAG_A = new Tag("A");
   public static final Tag TAG_B = new Tag("B");
 
-  public static final String IPV4_ADDRESS = "184.52.70.179";
-  public static final String IPV6_ADDRESS = "2001:db8:85a3:0:0:8a2e:370:7334";
-
   public static final LinkId LINK_ID = LinkId.of(1L);
-
-  public static final LocalDateTime TIMESTAMP = LocalDateTime.of(2018, 02, 28, 19, 52);
 
   public static final Pageable PAGEABLE = PageRequest.of(0, 10);
 
@@ -129,22 +123,8 @@ public final class Mocks {
           + "4t8MG5JXBiGL3pfPEDO0zkW9Rr__jmqPoxPbDcxSQTo5m361MHOmE8BuCsZvoAbf-oY5JaLij5x"
           + "bq0gAONANoBdQzt264uBu9bTRLXxzw2hGT0AqZMg";
 
-  public static final String JWS_VISITOR_COOKIE_VALUE =
-      "eyJhbGciOiJIUzI1NiJ9.Mjc0NjkxNDM5NjEyMTI.hW09QfpayfzkXZ_01tYyl5n-p2V8iseFcm9ecqJIf6Y";
-
   public static final String JWS_VISITOR_COOKIE_SECRET_KEY =
       "MGBDV!Wu*8G$f#CLK8rB!PgLTnSAaQXs";
-
-  public static final String ENCRYPTED_PASSWORD =
-      "{bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG";
-
-  public static final Exception REST_IO_ERROR = new ResourceAccessException("IO Error");
-
-  public static final Exception REST_SERVER_ERROR =
-      new HttpServerErrorException(INTERNAL_SERVER_ERROR);
-
-  public static final Exception REST_CLIENT_ERROR =
-      new HttpClientErrorException(BAD_REQUEST);
 
   public static final String OAUTH2_CLIENT_ID = "1234";
   public static final String OAUTH2_CLIENT_SECRET = "1234";

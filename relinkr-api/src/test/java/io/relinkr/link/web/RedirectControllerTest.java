@@ -19,7 +19,6 @@ package io.relinkr.link.web;
 import static io.relinkr.link.web.RedirectController.FRONT_END_LOGIN_URL_PROPERTY;
 import static io.relinkr.link.web.RedirectController.HEADER_XFF;
 import static io.relinkr.link.web.RedirectController.REDIRECT_NOT_FOUND_URL_PROPERTY;
-import static io.relinkr.test.Mocks.FIXED_CLOCK;
 import static io.relinkr.test.Mocks.FRONTEND_LOGIN_URL;
 import static io.relinkr.test.Mocks.NOT_FOUND_URL;
 import static io.relinkr.test.Mocks.createLink;
@@ -38,23 +37,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import io.relinkr.core.model.EntityNotFoundException;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.service.LinkService;
-import io.relinkr.link.web.RedirectControllerTest.TestConfig;
-import java.time.Clock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
 @TestPropertySource(properties = {
     FRONT_END_LOGIN_URL_PROPERTY + "=" + FRONTEND_LOGIN_URL,
     REDIRECT_NOT_FOUND_URL_PROPERTY + "=" + NOT_FOUND_URL
@@ -108,16 +101,6 @@ public class RedirectControllerTest {
         .andExpect(header().string(EXPIRES, "Thu, 01 Jan 1970 00:00:00 GMT"))
         .andExpect(header().string(PRAGMA, "no-cache"))
         .andExpect(redirectedUrl(targetUrl));
-  }
-
-  @TestConfiguration
-  static class TestConfig {
-
-    @Bean
-    Clock clock() {
-      return FIXED_CLOCK;
-    }
-
   }
 
 }

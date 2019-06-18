@@ -24,10 +24,7 @@ import io.relinkr.core.model.EntityNotFoundException;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.service.LinkService;
 import java.net.URI;
-import java.time.Clock;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +45,6 @@ public class RedirectController {
 
   static final String HEADER_XFF = "X-Forwarded-For";
 
-  private static final String EMIT_REDIRECT_EVENT_CALLBACK = "EMIT_REDIRECT_EVENT";
   private static final HttpHeaders HTTP_HEADERS;
 
   static {
@@ -60,21 +56,12 @@ public class RedirectController {
     HTTP_HEADERS = readOnlyHttpHeaders(httpHeaders);
   }
 
-  private final ApplicationEventPublisher eventPublisher;
-  private final Clock clock;
   private final URI frontendLoginUrl;
   private final URI notFoundUrl;
   private final LinkService linkService;
 
   @Autowired
-  public RedirectController(
-      ApplicationEventPublisher eventPublisher,
-      ObjectProvider<Clock> clockProvider,
-      Environment environment,
-      LinkService linkService) {
-
-    this.eventPublisher = eventPublisher;
-    clock = clockProvider.getIfAvailable(Clock::systemUTC);
+  public RedirectController(Environment environment, LinkService linkService) {
     frontendLoginUrl = environment.getRequiredProperty(FRONT_END_LOGIN_URL_PROPERTY, URI.class);
     notFoundUrl = environment.getRequiredProperty(REDIRECT_NOT_FOUND_URL_PROPERTY, URI.class);
     this.linkService = linkService;
@@ -86,8 +73,7 @@ public class RedirectController {
   }
 
   @GetMapping("/{path}")
-  ResponseEntity redirectLink(
-      @PathVariable(required = false) String path, ServletWebRequest webRequest)
+  ResponseEntity redirectLink(@PathVariable(required = false) String path)
       throws ApplicationException {
 
     if (StringUtils.isEmpty(path)) {
