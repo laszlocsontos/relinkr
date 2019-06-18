@@ -46,6 +46,9 @@ const mutations = {
     state.page = _.assign(state.page, data.page || {});
 
     const links = _.defaultTo(_.get(data, "_embedded.links"), []);
+
+    _.forEach(links, link => link.utmParameters = link.utmParameters || {});
+
     callback(links);
 
     state.userLinkStatuses = _.reduce(
