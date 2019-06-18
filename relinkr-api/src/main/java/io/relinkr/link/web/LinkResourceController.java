@@ -23,15 +23,14 @@ import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.ResponseEntity.ok;
 
 import io.relinkr.core.model.ApplicationException;
-import io.relinkr.core.security.authn.annotation.CurrentUser;
-import io.relinkr.core.security.authz.annotation.AuthorizeRolesOrOwner;
+import io.relinkr.core.model.UserId;
 import io.relinkr.link.model.InvalidLinkStatusException;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.model.LinkId;
 import io.relinkr.link.model.LinkStatus;
 import io.relinkr.link.model.UtmParameters;
 import io.relinkr.link.service.LinkService;
-import io.relinkr.core.model.UserId;
+import java.security.Principal;
 import java.util.EnumSet;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -40,6 +39,8 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -74,8 +75,9 @@ public class LinkResourceController {
   private final PagedResourcesAssembler pagedResourcesAssembler =
       new PagedResourcesAssembler(null, null);
 
-  public LinkResourceController(LinkService linkService,
-      LinkResourceAssembler linkResourceAssembler) {
+  public LinkResourceController(
+      LinkService linkService, LinkResourceAssembler linkResourceAssembler) {
+
     this.linkService = linkService;
     this.linkResourceAssembler = linkResourceAssembler;
   }
@@ -96,50 +98,57 @@ public class LinkResourceController {
     }
   }
 
-  @AuthorizeRolesOrOwner
   @GetMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
-  HttpEntity<LinkResource> getLink(@PathVariable LinkId linkId) throws ApplicationException {
+  HttpEntity<LinkResource> getLink(
+      @PathVariable LinkId linkId, Principal principal) throws ApplicationException {
+
     Link link = linkService.getLink(linkId);
+    checkAccess(link, principal);
+
     return ok(linkResourceAssembler.toResource(link));
   }
 
-  @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
   @PostMapping(produces = HAL_JSON_VALUE)
-  HttpEntity<LinkResource> addLink(@CurrentUser UserId userId,
-      @Validated @RequestBody LinkResource linkResource)
+  HttpEntity<LinkResource> addLink(
+      @Validated @RequestBody LinkResource linkResource,
+      Principal principal)
       throws ApplicationException {
 
     Link link = linkService.addLink(
         linkResource.getLongUrl(),
         linkResource.getUtmParameters().orElse(null),
-        userId
+        getCurrentUser(principal)
     );
 
     return ok(linkResourceAssembler.toResource(link));
   }
 
-  @AuthorizeRolesOrOwner
   @PutMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
   HttpEntity<LinkResource> replaceLink(
-      @PathVariable LinkId linkId, @Validated @RequestBody LinkResource linkResource)
+      @PathVariable LinkId linkId, @Validated @RequestBody LinkResource linkResource,
+      Principal principal)
       throws ApplicationException {
+
+    Link link = linkService.getLink(linkId);
+    checkAccess(link, principal);
 
     String longUrl = linkResource.getLongUrl();
     UtmParameters utmParameters = linkResource.getUtmParameters().orElse(null);
 
-    Link link = linkService.updateLongUrl(linkId, longUrl, utmParameters);
+    link = linkService.updateLongUrl(linkId, longUrl, utmParameters);
 
     return ok(linkResourceAssembler.toResource(link));
   }
 
-  @AuthorizeRolesOrOwner
   @PatchMapping(path = "/{linkId}", produces = HAL_JSON_VALUE)
   HttpEntity<LinkResource> updateLink(
       @PathVariable LinkId linkId,
-      @Validated @RequestBody LinkResource linkResource)
+      @Validated @RequestBody LinkResource linkResource, Principal principal)
       throws ApplicationException {
 
-    Link link = null;
+    Link link = linkService.getLink(linkId);
+    checkAccess(link, principal);
+
     String longUrl = linkResource.getLongUrl();
     Optional<UtmParameters> utmParameters = linkResource.getUtmParameters();
 
@@ -154,19 +163,22 @@ public class LinkResourceController {
     return ok(linkResourceAssembler.toResource(link));
   }
 
-  @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
   @GetMapping(produces = HAL_JSON_VALUE)
   HttpEntity<PagedResources<LinkResource>> fetchLinks(
-      @CurrentUser UserId userId, Pageable pageable) {
+      Pageable pageable, Principal principal) {
 
-    Page<Link> linkPage = linkService.fetchLinks(userId, pageable);
+    Page<Link> linkPage = linkService.fetchLinks(getCurrentUser(principal), pageable);
     return ok(pagedResourcesAssembler.toResource(linkPage, linkResourceAssembler));
   }
 
-  @AuthorizeRolesOrOwner
   @PutMapping(path = "/{linkId}/linkStatuses/{linkStatus}")
-  HttpEntity updateLinkStatus(@PathVariable LinkId linkId, @PathVariable LinkStatus linkStatus)
+  HttpEntity updateLinkStatus(
+      @PathVariable LinkId linkId, @PathVariable LinkStatus linkStatus,
+      Principal principal)
       throws ApplicationException {
+
+    Link link = linkService.getLink(linkId);
+    checkAccess(link, principal);
 
     switch (linkStatus) {
       case ACTIVE:
@@ -184,23 +196,49 @@ public class LinkResourceController {
     return ok().build();
   }
 
-  @AuthorizeRolesOrOwner
   @PostMapping(path = "/{linkId}/tags/{tagName}")
-  HttpEntity addTag(@PathVariable LinkId linkId, @PathVariable String tagName)
+  HttpEntity addTag(
+      @PathVariable LinkId linkId, @PathVariable String tagName, Principal principal)
       throws ApplicationException {
+
+    Link link = linkService.getLink(linkId);
+    checkAccess(link, principal);
 
     linkService.addTag(linkId, tagName);
 
     return ok().build();
   }
 
-  @AuthorizeRolesOrOwner
   @DeleteMapping(path = "/{linkId}/tags/{tagName}")
-  HttpEntity removeTag(@PathVariable LinkId linkId, @PathVariable String tagName)
+  HttpEntity removeTag(
+      @PathVariable LinkId linkId, @PathVariable String tagName, Principal principal)
       throws ApplicationException {
+
+    Link link = linkService.getLink(linkId);
+    checkAccess(link, principal);
+
     linkService.removeTag(linkId, tagName);
 
     return ok().build();
+  }
+
+  private UserId getCurrentUser(Principal principal) {
+    String name = principal.getName();
+    long userId = NumberUtils.parseNumber(name, Long.class);
+    return UserId.of(userId);
+  }
+
+  private void checkAccess(Link link, Principal principal) {
+    UserId userId = getCurrentUser(principal);
+    checkAccess(link, userId);
+  }
+
+  private void checkAccess(Link link, UserId userId) {
+    if (link.getUserId().equals(userId)) {
+      return;
+    }
+
+    throw new AccessDeniedException("Access is denied");
   }
 
   static class FullLinkValidator extends AbstractLinkValidator {

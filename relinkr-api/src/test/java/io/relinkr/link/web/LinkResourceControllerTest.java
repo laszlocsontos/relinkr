@@ -23,11 +23,11 @@ import static io.relinkr.test.Mocks.TAG_A;
 import static io.relinkr.test.Mocks.USER_ID;
 import static io.relinkr.test.Mocks.createLink;
 import static java.util.Arrays.asList;
-import static javax.persistence.LockModeType.NONE;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.inOrder;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -49,6 +49,7 @@ import io.relinkr.test.security.AbstractResourceControllerTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -86,14 +87,12 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   @Before
   public void setUp() {
     link = createLink();
-    given(entityManager.find(Link.class, link.getId(), NONE)).willReturn(link);
+    given(linkService.getLink(link.getId())).willReturn(link);
   }
 
   @Test
   @WithMockUser(username = "1") // USER_ID
   public void givenLinkOwnedByCurrentUser_whenGetLink_thenOk() throws Exception {
-    given(linkService.getLink(link.getId())).willReturn(link);
-
     ResultActions resultActions = mockMvc
         .perform(get("/v1/links/{linkId}", link.getId()))
         .andExpect(status().isOk())
@@ -106,12 +105,12 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   @Test
   @WithMockUser(username = "0") // USER_ID_ZERO
   public void givenLinkOwnedByOtherUser_whenGetLink_thenForbidden() throws Exception {
-    given(linkService.getLink(link.getId())).willReturn(link);
-
     ResultActions resultActions = mockMvc
         .perform(get("/v1/links/{linkId}", link.getId()))
         .andExpect(status().isForbidden())
         .andDo(print());
+
+    then(linkService).should().getLink(link.getId());
 
     assertError(403, "Access is denied", resultActions);
   }
@@ -158,11 +157,11 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
         .andExpect(status().isOk())
         .andDo(print());
 
-    then(linkService).should().updateLongUrl(linkId, longUrl, utmParameters);
+    InOrder inOrder = inOrder(linkService);
+    then(linkService).should(inOrder).getLink(link.getId());
+    then(linkService).should(inOrder).updateLongUrl(linkId, longUrl, utmParameters);
 
     assertLink(resultActions);
-
-    then(linkService).should().updateLongUrl(linkId, longUrl, utmParameters);
   }
 
   @Test
@@ -183,7 +182,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
             .content(objectMapper.writeValueAsString(linkResource)))
         .andDo(print());
 
-    then(linkService).shouldHaveZeroInteractions();
+    then(linkService).should().getLink(link.getId());
 
     assertError(403, "Access is denied", resultActions);
   }
@@ -243,7 +242,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
             .content(objectMapper.writeValueAsString(linkResource)))
         .andDo(print());
 
-    then(linkService).shouldHaveZeroInteractions();
+    then(linkService).should().getLink(link.getId());
 
     assertError(403, "Access is denied", resultActions);
   }
@@ -317,8 +316,9 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
         .andExpect(status().isOk())
         .andDo(print());
 
-    then(linkService).should().activateLink(link.getId());
-    then(linkService).shouldHaveNoMoreInteractions();
+    InOrder inOrder = inOrder(linkService);
+    then(linkService).should(inOrder).getLink(link.getId());
+    then(linkService).should(inOrder).activateLink(link.getId());
   }
 
   @Test
@@ -330,7 +330,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
         put("/v1/links/{linkId}/linkStatuses/{linkStatus}", link.getId(), ACTIVE.name()))
         .andDo(print());
 
-    then(linkService).shouldHaveZeroInteractions();
+    then(linkService).should().getLink(link.getId());
 
     assertError(403, "Access is denied", resultActions);
   }
@@ -345,8 +345,9 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
         .andExpect(status().isOk())
         .andDo(print());
 
-    then(linkService).should().archiveLink(link.getId());
-    then(linkService).shouldHaveNoMoreInteractions();
+    InOrder inOrder = inOrder(linkService);
+    then(linkService).should(inOrder).getLink(link.getId());
+    then(linkService).should(inOrder).archiveLink(link.getId());
   }
 
   @Test
@@ -357,8 +358,10 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
         .andExpect(status().isOk())
         .andDo(print());
 
-    then(linkService).should().addTag(link.getId(), TAG_A.getTagName());
-    then(linkService).shouldHaveNoMoreInteractions();
+    InOrder inOrder = inOrder(linkService);
+
+    then(linkService).should(inOrder).getLink(link.getId());
+    then(linkService).should(inOrder).addTag(link.getId(), TAG_A.getTagName());
   }
 
   @Test
@@ -368,7 +371,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
         post("/v1/links/{linkId}/tags/{tagName}", link.getId(), TAG_A.getTagName()))
         .andDo(print());
 
-    then(linkService).shouldHaveZeroInteractions();
+    then(linkService).should().getLink(link.getId());
 
     assertError(403, "Access is denied", resultActions);
   }
@@ -381,8 +384,10 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
         .andExpect(status().isOk())
         .andDo(print());
 
-    then(linkService).should().removeTag(link.getId(), TAG_A.getTagName());
-    then(linkService).shouldHaveNoMoreInteractions();
+    InOrder inOrder = inOrder(linkService);
+
+    then(linkService).should(inOrder).getLink(link.getId());
+    then(linkService).should(inOrder).removeTag(link.getId(), TAG_A.getTagName());
   }
 
   @Test
@@ -392,7 +397,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
         delete("/v1/links/{linkId}/tags/{tagName}", link.getId(), TAG_A.getTagName()))
         .andDo(print());
 
-    then(linkService).shouldHaveZeroInteractions();
+    then(linkService).should().getLink(link.getId());
 
     assertError(403, "Access is denied", resultActions);
   }

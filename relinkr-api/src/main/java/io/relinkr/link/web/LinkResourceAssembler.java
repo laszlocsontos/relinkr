@@ -71,7 +71,7 @@ public class LinkResourceAssembler
       LinkResource linkResource, LinkId linkId, LinkStatus linkStatus) {
 
     linkResource.add(
-        linkTo(methodOn(LinkResourceController.class).updateLinkStatus(linkId, linkStatus))
+        linkTo(methodOn(LinkResourceController.class).updateLinkStatus(linkId, linkStatus, null))
             .withRel("userLinkStatuses"));
   }
 
