@@ -16,8 +16,8 @@
 
 package io.relinkr.core.convert;
 
-import io.relinkr.click.model.ClickId;
 import io.relinkr.core.orm.EntityClassAwareId;
+import io.relinkr.link.model.LinkId;
 import org.junit.Test;
 import org.springframework.core.convert.converter.Converter;
 
@@ -36,7 +36,7 @@ public class StringToEntityClassAwareIdConverterTest<T extends EntityClassAwareI
 
   @Override
   protected Converter<String, T> createConverter() {
-    return new StringToEntityClassAwareIdConverter(ClickId.class);
+    return new StringToEntityClassAwareIdConverter(LinkId.class);
   }
 
   @Override

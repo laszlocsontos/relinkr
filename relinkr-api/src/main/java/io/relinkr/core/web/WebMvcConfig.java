@@ -21,11 +21,9 @@ import static org.springframework.util.ReflectionUtils.findField;
 import static org.springframework.util.ReflectionUtils.makeAccessible;
 import static org.springframework.util.ReflectionUtils.setField;
 
-import io.relinkr.click.model.ClickId;
 import io.relinkr.core.convert.EntityClassAwareIdToStringConverter;
 import io.relinkr.core.convert.StringToEntityClassAwareIdConverter;
 import io.relinkr.link.model.LinkId;
-import io.relinkr.core.model.UserId;
 import io.relinkr.visitor.model.VisitorId;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -56,10 +54,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
   @Override
   public void addFormatters(FormatterRegistry registry) {
-    registry.addConverter(String.class, ClickId.class,
-        new StringToEntityClassAwareIdConverter<>(ClickId.class));
-    registry.addConverter(new EntityClassAwareIdToStringConverter<ClickId>());
-
     registry.addConverter(String.class, LinkId.class,
         new StringToEntityClassAwareIdConverter<>(LinkId.class));
     registry.addConverter(new EntityClassAwareIdToStringConverter<LinkId>());

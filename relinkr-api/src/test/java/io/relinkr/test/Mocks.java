@@ -27,9 +27,6 @@ import static org.springframework.security.oauth2.core.AuthorizationGrantType.AU
 import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER;
 import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.REGISTRATION_ID;
 
-import io.relinkr.click.model.Click;
-import io.relinkr.click.model.ClickId;
-import io.relinkr.click.model.IpAddress;
 import io.relinkr.core.model.ApplicationException;
 import io.relinkr.core.model.EmailAddress;
 import io.relinkr.core.model.UserId;
@@ -107,9 +104,6 @@ public final class Mocks {
   public static final Tag TAG_A = new Tag("A");
   public static final Tag TAG_B = new Tag("B");
 
-  public static final ClickId CLICK_ID = ClickId.of(1L);
-  public static final ClickId CLICK_ID_ZERO = ClickId.of(0L);
-
   public static final String IPV4_ADDRESS = "184.52.70.179";
   public static final String IPV6_ADDRESS = "2001:db8:85a3:0:0:8a2e:370:7334";
 
@@ -117,8 +111,6 @@ public final class Mocks {
 
   public static final VisitorId VISITOR_ID = VisitorId.of(27469143961212L);
   public static final VisitorId VISITOR_ID_ZERO = VisitorId.of(0L);
-
-  public static final IpAddress VISITOR_IP;
 
   public static final LocalDateTime TIMESTAMP = LocalDateTime.of(2018, 02, 28, 19, 52);
 
@@ -225,8 +217,6 @@ public final class Mocks {
           UTM_CAMPAIGN_V
       );
 
-      VISITOR_IP = IpAddress.fromString(IPV4_ADDRESS);
-
       Map<String, Object> googleUserAttributes = new HashMap<>();
 
       googleUserAttributes.put("sub", "12345789");
@@ -285,10 +275,6 @@ public final class Mocks {
     Visitor visitor = new Visitor();
     visitor.setId(VISITOR_ID);
     return visitor;
-  }
-
-  public static Click createClick() {
-    return Click.of(LINK_ID, VISITOR_ID, USER_ID, VISITOR_IP, FIXED_TIMESTAMP);
   }
 
 }

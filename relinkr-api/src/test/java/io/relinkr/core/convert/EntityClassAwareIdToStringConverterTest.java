@@ -19,13 +19,13 @@ package io.relinkr.core.convert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import io.relinkr.click.model.ClickId;
+import io.relinkr.link.model.LinkId;
 import org.junit.Test;
 import org.springframework.core.convert.converter.Converter;
 
 public class EntityClassAwareIdToStringConverterTest {
 
-  private final Converter<ClickId, String> converter = new EntityClassAwareIdToStringConverter<>();
+  private final Converter<LinkId, String> converter = new EntityClassAwareIdToStringConverter<>();
 
   @Test
   public void givenNull_whenConvert_thenNull() {
@@ -34,7 +34,7 @@ public class EntityClassAwareIdToStringConverterTest {
 
   @Test
   public void givenEntityClassAwareId_whenConvert_thenString() {
-    assertEquals("123", converter.convert(ClickId.of(123L)));
+    assertEquals("123", converter.convert(LinkId.of(123L)));
   }
 
 }

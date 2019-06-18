@@ -25,7 +25,6 @@ import static io.relinkr.test.Mocks.FRONTEND_LOGIN_URL;
 import static io.relinkr.test.Mocks.NOT_FOUND_URL;
 import static io.relinkr.test.Mocks.VISITOR_ID;
 import static io.relinkr.test.Mocks.VISITOR_ID_ZERO;
-import static io.relinkr.test.Mocks.VISITOR_IP;
 import static io.relinkr.test.Mocks.createLink;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
@@ -38,6 +37,7 @@ import static org.mockito.Mockito.never;
 import static org.springframework.http.HttpHeaders.CACHE_CONTROL;
 import static org.springframework.http.HttpHeaders.EXPIRES;
 import static org.springframework.http.HttpHeaders.PRAGMA;
+import static org.springframework.mock.web.MockHttpServletRequest.DEFAULT_SERVER_ADDR;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -191,7 +191,7 @@ public class RedirectControllerTest {
     RedirectedEvent redirectedEvent = redirectedEventListener.getEvent();
     assertEquals(link.getId(), redirectedEvent.getLinkId());
     assertEquals(VISITOR_ID, redirectedEvent.getVisitorId());
-    assertEquals(VISITOR_IP.getIpAddress(), redirectedEvent.getIpAddress());
+    assertEquals(DEFAULT_SERVER_ADDR, redirectedEvent.getIpAddress());
     assertEquals(link.getUserId(), redirectedEvent.getUserId());
     assertEquals(FIXED_INSTANT, redirectedEvent.getInstant());
   }
@@ -201,7 +201,7 @@ public class RedirectControllerTest {
   }
 
   private void redirect(String path, String targetUrl) throws Exception {
-    mockMvc.perform(get("/" + path).header(HEADER_XFF, VISITOR_IP.getIpAddress()))
+    mockMvc.perform(get("/" + path).header(HEADER_XFF, DEFAULT_SERVER_ADDR))
         .andDo(print())
         .andExpect(status().isMovedPermanently())
         .andExpect(header().string(CACHE_CONTROL,
