@@ -57,50 +57,38 @@
 
         <template slot="row-details" slot-scope="row">
           <b-card>
-            <b-tabs content-class="mt-3">
-              <b-tab title="UTM Parameters" active>
-                <b-list-group>
-                  <b-list-group-item href="#" disabled class="flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1">{{ row.item.utmParameters.utmSource }}</h5>
-                    </div>
-                    <small class="text-muted">UTM Source</small>
-                  </b-list-group-item>
-                  <b-list-group-item href="#" disabled class="flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1">{{ row.item.utmParameters.utmMedium }}</h5>
-                    </div>
-                    <small class="text-muted">UTM Medium</small>
-                  </b-list-group-item>
-                  <b-list-group-item href="#" disabled class="flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1">{{ row.item.utmParameters.utmCampaign }}</h5>
-                    </div>
-                    <small class="text-muted">UTM Campaign</small>
-                  </b-list-group-item>
-                  <b-list-group-item href="#" disabled class="flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1">{{ row.item.utmParameters.utmTerm }}</h5>
-                    </div>
-                    <small class="text-muted">UTM Term</small>
-                  </b-list-group-item>
-                  <b-list-group-item href="#" disabled class="flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1">{{ row.item.utmParameters.utmContent }}</h5>
-                    </div>
-                    <small class="text-muted">UTM Content</small>
-                  </b-list-group-item>
-                </b-list-group>
-              </b-tab>
-              <b-tab title="Clicks">
-                <line-chart :chart-data="clicksData" :chartId="'clicks-chart-' + row.item.id"
-                            height=150></line-chart>
-              </b-tab>
-              <b-tab title="Visitors">
-                <doughnut-chart :chart-data="visitorsData" :chartId="'visitors-chart-' +row.item.id"
-                                height=150></doughnut-chart>
-              </b-tab>
-            </b-tabs>
+            <b-list-group>
+              <b-list-group-item href="#" disabled class="flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">{{ row.item.utmParameters.utmSource }}</h5>
+                </div>
+                <small class="text-muted">UTM Source</small>
+              </b-list-group-item>
+              <b-list-group-item href="#" disabled class="flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">{{ row.item.utmParameters.utmMedium }}</h5>
+                </div>
+                <small class="text-muted">UTM Medium</small>
+              </b-list-group-item>
+              <b-list-group-item href="#" disabled class="flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">{{ row.item.utmParameters.utmCampaign }}</h5>
+                </div>
+                <small class="text-muted">UTM Campaign</small>
+              </b-list-group-item>
+              <b-list-group-item href="#" disabled class="flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">{{ row.item.utmParameters.utmTerm }}</h5>
+                </div>
+                <small class="text-muted">UTM Term</small>
+              </b-list-group-item>
+              <b-list-group-item href="#" disabled class="flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">{{ row.item.utmParameters.utmContent }}</h5>
+                </div>
+                <small class="text-muted">UTM Content</small>
+              </b-list-group-item>
+            </b-list-group>
           </b-card>
         </template>
       </b-table>
@@ -116,8 +104,6 @@
     ChevronsUpIcon,
     ExternalLinkIcon
   } from 'vue-feather-icons';
-  import DoughnutChart from '@/components/DoughnutChart.js';
-  import LineChart from '@/components/LineChart.js';
   import PageTemplate from '@/components/PageTemplate.vue';
 
   import {mapActions, mapGetters} from 'vuex';
@@ -125,7 +111,7 @@
   export default {
     components: {
       ArrowUpCircleIcon, ExternalLinkIcon, ArchiveIcon, ChevronsDownIcon, ChevronsUpIcon,
-      DoughnutChart, LineChart, PageTemplate
+      PageTemplate
     },
     mounted() {
       this.$root.$on("refreshLinks", () => this._refresh());
@@ -146,37 +132,10 @@
             label: 'Created At',
             sortable: true
           },
-          clicks: {
-            label: 'Clicks',
-            sortable: true
-          },
-          visitors: {
-            label: 'Unique Visitors',
-            sortable: true
-          },
           controls: {
             label: '',
             sortable: false
           }
-        },
-        clicksData: {
-          datasets: [{
-            label: "# of clicks",
-            data: [10, 20, 35, 20, 42, 25, 80]
-          }],
-          labels: ['2018-03-06', '2018-03-07', '2018-03-08', '2018-03-09', '2018-03-10',
-            '2018-03-11', '2018-03-12'],
-        },
-        visitorsData: {
-          datasets: [{
-            data: [10, 30]
-          }],
-
-          // These labels appear in the legend and in the tooltips when hovering different arcs
-          labels: [
-            'New',
-            'Returning'
-          ]
         }
       }
     },
