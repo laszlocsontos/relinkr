@@ -1,0 +1,6 @@
+# Disable Spring Cloud GCP runtime config for unit tests
+spring:
+  cloud:
+    gcp:
+      config:
+        enabled: false
