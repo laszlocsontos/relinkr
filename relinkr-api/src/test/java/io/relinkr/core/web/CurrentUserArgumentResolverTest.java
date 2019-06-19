@@ -37,6 +37,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -46,6 +47,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @WebMvcTest(controllers = TestController.class, secure = false)
+@ActiveProfiles("test")
 public class CurrentUserArgumentResolverTest {
 
   @Autowired

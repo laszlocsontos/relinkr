@@ -40,6 +40,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -48,6 +49,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @WebMvcTest(controllers = MethodSecurityTestController.class)
+@ActiveProfiles("test")
 public class MethodSecurityConfigTest {
 
   private static final TestId TEST_ID = TestId.of(1L);

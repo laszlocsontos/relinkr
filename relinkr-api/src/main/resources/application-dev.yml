@@ -7,9 +7,5 @@ server:
     key-alias: tomcat
 
 spring:
-  cloud:
-    gcp:
-      sql:
-        enabled: false
   datasource:
     url: jdbc:postgresql://${PGSQL_HOST:localhost}:${PGSQL_PORT:5432}/${PGSQL_DB:relinkr}

@@ -1,0 +1,6 @@
+# Disable Spring Cloud GCP runtime config for local development
+spring:
+  cloud:
+    gcp:
+      sql:
+        enabled: false

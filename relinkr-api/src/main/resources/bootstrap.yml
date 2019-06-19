@@ -1,0 +1,10 @@
+# Spring Cloud GCP needs to fetch data from the Runtime Configuration API and assemble a property
+# source before application.yml is processed.
+spring:
+  cloud:
+    gcp:
+      config:
+        # GCP Runtime Configuration API will be queried by pattern {name}_{profile}, where {profile}
+        # gets its default value from the spring.profiles.active property.
+        name: relinkr_api
+        enabled: true
