@@ -1,6 +1,10 @@
 spring:
+  cloud:
+    gcp:
+      sql:
+        database-name: ${GCP_SQL_DB}
+        instance-connection-name: ${GCP_SQL_INSTANCE}
   datasource:
-    url: jdbc:postgresql://${PGSQL_HOST:localhost}:${PGSQL_PORT:5432}/${PGSQL_DB:relinkr}
     username: ${PGSQL_USERNAME:relinkr}
     password: ${PGSQL_PASSWORD:relinkr}
   jpa:
