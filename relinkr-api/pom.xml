@@ -12,6 +12,12 @@
       </plugin>
 
       <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>appengine-maven-plugin</artifactId>
+        <version>1.3.2</version>
+      </plugin>
+
+      <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
           <configLocation>checkstyle.xml</configLocation>
