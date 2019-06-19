@@ -1,11 +1,13 @@
 # reLinkR API
 
-## Project setup
+## Development
+
+### Project setup
 
 1. Create a PostgreSQL user and database
 ```
-# create user relinkr with password 'relinkr';
-# create database relinkr with owner relinkr;
+=> create user relinkr with password 'relinkr';
+=> create database relinkr with owner relinkr;
 ```
 
 2. Generate RSA key pair for signing JWT authentication tokens
@@ -30,7 +32,7 @@ Obtain client ID and client secret and set the following environment variables a
 % export OAUTH2_GOOGLE_CLIENT_SECRET=...
 ```
 
-4. Obtain OAuth 2.0 credentials from the [Facebook for Developers](https://developers.facebook.com/apps/).
+5. Obtain OAuth 2.0 credentials from the [Facebook for Developers](https://developers.facebook.com/apps/).
 
 Obtain client ID and client secret and set the following environment variables accordingly.
 
@@ -44,13 +46,73 @@ Obtain client ID and client secret and set the following environment variables a
 You can customize other environment variables like `PGSQL_HOST`, but they'll have sensible defaults for running reLinkR in development mode.
 See [application.yml](src/main/resources/application.yml).
 
-### Compiles and runs all unit tests
+### Compile and run all unit tests
 
 ```
 % ./mvnw clean install
 ```
 
-### Runs API locally
+### Run API locally
 ```
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+## Integration testing
+
+1. Create a PostgreSQL instance
+
+```
+% gcloud sql instances create relinkr-db --database-version=POSTGRES_9_6 --tier=db-f1-micro --root-password=secret
+```
+
+2. Create a PostgreSQL database for the integration tests
+
+```
+gcloud sql databases create relinkr-it --instance relinkr-db
+```
+
+3. Set GCP database properties
+
+```
+% export GCP_SQL_DB=relinkr-it
+% export GCP_SQL_INSTANCE=$(gcloud sql instances describe relinkr-db --format 'value(connectionName)')
+```
+
+4. Set GCP database credentials
+
+```
+export PGSQL_USERNAME=postgres
+export PGSQL_PASSWORD="secret"
+```
+
+_Note: use that password you picked at instance creation time._
+ 
+5. Set the rest of the environment variables as described above
+
+6. Create GCP Runtime Configuration for the integration test's profile
+
+```
+% gcloud services enable runtimeconfig.googleapis.com
+% gcloud beta runtime-config configs create relinkr_api_it
+```
+
+7. Set variables to GCP Runtime Configuration
+
+```
+% gcloud beta runtime-config configs variables set JWT_PRIVATE_KEY "${JWT_PRIVATE_KEY}" --config-name relinkr_api_it
+% gcloud beta runtime-config configs variables set JWT_PUBLIC_KEY "${JWT_PUBLIC_KEY}" --config-name relinkr_api_it
+% gcloud beta runtime-config configs variables set COOKIE_VISITOR_SECRET_KEY "${COOKIE_VISITOR_SECRET_KEY}" --config-name relinkr_api_it
+% gcloud beta runtime-config configs variables set COOKIE_OAUTH2_REQUEST_SECRET_KEY "${COOKIE_OAUTH2_REQUEST_SECRET_KEY}" --config-name relinkr_api_it
+% gcloud beta runtime-config configs variables set OAUTH2_GOOGLE_CLIENT_ID "${OAUTH2_GOOGLE_CLIENT_ID}" --config-name relinkr_api_it
+% gcloud beta runtime-config configs variables set OAUTH2_GOOGLE_CLIENT_SECRET "${OAUTH2_GOOGLE_CLIENT_SECRET}" --config-name relinkr_api_it
+% gcloud beta runtime-config configs variables set GCP_SQL_DB "${GCP_SQL_DB}" --config-name relinkr_api_it
+% gcloud beta runtime-config configs variables set GCP_SQL_INSTANCE "${GCP_SQL_INSTANCE}" --config-name relinkr_api_it
+% gcloud beta runtime-config configs variables set PGSQL_USERNAME "${PGSQL_USERNAME}" --config-name relinkr_api_it
+% gcloud beta runtime-config configs variables set PGSQL_PASSWORD "${PGSQL_PASSWORD}" --config-name relinkr_api_it
+```
+
+### Run the integration tests
+
+```
+% ./mvnw integration-test verify -P integration-test
 ```
