@@ -41,9 +41,6 @@ import org.springframework.util.StringUtils;
 public class JwtAuthenticationTokenCookieResolverImpl
     implements JwtAuthenticationTokenCookieResolver {
 
-  static final String TOKEN_PAYLOAD_COOKIE_NAME = "atp";
-  static final String TOKEN_SIGNATURE_COOKIE_NAME = "ats";
-
   private static final String DELIMITER = ".";
 
   private final CookieValueResolver<String> tokenPayloadResolver;
