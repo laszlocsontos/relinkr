@@ -16,8 +16,8 @@
 
 package io.relinkr.core.security.authn.jwt;
 
-import static io.relinkr.core.security.authn.jwt.JwtAuthenticationTokenCookieResolverImpl.TOKEN_PAYLOAD_COOKIE_NAME;
-import static io.relinkr.core.security.authn.jwt.JwtAuthenticationTokenCookieResolverImpl.TOKEN_SIGNATURE_COOKIE_NAME;
+import static io.relinkr.core.security.authn.jwt.JwtAuthenticationTokenCookieResolver.TOKEN_PAYLOAD_COOKIE_NAME;
+import static io.relinkr.core.security.authn.jwt.JwtAuthenticationTokenCookieResolver.TOKEN_SIGNATURE_COOKIE_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;

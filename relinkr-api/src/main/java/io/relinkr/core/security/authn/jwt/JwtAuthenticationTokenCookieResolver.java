@@ -27,6 +27,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface JwtAuthenticationTokenCookieResolver extends CookieValueResolver<String> {
 
+  String TOKEN_PAYLOAD_COOKIE_NAME = "atp";
+  String TOKEN_SIGNATURE_COOKIE_NAME = "ats";
+
   default Optional<String> resolveToken(HttpServletRequest request) {
     return resolveValue(request);
   }
