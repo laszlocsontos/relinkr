@@ -5,7 +5,7 @@ spring:
     gcp:
       sql:
         database-name: ${GCP_SQL_DB}
-        instance-connection-name: ${GCP_SQL_INSTANCE}
+        instance-connection-name: ${GCP_SQL_CONNECTION}
   datasource:
     username: ${PGSQL_USERNAME:relinkr}
     password: ${PGSQL_PASSWORD:relinkr}
