@@ -1,0 +1,23 @@
+runtime: java
+env: flex
+resources:
+  cpu: 2
+  memory_gb: 1.4
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 2
+liveness_check:
+  path: "/actuator/health"
+  check_interval_sec: 30
+  timeout_sec: 5
+  failure_threshold: 4
+  success_threshold: 2
+readiness_check:
+  path: "/actuator/info"
+  check_interval_sec: 5
+  timeout_sec: 5
+  failure_threshold: 2
+  success_threshold: 2
+  app_start_timeout_sec: 600
+env_variables:
+  JAVA_USER_OPTS: "-Dspring.profiles.active=@build.profile.id@"
