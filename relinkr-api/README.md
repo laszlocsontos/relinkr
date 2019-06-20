@@ -59,10 +59,22 @@ See [application.yml](src/main/resources/application.yml).
 
 ## Integration testing
 
+### Automated configuration
+
+Create the database instance, runtime configuration variables for integration testing is automated
+with `configure.sh <profile>`. If you rather prefer to do it manually, refer to next section.
+
+```
+% ./configure it
+```
+
+### Manual configuration
+
 1. Create a PostgreSQL instance
 
 ```
-% gcloud sql instances create relinkr-db --database-version=POSTGRES_9_6 --tier=db-f1-micro --root-password=secret
+% gcloud sql instances create relinkr-db --database-version=POSTGRES_9_6 --tier=db-f1-micro
+% gcloud sql users set-password postgres --instance=relinkr-db --password=secret
 ```
 
 2. Create a PostgreSQL database for the integration tests
@@ -75,7 +87,7 @@ gcloud sql databases create relinkr-it --instance relinkr-db
 
 ```
 % export GCP_SQL_DB=relinkr-it
-% export GCP_SQL_INSTANCE=$(gcloud sql instances describe relinkr-db --format 'value(connectionName)')
+% export GCP_SQL_CONNECTION=$(gcloud sql instances describe relinkr-db --format 'value(connectionName)')
 ```
 
 4. Set GCP database credentials
@@ -106,7 +118,7 @@ _Note: use that password you picked at instance creation time._
 % gcloud beta runtime-config configs variables set OAUTH2_GOOGLE_CLIENT_ID "${OAUTH2_GOOGLE_CLIENT_ID}" --config-name relinkr_api_it
 % gcloud beta runtime-config configs variables set OAUTH2_GOOGLE_CLIENT_SECRET "${OAUTH2_GOOGLE_CLIENT_SECRET}" --config-name relinkr_api_it
 % gcloud beta runtime-config configs variables set GCP_SQL_DB "${GCP_SQL_DB}" --config-name relinkr_api_it
-% gcloud beta runtime-config configs variables set GCP_SQL_INSTANCE "${GCP_SQL_INSTANCE}" --config-name relinkr_api_it
+% gcloud beta runtime-config configs variables set GCP_SQL_CONNECTION "${GCP_SQL_CONNECTION}" --config-name relinkr_api_it
 % gcloud beta runtime-config configs variables set PGSQL_USERNAME "${PGSQL_USERNAME}" --config-name relinkr_api_it
 % gcloud beta runtime-config configs variables set PGSQL_PASSWORD "${PGSQL_PASSWORD}" --config-name relinkr_api_it
 ```
