@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpHeaders.COOKIE;
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -29,7 +30,6 @@ import io.relinkr.user.service.UserService;
 import java.net.URI;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +38,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
+import org.springframework.http.RequestEntity.BodyBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,6 +46,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RunWith(SpringRunner.class)
@@ -67,11 +69,53 @@ public class RelinkrApiIT {
   @LocalServerPort
   private int testPort;
 
-  private String tokenPayloadCookieValue;
-  private String tokenSignatureCookieValue;
+  @Test
+  public void shouldCreateLink() {
+    RequestEntity<?> request = buildRequest(
+        POST,
+        "/v1/links",
+        singletonMap("longUrl", "https://start.spring.io/"),
+        emptyMap(),
+        obtainAuthToken()
+    );
 
-  @Before
-  public void setUp() {
+    ResponseEntity<JsonNode> response = testRestTemplate.exchange(request, JsonNode.class);
+
+    assertEquals(OK, response.getStatusCode());
+  }
+
+  @Test
+  public void shouldReportStatusIsUp() {
+    RequestEntity<?> request = buildRequest(
+        GET,
+        "/actuator/health",
+        null,
+        emptyMap(),
+        null
+    );
+
+    ResponseEntity<JsonNode> response = testRestTemplate.exchange(request, JsonNode.class);
+
+    assertEquals(OK, response.getStatusCode());
+    assertEquals("UP", response.getBody().path("status").asText());
+  }
+
+  @Test
+  public void shouldRespondWithOK() {
+    RequestEntity<?> request = buildRequest(
+        GET,
+        "/actuator/info",
+        null,
+        emptyMap(),
+        null
+    );
+
+    ResponseEntity<JsonNode> response = testRestTemplate.exchange(request, JsonNode.class);
+
+    assertEquals(OK, response.getStatusCode());
+  }
+
+  private String obtainAuthToken() {
     User user = userService.saveUser(
         EMAIL_ADDRESS,
         UserProfile.of(NATIVE, EMAIL_ADDRESS.getValue())
@@ -83,46 +127,39 @@ public class RelinkrApiIT {
         createAuthorityList(user.getAuthorities().toArray(new String[0]))
     );
 
-    String jwtToken = jwtAuthenticationService.createJwtToken(authentication, 1);
-
-    String[] parts = jwtToken.split("\\.");
-    tokenPayloadCookieValue = parts[1];
-    tokenSignatureCookieValue = parts[0] + "." + parts[2];
-  }
-
-  @Test
-  public void shouldCreateLink() {
-    RequestEntity<?> request = buildRequest(
-        POST,
-        "/v1/links",
-        singletonMap("longUrl", "https://start.spring.io/"),
-        emptyMap()
-    );
-
-    ResponseEntity<JsonNode> response = testRestTemplate.exchange(request, JsonNode.class);
-
-    assertEquals(OK, response.getStatusCode());
+    return jwtAuthenticationService.createJwtToken(authentication, 1);
   }
 
   private RequestEntity<?> buildRequest(
-      HttpMethod method, String path, Object body, Map<String, String> params) {
+      HttpMethod method, String path, Object body, Map<String, String> params, String jwtToken) {
 
-    String cookies = new StringBuilder()
-        .append(TOKEN_PAYLOAD_COOKIE_NAME)
-        .append("=")
-        .append(tokenPayloadCookieValue)
-        .append("; ")
-        .append(TOKEN_SIGNATURE_COOKIE_NAME)
-        .append("=")
-        .append(tokenSignatureCookieValue)
-        .toString();
-
-    return RequestEntity
+    BodyBuilder builder = RequestEntity
         .method(method, buildUri(path, params))
-        .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-        .header(COOKIE, cookies)
-        .header(X_REQUESTED_WITH_HEADER, X_REQUESTED_WITH_VALUE)
-        .body(body);
+        .header(CONTENT_TYPE, APPLICATION_JSON_VALUE);
+
+    if (StringUtils.hasText(jwtToken)) {
+      String[] parts = jwtToken.split("\\.");
+      String tokenPayloadCookieValue = parts[1];
+      String tokenSignatureCookieValue = parts[0] + "." + parts[2];
+
+      String cookies = new StringBuilder()
+          .append(TOKEN_PAYLOAD_COOKIE_NAME)
+          .append("=")
+          .append(tokenPayloadCookieValue)
+          .append("; ")
+          .append(TOKEN_SIGNATURE_COOKIE_NAME)
+          .append("=")
+          .append(tokenSignatureCookieValue)
+          .toString();
+
+      builder.header(COOKIE, cookies).header(X_REQUESTED_WITH_HEADER, X_REQUESTED_WITH_VALUE);
+    }
+
+    if (body != null) {
+      return builder.body(body);
+    }
+
+    return builder.build();
   }
 
   private URI buildUri(String path, Map<String, String> params) {
