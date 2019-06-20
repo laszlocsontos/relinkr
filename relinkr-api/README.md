@@ -128,3 +128,35 @@ _Note: use that password you picked at instance creation time._
 ```
 % ./mvnw integration-test verify -P integration-test
 ```
+
+## GCP Deployment
+
+There are Maven two profiles setup for deploying to GCP `test` and `prod`. In this last section
+steps will refer to a `test` deployment.
+
+1. Configure `test` environment
+
+```
+% ./configure test
+```
+
+2. Package the application before deployment
+
+```
+% ./mvnw package appengine:stage -P test
+```
+
+_Note: This step requires environment setup for integration tests. Should you have skipped that,
+refer to previous section how to do that._
+
+3. Initialize an App Engine application within the project
+
+```
+% gcloud app create
+```
+
+4. Initiate deployment
+
+```
+% ./mvnw appengine:deploy
+```
