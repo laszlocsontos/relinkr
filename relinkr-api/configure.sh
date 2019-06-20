@@ -168,10 +168,8 @@ function main {
     PGSQL_USERNAME=${DEFAULT_PGSQL_USERNAME}
   fi
 
-  # Check if a DB user password was given; generate a random password otherwise
-  if [[ -z "${PGSQL_PASSWORD}" ]]; then
-    PGSQL_PASSWORD=$(openssl rand -hex 16)
-  fi
+  # Check if a DB user password was given
+  check_required PGSQL_PASSWORD
 
   # Check if JWT keys were given; generate new key pair otherwise
   if [[ -z "${JWT_PRIVATE_KEY}" ]]; then
