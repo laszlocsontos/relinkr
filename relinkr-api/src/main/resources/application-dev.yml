@@ -9,3 +9,7 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://${PGSQL_HOST:localhost}:${PGSQL_PORT:5432}/${PGSQL_DB:relinkr}
+  cloud:
+    gcp:
+      sql:
+        enabled: false
