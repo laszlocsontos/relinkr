@@ -59,17 +59,24 @@ public class LinkResourceAssemblerTest {
   }
 
   @Test
-  public void givenShortLinkDomainAsProperty_whenAddShortLink_thenDomainUsed() {
+  public void givenShortLinkSchemeAsProperty_whenAddShortLink_thenSchemeUsed() {
     given(environment.getProperty(SHORT_LINK_SCHEME)).willReturn("https");
     linkResourceAssembler.addShortLink(linkResource, PATH);
     assertEquals("https://localhost/" + PATH, linkResource.getLink("shortLink").getHref());
   }
 
   @Test
-  public void givenShortLinkSchemeAsProperty_whenAddShortLink_thenSchemeUsed() {
+  public void givenShortLinkDomainAsProperty_whenAddShortLink_thenDomainUsed() {
     given(environment.getProperty(SHORT_LINK_DOMAIN)).willReturn("rln.kr");
     linkResourceAssembler.addShortLink(linkResource, PATH);
     assertEquals("http://rln.kr/" + PATH, linkResource.getLink("shortLink").getHref());
+  }
+
+  @Test
+  public void givenEmptyShortLinkDomainAsProperty_whenAddShortLink_thenDefaultUsed() {
+    given(environment.getProperty(SHORT_LINK_DOMAIN)).willReturn("");
+    linkResourceAssembler.addShortLink(linkResource, PATH);
+    assertEquals("http://localhost/" + PATH, linkResource.getLink("shortLink").getHref());
   }
 
   @Test
