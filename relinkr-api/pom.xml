@@ -7,12 +7,12 @@
   <!-- https://www.petrikainulainen.net/programming/maven/integration-testing-with-maven/ -->
   <profiles>
     <profile>
-      <id>dev</id>
+      <id>development</id>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
       <properties>
-        <build.profile.id>dev</build.profile.id>
+        <build.profile.id>development</build.profile.id>
         <!-- Only unit tests are run when the development profile is active -->
         <skip.integration.tests>true</skip.integration.tests>
         <skip.unit.tests>false</skip.unit.tests>
@@ -20,9 +20,9 @@
     </profile>
 
     <profile>
-      <id>integration-test</id>
+      <id>integration</id>
       <properties>
-        <build.profile.id>integration-test</build.profile.id>
+        <build.profile.id>integration</build.profile.id>
         <!-- Only integration tests are run when the integration-test profile is active -->
         <skip.integration.tests>false</skip.integration.tests>
         <skip.unit.tests>true</skip.unit.tests>
@@ -30,9 +30,9 @@
     </profile>
 
     <profile>
-      <id>test</id>
+      <id>staging</id>
       <properties>
-        <build.profile.id>test</build.profile.id>
+        <build.profile.id>staging</build.profile.id>
         <!-- Run both unit and integration tests -->
         <skip.integration.tests>false</skip.integration.tests>
         <skip.unit.tests>false</skip.unit.tests>
@@ -40,9 +40,9 @@
     </profile>
 
     <profile>
-      <id>prod</id>
+      <id>production</id>
       <properties>
-        <build.profile.id>prod</build.profile.id>
+        <build.profile.id>production</build.profile.id>
         <!-- Run both unit and integration tests -->
         <skip.integration.tests>false</skip.integration.tests>
         <skip.unit.tests>false</skip.unit.tests>
