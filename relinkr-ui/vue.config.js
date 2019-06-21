@@ -15,8 +15,6 @@
 */
 
 const path = require('path');
-const webpack = require('webpack');
-const config = require(`./env/${process.env.NODE_ENV}.json`);
 
 module.exports = {
   chainWebpack: config => {
@@ -41,11 +39,6 @@ module.exports = {
     });
   },
   configureWebpack: {
-    plugins: [
-      new webpack.DefinePlugin({
-        CONFIG: JSON.stringify(config)
-      })
-    ],
     resolve: {
       alias: {
         'bootstrap-components': path.resolve(__dirname,

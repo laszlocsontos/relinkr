@@ -16,10 +16,10 @@
 
 /* eslint-disable */
 
-export const API_BASE_URL = CONFIG.API_BASE_URL;
-export const OAUTH2_INIT_ENDPOINT = CONFIG.OAUTH2_INIT_ENDPOINT;
+const API_BASE_URL = process.env.VUE_APP_API_BASE_URL;
+const OAUTH2_INIT_ENDPOINT = process.env.VUE_APP_OAUTH2_INIT_ENDPOINT;
 
-export default {
+export {
   API_BASE_URL,
   OAUTH2_INIT_ENDPOINT
 }
