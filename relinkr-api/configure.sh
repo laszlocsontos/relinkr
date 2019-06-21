@@ -22,6 +22,7 @@ readonly GCP_SQL_VERSION="POSTGRES_9_6"
 readonly GCP_SQL_TIER="db-f1-micro"
 
 readonly DEFAULT_PGSQL_USERNAME="postgres"
+readonly DEFAULT_SHORT_LINK_SCHEME="https"
 
 readonly E_NO_PROFILE=1
 readonly E_NO_ENV_VAR=2
@@ -160,11 +161,15 @@ function main {
   # Front-end URL is required
   check_required FRONTEND_BASE_URL
 
+  # Check if a short link scheme was given, otherwise set a default
+  if [[ -z "${SHORT_LINK_SCHEME}" ]]; then
+    SHORT_LINK_SCHEME=${DEFAULT_SHORT_LINK_SCHEME}
+  fi
+
   # Check if a DB name was given, otherwise set a default
   if [[ -z "${GCP_SQL_DB}" ]]; then
     GCP_SQL_DB="${APP_NAME}_${profile}"
   fi
-
 
   # Check if a DB user name was given; default to postgres otherwise
   if [[ -z "${PGSQL_USERNAME}" ]]; then
@@ -229,6 +234,7 @@ function main {
   set_runtime_config_variable ${config_name} PGSQL_USERNAME
   set_runtime_config_variable ${config_name} PGSQL_PASSWORD
   set_runtime_config_variable ${config_name} FRONTEND_BASE_URL
+  set_runtime_config_variable ${config_name} SHORT_LINK_SCHEME
 }
 
 
