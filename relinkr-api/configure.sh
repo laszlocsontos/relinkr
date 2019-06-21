@@ -30,13 +30,27 @@ readonly E_NO_ACCOUNT=3
 readonly E_NO_PROJECT=4
 readonly E_NO_CONNECTION_NAME=5
 readonly E_DB_ERROR=6
+readonly E_NO_ENV_FILE=7
+
+
+function check_env {
+  local profile=$1
+  declare -g local_env=".env.${profile}.local"
+  if [[ ! -f ${local_env} ]]; then
+    echo "Create a ${local_env} file Luke!"
+    exit ${E_NO_ENV_FILE}
+  fi
+
+  source ${local_env}
+}
 
 
 function check_required {
   local name=$1
   local value=${!name}
+  local env=$2
   if [[ -z "${value}" ]]; then
-    echo "Set ${name} Luke!"
+    echo "Set ${name} in ${env} Luke!"
     exit ${E_NO_ENV_VAR}
   fi
 }
@@ -152,17 +166,21 @@ function main {
     exit ${E_NO_PROFILE}
   fi
 
+  # Checks if .env.<profile>.local exists
+  check_env ${profile}
+  source ${local_env}
+
   # Check OAuth2 configuration vars
-  check_required OAUTH2_GOOGLE_CLIENT_ID
-  check_required OAUTH2_GOOGLE_CLIENT_SECRET
-  check_required OAUTH2_FACEBOOK_CLIENT_ID
-  check_required OAUTH2_FACEBOOK_CLIENT_SECRET
+  check_required OAUTH2_GOOGLE_CLIENT_ID ${local_env}
+  check_required OAUTH2_GOOGLE_CLIENT_SECRET ${local_env}
+  check_required OAUTH2_FACEBOOK_CLIENT_ID ${local_env}
+  check_required OAUTH2_FACEBOOK_CLIENT_SECRET ${local_env}
 
   # Front-end URL is required
-  check_required FRONTEND_BASE_URL
+  check_required FRONTEND_BASE_URL ${local_env}
 
   # Links' short domain is required
-  check_required SHORT_LINK_DOMAIN
+  check_required SHORT_LINK_DOMAIN ${local_env}
 
   # Check if a short link scheme was given, otherwise set a default
   if [[ -z "${SHORT_LINK_SCHEME}" ]]; then
@@ -180,7 +198,7 @@ function main {
   fi
 
   # Check if a DB user password was given
-  check_required PGSQL_PASSWORD
+  check_required PGSQL_PASSWORD ${local_env}
 
   # Check if JWT keys were given; generate new key pair otherwise
   if [[ -z "${JWT_PRIVATE_KEY}" ]]; then

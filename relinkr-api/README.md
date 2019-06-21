@@ -12,34 +12,52 @@
 
 2. Generate RSA key pair for signing JWT authentication tokens
 ```
-% openssl genrsa -out privatekey.pem 2048
+% openssl genrsa -out /tmp/privatekey.pem 2048
 ```
 
-3. Set required environment variables
-```
-% export JWT_PRIVATE_KEY=$(openssl pkcs8 -topk8 -nocrypt -in privatekey.pem -outform der | base64 -w0)
-% export JWT_PUBLIC_KEY=$(openssl rsa -in privatekey.pem -outform der -pubout | base64 -w0)
-% export COOKIE_VISITOR_SECRET_KEY=$(openssl rand -base64 32)
-% export COOKIE_OAUTH2_REQUEST_SECRET_KEY=$(openssl rand -base64 32)
-```
-
-4. Obtain OAuth 2.0 credentials from the [Google API Console](https://console.developers.google.com/apis/credentials).
-
-Obtain client ID and client secret and set the following environment variables accordingly.
+3. Create a file `.env.development.local` with the following content
 
 ```
-% export OAUTH2_GOOGLE_CLIENT_ID=...
-% export OAUTH2_GOOGLE_CLIENT_SECRET=...
+JWT_PRIVATE_KEY=
+JWT_PUBLIC_KEY=
+
+COOKIE_VISITOR_SECRET_KEY=
+COOKIE_OAUTH2_REQUEST_SECRET_KEY=
+
+OAUTH2_GOOGLE_CLIENT_ID=
+OAUTH2_GOOGLE_CLIENT_SECRET=
+
+OAUTH2_FACEBOOK_CLIENT_ID=
+OAUTH2_FACEBOOK_CLIENT_SECRET=
 ```
 
-5. Obtain OAuth 2.0 credentials from the [Facebook for Developers](https://developers.facebook.com/apps/).
+4. Set required environment variables
 
-Obtain client ID and client secret and set the following environment variables accordingly.
+- Set the value of `JWT_PRIVATE_KEY` with the following command.
 
 ```
-% export OAUTH2_FACEBOOK_CLIENT_ID=...
-% export OAUTH2_FACEBOOK_CLIENT_SECRET=...
+% openssl pkcs8 -topk8 -nocrypt -in privatekey.pem -outform der | base64 -w0
 ```
+
+- Set the value of `JWT_PUBLIC_KEY` with the following command.
+
+```
+% openssl rsa -in privatekey.pem -outform der -pubout | base64 -w0
+```
+
+- Set the value of `COOKIE_VISITOR_SECRET_KEY` and `COOKIE_OAUTH2_REQUEST_SECRET_KEY` with the following command.
+
+```
+% openssl rand -base64 32
+```
+
+5. Obtain OAuth 2.0 credentials from the [Google API Console](https://console.developers.google.com/apis/credentials).
+
+Obtain client ID and client secret and set variables `OAUTH2_GOOGLE_CLIENT_ID` and `OAUTH2_GOOGLE_CLIENT_SECRET` accordingly.
+
+6. Obtain OAuth 2.0 credentials from the [Facebook for Developers](https://developers.facebook.com/apps/).
+
+Obtain client ID and client secret and set variables `OAUTH2_FACEBOOK_CLIENT_ID` and `OAUTH2_FACEBOOK_CLIENT_SECRET` accordingly.
 
 ### Customize configuration
 
@@ -61,8 +79,29 @@ See [application.yml](src/main/resources/application.yml).
 
 ### Automated configuration
 
-Create the database instance, runtime configuration variables for integration testing is automated
+Creating the database instance, runtime configuration variables for integration testing is automated
 with `configure.sh <profile>`. If you rather prefer to do it manually, refer to next section.
+
+1. Create a file `.env.integration.local` with the following content and configure the environment
+variables accordingly. 
+
+```
+OAUTH2_GOOGLE_CLIENT_ID=
+OAUTH2_GOOGLE_CLIENT_SECRET=
+
+OAUTH2_FACEBOOK_CLIENT_ID=
+OAUTH2_FACEBOOK_CLIENT_SECRET=
+
+PGSQL_PASSWORD=
+
+FRONTEND_BASE_URL=https://localhost:9443
+SHORT_LINK_DOMAIN=localhost
+```
+
+_Note: the integration test doesn't use actually `FRONTEND_BASE_URL` and `SHORT_LINK_DOMAIN`,
+it's safe to leave them on defaults._ 
+
+2. Configure `integration` environment
 
 ```
 % ./configure.sh integration
@@ -80,13 +119,13 @@ with `configure.sh <profile>`. If you rather prefer to do it manually, refer to 
 2. Create a PostgreSQL database for the integration tests
 
 ```
-gcloud sql databases create relinkr-integration --instance relinkr-db
+gcloud sql databases create relinkr_api_integration --instance relinkr-db
 ```
 
 3. Set GCP database properties
 
 ```
-% export GCP_SQL_DB=relinkr-integration
+% export GCP_SQL_DB=relinkr_api_integration
 % export GCP_SQL_CONNECTION=$(gcloud sql instances describe relinkr-db --format 'value(connectionName)')
 ```
 
@@ -121,6 +160,9 @@ _Note: use that password you picked at instance creation time._
 % gcloud beta runtime-config configs variables set GCP_SQL_CONNECTION "${GCP_SQL_CONNECTION}" --config-name relinkr_api_integration
 % gcloud beta runtime-config configs variables set PGSQL_USERNAME "${PGSQL_USERNAME}" --config-name relinkr_api_integration
 % gcloud beta runtime-config configs variables set PGSQL_PASSWORD "${PGSQL_PASSWORD}" --config-name relinkr_api_integration
+% gcloud beta runtime-config configs variables set FRONTEND_BASE_URL "${FRONTEND_BASE_URL}" --config-name relinkr_api_integration
+% gcloud beta runtime-config configs variables set SHORT_LINK_SCHEME "${SHORT_LINK_SCHEME}" --config-name relinkr_api_integration
+% gcloud beta runtime-config configs variables set SHORT_LINK_DOMAIN "${SHORT_LINK_DOMAIN}" --config-name relinkr_api_integration
 ```
 
 ### Run the integration tests
@@ -133,6 +175,25 @@ _Note: use that password you picked at instance creation time._
 
 There are Maven two profiles setup for deploying to GCP `staging` and `production`. In this last section
 steps will refer to a `staging` deployment.
+
+1. Create a file `.env.staging.local` with the following content and configure the environment
+variables accordingly. 
+
+```
+OAUTH2_GOOGLE_CLIENT_ID=
+OAUTH2_GOOGLE_CLIENT_SECRET=
+
+OAUTH2_FACEBOOK_CLIENT_ID=
+OAUTH2_FACEBOOK_CLIENT_SECRET=
+
+PGSQL_PASSWORD=
+
+FRONTEND_BASE_URL=
+SHORT_LINK_DOMAIN=
+```
+
+_Note: now you need to set valid values for both `FRONTEND_BASE_URL` and `SHORT_LINK_DOMAIN`._
+
 
 1. Configure `staging` environment
 
