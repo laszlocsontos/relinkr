@@ -157,6 +157,9 @@ function main {
   check_required OAUTH2_FACEBOOK_CLIENT_ID
   check_required OAUTH2_FACEBOOK_CLIENT_SECRET
 
+  # Front-end URL is required
+  check_required FRONTEND_BASE_URL
+
   # Check if a DB name was given, otherwise set a default
   if [[ -z "${GCP_SQL_DB}" ]]; then
     GCP_SQL_DB="${APP_NAME}_${profile}"
@@ -225,6 +228,7 @@ function main {
   set_runtime_config_variable ${config_name} GCP_SQL_CONNECTION
   set_runtime_config_variable ${config_name} PGSQL_USERNAME
   set_runtime_config_variable ${config_name} PGSQL_PASSWORD
+  set_runtime_config_variable ${config_name} FRONTEND_BASE_URL
 }
 
 
