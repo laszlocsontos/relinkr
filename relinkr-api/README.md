@@ -65,7 +65,7 @@ Create the database instance, runtime configuration variables for integration te
 with `configure.sh <profile>`. If you rather prefer to do it manually, refer to next section.
 
 ```
-% ./configure integration
+% ./configure.sh integration
 ```
 
 ### Manual configuration
@@ -137,7 +137,7 @@ steps will refer to a `staging` deployment.
 1. Configure `staging` environment
 
 ```
-% ./configure staging
+% ./configure.sh staging
 ```
 
 2. Package the application before deployment
