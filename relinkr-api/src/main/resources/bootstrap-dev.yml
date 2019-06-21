@@ -2,5 +2,5 @@
 spring:
   cloud:
     gcp:
-      sql:
+      config:
         enabled: false
