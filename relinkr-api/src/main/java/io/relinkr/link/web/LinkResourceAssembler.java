@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.hateoas.mvc.IdentifiableResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
@@ -98,7 +99,8 @@ public class LinkResourceAssembler
   }
 
   Optional<String> getShortLinkDomain() {
-    return Optional.ofNullable(environment.getProperty(SHORT_LINK_DOMAIN));
+    return Optional.ofNullable(environment.getProperty(SHORT_LINK_DOMAIN))
+        .filter(StringUtils::hasText);
   }
 
 }

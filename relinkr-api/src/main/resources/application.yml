@@ -64,4 +64,4 @@ relinkr:
     login-url: ${relinkr.frontend.base-url}/login
   short-link:
     scheme: ${SHORT_LINK_SCHEME:https}
-    domain: ${SHORT_LINK_SCHEME:rln.kr}
+    domain: ${SHORT_LINK_DOMAIN:}

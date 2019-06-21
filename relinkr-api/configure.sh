@@ -161,6 +161,9 @@ function main {
   # Front-end URL is required
   check_required FRONTEND_BASE_URL
 
+  # Links' short domain is required
+  check_required SHORT_LINK_DOMAIN
+
   # Check if a short link scheme was given, otherwise set a default
   if [[ -z "${SHORT_LINK_SCHEME}" ]]; then
     SHORT_LINK_SCHEME=${DEFAULT_SHORT_LINK_SCHEME}
@@ -235,6 +238,7 @@ function main {
   set_runtime_config_variable ${config_name} PGSQL_PASSWORD
   set_runtime_config_variable ${config_name} FRONTEND_BASE_URL
   set_runtime_config_variable ${config_name} SHORT_LINK_SCHEME
+  set_runtime_config_variable ${config_name} SHORT_LINK_DOMAIN
 }
 
 
