@@ -54,7 +54,7 @@ See [application.yml](src/main/resources/application.yml).
 
 ### Run API locally
 ```
-./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+./mvnw spring-boot:run -Dspring-boot.run.profiles=development
 ```
 
 ## Integration testing
@@ -65,7 +65,7 @@ Create the database instance, runtime configuration variables for integration te
 with `configure.sh <profile>`. If you rather prefer to do it manually, refer to next section.
 
 ```
-% ./configure it
+% ./configure integration
 ```
 
 ### Manual configuration
@@ -80,13 +80,13 @@ with `configure.sh <profile>`. If you rather prefer to do it manually, refer to 
 2. Create a PostgreSQL database for the integration tests
 
 ```
-gcloud sql databases create relinkr-it --instance relinkr-db
+gcloud sql databases create relinkr-integration --instance relinkr-db
 ```
 
 3. Set GCP database properties
 
 ```
-% export GCP_SQL_DB=relinkr-it
+% export GCP_SQL_DB=relinkr-integration
 % export GCP_SQL_CONNECTION=$(gcloud sql instances describe relinkr-db --format 'value(connectionName)')
 ```
 
@@ -105,45 +105,45 @@ _Note: use that password you picked at instance creation time._
 
 ```
 % gcloud services enable runtimeconfig.googleapis.com
-% gcloud beta runtime-config configs create relinkr_api_it
+% gcloud beta runtime-config configs create relinkr_api_integration
 ```
 
 7. Set variables to GCP Runtime Configuration
 
 ```
-% gcloud beta runtime-config configs variables set JWT_PRIVATE_KEY "${JWT_PRIVATE_KEY}" --config-name relinkr_api_it
-% gcloud beta runtime-config configs variables set JWT_PUBLIC_KEY "${JWT_PUBLIC_KEY}" --config-name relinkr_api_it
-% gcloud beta runtime-config configs variables set COOKIE_VISITOR_SECRET_KEY "${COOKIE_VISITOR_SECRET_KEY}" --config-name relinkr_api_it
-% gcloud beta runtime-config configs variables set COOKIE_OAUTH2_REQUEST_SECRET_KEY "${COOKIE_OAUTH2_REQUEST_SECRET_KEY}" --config-name relinkr_api_it
-% gcloud beta runtime-config configs variables set OAUTH2_GOOGLE_CLIENT_ID "${OAUTH2_GOOGLE_CLIENT_ID}" --config-name relinkr_api_it
-% gcloud beta runtime-config configs variables set OAUTH2_GOOGLE_CLIENT_SECRET "${OAUTH2_GOOGLE_CLIENT_SECRET}" --config-name relinkr_api_it
-% gcloud beta runtime-config configs variables set GCP_SQL_DB "${GCP_SQL_DB}" --config-name relinkr_api_it
-% gcloud beta runtime-config configs variables set GCP_SQL_CONNECTION "${GCP_SQL_CONNECTION}" --config-name relinkr_api_it
-% gcloud beta runtime-config configs variables set PGSQL_USERNAME "${PGSQL_USERNAME}" --config-name relinkr_api_it
-% gcloud beta runtime-config configs variables set PGSQL_PASSWORD "${PGSQL_PASSWORD}" --config-name relinkr_api_it
+% gcloud beta runtime-config configs variables set JWT_PRIVATE_KEY "${JWT_PRIVATE_KEY}" --config-name relinkr_api_integration
+% gcloud beta runtime-config configs variables set JWT_PUBLIC_KEY "${JWT_PUBLIC_KEY}" --config-name relinkr_api_integration
+% gcloud beta runtime-config configs variables set COOKIE_VISITOR_SECRET_KEY "${COOKIE_VISITOR_SECRET_KEY}" --config-name relinkr_api_integration
+% gcloud beta runtime-config configs variables set COOKIE_OAUTH2_REQUEST_SECRET_KEY "${COOKIE_OAUTH2_REQUEST_SECRET_KEY}" --config-name relinkr_api_integration
+% gcloud beta runtime-config configs variables set OAUTH2_GOOGLE_CLIENT_ID "${OAUTH2_GOOGLE_CLIENT_ID}" --config-name relinkr_api_integration
+% gcloud beta runtime-config configs variables set OAUTH2_GOOGLE_CLIENT_SECRET "${OAUTH2_GOOGLE_CLIENT_SECRET}" --config-name relinkr_api_integration
+% gcloud beta runtime-config configs variables set GCP_SQL_DB "${GCP_SQL_DB}" --config-name relinkr_api_integration
+% gcloud beta runtime-config configs variables set GCP_SQL_CONNECTION "${GCP_SQL_CONNECTION}" --config-name relinkr_api_integration
+% gcloud beta runtime-config configs variables set PGSQL_USERNAME "${PGSQL_USERNAME}" --config-name relinkr_api_integration
+% gcloud beta runtime-config configs variables set PGSQL_PASSWORD "${PGSQL_PASSWORD}" --config-name relinkr_api_integration
 ```
 
 ### Run the integration tests
 
 ```
-% ./mvnw integration-test verify -P integration-test
+% ./mvnw integration-test verify -P integration
 ```
 
 ## GCP Deployment
 
-There are Maven two profiles setup for deploying to GCP `test` and `prod`. In this last section
-steps will refer to a `test` deployment.
+There are Maven two profiles setup for deploying to GCP `staging` and `production`. In this last section
+steps will refer to a `staging` deployment.
 
-1. Configure `test` environment
+1. Configure `staging` environment
 
 ```
-% ./configure test
+% ./configure staging
 ```
 
 2. Package the application before deployment
 
 ```
-% ./mvnw package appengine:stage -P test
+% ./mvnw package appengine:stage -P staging
 ```
 
 _Note: This step requires environment setup for integration tests. Should you have skipped that,
