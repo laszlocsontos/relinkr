@@ -13,10 +13,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
- 
+
 import Vue from 'vue';
 import Router from 'vue-router';
 
+import {UI_BASE_PATH} from './config'
 import store from './store';
 
 import Login from '@/views/Login.vue';
@@ -28,7 +29,7 @@ Vue.use(Router);
 
 const router = new Router({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: UI_BASE_PATH,
   routes: [
     {
       path: '*',

@@ -17,9 +17,11 @@
 /* eslint-disable */
 
 const API_BASE_URL = process.env.VUE_APP_API_BASE_URL;
+const UI_BASE_PATH = process.env.VUE_APP_UI_BASE_PATH;
 const OAUTH2_INIT_ENDPOINT = process.env.VUE_APP_OAUTH2_INIT_ENDPOINT;
 
 export {
   API_BASE_URL,
+  UI_BASE_PATH,
   OAUTH2_INIT_ENDPOINT
 }
