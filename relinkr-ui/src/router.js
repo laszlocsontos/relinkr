@@ -44,19 +44,19 @@ const router = new Router({
       path: '/dashboard',
       name: 'dashboard',
       component: Dashboard,
-      meta: { requiresAuth: true }
+      meta: {requiresAuth: true}
     },
     {
       path: '/links',
       name: 'links',
       component: Links,
-      meta: { requiresAuth: true }
+      meta: {requiresAuth: true}
     },
     {
       path: '/stats',
       name: 'stats',
       component: Stats,
-      meta: { requiresAuth: true }
+      meta: {requiresAuth: true}
     }
   ]
 });
@@ -65,7 +65,7 @@ router.beforeEach((to, from, next) => {
   // This route requires auth, check if logged in otherwise redirect to login page.
   if (to.meta.requiresAuth) {
     if (!store.getters['auth/isLoggedIn']) {
-      next({ path: '/login' });
+      next({path: '/login'});
     } else {
       next();
     }
