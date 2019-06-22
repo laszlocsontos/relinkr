@@ -1,3 +1,6 @@
+server:
+  use-forward-headers: true
+
 spring:
   application:
     name: relinkr-api

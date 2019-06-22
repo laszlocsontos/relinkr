@@ -5,6 +5,7 @@ server:
     key-store-password: mypassword
     key-store-type: PKCS12
     key-alias: tomcat
+  use-forward-headers: false
 
 spring:
   datasource:
