@@ -52,5 +52,6 @@ module.exports = {
     https: true,
     hot: true,
     hotOnly: true
-  }
+  },
+  publicPath: ''
 };
