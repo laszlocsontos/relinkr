@@ -1,8 +1,32 @@
 {
-    "datasets": [{
-      "label": "# of links",
-      "data": [1, 2, 3, 2, 4, 2, 6]
-    }],
-    "labels": ["2018-03-06", "2018-03-07", "2018-03-08", "2018-03-09", "2018-03-10",
-    "2018-03-11", "2018-03-12"]
+   "_embedded":{
+      "data": [
+         { "date": "2018-03-06", "value": 1 },
+         { "date": "2018-03-07", "value": 2 },
+         { "date": "2018-03-08", "value": 3 },
+         { "date": "2018-03-09", "value": 2 },
+         { "date": "2018-03-10", "value": 4 },
+         { "date": "2018-03-11", "value": 2 },
+         { "date": "2018-03-12", "value": 6 }
+     ]
+   },
+   "_links":{
+      "self":{
+         "href":"http://localhost/v1/links/stats?startDate=2018-03-06&endDate=2018-03-12"
+      },
+      "today":{
+         "href":"http://localhost/v1/links/stats?startDate=2019-06-03&endDate=2019-06-03"
+      },
+      "yesterday":{
+         "href":"http://localhost/v1/links/stats?startDate=2019-06-02&endDate=2019-06-02"
+      },
+      "last7days":{
+         "href":"http://localhost/v1/links/stats?startDate=2019-05-27&endDate=2019-06-02"
+      }
+   },
+   "timespan":{
+      "name": "custom",
+      "startDate": "2018-03-06",
+      "endDate": "2018-03-12"
+   }
 }

@@ -63,7 +63,7 @@ const mutations = {
     state.userLinkStatuses = _.reduce(
         _.map(links, link => {
           let hrefs =
-              _.defaultTo(_.get(link, "_links.userLinkStatuses.href"), []);
+              _.defaultTo(_.get(link, '_links.userLinkStatuses.href'), []);
 
           if (!_.isArray(hrefs)) {
             hrefs = [hrefs];
@@ -80,7 +80,23 @@ const mutations = {
     );
   },
   setStats(state, {statType, data}) {
-    state[`_${statType}Stats`] = data;
+    const embeddedData = _.defaultTo(_.get(data, '_embedded.data'), []);
+    const dataArray = [];
+    const labelsArray = [];
+    let labelName = statType === 'visitors' ? 'category' : 'date';
+
+    for(const element of embeddedData) {
+      dataArray.push(element['value']);
+      labelsArray.push(element[labelName]);
+    }
+
+    state[`_${statType}Stats`] = {
+      datasets: [{
+        label: `# of ${statType}`,
+        data: dataArray
+      }],
+      labels: labelsArray
+    };
   }
 };
 
