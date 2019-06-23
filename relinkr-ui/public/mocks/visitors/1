@@ -1,9 +1,27 @@
 {
-    "datasets": [{
-      "data": [10, 30]
-    }],
-    "labels": [
-      "New",
-      "Returning"
-    ]
+   "_embedded":{
+      "data": [
+         { "category": "New", "value": 10 },
+         { "category": "Returning", "value": 30 }
+     ]
+   },
+   "_links":{
+      "self":{
+         "href":"http://localhost/v1/visitors/stats?startDate=2018-03-06&endDate=2018-03-12"
+      },
+      "today":{
+         "href":"http://localhost/v1/visitors/stats?startDate=2019-06-03&endDate=2019-06-03"
+      },
+      "yesterday":{
+         "href":"http://localhost/v1/visitors/stats?startDate=2019-06-02&endDate=2019-06-02"
+      },
+      "last7days":{
+         "href":"http://localhost/v1/visitors/stats?startDate=2019-05-27&endDate=2019-06-02"
+      }
+   },
+   "timespan":{
+      "name": "custom",
+      "startDate": "2018-03-06",
+      "endDate": "2018-03-12"
+   }
 }
