@@ -105,9 +105,8 @@
   import LineChart from '@/components/LineChart.js';
   import PageTemplate from '@/components/PageTemplate.vue';
 
-import _ from 'lodash';
 import { mapActions } from 'vuex';
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 
   export default {
     name: 'home',
@@ -120,19 +119,7 @@ import { mapState } from 'vuex';
       this.fetchStats('visitors');
     },
     computed: {
-      linksStats() {
-        // Pass a copy of the state to prevent "vuex store state modified outside mutation
-        // handlers" error, the Chart modifies this data if there are multiple charts
-        return _.cloneDeep(this._linksStats);
-      },
-      clicksStats() {
-        return _.cloneDeep(this._clicksStats);
-      },
-      visitorsStats() {
-        return _.cloneDeep(this._visitorsStats);
-      },
-      ...mapState('link', {_linksStats: 'linksStats', _clicksStats: 'clicksStats',
-        _visitorsStats: 'visitorsStats'})
+      ...mapGetters('link', ['linksStats', 'clicksStats', 'visitorsStats'])
     },
     methods: {
       ...mapActions('link', ['fetchStats'])
