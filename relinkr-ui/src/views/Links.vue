@@ -197,7 +197,8 @@
       }
     },
     computed: {
-      ...mapGetters('link', ['totalRows', 'perPage', 'hasNextStatus']),
+      ...mapGetters('link', {totalRows: 'getTotalRows', perPage: 'getPageSize'}),
+      ...mapGetters('link', ['hasNextStatus']),
       rows() {
         return this.items.length;
       }
