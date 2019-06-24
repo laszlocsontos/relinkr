@@ -119,7 +119,8 @@ import { mapGetters } from 'vuex';
       this.fetchStats('visitors');
     },
     computed: {
-      ...mapGetters('link', ['linksStats', 'clicksStats', 'visitorsStats'])
+      ...mapGetters('link', {linksStats: 'getLinksStats', clicksStats: 'getClicksStats',
+        visitorsStats: 'getVisitorsStats'})
     },
     methods: {
       ...mapActions('link', ['fetchStats'])

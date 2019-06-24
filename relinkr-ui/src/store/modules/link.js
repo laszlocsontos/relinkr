@@ -37,17 +37,17 @@ const state = {
 };
 
 const getters = {
-  totalRows: state => (state.page.totalElements),
-  perPage: () => PAGE_SIZE,
+  getTotalRows: state => (state.page.totalElements),
+  getPageSize: () => PAGE_SIZE,
   hasNextStatus: state => (id, nextStatus) => {
     const paths = state.userLinkStatuses[id];
     return _.some(paths, (path) => _.endsWith(path, nextStatus));
   },
   // Pass a copy of the state to prevent "vuex store state modified outside mutation
   // handlers" error, the Chart modifies this data if there are multiple charts on the page
-  linksStats: () => _.cloneDeep(state._linksStats),
-  clicksStats: () => _.cloneDeep(state._clicksStats),
-  visitorsStats: () => _.cloneDeep(state._visitorsStats)
+  getLinksStats: () => _.cloneDeep(state._linksStats),
+  getClicksStats: () => _.cloneDeep(state._clicksStats),
+  getVisitorsStats: () => _.cloneDeep(state._visitorsStats)
 };
 
 const mutations = {
