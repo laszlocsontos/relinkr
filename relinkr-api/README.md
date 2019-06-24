@@ -190,9 +190,11 @@ PGSQL_PASSWORD=
 
 FRONTEND_BASE_URL=
 SHORT_LINK_DOMAIN=
+COOKIE_AUTH_TOKEN_DOMAIN=
 ```
 
-_Note: now you need to set valid values for both `FRONTEND_BASE_URL` and `SHORT_LINK_DOMAIN`._
+_Note: now you need to set valid values for both `FRONTEND_BASE_URL` and `SHORT_LINK_DOMAIN`. Set
+`COOKIE_AUTH_TOKEN_DOMAIN` only in that case when you plan to use a custom domain._
 
 
 1. Configure `staging` environment

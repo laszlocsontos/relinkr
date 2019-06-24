@@ -154,8 +154,12 @@ function set_runtime_config_variable {
   local config_name=$1
   local var_name=$2
   local var_value=${!var_name}
-  echo "Setting ${var_name} for runtime config ${config_name}..."
-  gcloud beta runtime-config configs variables set ${var_name} "${var_value}" --config-name ${config_name}
+  if [[ -n "${var_value}" ]]; then
+    echo "Setting ${var_name} for runtime config ${config_name}..."
+    gcloud beta runtime-config configs variables set ${var_name} "${var_value}" --config-name ${config_name}
+  else
+    echo "Skipping ${var_name} for runtime config ${config_name}, as it's got an empty value."
+  fi
 }
 
 
@@ -257,6 +261,7 @@ function main {
   set_runtime_config_variable ${config_name} FRONTEND_BASE_URL
   set_runtime_config_variable ${config_name} SHORT_LINK_SCHEME
   set_runtime_config_variable ${config_name} SHORT_LINK_DOMAIN
+  set_runtime_config_variable ${config_name} COOKIE_AUTH_TOKEN_DOMAIN
 }
 
 
