@@ -45,4 +45,8 @@ nbdist/
 ### Log Files ###
 *.log
 
+### Firebase ###
+.firebaserc
+.firebase
+
 privatekey.pem
