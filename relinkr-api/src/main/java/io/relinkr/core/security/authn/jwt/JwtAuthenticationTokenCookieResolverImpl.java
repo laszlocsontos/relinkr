@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -41,18 +42,23 @@ import org.springframework.util.StringUtils;
 public class JwtAuthenticationTokenCookieResolverImpl
     implements JwtAuthenticationTokenCookieResolver {
 
+  static final String AUTH_TOKEN_DOMAIN_PROPERTY =
+      "relinkr.cookie.auth-token-domain";
+
   private static final String DELIMITER = ".";
 
   private final CookieValueResolver<String> tokenPayloadResolver;
   private final CookieValueResolver<String> tokenSignatureResolver;
 
-  JwtAuthenticationTokenCookieResolverImpl() {
+  JwtAuthenticationTokenCookieResolverImpl(Environment environment) {
+    String authTokenDomain = environment.getProperty(AUTH_TOKEN_DOMAIN_PROPERTY);
+
     tokenPayloadResolver = TokenPartValueResolver.with(
-        new CookieManager(TOKEN_PAYLOAD_COOKIE_NAME, null, false)
+        new CookieManager(TOKEN_PAYLOAD_COOKIE_NAME, authTokenDomain, null, false)
     );
 
     tokenSignatureResolver = TokenPartValueResolver.with(
-        new CookieManager(TOKEN_SIGNATURE_COOKIE_NAME, null, true)
+        new CookieManager(TOKEN_SIGNATURE_COOKIE_NAME, authTokenDomain, null, true)
     );
   }
 

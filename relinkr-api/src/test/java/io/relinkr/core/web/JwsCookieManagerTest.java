@@ -23,10 +23,17 @@ import java.time.Duration;
 public class JwsCookieManagerTest extends AbstractCookieManagerTest {
 
   @Override
-  CookieManager createCookieManager(String cookieName, Duration cookieMaxAgeDuration) {
+  CookieManager createCookieManager(
+      String cookieName, String cookieDomain, Duration cookieMaxAgeDuration) {
+
     return new JwsCookieManager(
         cookieName, cookieMaxAgeDuration, true, JWS_VISITOR_COOKIE_SECRET_KEY
     );
+  }
+
+  @Override
+  String getCookieDomain() {
+    return null;
   }
 
 }

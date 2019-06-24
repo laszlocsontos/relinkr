@@ -37,6 +37,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.env.Environment;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -79,8 +80,10 @@ public class JwtConfig {
   }
 
   @Bean
-  public JwtAuthenticationTokenCookieResolver jwtAuthenticationTokenCookieResolver() {
-    return new JwtAuthenticationTokenCookieResolverImpl();
+  public JwtAuthenticationTokenCookieResolver jwtAuthenticationTokenCookieResolver(
+      Environment environment) {
+
+    return new JwtAuthenticationTokenCookieResolverImpl(environment);
   }
 
   @Data
