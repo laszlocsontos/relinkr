@@ -52,6 +52,7 @@ spring:
 relinkr:
   # openssl rand -base64 32
   cookie:
+    auth-token-domain: ${COOKIE_AUTH_TOKEN_DOMAIN:}
     visitor-secret-key: ${COOKIE_VISITOR_SECRET_KEY}
     oauth2-request-secret-key: ${COOKIE_OAUTH2_REQUEST_SECRET_KEY}
   # openssl genrsa -out privatekey.pem 2048
