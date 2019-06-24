@@ -56,6 +56,30 @@ public class CookieManager extends CookieGenerator {
   }
 
   /**
+   * Creates a new {@code CookieManager} with the following properties
+   *
+   * @param cookieName Cookie name
+   * @param cookieDomain Cookie's domain
+   * @param cookieMaxAgeDuration Cookies max age, if null expires immediately
+   * @param httpOnly Whether or not this is a
+   * <a href="https://www.owasp.org/index.php/HttpOnly">HTTPOnly</a> cookie
+   */
+  public CookieManager(
+      String cookieName, String cookieDomain, Duration cookieMaxAgeDuration, boolean httpOnly) {
+
+    Assert.hasText(cookieName, "cookieName cannot be empty");
+    setCookieName(cookieName);
+
+    Optional.ofNullable(cookieDomain)
+        .filter(StringUtils::hasText)
+        .ifPresent(this::setCookieDomain);
+
+    setCookieMaxAge(cookieMaxAgeDuration);
+    setCookieHttpOnly(httpOnly);
+    setCookieSecure(true);
+  }
+
+  /**
    * Returns the cookie's value from the given {@link HttpServletRequest}.
    *
    * @param request An {@code HttpServletRequest}

@@ -20,9 +20,18 @@ import java.time.Duration;
 
 public class CookieManagerTest extends AbstractCookieManagerTest {
 
+  private static final String COOKIE_DOMAIN = "test.com";
+
   @Override
-  CookieManager createCookieManager(String cookieName, Duration cookieMaxAgeDuration) {
-    return new CookieManager(cookieName, cookieMaxAgeDuration, true);
+  CookieManager createCookieManager(
+      String cookieName, String cookieDomain, Duration cookieMaxAgeDuration) {
+
+    return new CookieManager(cookieName, cookieDomain, cookieMaxAgeDuration, true);
+  }
+
+  @Override
+  String getCookieDomain() {
+    return COOKIE_DOMAIN;
   }
 
 }

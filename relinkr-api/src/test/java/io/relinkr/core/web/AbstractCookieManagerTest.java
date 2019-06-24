@@ -52,18 +52,32 @@ public abstract class AbstractCookieManagerTest {
 
     };
 
-    cookieManager = createCookieManager(COOKIE_NAME, COOKIE_MAX_AGE);
+    cookieManager = createCookieManager(COOKIE_NAME, getCookieDomain(), COOKIE_MAX_AGE);
   }
 
   @Test
   public void givenCookieNameAndMaxAge_whenCreateCookieManager_thenCookieNameAndMaxAgeSet() {
-    assertCookie(COOKIE_NAME, COOKIE_MAX_AGE.getSeconds(), true, true, cookieManager);
+    assertCookie(
+        COOKIE_NAME,
+        getCookieDomain(),
+        COOKIE_MAX_AGE.getSeconds(),
+        true,
+        true,
+        cookieManager
+    );
   }
 
   @Test
   public void givenCookieNameAndNoMaxAge_whenCreateCookieManager_thenCookieNameAndMaxAgeSet() {
-    cookieManager = createCookieManager(COOKIE_NAME, null);
-    assertCookie(COOKIE_NAME, CookieManager.MAX_AGE_AUTO_EXPIRE, true, true, cookieManager);
+    cookieManager = createCookieManager(COOKIE_NAME, getCookieDomain(), null);
+    assertCookie(
+        COOKIE_NAME,
+        getCookieDomain(),
+        CookieManager.MAX_AGE_AUTO_EXPIRE,
+        true,
+        true,
+        cookieManager
+    );
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -84,16 +98,21 @@ public abstract class AbstractCookieManagerTest {
     assertFalse(cookieManager.getCookie(request).isPresent());
   }
 
-  abstract CookieManager createCookieManager(String cookieName, Duration cookieMaxAgeDuration);
+  abstract String getCookieDomain();
+
+  abstract CookieManager createCookieManager(
+      String cookieName, String cookieDomain, Duration cookieMaxAgeDuration);
 
   private void assertCookie(
       String expectedCookieName,
+      String expectedCookieDomain,
       long expectCookieMaxAge,
       boolean expectedHttpOnly,
       boolean expectedSecure,
       CookieManager cookieManager) {
 
     assertEquals(expectedCookieName, cookieManager.getCookieName());
+    assertEquals(expectedCookieDomain, cookieManager.getCookieDomain());
     assertEquals(expectCookieMaxAge, cookieManager.getCookieMaxAge().longValue());
     assertEquals(expectedHttpOnly, cookieManager.isCookieHttpOnly());
     assertEquals(expectedSecure, cookieManager.isCookieSecure());
