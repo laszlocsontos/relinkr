@@ -1,8 +1,8 @@
 {
    "_embedded":{
       "data": [
-         { "category": "New", "value": 10 },
-         { "category": "Returning", "value": 30 }
+         { "key": "New", "value": 10 },
+         { "key": "Returning", "value": 30 }
      ]
    },
    "_links":{
