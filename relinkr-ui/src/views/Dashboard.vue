@@ -41,7 +41,7 @@
             <b-card-body>
               <line-chart :chart-data="linksStats"></line-chart>
             </b-card-body>
-            <em slot="footer">Total Links: <strong>26</strong></em>
+            <em slot="footer">Total Links: <strong>{{linksCount}}</strong></em>
           </b-card>
           <b-card
               border-variant="primary"
@@ -65,7 +65,7 @@
             <b-card-body>
               <line-chart :chart-data="clicksStats"></line-chart>
             </b-card-body>
-            <em slot="footer">Total Clicks: <strong>259</strong></em>
+            <em slot="footer">Total Clicks: <strong>{{clicksCount}}</strong></em>
           </b-card>
           <b-card
               border-variant="primary"
@@ -89,7 +89,7 @@
             <b-card-body>
               <doughnut-chart :chart-data="visitorsStats"></doughnut-chart>
             </b-card-body>
-            <em slot="footer">Unique Visitors: <strong>50</strong></em>
+            <em slot="footer">Unique Visitors: <strong>{{visitorsCount}}</strong></em>
           </b-card>
         </b-card-group>
       </b-row>
@@ -107,6 +107,7 @@
 
 import { mapActions } from 'vuex';
 import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
   export default {
     name: 'home',
@@ -120,7 +121,8 @@ import { mapGetters } from 'vuex';
     },
     computed: {
       ...mapGetters('link', {linksStats: 'getLinksStats', clicksStats: 'getClicksStats',
-        visitorsStats: 'getVisitorsStats'})
+        visitorsStats: 'getVisitorsStats'}),
+      ...mapState('link', ['linksCount', 'clicksCount', 'visitorsCount'])
     },
     methods: {
       ...mapActions('link', ['fetchStats'])
