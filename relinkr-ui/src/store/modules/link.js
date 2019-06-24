@@ -83,11 +83,10 @@ const mutations = {
     const embeddedData = _.defaultTo(_.get(data, '_embedded.data'), []);
     const dataArray = [];
     const labelsArray = [];
-    let labelName = statType === 'visitors' ? 'category' : 'date';
 
     for(const element of embeddedData) {
-      dataArray.push(element['value']);
-      labelsArray.push(element[labelName]);
+      dataArray.push(element.value);
+      labelsArray.push(element.key);
     }
 
     state[`_${statType}Stats`] = {
