@@ -63,13 +63,33 @@ custom value to `.env.staging.local` or `.env.production.local`.
 % npm run build
 ```
 
-4. Upload front-end
+4. Authenticate with Firebase
 
-TODO
+```
+% firebase login
+```
 
-5. Setting up a custom domain.
+5. Create and add a project
 
-TODO
+Open the [Firebase Console](https://console.firebase.google.com) to create a project.
+
+_Note: Firebase projects are Google Cloud Platform projects that use Firebase services. This means
+that unique identifiers for a project (like Project ID) are shared across consoles._
+
+```
+% firebase use --add
+```
+
+6. Upload front-end
+
+```
+% firebase deploy
+```
+
+7. Setting up a custom domain.
+
+Refer to [Connect a custom domain](https://firebase.google.com/docs/hosting/custom-domain) on how to
+add a custom domain to your deployment if you have one.
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
