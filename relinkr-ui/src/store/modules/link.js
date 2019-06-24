@@ -28,6 +28,9 @@ const state = {
   _linksStats: {},
   _clicksStats: {},
   _visitorsStats: {},
+  linksCount: null, // do not display any number until the data is fetched
+  clicksCount: null,
+  visitorsCount: null,
   page: {
     size: 0,
     totalElements: 0,
@@ -84,11 +87,14 @@ const mutations = {
     const dataArray = [];
     const labelsArray = [];
 
+    let totalCount = 0;
     for(const element of embeddedData) {
       dataArray.push(element.value);
       labelsArray.push(element.key);
+      totalCount += element.value;
     }
 
+    state[`${statType}Count`] = totalCount;
     state[`_${statType}Stats`] = {
       datasets: [{
         label: `# of ${statType}`,
