@@ -19,6 +19,8 @@ package io.relinkr.core.security.authn.jwt;
 import static io.relinkr.core.security.authn.oauth2.PersistentOAuth2UserService.USER_ID_ATTRIBUTE;
 import static io.relinkr.core.security.authn.oauth2.PersistentOAuth2UserService.USER_PROFILE_TYPE_ATTRIBUTE;
 import static io.relinkr.test.Mocks.AUTHORITY_USER;
+import static io.relinkr.test.Mocks.FIXED_CLOCK;
+import static io.relinkr.test.Mocks.FIXED_INSTANT;
 import static io.relinkr.test.Mocks.JWT_TOKEN_EXPIRED;
 import static io.relinkr.test.Mocks.JWT_TOKEN_INVALID;
 import static io.relinkr.test.Mocks.JWT_TOKEN_VALID;
@@ -29,7 +31,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import io.relinkr.core.security.authn.jwt.JwtAuthenticationServiceTest.TestConfig;
 import io.relinkr.core.security.authn.user.UserAuthenticationToken.Details;
+import java.time.Clock;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +42,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
@@ -52,7 +59,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Slf4j
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
-@SpringBootTest(classes = JwtConfig.class)
+@SpringBootTest(classes = TestConfig.class)
 public class JwtAuthenticationServiceTest {
 
   @Autowired
@@ -81,6 +88,12 @@ public class JwtAuthenticationServiceTest {
     authentication = jwtAuthenticationService.parseJwtToken(jwtToken);
 
     assertEquals("53245345345345", authentication.getName());
+
+    assertEquals(
+        FIXED_INSTANT.getEpochSecond() + 60,
+        ((Details) authentication.getDetails()).getExpiresAt()
+    );
+
     assertThat(authentication.getAuthorities(), contains(AUTHORITY_USER));
   }
 
@@ -93,8 +106,14 @@ public class JwtAuthenticationServiceTest {
     authentication = jwtAuthenticationService.parseJwtToken(jwtToken);
 
     assertEquals("53245345345345", authentication.getName());
+
+    assertEquals(
+        FIXED_INSTANT.getEpochSecond() + 60,
+        ((Details) authentication.getDetails()).getExpiresAt()
+    );
+
     assertThat(authentication.getAuthorities(), contains(AUTHORITY_USER));
-    assertEquals(GOOGLE, ((Details)authentication.getDetails()).getUserProfileType());
+    assertEquals(GOOGLE, ((Details) authentication.getDetails()).getUserProfileType());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -108,7 +127,9 @@ public class JwtAuthenticationServiceTest {
   @Test
   public void givenValidToken_whenParseJwtToken_thenAuthenticated() {
     Authentication authentication = jwtAuthenticationService.parseJwtToken(JWT_TOKEN_VALID);
+
     assertEquals("53245345345345", authentication.getName());
+    assertEquals(130407537511L, ((Details) authentication.getDetails()).getExpiresAt());
     assertThat(authentication.getAuthorities(), contains(AUTHORITY_USER));
     assertTrue(authentication.isAuthenticated());
   }
@@ -148,6 +169,17 @@ public class JwtAuthenticationServiceTest {
         authorities,
         CommonOAuth2Provider.GOOGLE.name()
     );
+  }
+
+  @Configuration
+  @Import(JwtConfig.class)
+  static class TestConfig {
+
+    @Bean
+    Clock clock() {
+      return FIXED_CLOCK;
+    }
+
   }
 
 }

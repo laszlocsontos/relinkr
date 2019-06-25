@@ -27,10 +27,12 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.time.Clock;
 import java.util.Base64;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -72,8 +74,10 @@ public class JwtConfig {
   }
 
   @Bean
-  public JwtAuthenticationService jwtTokenService(JwtProperties jwtProperties) {
+  public JwtAuthenticationService jwtTokenService(
+      ObjectProvider<Clock> clock, JwtProperties jwtProperties) {
     return new JwtAuthenticationServiceImpl(
+        clock,
         jwtProperties.getPrivateKey(), jwtProperties.getPublicKey(),
         IdentityGenerator.getInstance()
     );

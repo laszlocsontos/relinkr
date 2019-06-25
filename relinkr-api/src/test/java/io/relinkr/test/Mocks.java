@@ -67,7 +67,7 @@ public final class Mocks {
 
   public static final EmailAddress EMAIL_ADDRESS = EmailAddress.of("test@test.com");
 
-  public static final Instant FIXED_INSTANT = ofEpochSecond(1553091772);
+  public static final Instant FIXED_INSTANT = ofEpochSecond(5553091772L);
   public static final LocalDateTime FIXED_TIMESTAMP = LocalDateTime.ofInstant(FIXED_INSTANT, UTC);
   public static final Clock FIXED_CLOCK = Clock.fixed(FIXED_INSTANT, UTC);
 

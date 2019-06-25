@@ -20,7 +20,6 @@ import static com.nimbusds.jose.JWSAlgorithm.RS256;
 import static io.relinkr.core.security.authn.oauth2.PersistentOAuth2UserService.USER_PROFILE_TYPE_ATTRIBUTE;
 import static io.relinkr.user.model.User.ROLE_PREFIX;
 import static io.relinkr.user.model.UserProfileType.NATIVE;
-import static java.lang.System.currentTimeMillis;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toSet;
 
@@ -39,6 +38,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
+import java.time.Clock;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.NonNull;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -66,6 +67,8 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
   private static final String CLAIM_AUTHORITIES = "_ath";
   private static final String CLAIM_USER_PROFILE_TYPE = "_upt";
 
+  private final Clock clock;
+
   private final JWSSigner signer;
   private final JWSVerifier verifier;
 
@@ -74,13 +77,16 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
   /**
    * Creates a new {@code JwtAuthenticationService}.
    *
+   * @param clock Clock (defaults to system's UTC clock)
    * @param privateKey RSA private key for signing JWT tokens
    * @param publicKey RSA public key for verifying JWT tokens' signature
    * @param identityGenerator ID generator for assigning unique IDs to tokens
    */
   public JwtAuthenticationServiceImpl(
+      ObjectProvider<Clock> clock,
       PrivateKey privateKey, PublicKey publicKey, IdentityGenerator identityGenerator) {
 
+    this.clock = clock.getIfAvailable(Clock::systemUTC);
     this.verifier = new RSASSAVerifier((RSAPublicKey) publicKey);
     this.signer = new RSASSASigner(privateKey);
     this.identityGenerator = identityGenerator;
@@ -91,11 +97,13 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
     Object principal = authentication.getPrincipal();
     Assert.notNull(principal, "Principal cannot be null");
 
+    long currentTimeMillis = clock.millis();
+
     JWTClaimsSet.Builder claimsSetBuilder = new JWTClaimsSet.Builder()
         .jwtID(String.valueOf(identityGenerator.generate()))
         .subject(authentication.getName())
-        .expirationTime(new Date(currentTimeMillis() + (long) minutes * 60 * 1000))
-        .issueTime(new Date());
+        .expirationTime(new Date(currentTimeMillis + (long) minutes * 60 * 1000))
+        .issueTime(new Date(currentTimeMillis));
 
     String authorities = authentication.getAuthorities()
         .stream()
@@ -159,7 +167,7 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
         .map(Date::toInstant)
         .orElseThrow(() -> new BadCredentialsException("Missing expiration date."));
 
-    Instant now = Instant.now();
+    Instant now = clock.instant();
     if (now.isAfter(expiration)) {
       throw new NonceExpiredException("Token has expired.");
     }
