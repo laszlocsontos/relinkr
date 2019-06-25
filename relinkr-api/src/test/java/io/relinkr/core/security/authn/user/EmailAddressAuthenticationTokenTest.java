@@ -15,7 +15,7 @@ public class EmailAddressAuthenticationTokenTest {
   private static final List<GrantedAuthority> AUTHORITIES = createAuthorityList("ROLE_USER");
 
   private final EmailAddressAuthenticationToken emailAddressAuthenticationToken =
-      EmailAddressAuthenticationToken.of(EMAIL_ADDRESS, AUTHORITIES);
+      EmailAddressAuthenticationToken.of(EMAIL_ADDRESS, 1L, AUTHORITIES);
 
   @Test
   public void shouldReturnEmailAddressAsPrincipal() {
@@ -30,6 +30,11 @@ public class EmailAddressAuthenticationTokenTest {
   @Test
   public void shouldReturnNullAsCredentials() {
     assertNull(emailAddressAuthenticationToken.getCredentials());
+  }
+
+  @Test
+  public void shouldReturnExpiresAtAsDetails() {
+    assertEquals(Long.valueOf(1), emailAddressAuthenticationToken.getDetails());
   }
 
   @Test

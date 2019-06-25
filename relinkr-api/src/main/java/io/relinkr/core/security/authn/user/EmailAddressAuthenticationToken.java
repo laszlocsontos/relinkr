@@ -29,22 +29,34 @@ import org.springframework.security.core.GrantedAuthority;
 public class EmailAddressAuthenticationToken extends AbstractAuthenticationToken {
 
   private final EmailAddress principal;
+  private final long expiresAt;
 
   private EmailAddressAuthenticationToken(
       EmailAddress principal,
+      long expiresAt,
       Collection<? extends GrantedAuthority> authorities) {
 
     super(authorities);
     setAuthenticated(true);
 
     this.principal = principal;
+    this.expiresAt = expiresAt;
   }
 
+  /**
+   * Creates a new {@code EmailAddressAuthenticationToken} based on the following data.
+   *
+   * @param principal User's email address
+   * @param expiresAt Seconds since the Epoch
+   * @param authorities User's authorities
+   * @return a {@code EmailAddressAuthenticationToken} instance
+   */
   public static EmailAddressAuthenticationToken of(
       @NonNull EmailAddress principal,
+      long expiresAt,
       Collection<? extends GrantedAuthority> authorities) {
 
-    return new EmailAddressAuthenticationToken(principal, authorities);
+    return new EmailAddressAuthenticationToken(principal, expiresAt, authorities);
   }
 
   @Override
@@ -55,6 +67,11 @@ public class EmailAddressAuthenticationToken extends AbstractAuthenticationToken
   @Override
   public EmailAddress getPrincipal() {
     return principal;
+  }
+
+  @Override
+  public Long getDetails() {
+    return expiresAt;
   }
 
   @Override

@@ -166,7 +166,7 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
             .map(it -> it.collect(toSet()))
             .orElse(emptySet());
 
-    return EmailAddressAuthenticationToken.of(principal, authorities);
+    return EmailAddressAuthenticationToken.of(principal, expiration.getEpochSecond(), authorities);
   }
 
   private String addRolePrefix(String role) {
