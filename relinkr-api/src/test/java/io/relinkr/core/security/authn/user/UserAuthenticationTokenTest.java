@@ -15,7 +15,7 @@ public class UserAuthenticationTokenTest {
   private static final List<GrantedAuthority> AUTHORITIES = createAuthorityList("ROLE_USER");
 
   private final UserAuthenticationToken userAuthenticationToken =
-      UserAuthenticationToken.of(1L, GOOGLE, AUTHORITIES);
+      UserAuthenticationToken.of(1L, GOOGLE, 1L, AUTHORITIES);
 
   @Test
   public void shouldReturnUserIdAsPrincipal() {
@@ -28,8 +28,9 @@ public class UserAuthenticationTokenTest {
   }
 
   @Test
-  public void shouldReturnUserProfileTypeAsDetails() {
-    assertEquals(GOOGLE, userAuthenticationToken.getDetails());
+  public void shouldReturnUserProfileTypeAndExpirationAsDetails() {
+    assertEquals(GOOGLE, userAuthenticationToken.getDetails().getUserProfileType());
+    assertEquals(1L, userAuthenticationToken.getDetails().getExpiresAt());
   }
 
   @Test

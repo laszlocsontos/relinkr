@@ -190,7 +190,9 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
             .map(it -> it.collect(toSet()))
             .orElse(emptySet());
 
-    return UserAuthenticationToken.of(userId, userProfileType, authorities);
+    return UserAuthenticationToken.of(
+        userId, userProfileType, expiration.getEpochSecond(), authorities
+    );
   }
 
   // TODO: This code duplicates its counterpart in AuthorizeRolesOrOwnerSecurityMetadataSource,

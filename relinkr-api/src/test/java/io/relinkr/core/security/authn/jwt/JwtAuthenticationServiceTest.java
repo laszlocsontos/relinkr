@@ -29,6 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import io.relinkr.core.security.authn.user.UserAuthenticationToken.Details;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -93,7 +94,7 @@ public class JwtAuthenticationServiceTest {
 
     assertEquals("53245345345345", authentication.getName());
     assertThat(authentication.getAuthorities(), contains(AUTHORITY_USER));
-    assertEquals(GOOGLE, authentication.getDetails());
+    assertEquals(GOOGLE, ((Details)authentication.getDetails()).getUserProfileType());
   }
 
   @Test(expected = IllegalArgumentException.class)

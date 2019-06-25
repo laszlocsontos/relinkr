@@ -18,7 +18,9 @@ package io.relinkr.core.security.authn.user;
 
 import io.relinkr.user.model.UserProfileType;
 import java.util.Collection;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -29,23 +31,32 @@ import org.springframework.security.core.GrantedAuthority;
 public class UserAuthenticationToken extends AbstractAuthenticationToken {
 
   private final long userId;
-  private final UserProfileType userProfileType;
+  private final Details details;
 
   private UserAuthenticationToken(
-      long userId, UserProfileType userProfileType,
+      long userId, UserProfileType userProfileType, long expiresAt,
       Collection<? extends GrantedAuthority> authorities) {
 
     super(authorities);
     setAuthenticated(true);
 
     this.userId = userId;
-    this.userProfileType = userProfileType;
+    this.details = Details.of(userProfileType, expiresAt);
   }
 
+  /**
+   * Creates a new {@code UserAuthenticationToken} based on the following data.
+   *
+   * @param userId User's ID
+   * @param userProfileType User's profile type
+   * @param expiresAt Seconds since the Epoch
+   * @param authorities User's authorities
+   * @return a {@code UserAuthenticationToken} instance
+   */
   public static UserAuthenticationToken of(
-      long userId, @NonNull UserProfileType userProfileType,
+      long userId, @NonNull UserProfileType userProfileType, long expiresAt,
       Collection<? extends GrantedAuthority> authorities) {
-    return new UserAuthenticationToken(userId, userProfileType, authorities);
+    return new UserAuthenticationToken(userId, userProfileType, expiresAt, authorities);
   }
 
   @Override
@@ -59,13 +70,22 @@ public class UserAuthenticationToken extends AbstractAuthenticationToken {
   }
 
   @Override
-  public UserProfileType getDetails() {
-    return userProfileType;
+  public Details getDetails() {
+    return details;
   }
 
   @Override
   public void setDetails(Object details) {
     throw new UnsupportedOperationException();
+  }
+
+  @Getter
+  @RequiredArgsConstructor(staticName = "of")
+  public static class Details {
+
+    private final UserProfileType userProfileType;
+    private final long expiresAt;
+
   }
 
 }

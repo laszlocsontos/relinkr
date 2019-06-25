@@ -47,6 +47,7 @@ public abstract class AbstractResourceControllerTest extends AbstractWebSecurity
     Authentication authentication = UserAuthenticationToken.of(
         user.getId().getId(),
         userProfileType,
+        Long.MAX_VALUE,
         createAuthorityList("ROLE_USER")
     );
 

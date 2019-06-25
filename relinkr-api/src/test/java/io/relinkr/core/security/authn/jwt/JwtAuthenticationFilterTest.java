@@ -53,7 +53,7 @@ import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 public class JwtAuthenticationFilterTest extends BaseFilterTest {
 
   private static final Authentication AUTHENTICATED_TOKEN =
-      UserAuthenticationToken.of(1L, GOOGLE, emptySet());
+      UserAuthenticationToken.of(1L, GOOGLE, Long.MAX_VALUE, emptySet());
 
   private static final String PUBLIC_PATH = "/public";
 

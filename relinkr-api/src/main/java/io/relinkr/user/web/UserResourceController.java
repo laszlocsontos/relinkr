@@ -20,10 +20,10 @@ import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
 import io.relinkr.core.model.ApplicationException;
+import io.relinkr.core.security.authn.user.UserAuthenticationToken.Details;
 import io.relinkr.core.security.authz.annotation.AuthorizeRolesOrOwner;
 import io.relinkr.user.model.User;
 import io.relinkr.user.model.UserId;
-import io.relinkr.user.model.UserProfileType;
 import io.relinkr.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -54,12 +54,12 @@ public class UserResourceController {
     // TODO: Add a HandlerMethodArgumentResolver as a more elegant solution
     Object details = authentication.getDetails();
     Assert.isInstanceOf(
-        UserProfileType.class,
+        Details.class,
         details,
-        "Authentication details should be a UserProfileType instance"
+        "Authentication details should be a UserProfileType.Details instance"
     );
 
-    return ok(UserResource.of(user, (UserProfileType) details));
+    return ok(UserResource.of(user, ((Details) details).getUserProfileType()));
   }
 
 }
