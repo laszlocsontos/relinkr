@@ -21,6 +21,7 @@ import static io.relinkr.test.Mocks.USER_ID_ZERO;
 import static io.relinkr.test.Mocks.createUser;
 import static io.relinkr.test.Mocks.createUserProfile;
 import static javax.persistence.LockModeType.NONE;
+import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
@@ -91,6 +92,8 @@ public class UserResourceControllerTest extends AbstractResourceControllerTest {
         .andExpect(status().isForbidden())
         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
         .andDo(print());
+
+    assertError(SC_FORBIDDEN, "Access is denied", resultActions);
   }
 
   @Test
@@ -103,6 +106,12 @@ public class UserResourceControllerTest extends AbstractResourceControllerTest {
         .andExpect(status().isUnauthorized())
         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
         .andDo(print());
+
+    assertError(
+        SC_UNAUTHORIZED,
+        "Full authentication is required to access this resource",
+        resultActions
+    );
   }
 
   @Test
