@@ -21,8 +21,6 @@ import static java.time.Instant.ofEpochSecond;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Collections.singletonMap;
 import static java.util.Collections.unmodifiableMap;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
 import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER;
 import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.REGISTRATION_ID;
@@ -37,7 +35,6 @@ import io.relinkr.link.model.Tag;
 import io.relinkr.link.model.UtmParameters;
 import java.time.Clock;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.data.domain.PageRequest;
@@ -48,15 +45,12 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.ResourceAccessException;
 
 public final class Mocks {
 
   public static final EmailAddress EMAIL_ADDRESS = EmailAddress.of("test@test.com");
 
-  public static final Instant FIXED_INSTANT = ofEpochSecond(1553091772);
+  public static final Instant FIXED_INSTANT = ofEpochSecond(5553091772L);
   public static final Clock FIXED_CLOCK = Clock.fixed(FIXED_INSTANT, UTC);
 
   public static final String LONG_URL_BASE_S
