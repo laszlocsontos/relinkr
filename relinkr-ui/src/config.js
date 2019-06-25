@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-/* eslint-disable */
-
 const API_BASE_URL = process.env.VUE_APP_API_BASE_URL;
 const UI_BASE_PATH = process.env.VUE_APP_UI_BASE_PATH;
+const AUTH_TOKEN_FETCH_STRATEGY = process.env.VUE_APP_AUTH_TOKEN_FETCH_STRATEGY;
 const OAUTH2_INIT_ENDPOINT = process.env.VUE_APP_OAUTH2_INIT_ENDPOINT;
 
 export {
   API_BASE_URL,
   UI_BASE_PATH,
+  AUTH_TOKEN_FETCH_STRATEGY,
   OAUTH2_INIT_ENDPOINT
 }

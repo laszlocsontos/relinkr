@@ -17,6 +17,8 @@
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
 import _ from 'lodash';
+import {AUTH_TOKEN_FETCH_STRATEGY} from '../../config'
+import {get} from '../../api';
 import router from "../../router";
 
 Vue.use(VueCookies);
@@ -56,27 +58,51 @@ const mutations = {
 };
 
 const actions = {
-  checkToken({dispatch}) {
-
-    const token = this._vm.$cookies.get(TOKEN_PAYLOAD_COOKIE_NAME);
-    if (_.isEmpty(token)) {
-      return;
-    }
-
+  async checkToken({dispatch}) {
     try {
-      let decoded = JSON.parse(atob(token));
+      let auth;
 
-      const auth = {
-        userId: decoded.sub,
-        expiresAt: decoded.exp
-      };
+      const strategy = _.toLower(AUTH_TOKEN_FETCH_STRATEGY);
+      switch (strategy) {
+        case "cookies": {
+          let token = this._vm.$cookies.get(TOKEN_PAYLOAD_COOKIE_NAME);
+          if (_.isEmpty(token)) {
+            return;
+          }
+
+          let decoded = JSON.parse(atob(token));
+
+          auth = {
+            userId: decoded.sub,
+            expiresAt: decoded.exp
+          };
+
+          break;
+        }
+
+        case "api": {
+          // When there's no authentication cookie, this HTTP call receives
+          // HTTP 401 for which axios throws an exception.
+          const response = await get({endpoint: '/v1/users/checkToken'});
+
+          auth = response.data;
+          break;
+        }
+
+        default: {
+          throw `Invalid auth token fetch strategy: ${strategy}`;
+        }
+      }
 
       dispatch('login', auth);
     } catch (err) {
+      // eslint-disable-next-line no-console
+      console.log("Failed to authenticate; reason: ", err);
+
       dispatch('logout');
     }
-  },
 
+  },
   login({commit}, args) {
     const auth = args || {};
     commit('setAuthentication', auth);
