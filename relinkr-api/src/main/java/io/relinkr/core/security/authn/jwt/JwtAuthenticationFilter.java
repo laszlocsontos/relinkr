@@ -16,13 +16,13 @@
 
 package io.relinkr.core.security.authn.jwt;
 
-import io.relinkr.core.web.AjaxRequestMatcher;
 import java.io.IOException;
 import java.util.Optional;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -30,6 +30,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.StringUtils;
 
@@ -52,8 +53,10 @@ import org.springframework.util.StringUtils;
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
   public static final String AUTHORIZATION_HEADER = "Authorization";
-
   public static final String BEARER_TOKEN_PREFIX = "Bearer";
+
+  public static final String X_REQUESTED_WITH_HEADER = "X-Requested-With";
+  public static final String X_REQUESTED_WITH_VALUE = "XMLHttpRequest";
 
   private static final String BEARER_TOKEN_ATTRIBUTE = "bearer_token";
 
@@ -144,7 +147,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
    * @param response HTTP response
    * @param chain filter chain
    * @param authResult authentication result
-   *
    * @throws IOException Upon I/O errors
    * @throws ServletException Upon unrecoverable servlet errors
    */
@@ -159,6 +161,22 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
     // Continue filter chain after security context has been set
     chain.doFilter(request, response);
+  }
+
+  /**
+   * A {@link RequestMatcher} that matches those HTTP requests which contain the HTTP header
+   * {@code X-Requested-With} with value {@code XMLHttpRequest}.
+   */
+  private static class AjaxRequestMatcher implements RequestMatcher {
+
+    private final RequestMatcher delegate =
+        new RequestHeaderRequestMatcher(X_REQUESTED_WITH_HEADER, X_REQUESTED_WITH_VALUE);
+
+    @Override
+    public boolean matches(@NonNull HttpServletRequest request) {
+      return delegate.matches(request);
+    }
+
   }
 
   /**

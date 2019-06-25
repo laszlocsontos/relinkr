@@ -18,6 +18,8 @@ package io.relinkr.core.security.authn.jwt;
 
 import static io.relinkr.core.security.authn.jwt.JwtAuthenticationFilter.AUTHORIZATION_HEADER;
 import static io.relinkr.core.security.authn.jwt.JwtAuthenticationFilter.BEARER_TOKEN_PREFIX;
+import static io.relinkr.core.security.authn.jwt.JwtAuthenticationFilter.X_REQUESTED_WITH_HEADER;
+import static io.relinkr.core.security.authn.jwt.JwtAuthenticationFilter.X_REQUESTED_WITH_VALUE;
 import static io.relinkr.user.model.UserProfileType.GOOGLE;
 import static java.util.Collections.emptySet;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
@@ -30,7 +32,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import io.relinkr.core.security.authn.user.UserAuthenticationToken;
-import io.relinkr.core.web.AjaxRequestMatcher;
 import io.relinkr.test.web.BaseFilterTest;
 import java.util.Optional;
 import org.junit.Before;
@@ -146,9 +147,7 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
 
   @Test
   public void givenValidJwtTokenInCookie_whenDoFilter_thenOkAndContextSet() throws Exception {
-    request.addHeader(
-        AjaxRequestMatcher.X_REQUESTED_WITH_HEADER,
-        AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
+    request.addHeader(X_REQUESTED_WITH_HEADER, X_REQUESTED_WITH_VALUE);
 
     given(authenticationTokenCookieResolver.resolveToken(request))
         .willReturn(Optional.of("valid"));
@@ -170,9 +169,7 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
   public void givenValidJwtTokenInCookieAndIgnoredPath_whenDoFilter_thenOkAndContextSet()
       throws Exception {
 
-    request.addHeader(
-        AjaxRequestMatcher.X_REQUESTED_WITH_HEADER,
-        AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
+    request.addHeader(X_REQUESTED_WITH_HEADER, X_REQUESTED_WITH_VALUE);
 
     given(authenticationTokenCookieResolver.resolveToken(request))
         .willReturn(Optional.of("valid"));
@@ -197,9 +194,7 @@ public class JwtAuthenticationFilterTest extends BaseFilterTest {
   public void givenInvalidJwtTokenInCookie_whenDoFilter_thenUnauthorizedAndNoContextSet()
       throws Exception {
 
-    request.addHeader(
-        AjaxRequestMatcher.X_REQUESTED_WITH_HEADER,
-        AjaxRequestMatcher.X_REQUESTED_WITH_VALUE);
+    request.addHeader(X_REQUESTED_WITH_HEADER, X_REQUESTED_WITH_VALUE);
 
     given(authenticationTokenCookieResolver.resolveToken(request))
         .willReturn(Optional.of("invalid"));

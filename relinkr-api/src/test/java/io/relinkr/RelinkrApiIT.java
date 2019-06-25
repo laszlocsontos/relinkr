@@ -1,9 +1,9 @@
 package io.relinkr;
 
+import static io.relinkr.core.security.authn.jwt.JwtAuthenticationFilter.X_REQUESTED_WITH_HEADER;
+import static io.relinkr.core.security.authn.jwt.JwtAuthenticationFilter.X_REQUESTED_WITH_VALUE;
 import static io.relinkr.core.security.authn.jwt.JwtAuthenticationTokenCookieResolver.TOKEN_PAYLOAD_COOKIE_NAME;
 import static io.relinkr.core.security.authn.jwt.JwtAuthenticationTokenCookieResolver.TOKEN_SIGNATURE_COOKIE_NAME;
-import static io.relinkr.core.web.AjaxRequestMatcher.X_REQUESTED_WITH_HEADER;
-import static io.relinkr.core.web.AjaxRequestMatcher.X_REQUESTED_WITH_VALUE;
 import static io.relinkr.test.Mocks.EMAIL_ADDRESS;
 import static io.relinkr.user.model.UserProfileType.NATIVE;
 import static java.util.Collections.emptyMap;
