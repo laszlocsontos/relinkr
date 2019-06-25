@@ -16,10 +16,12 @@
 
 package io.relinkr.user.web;
 
+import static io.relinkr.test.Mocks.FIXED_INSTANT;
 import static io.relinkr.test.Mocks.USER_ID_ZERO;
 import static io.relinkr.test.Mocks.createUser;
 import static io.relinkr.test.Mocks.createUserProfile;
 import static javax.persistence.LockModeType.NONE;
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
@@ -101,6 +103,32 @@ public class UserResourceControllerTest extends AbstractResourceControllerTest {
         .andExpect(status().isUnauthorized())
         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
         .andDo(print());
+  }
+
+  @Test
+  public void givenAuthenticatedRequest_whenCheckToken_thenUserIdAndExpReturned() throws Exception {
+    withUser(user, userProfile.getUserProfileType());
+
+    mockMvc
+        .perform(get("/v1/users/checkToken"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
+        .andExpect(jsonPath("$.userId", is(user.getId().getId().intValue())))
+        .andExpect(jsonPath("$.expiresAt", is(FIXED_INSTANT.getEpochSecond())));
+  }
+
+  @Test
+  public void givenUnauthenticatedRequest_whenCheckToken_thenUnauthorized() throws Exception {
+    ResultActions resultActions = mockMvc
+        .perform(get("/v1/users/checkToken"))
+        .andDo(print());
+
+    assertError(
+        SC_UNAUTHORIZED,
+        "Full authentication is required to access this resource",
+        resultActions
+    );
   }
 
   private void assertUser(ResultActions resultActions) throws Exception {

@@ -1,5 +1,6 @@
 package io.relinkr.test.security;
 
+import static io.relinkr.test.Mocks.FIXED_INSTANT;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType.HAL;
@@ -47,7 +48,7 @@ public abstract class AbstractResourceControllerTest extends AbstractWebSecurity
     Authentication authentication = UserAuthenticationToken.of(
         user.getId().getId(),
         userProfileType,
-        Long.MAX_VALUE,
+        FIXED_INSTANT.getEpochSecond(),
         createAuthorityList("ROLE_USER")
     );
 
