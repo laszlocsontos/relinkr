@@ -81,7 +81,7 @@ public class JwtAuthenticationServiceTest {
   public void givenValidAuthentication_whenCreateJwtToken_thenParsed() {
     Authentication authentication = createAuthentication(EMAIL_ADDRESS.getValue());
 
-    String jwtToken = jwtAuthenticationService.createJwtToken(authentication, Integer.MAX_VALUE);
+    String jwtToken = jwtAuthenticationService.createJwtToken(authentication, 1);
     log.info(jwtToken);
 
     authentication = jwtAuthenticationService.parseJwtToken(jwtToken);
@@ -128,7 +128,7 @@ public class JwtAuthenticationServiceTest {
     assertEquals("test@test.com", authentication.getName());
 
     assertEquals(
-        Long.valueOf(130407537511L),
+        Long.valueOf(130409878118L),
         (Long) authentication.getDetails()
     );
 
