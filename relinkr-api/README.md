@@ -21,14 +21,10 @@
 JWT_PRIVATE_KEY=
 JWT_PUBLIC_KEY=
 
-COOKIE_VISITOR_SECRET_KEY=
 COOKIE_OAUTH2_REQUEST_SECRET_KEY=
 
 OAUTH2_GOOGLE_CLIENT_ID=
 OAUTH2_GOOGLE_CLIENT_SECRET=
-
-OAUTH2_FACEBOOK_CLIENT_ID=
-OAUTH2_FACEBOOK_CLIENT_SECRET=
 ```
 
 4. Set required environment variables
@@ -45,7 +41,7 @@ OAUTH2_FACEBOOK_CLIENT_SECRET=
 % openssl rsa -in privatekey.pem -outform der -pubout | base64 -w0
 ```
 
-- Set the value of `COOKIE_VISITOR_SECRET_KEY` and `COOKIE_OAUTH2_REQUEST_SECRET_KEY` with the following command.
+- Set the value of `COOKIE_OAUTH2_REQUEST_SECRET_KEY` with the following command.
 
 ```
 % openssl rand -base64 32
@@ -54,10 +50,6 @@ OAUTH2_FACEBOOK_CLIENT_SECRET=
 5. Obtain OAuth 2.0 credentials from the [Google API Console](https://console.developers.google.com/apis/credentials).
 
 Obtain client ID and client secret and set variables `OAUTH2_GOOGLE_CLIENT_ID` and `OAUTH2_GOOGLE_CLIENT_SECRET` accordingly.
-
-6. Obtain OAuth 2.0 credentials from the [Facebook for Developers](https://developers.facebook.com/apps/).
-
-Obtain client ID and client secret and set variables `OAUTH2_FACEBOOK_CLIENT_ID` and `OAUTH2_FACEBOOK_CLIENT_SECRET` accordingly.
 
 ### Customize configuration
 
@@ -88,9 +80,6 @@ variables accordingly.
 ```
 OAUTH2_GOOGLE_CLIENT_ID=
 OAUTH2_GOOGLE_CLIENT_SECRET=
-
-OAUTH2_FACEBOOK_CLIENT_ID=
-OAUTH2_FACEBOOK_CLIENT_SECRET=
 
 PGSQL_PASSWORD=
 
@@ -152,7 +141,6 @@ _Note: use that password you picked at instance creation time._
 ```
 % gcloud beta runtime-config configs variables set JWT_PRIVATE_KEY "${JWT_PRIVATE_KEY}" --config-name relinkr_api_integration
 % gcloud beta runtime-config configs variables set JWT_PUBLIC_KEY "${JWT_PUBLIC_KEY}" --config-name relinkr_api_integration
-% gcloud beta runtime-config configs variables set COOKIE_VISITOR_SECRET_KEY "${COOKIE_VISITOR_SECRET_KEY}" --config-name relinkr_api_integration
 % gcloud beta runtime-config configs variables set COOKIE_OAUTH2_REQUEST_SECRET_KEY "${COOKIE_OAUTH2_REQUEST_SECRET_KEY}" --config-name relinkr_api_integration
 % gcloud beta runtime-config configs variables set OAUTH2_GOOGLE_CLIENT_ID "${OAUTH2_GOOGLE_CLIENT_ID}" --config-name relinkr_api_integration
 % gcloud beta runtime-config configs variables set OAUTH2_GOOGLE_CLIENT_SECRET "${OAUTH2_GOOGLE_CLIENT_SECRET}" --config-name relinkr_api_integration
@@ -182,9 +170,6 @@ variables accordingly.
 ```
 OAUTH2_GOOGLE_CLIENT_ID=
 OAUTH2_GOOGLE_CLIENT_SECRET=
-
-OAUTH2_FACEBOOK_CLIENT_ID=
-OAUTH2_FACEBOOK_CLIENT_SECRET=
 
 PGSQL_PASSWORD=
 

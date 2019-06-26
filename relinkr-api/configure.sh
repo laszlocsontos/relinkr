@@ -177,8 +177,6 @@ function main {
   # Check OAuth2 configuration vars
   check_required OAUTH2_GOOGLE_CLIENT_ID ${local_env}
   check_required OAUTH2_GOOGLE_CLIENT_SECRET ${local_env}
-  check_required OAUTH2_FACEBOOK_CLIENT_ID ${local_env}
-  check_required OAUTH2_FACEBOOK_CLIENT_SECRET ${local_env}
 
   # Front-end URL is required
   check_required FRONTEND_BASE_URL ${local_env}
@@ -215,11 +213,6 @@ function main {
     rm ${private_key}
   fi
 
-  # Check if visitor cookie key was given; generate new key otherwise
-  if [[ -z "${COOKIE_VISITOR_SECRET_KEY}" ]]; then
-    COOKIE_VISITOR_SECRET_KEY=$(openssl rand -base64 32)
-  fi
-
   # Check if OAuth2 cookie key was given; generate new key otherwise
   if [[ -z "${COOKIE_OAUTH2_REQUEST_SECRET_KEY}" ]]; then
     COOKIE_OAUTH2_REQUEST_SECRET_KEY=$(openssl rand -base64 32)
@@ -248,12 +241,9 @@ function main {
   # Set runtime configuration variables
   set_runtime_config_variable ${config_name} JWT_PRIVATE_KEY
   set_runtime_config_variable ${config_name} JWT_PUBLIC_KEY
-  set_runtime_config_variable ${config_name} COOKIE_VISITOR_SECRET_KEY
   set_runtime_config_variable ${config_name} COOKIE_OAUTH2_REQUEST_SECRET_KEY
   set_runtime_config_variable ${config_name} OAUTH2_GOOGLE_CLIENT_ID
   set_runtime_config_variable ${config_name} OAUTH2_GOOGLE_CLIENT_SECRET
-  set_runtime_config_variable ${config_name} OAUTH2_FACEBOOK_CLIENT_ID
-  set_runtime_config_variable ${config_name} OAUTH2_FACEBOOK_CLIENT_SECRET
   set_runtime_config_variable ${config_name} GCP_SQL_DB
   set_runtime_config_variable ${config_name} GCP_SQL_CONNECTION
   set_runtime_config_variable ${config_name} PGSQL_USERNAME
