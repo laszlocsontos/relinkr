@@ -83,7 +83,7 @@ const actions = {
         case "api": {
           // When there's no authentication cookie, this HTTP call receives
           // HTTP 401 for which axios throws an exception.
-          const response = await get({endpoint: '/v1/users/checkToken'});
+          const response = await get({endpoint: '/v1/auth/checkToken'});
 
           auth = response.data;
           break;
