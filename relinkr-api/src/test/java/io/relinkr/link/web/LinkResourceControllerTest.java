@@ -94,7 +94,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   @WithMockUser(username = "test@test.com")
   public void givenLinkOwnedByCurrentUser_whenGetLink_thenOk() throws Exception {
     ResultActions resultActions = mockMvc
-        .perform(get("/v1/links/{linkId}", link.getId()))
+        .perform(get("/v0/links/{linkId}", link.getId()))
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_VALUE))
         .andDo(print());
@@ -106,7 +106,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   @WithMockUser(username = "test2@test.com")
   public void givenLinkOwnedByOtherUser_whenGetLink_thenForbidden() throws Exception {
     ResultActions resultActions = mockMvc
-        .perform(get("/v1/links/{linkId}", link.getId()))
+        .perform(get("/v0/links/{linkId}", link.getId()))
         .andExpect(status().isForbidden())
         .andDo(print());
 
@@ -129,7 +129,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
     given(linkService.addLink(longUrl, utmParameters, EMAIL_ADDRESS)).willReturn(link);
 
     ResultActions resultActions = mockMvc
-        .perform(post("/v1/links").contentType(APPLICATION_JSON)
+        .perform(post("/v0/links").contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(linkResource)))
         .andExpect(status().isOk())
         .andDo(print());
@@ -152,7 +152,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
     given(linkService.updateLongUrl(linkId, longUrl, utmParameters)).willReturn(link);
 
     ResultActions resultActions = mockMvc.perform(
-        put("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+        put("/v0/links/{linkId}", linkId).contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(linkResource)))
         .andExpect(status().isOk())
         .andDo(print());
@@ -178,7 +178,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
     given(linkService.updateLongUrl(linkId, longUrl, utmParameters)).willReturn(link);
 
     ResultActions resultActions = mockMvc.perform(
-        put("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+        put("/v0/links/{linkId}", linkId).contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(linkResource)))
         .andDo(print());
 
@@ -198,7 +198,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
     LinkId linkId = link.getId();
 
     ResultActions resultActions = mockMvc.perform(
-        put("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+        put("/v0/links/{linkId}", linkId).contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(linkResource)))
         .andExpect(status().isBadRequest())
         .andDo(print());
@@ -219,7 +219,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
     given(linkService.updateLongUrl(linkId, longUrl)).willReturn(link);
 
     ResultActions resultActions = mockMvc.perform(
-        patch("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+        patch("/v0/links/{linkId}", linkId).contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(linkResource)))
         .andExpect(status().isOk())
         .andDo(print());
@@ -238,7 +238,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
     LinkId linkId = link.getId();
 
     ResultActions resultActions = mockMvc.perform(
-        patch("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+        patch("/v0/links/{linkId}", linkId).contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(linkResource)))
         .andDo(print());
 
@@ -260,7 +260,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
     given(linkService.updateUtmParameters(linkId, utmParameters)).willReturn(link);
 
     ResultActions resultActions = mockMvc.perform(
-        patch("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+        patch("/v0/links/{linkId}", linkId).contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(linkResource)))
         .andExpect(status().isOk())
         .andDo(print());
@@ -280,7 +280,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
     LinkId linkId = link.getId();
 
     ResultActions resultActions = mockMvc.perform(
-        patch("/v1/links/{linkId}", linkId).contentType(APPLICATION_JSON)
+        patch("/v0/links/{linkId}", linkId).contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(linkResource)))
         .andExpect(status().isBadRequest())
         .andDo(print());
@@ -297,7 +297,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
     given(linkService.fetchLinks(EMAIL_ADDRESS, PAGEABLE))
         .willReturn(new PageImpl<>(asList(link), PAGEABLE, 1));
 
-    ResultActions resultActions = mockMvc.perform(get("/v1/links")
+    ResultActions resultActions = mockMvc.perform(get("/v0/links")
         .param("page", String.valueOf(PAGEABLE.getPageNumber()))
         .param("size", String.valueOf(PAGEABLE.getPageSize())))
         .andExpect(status().isOk())
@@ -311,7 +311,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   public void givenLinkOwnedByCurrentUserWithActive_whenUpdateLinkStatus_thenActivated()
       throws Exception {
 
-    mockMvc.perform(put("/v1/links/{linkId}/linkStatuses/{linkStatus}", link.getId(),
+    mockMvc.perform(put("/v0/links/{linkId}/linkStatuses/{linkStatus}", link.getId(),
         ACTIVE.name()))
         .andExpect(status().isOk())
         .andDo(print());
@@ -327,7 +327,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
       throws Exception {
 
     ResultActions resultActions = mockMvc.perform(
-        put("/v1/links/{linkId}/linkStatuses/{linkStatus}", link.getId(), ACTIVE.name()))
+        put("/v0/links/{linkId}/linkStatuses/{linkStatus}", link.getId(), ACTIVE.name()))
         .andDo(print());
 
     then(linkService).should().getLink(link.getId());
@@ -340,7 +340,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   public void givenLinkOwnedByCurrentUserWithArchive_whenUpdateLinkStatus_thenArchived()
       throws Exception {
 
-    mockMvc.perform(put("/v1/links/{linkId}/linkStatuses/{linkStatus}", link.getId(),
+    mockMvc.perform(put("/v0/links/{linkId}/linkStatuses/{linkStatus}", link.getId(),
         ARCHIVED.name()))
         .andExpect(status().isOk())
         .andDo(print());
@@ -353,7 +353,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   @Test
   @WithMockUser(username = "test@test.com")
   public void givenLinkOwnedByCurrentUser_whenAddTag_thenTagAdded() throws Exception {
-    mockMvc.perform(post("/v1/links/{linkId}/tags/{tagName}", link.getId(),
+    mockMvc.perform(post("/v0/links/{linkId}/tags/{tagName}", link.getId(),
         TAG_A.getTagName()))
         .andExpect(status().isOk())
         .andDo(print());
@@ -368,7 +368,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   @WithMockUser(username = "test2@test.com")
   public void givenLinkOwnedByOtherUser_whenAddTag_thenForbidden() throws Exception {
     ResultActions resultActions = mockMvc.perform(
-        post("/v1/links/{linkId}/tags/{tagName}", link.getId(), TAG_A.getTagName()))
+        post("/v0/links/{linkId}/tags/{tagName}", link.getId(), TAG_A.getTagName()))
         .andDo(print());
 
     then(linkService).should().getLink(link.getId());
@@ -379,7 +379,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   @Test
   @WithMockUser(username = "test@test.com")
   public void givenLinkOwnedByCurrentUser_whenRemoveTag_thenRemoved() throws Exception {
-    mockMvc.perform(delete("/v1/links/{linkId}/tags/{tagName}", link.getId(),
+    mockMvc.perform(delete("/v0/links/{linkId}/tags/{tagName}", link.getId(),
         TAG_A.getTagName()))
         .andExpect(status().isOk())
         .andDo(print());
@@ -394,7 +394,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   @WithMockUser(username = "test2@test.com")
   public void givenLinkOwnedByOtherUser_whenRemoveTag_thenForbidden() throws Exception {
     ResultActions resultActions = mockMvc.perform(
-        delete("/v1/links/{linkId}/tags/{tagName}", link.getId(), TAG_A.getTagName()))
+        delete("/v0/links/{linkId}/tags/{tagName}", link.getId(), TAG_A.getTagName()))
         .andDo(print());
 
     then(linkService).should().getLink(link.getId());
@@ -429,9 +429,9 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
         .andExpect(jsonPath(path + ".utmParameters.utmContent",
             is(link.getUtmParameters().get().getUtmContent().orElse(null))))
         .andExpect(jsonPath(path + "._links.self.href",
-            is("http://localhost/v1/links/" + link.getId())))
+            is("http://localhost/v0/links/" + link.getId())))
         .andExpect(jsonPath(path + "._links.userLinkStatuses.href",
-            is("http://localhost/v1/links/" + link.getId()
+            is("http://localhost/v0/links/" + link.getId()
                 + "/linkStatuses/ARCHIVED")))
         .andExpect(jsonPath(path + "._links.shortLink.href",
             is(shortLinkScheme + "://" + shortLinkDomain + "/" + link.getPath())));

@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Provides the REST API for managing users.
  */
 @RestController
-@RequestMapping("/v1/auth")
+@RequestMapping("/v0/auth")
 @RequiredArgsConstructor
 public class CheckTokenController {
 

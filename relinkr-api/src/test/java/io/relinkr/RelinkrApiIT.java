@@ -63,7 +63,7 @@ public class RelinkrApiIT {
   public void shouldCreateLink() {
     RequestEntity<?> request = buildRequest(
         POST,
-        "/v1/links",
+        "/v0/links",
         singletonMap("longUrl", "https://start.spring.io/"),
         emptyMap(),
         obtainAuthToken()

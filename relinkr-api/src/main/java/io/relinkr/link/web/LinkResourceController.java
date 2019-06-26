@@ -62,7 +62,7 @@ import org.springframework.web.context.request.ServletWebRequest;
  * Provides the REST API for managing links.
  */
 @RestController
-@RequestMapping("/v1/links")
+@RequestMapping("/v0/links")
 public class LinkResourceController {
 
   private static Validator FULL_LINK_VALIDATOR = new FullLinkValidator();

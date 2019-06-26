@@ -92,7 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   );
 
   private static final List<RequestMatcher> PROTECTED_REQUEST_MATCHERS = unmodifiableList(
-      singletonList(new RegexRequestMatcher("/v1/.*", null))
+      singletonList(new RegexRequestMatcher("/v0/.*", null))
   );
 
   private static final String DEVELOPMENT_PROFILE_NAME = "development";

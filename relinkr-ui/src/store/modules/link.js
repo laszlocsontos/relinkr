@@ -79,7 +79,7 @@ const actions = {
       }
     };
 
-    get({endpoint: "/v1/links", params: {page: (page - 1), size: PAGE_SIZE}})
+    get({endpoint: "/v0/links", params: {page: (page - 1), size: PAGE_SIZE}})
     .then(response => {
       commit('setState', {data: response.data, callback: callback});
     })
@@ -94,7 +94,7 @@ const actions = {
       }
     };
 
-    put({endpoint: `/v1/links/${id}/linkStatuses/${nextStatus}`})
+    put({endpoint: `/v0/links/${id}/linkStatuses/${nextStatus}`})
     .then(() => refreshCallback())
     .catch(err => {
       console.log("error", err);
@@ -102,7 +102,7 @@ const actions = {
   },
   saveLink(_, args) {
     const {link, successCallback, failureCallback} = args;
-    post({endpoint: "/v1/links", data: link})
+    post({endpoint: "/v0/links", data: link})
     .then(successCallback)
     .catch(failureCallback);
   }
