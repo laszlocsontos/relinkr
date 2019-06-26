@@ -46,7 +46,7 @@ public class CheckTokenControllerTest extends AbstractResourceControllerTest {
     withUser(EMAIL_ADDRESS, FIXED_INSTANT.getEpochSecond());
 
     mockMvc
-        .perform(get("/v0/users/checkToken"))
+        .perform(get("/v0/auth/checkToken"))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
@@ -57,7 +57,7 @@ public class CheckTokenControllerTest extends AbstractResourceControllerTest {
   @Test
   public void givenUnauthenticatedRequest_whenCheckToken_thenUnauthorized() throws Exception {
     ResultActions resultActions = mockMvc
-        .perform(get("/v0/users/checkToken"))
+        .perform(get("/v0/auth/checkToken"))
         .andDo(print());
 
     assertError(
