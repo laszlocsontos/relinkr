@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-package io.relinkr.user.web;
+package io.relinkr.core.security.authn.user;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/users")
 @RequiredArgsConstructor
-public class UserResourceController {
+public class CheckTokenController {
 
   @GetMapping(path = "/checkToken", produces = APPLICATION_JSON_VALUE)
   HttpEntity<CheckTokenResponse> checkToken(Authentication authentication)

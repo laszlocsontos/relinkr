@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-package io.relinkr.user.web;
+package io.relinkr.core.security.authn.user;
 
 import static io.relinkr.test.Mocks.EMAIL_ADDRESS;
 import static io.relinkr.test.Mocks.FIXED_INSTANT;
@@ -38,8 +38,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-@WebMvcTest(controllers = UserResourceController.class)
-public class UserResourceControllerTest extends AbstractResourceControllerTest {
+@WebMvcTest(controllers = CheckTokenController.class)
+public class CheckTokenControllerTest extends AbstractResourceControllerTest {
 
   @Test
   public void givenAuthenticatedRequest_whenCheckToken_thenUserIdAndExpReturned() throws Exception {
