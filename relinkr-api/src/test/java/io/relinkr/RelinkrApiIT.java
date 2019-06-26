@@ -51,7 +51,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-@ActiveProfiles("it")
+@ActiveProfiles("integration")
 public class RelinkrApiIT {
 
   @Autowired
