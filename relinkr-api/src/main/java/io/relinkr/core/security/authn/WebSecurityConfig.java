@@ -38,9 +38,11 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
@@ -96,6 +98,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       singletonList(new RegexRequestMatcher("/v1/.*", null))
   );
 
+  private static final String DEVELOPMENT_PROFILE_NAME = "development";
+
+  private final Environment environment;
   private final ObjectMapper objectMapper;
   private final UserProfileFactory userProfileFactory;
   private final UserService userService;
@@ -169,6 +174,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         jwtAuthenticationFailureHandler(),
         jwtAuthenticationTokenCookieResolver
     );
+  }
+
+  @Override
+  public void configure(WebSecurity web) {
+    boolean enabledDebug =
+        asList(environment.getActiveProfiles()).contains(DEVELOPMENT_PROFILE_NAME);
+
+    web.debug(enabledDebug);
   }
 
   @Override
