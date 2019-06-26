@@ -47,8 +47,15 @@ Create a file `.env.staging.local` or `.env.production.local` depending on which
 building for and add the following content.
 
 ```
-VUE_APP_UI_BASE_PATH=/[BUCKET_NAME]
+VUE_APP_AUTH_TOKEN_FETCH_STRATEGY=api
+VUE_APP_UI_BASE_PATH=/<path>
 ```
+
+_Note: If you wish to deploy to your own domain, then you can safely remove
+`VUE_APP_AUTH_TOKEN_FETCH_STRATEGY` in which case it's going to default to `cookies`. Strategy `api`
+enables the app to be deployed for demonstration purposes where both the back-end and the front-end
+are deployed to completely different domains given by the underlying cloud provider
+(eg. `<projectId>.appspot.com` and `<projectId>.firebaseapp.com`)._
 
 2. Setup API base URL
 
