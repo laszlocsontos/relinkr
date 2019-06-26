@@ -5,7 +5,7 @@ import static io.relinkr.core.security.authn.jwt.JwtAuthenticationFilter.X_REQUE
 import static io.relinkr.core.security.authn.jwt.JwtAuthenticationTokenCookieResolver.TOKEN_PAYLOAD_COOKIE_NAME;
 import static io.relinkr.core.security.authn.jwt.JwtAuthenticationTokenCookieResolver.TOKEN_SIGNATURE_COOKIE_NAME;
 import static io.relinkr.test.Mocks.EMAIL_ADDRESS;
-import static io.relinkr.user.model.UserProfileType.NATIVE;
+import static io.relinkr.test.Mocks.FIXED_INSTANT;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.singletonMap;
@@ -22,11 +22,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.relinkr.core.security.authn.jwt.JwtAuthenticationService;
-import io.relinkr.user.model.User;
-import io.relinkr.user.model.UserProfile;
-import io.relinkr.user.service.UserService;
+import io.relinkr.core.security.authn.user.EmailAddressAuthenticationToken;
 import java.net.URI;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,7 +37,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.RequestEntity.BodyBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -56,12 +52,6 @@ public class RelinkrApiIT {
 
   @Autowired
   private TestRestTemplate testRestTemplate;
-
-  @Autowired
-  private ObjectMapper objectMapper;
-
-  @Autowired
-  private UserService userService;
 
   @Autowired
   private JwtAuthenticationService jwtAuthenticationService;
@@ -116,15 +106,10 @@ public class RelinkrApiIT {
   }
 
   private String obtainAuthToken() {
-    User user = userService.saveUser(
+    Authentication authentication = EmailAddressAuthenticationToken.of(
         EMAIL_ADDRESS,
-        UserProfile.of(NATIVE, EMAIL_ADDRESS.getValue())
-    );
-
-    Authentication authentication = new TestingAuthenticationToken(
-        String.valueOf(user.getId().getId()),
-        null,
-        createAuthorityList(user.getAuthorities().toArray(new String[0]))
+        FIXED_INSTANT.getEpochSecond(),
+        createAuthorityList("ROLE_USER")
     );
 
     return jwtAuthenticationService.createJwtToken(authentication, 1);
