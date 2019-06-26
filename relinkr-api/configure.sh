@@ -209,8 +209,8 @@ function main {
     private_key=$(mktemp)
     openssl genrsa -out ${private_key} 2048 &>/dev/null
 
-    JWT_PRIVATE_KEY=$(openssl pkcs8 -topk8 -nocrypt -in /tmp/privatekey.pem -outform der | base64 -w0)
-    JWT_PUBLIC_KEY=$(openssl rsa -in /tmp/privatekey.pem -outform der -pubout | base64 -w0)
+    JWT_PRIVATE_KEY=$(openssl pkcs8 -topk8 -nocrypt -in ${private_key} -outform der | base64 -w0)
+    JWT_PUBLIC_KEY=$(openssl rsa -in ${private_key} -outform der -pubout | base64 -w0)
 
     rm ${private_key}
   fi
