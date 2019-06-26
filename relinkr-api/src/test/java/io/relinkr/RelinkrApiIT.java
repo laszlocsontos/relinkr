@@ -22,7 +22,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.relinkr.core.security.authn.jwt.JwtAuthenticationService;
 import io.relinkr.user.model.User;
 import io.relinkr.user.model.UserProfile;
@@ -56,9 +55,6 @@ public class RelinkrApiIT {
 
   @Autowired
   private TestRestTemplate testRestTemplate;
-
-  @Autowired
-  private ObjectMapper objectMapper;
 
   @Autowired
   private UserService userService;
