@@ -283,6 +283,6 @@
     <app.deploy.version>GCLOUD_CONFIG</app.deploy.version>
   </properties>
 
-  <version>0.9.0-M2</version>
+  <version>0.9.0-SNAPSHOT</version>
 
 </project>
