@@ -37,24 +37,24 @@ public class Stats<K> {
   private final Collection<TimeSpan> availableTimeSpans;
 
   public static Stats<LocalDate> ofLinks(
-      Collection<StatEntry<LocalDate>> entries, TimeSpan timeSpan,
+      Collection<StatEntry<LocalDate>> entries, TimeSpan currentTimeSpan,
       Collection<TimeSpan> availableTimeSpans) {
 
-    return new Stats<>(LINKS, entries, timeSpan, availableTimeSpans);
+    return new Stats<>(LINKS, entries, currentTimeSpan, availableTimeSpans);
   }
 
   public static Stats<LocalDate> ofClicks(
-      Collection<StatEntry<LocalDate>> entries, TimeSpan timeSpan,
+      Collection<StatEntry<LocalDate>> entries, TimeSpan currentTimeSpan,
       Collection<TimeSpan> availableTimeSpans) {
 
-    return new Stats<>(CLICKS, entries, timeSpan, availableTimeSpans);
+    return new Stats<>(CLICKS, entries, currentTimeSpan, availableTimeSpans);
   }
 
   public static Stats<String> ofVisitors(
-      Collection<StatEntry<String>> entries, TimeSpan timeSpan,
+      Collection<StatEntry<String>> entries, TimeSpan currentTimeSpan,
       Collection<TimeSpan> availableTimeSpans) {
 
-    return new Stats<>(VISITORS, entries, timeSpan, availableTimeSpans);
+    return new Stats<>(VISITORS, entries, currentTimeSpan, availableTimeSpans);
   }
 
   public enum StatType {
