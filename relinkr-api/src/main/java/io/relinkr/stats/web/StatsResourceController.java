@@ -16,7 +16,6 @@
 
 package io.relinkr.stats.web;
 
-import static java.time.temporal.ChronoUnit.DAYS;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -25,6 +24,7 @@ import io.relinkr.core.security.authn.annotation.CurrentUser;
 import io.relinkr.core.security.authz.annotation.AuthorizeRolesOrOwner;
 import io.relinkr.stats.model.StatEntry;
 import io.relinkr.stats.model.Stats;
+import io.relinkr.stats.model.TimePeriod;
 import io.relinkr.stats.model.TimeSpan;
 import io.relinkr.stats.model.TimeSpanFactory;
 import io.relinkr.user.model.UserId;
@@ -34,6 +34,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -51,8 +52,9 @@ public class StatsResourceController {
 
   // TODO: Add path variable: requested timespan
   @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
-  @GetMapping(path = "/links", produces = HAL_JSON_VALUE)
-  HttpEntity<StatsResource> getLinksStats(@CurrentUser UserId userId)
+  @GetMapping(path = "/links/{period}", produces = HAL_JSON_VALUE)
+  HttpEntity<StatsResource> getLinksStats(
+      @CurrentUser UserId userId, @PathVariable TimePeriod period)
       throws ApplicationException {
 
     List<StatEntry<LocalDate>> entries = Arrays.asList(
@@ -60,30 +62,34 @@ public class StatsResourceController {
         StatEntry.of(LocalDate.of(2018, 3, 7), 2)
     );
 
-    List<TimeSpan> timeSpans = Arrays.asList(
+    List<TimeSpan> availableTimeSpans = Arrays.asList(
         timeSpanFactory.today(),
         timeSpanFactory.yesterday(),
-        timeSpanFactory.past(7, DAYS)
+        timeSpanFactory.thisWeek(),
+        timeSpanFactory.pastWeek()
     );
 
-    TimeSpan ts = TimeSpan.ofCustom(LocalDate.of(2019, 3, 6), LocalDate.of(2019, 3, 12));
-    Stats<LocalDate> stats = Stats.ofLinks(entries, ts, timeSpans);
+    TimeSpan currentTimeSpan = timeSpanFactory.period(period);
+
+    Stats<LocalDate> stats = Stats.ofLinks(entries, currentTimeSpan, availableTimeSpans);
 
     StatsResource resource = statsAssembler.toResource(stats);
     return ok(resource);
   }
 
   @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
-  @GetMapping(path = "/clicks", produces = HAL_JSON_VALUE)
-  HttpEntity<StatsResource> getClicksStats(@CurrentUser UserId userId)
+  @GetMapping(path = "/clicks/{period}", produces = HAL_JSON_VALUE)
+  HttpEntity<StatsResource> getClicksStats(
+      @CurrentUser UserId userId, @PathVariable TimePeriod period)
       throws ApplicationException {
 
     throw new NotImplementedException();
   }
 
   @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
-  @GetMapping(path = "/visitors", produces = HAL_JSON_VALUE)
-  HttpEntity<StatsResource> getVisitorsStats(@CurrentUser UserId userId)
+  @GetMapping(path = "/visitors/{period}", produces = HAL_JSON_VALUE)
+  HttpEntity<StatsResource> getVisitorsStats(
+      @CurrentUser UserId userId, @PathVariable TimePeriod period)
       throws ApplicationException {
 
     throw new NotImplementedException();

@@ -16,15 +16,22 @@
 
 package io.relinkr.stats.web;
 
+import static io.relinkr.test.Mocks.FIXED_CLOCK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import io.relinkr.stats.model.TimeSpanFactory;
+import io.relinkr.stats.web.StatsResourceControllerTest.TestConfig;
 import io.relinkr.test.security.AbstractResourceControllerTest;
-import io.relinkr.test.security.AbstractResourceControllerTest.TestConfig;
+import java.time.Clock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -40,11 +47,27 @@ public class StatsResourceControllerTest extends AbstractResourceControllerTest 
   public void givenAuthenticatedUser_whenGetLinksStats_thenOk() throws Exception {
 
     ResultActions resultActions = mockMvc
-        .perform(get("/v1/stats/links"))
+        .perform(get("/v1/stats/links/PAST_WEEK"))
         .andExpect(status().isOk())
         .andDo(print());
 
     // TODO: assert contents
+  }
+
+  @TestConfiguration
+  @Import({AbstractResourceControllerTest.TestConfig.class})
+  public static class TestConfig {
+
+    @Bean
+    Clock clock() {
+      return FIXED_CLOCK;
+    }
+
+    @Bean
+    TimeSpanFactory timeSpanFactory(ObjectProvider<Clock> clockProvider) {
+      return new TimeSpanFactory(clockProvider);
+    }
+
   }
 
 }

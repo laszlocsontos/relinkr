@@ -21,6 +21,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import io.relinkr.stats.model.Stats;
 import io.relinkr.stats.model.Stats.StatType;
+import io.relinkr.stats.model.TimePeriod;
 import io.relinkr.stats.model.TimeSpan;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceAssembler;
@@ -35,8 +36,7 @@ public class StatsResourceAssembler implements ResourceAssembler<Stats<?>, Stats
     StatsResource resource = new StatsResource(stats);
 
     TimeSpan selfTs = stats.getCurrentTimeSpan();
-    String queryStr = getQueryString(selfTs);
-    Link link = getLinkBuilder(stats.getType()).slash(queryStr).withSelfRel();
+    Link link = getLinkBuilder(stats.getType(), selfTs.getPeriod()).withSelfRel();
     resource.add(link);
 
     addAvailableLinks(stats, resource);
@@ -46,28 +46,23 @@ public class StatsResourceAssembler implements ResourceAssembler<Stats<?>, Stats
 
   private void addAvailableLinks(Stats<?> stats, StatsResource resource) {
     for (TimeSpan ts : stats.getAvailableTimeSpans()) {
-      String queryStr = getQueryString(ts);
-      Link link = getLinkBuilder(stats.getType()).slash(queryStr).withRel(ts.getPeriod().name());
+      Link link = getLinkBuilder(stats.getType(), ts.getPeriod()).withRel(ts.getPeriod().name());
       resource.add(link);
     }
   }
 
-  private ControllerLinkBuilder getLinkBuilder(StatType statType) {
+  private ControllerLinkBuilder getLinkBuilder(StatType statType, TimePeriod period) {
     StatsResourceController controller = methodOn(StatsResourceController.class);
     switch (statType) {
       case LINKS:
-        return linkTo(controller.getLinksStats(null));
+        return linkTo(controller.getLinksStats(null, period));
       case CLICKS:
-        return linkTo(controller.getClicksStats(null));
+        return linkTo(controller.getClicksStats(null, period));
       case VISITORS:
-        return linkTo(controller.getVisitorsStats(null));
+        return linkTo(controller.getVisitorsStats(null, period));
       default:
         throw new AssertionError("Internal error: unknown type " + statType);
     }
-  }
-
-  private String getQueryString(TimeSpan ts) {
-    return String.format("?startDate=%s&endDate=%s", ts.getStartDate(), ts.getEndDate());
   }
 
 }

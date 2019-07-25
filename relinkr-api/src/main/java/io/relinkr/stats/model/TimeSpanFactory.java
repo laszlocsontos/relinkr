@@ -28,6 +28,7 @@ import static io.relinkr.stats.model.TimePeriod.TODAY;
 import static io.relinkr.stats.model.TimePeriod.YESTERDAY;
 
 import java.time.Clock;
+import java.time.LocalDate;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -47,7 +48,8 @@ public class TimeSpanFactory {
   }
 
   public TimeSpan period(TimePeriod period) {
-    return null;
+    // TODO: Add a proper implementation here
+    return TimeSpan.ofCustom(LocalDate.of(2016, 7, 25), LocalDate.of(2016, 7, 25));
   }
 
   public TimeSpan today() {
