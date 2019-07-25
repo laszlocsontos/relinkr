@@ -105,9 +105,7 @@
   import LineChart from '@/components/LineChart.js';
   import PageTemplate from '@/components/PageTemplate.vue';
 
-import { mapActions } from 'vuex';
-import { mapGetters } from 'vuex';
-import { mapState } from 'vuex';
+  import {mapActions, mapGetters, mapState} from 'vuex';
 
   export default {
     name: 'home',
@@ -120,8 +118,11 @@ import { mapState } from 'vuex';
       this.fetchStats('visitors');
     },
     computed: {
-      ...mapGetters('stats', {linksStats: 'getLinksStats', clicksStats: 'getClicksStats',
-        visitorsStats: 'getVisitorsStats'}),
+      ...mapGetters('stats', {
+        linksStats: 'getLinksStats',
+        clicksStats: 'getClicksStats',
+        visitorsStats: 'getVisitorsStats'
+      }),
       ...mapState('stats', ['linksCount', 'clicksCount', 'visitorsCount'])
     },
     methods: {

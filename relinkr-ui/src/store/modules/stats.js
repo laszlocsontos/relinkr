@@ -21,9 +21,9 @@ import axios from 'axios';
 
 // initial state
 const state = {
-  _linksStats: {},
-  _clicksStats: {},
-  _visitorsStats: {},
+  linksStats: {},
+  clicksStats: {},
+  visitorsStats: {},
 
   // do not display any number until the data is fetched
   linksCount: null,
@@ -35,9 +35,9 @@ const getters = {
   // Pass a copy of the state to prevent "vuex store state modified outside
   // mutation handlers" error, the Chart modifies this data if there are
   // multiple charts on the page.
-  getLinksStats: () => _.cloneDeep(state._linksStats),
-  getClicksStats: () => _.cloneDeep(state._clicksStats),
-  getVisitorsStats: () => _.cloneDeep(state._visitorsStats)
+  getLinksStats: () => _.cloneDeep(state.linksStats),
+  getClicksStats: () => _.cloneDeep(state.clicksStats),
+  getVisitorsStats: () => _.cloneDeep(state.visitorsStats)
 };
 
 const mutations = {
@@ -54,7 +54,7 @@ const mutations = {
     }
 
     state[`${statType}Count`] = totalCount;
-    state[`_${statType}Stats`] = {
+    state[`${statType}Stats`] = {
       datasets: [{
         label: `# of ${statType}`,
         data: dataArray
