@@ -20,7 +20,7 @@ public class StatsResourceAssembler <K> implements ResourceAssembler<Stats<K>, S
     public StatsResource toResource(Stats<K> stats) {
         StatsResource resource = new StatsResource(stats);
 
-        TimeSpan<K> selfTs = stats.getTimeSpan();
+        TimeSpan selfTs = stats.getTimeSpan();
         String queryStr = getQueryString(selfTs);
         Link link = getLinkBuilder(stats.getType()).slash(queryStr).withSelfRel();
         resource.add(link);
@@ -31,7 +31,7 @@ public class StatsResourceAssembler <K> implements ResourceAssembler<Stats<K>, S
     }
 
     private void addAvailableLinks(Stats<K> stats, StatsResource resource) {
-        for(TimeSpan<K> ts : stats.getAvailableTimeSpans()) {
+        for(TimeSpan ts : stats.getAvailableTimeSpans()) {
             String queryStr = getQueryString(ts);
             Link link = getLinkBuilder(stats.getType()).slash(queryStr).withRel(ts.getName());
             resource.add(link);
@@ -52,7 +52,8 @@ public class StatsResourceAssembler <K> implements ResourceAssembler<Stats<K>, S
         }
     }
 
-    private String getQueryString(TimeSpan<K> ts) {
+    private String getQueryString(TimeSpan ts) {
         return String.format("?startDate=%s&endDate=%s", ts.getStartDate(), ts.getEndDate());
     }
+
 }

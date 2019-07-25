@@ -1,13 +1,15 @@
 package io.relinkr.stats.model;
 
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor(staticName = "of")
-public class TimeSpan <K> {
+public class TimeSpan {
 
     private final String name;
-    private final K startDate;
-    private final K endDate;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
+
 }

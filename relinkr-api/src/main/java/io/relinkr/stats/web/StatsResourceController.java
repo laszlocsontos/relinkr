@@ -8,6 +8,7 @@ import io.relinkr.stats.model.StatType;
 import io.relinkr.stats.model.Stats;
 import io.relinkr.stats.model.TimeSpan;
 import io.relinkr.user.model.UserId;
+import java.time.LocalDate;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,13 +40,13 @@ public class StatsResourceController {
             StatEntry.of("2018-03-06", 5),
             StatEntry.of("2018-03-07", 2));
 
-        List<TimeSpan<String>> timeSpans = Arrays.asList(
-            TimeSpan.of("today","2019-06-03", "2019-06-03"),
-            TimeSpan.of("yesterday","2019-06-02", "2019-06-02"),
-            TimeSpan.of("last7days","2019-05-27", "2019-06-02")
+        List<TimeSpan> timeSpans = Arrays.asList(
+            TimeSpan.of("today", LocalDate.of(2019, 6, 3), LocalDate.of(2019, 6, 3)),
+            TimeSpan.of("yesterday", LocalDate.of(2019, 6, 2), LocalDate.of(2019, 6, 2)),
+            TimeSpan.of("last7days", LocalDate.of(2019, 5, 27), LocalDate.of(2019, 6, 2))
         );
 
-        TimeSpan<String> ts = TimeSpan.of("custom", "2018-03-06", "2018-03-12");
+        TimeSpan ts = TimeSpan.of("custom", LocalDate.of(2019, 3, 6), LocalDate.of(2019, 3, 12));
         Stats<String> stats = Stats.of(StatType.LINKS, entries, ts, timeSpans);
 
         StatsResource resource = statsAssembler.toResource(stats);

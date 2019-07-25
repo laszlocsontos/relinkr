@@ -12,6 +12,6 @@ public class Stats <K> {
     private final StatType type;
     private final Collection<StatEntry<K>> entries;
 
-    private final TimeSpan<K> timeSpan;
-    private final Collection<TimeSpan<K>> availableTimeSpans;
+    private final TimeSpan timeSpan;
+    private final Collection<TimeSpan> availableTimeSpans;
 }
