@@ -4,7 +4,6 @@ import io.relinkr.core.model.ApplicationException;
 import io.relinkr.core.security.authn.annotation.CurrentUser;
 import io.relinkr.core.security.authz.annotation.AuthorizeRolesOrOwner;
 import io.relinkr.stats.model.StatEntry;
-import io.relinkr.stats.model.StatType;
 import io.relinkr.stats.model.Stats;
 import io.relinkr.stats.model.TimeSpan;
 import io.relinkr.user.model.UserId;
@@ -28,7 +27,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/v1/stats")
 public class StatsResourceController {
 
-    private final StatsResourceAssembler<String> statsAssembler = new StatsResourceAssembler<>();
+    private final StatsResourceAssembler statsAssembler = new StatsResourceAssembler();
 
     @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
     @GetMapping(path = "/links", produces = HAL_JSON_VALUE)
@@ -36,9 +35,10 @@ public class StatsResourceController {
     public HttpEntity<StatsResource> getLinksStats(@CurrentUser UserId userId)
             throws ApplicationException {
 
-        List<StatEntry<String>> entries = Arrays.asList(
-            StatEntry.of("2018-03-06", 5),
-            StatEntry.of("2018-03-07", 2));
+        List<StatEntry<LocalDate>> entries = Arrays.asList(
+            StatEntry.of(LocalDate.of(2018, 3, 6), 5),
+            StatEntry.of(LocalDate.of(2018, 3, 7), 2)
+        );
 
         List<TimeSpan> timeSpans = Arrays.asList(
             TimeSpan.of("today", LocalDate.of(2019, 6, 3), LocalDate.of(2019, 6, 3)),
@@ -47,7 +47,7 @@ public class StatsResourceController {
         );
 
         TimeSpan ts = TimeSpan.of("custom", LocalDate.of(2019, 3, 6), LocalDate.of(2019, 3, 12));
-        Stats<String> stats = Stats.of(StatType.LINKS, entries, ts, timeSpans);
+        Stats<LocalDate> stats = Stats.ofLinks(entries, ts, timeSpans);
 
         StatsResource resource = statsAssembler.toResource(stats);
         return ok(resource);

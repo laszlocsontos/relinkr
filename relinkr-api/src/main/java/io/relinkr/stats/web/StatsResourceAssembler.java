@@ -1,6 +1,6 @@
 package io.relinkr.stats.web;
 
-import io.relinkr.stats.model.StatType;
+import io.relinkr.stats.model.Stats.StatType;
 import io.relinkr.stats.model.Stats;
 import io.relinkr.stats.model.TimeSpan;
 import org.springframework.hateoas.Link;
@@ -8,16 +8,14 @@ import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Component
-public class StatsResourceAssembler <K> implements ResourceAssembler<Stats<K>, StatsResource> {
+public class StatsResourceAssembler implements ResourceAssembler<Stats<?>, StatsResource> {
 
     @Override
-    public StatsResource toResource(Stats<K> stats) {
+    public StatsResource toResource(Stats<?> stats) {
         StatsResource resource = new StatsResource(stats);
 
         TimeSpan selfTs = stats.getTimeSpan();
@@ -30,7 +28,7 @@ public class StatsResourceAssembler <K> implements ResourceAssembler<Stats<K>, S
         return resource;
     }
 
-    private void addAvailableLinks(Stats<K> stats, StatsResource resource) {
+    private void addAvailableLinks(Stats<?> stats, StatsResource resource) {
         for(TimeSpan ts : stats.getAvailableTimeSpans()) {
             String queryStr = getQueryString(ts);
             Link link = getLinkBuilder(stats.getType()).slash(queryStr).withRel(ts.getName());
