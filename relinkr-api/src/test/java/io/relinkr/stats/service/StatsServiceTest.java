@@ -14,15 +14,10 @@
   limitations under the License.
 */
 
-package io.relinkr.visitor.service;
+package io.relinkr.stats.service;
 
-import io.relinkr.core.orm.BaseRepository;
-import io.relinkr.visitor.model.Visitor;
-import io.relinkr.visitor.model.VisitorId;
+import static org.junit.Assert.*;
 
-/**
- * Repository of {@link Visitor}s.
- */
-public interface VisitorRepository extends BaseRepository<Visitor, VisitorId> {
+public class StatsServiceTest {
 
 }

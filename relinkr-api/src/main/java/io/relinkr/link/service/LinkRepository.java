@@ -24,7 +24,7 @@ import java.util.Optional;
 /**
  * Repository of {@link Link}s.
  */
-interface LinkRepository extends OwnableRepository<Link, LinkId> {
+public interface LinkRepository extends OwnableRepository<Link, LinkId> {
 
   /**
    * Returns a link by its {@code path}.
