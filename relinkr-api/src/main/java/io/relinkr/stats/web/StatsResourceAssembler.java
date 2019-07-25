@@ -1,9 +1,11 @@
 package io.relinkr.stats.web;
 
+import io.relinkr.stats.model.StatType;
 import io.relinkr.stats.model.Stats;
 import io.relinkr.stats.model.TimeSpan;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceAssembler;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -20,7 +22,7 @@ public class StatsResourceAssembler <K> implements ResourceAssembler<Stats<K>, S
 
         TimeSpan<K> selfTs = stats.getTimeSpan();
         String queryStr = getQueryString(selfTs);
-        Link link = stats.getType().linkBuilder().slash(queryStr).withSelfRel();
+        Link link = getLinkBuilder(stats.getType()).slash(queryStr).withSelfRel();
         resource.add(link);
 
         addAvailableLinks(stats, resource);
@@ -31,8 +33,22 @@ public class StatsResourceAssembler <K> implements ResourceAssembler<Stats<K>, S
     private void addAvailableLinks(Stats<K> stats, StatsResource resource) {
         for(TimeSpan<K> ts : stats.getAvailableTimeSpans()) {
             String queryStr = getQueryString(ts);
-            Link link = stats.getType().linkBuilder().slash(queryStr).withRel(ts.getName());
+            Link link = getLinkBuilder(stats.getType()).slash(queryStr).withRel(ts.getName());
             resource.add(link);
+        }
+    }
+
+    private ControllerLinkBuilder getLinkBuilder(StatType statType) {
+        StatsResourceController controller = methodOn(StatsResourceController.class);
+        switch (statType) {
+            case LINKS:
+                return linkTo(controller.getLinksStats(null));
+            case CLICKS:
+                return linkTo(controller.getClicksStats(null));
+            case VISITORS:
+                return linkTo(controller.getVisitorsStats(null));
+            default:
+                throw new AssertionError("Internal error: unknown type " + statType);
         }
     }
 
