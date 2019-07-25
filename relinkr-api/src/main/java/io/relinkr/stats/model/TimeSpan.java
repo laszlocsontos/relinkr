@@ -16,16 +16,34 @@
 
 package io.relinkr.stats.model;
 
+import static io.relinkr.stats.model.TimePeriod.CUSTOM;
+import static lombok.AccessLevel.PRIVATE;
+
 import java.time.LocalDate;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor(staticName = "of")
+@RequiredArgsConstructor(access = PRIVATE)
 public class TimeSpan {
 
-  private final String name;
+  private final TimePeriod period;
   private final LocalDate startDate;
   private final LocalDate endDate;
+
+  static TimeSpan of(
+      @NonNull TimePeriod period, @NonNull LocalDate startDate, @NonNull LocalDate endDate) {
+
+    if (endDate.isBefore(startDate)) {
+      throw new IllegalArgumentException("endDate cannot be earlier that startDate");
+    }
+
+    return new TimeSpan(period, startDate, endDate);
+  }
+
+  public static TimeSpan ofCustom(LocalDate startDate, LocalDate endDate) {
+    return of(CUSTOM, startDate, endDate);
+  }
 
 }

@@ -47,7 +47,7 @@ public class StatsResourceAssembler implements ResourceAssembler<Stats<?>, Stats
   private void addAvailableLinks(Stats<?> stats, StatsResource resource) {
     for (TimeSpan ts : stats.getAvailableTimeSpans()) {
       String queryStr = getQueryString(ts);
-      Link link = getLinkBuilder(stats.getType()).slash(queryStr).withRel(ts.getName());
+      Link link = getLinkBuilder(stats.getType()).slash(queryStr).withRel(ts.getPeriod().name());
       resource.add(link);
     }
   }

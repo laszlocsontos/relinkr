@@ -16,6 +16,7 @@
 
 package io.relinkr.stats.web;
 
+import static java.time.temporal.ChronoUnit.DAYS;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -25,10 +26,12 @@ import io.relinkr.core.security.authz.annotation.AuthorizeRolesOrOwner;
 import io.relinkr.stats.model.StatEntry;
 import io.relinkr.stats.model.Stats;
 import io.relinkr.stats.model.TimeSpan;
+import io.relinkr.stats.model.TimeSpanFactory;
 import io.relinkr.user.model.UserId;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,14 +42,16 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * Provides the REST API for retrieving statistics.
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/v1/stats")
 public class StatsResourceController {
 
   private final StatsResourceAssembler statsAssembler = new StatsResourceAssembler();
+  private final TimeSpanFactory timeSpanFactory;
 
+  // TODO: Add path variable: requested timespan
   @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
   @GetMapping(path = "/links", produces = HAL_JSON_VALUE)
-  // TODO: Add path variable: requested timespan
   HttpEntity<StatsResource> getLinksStats(@CurrentUser UserId userId)
       throws ApplicationException {
 
@@ -56,12 +61,12 @@ public class StatsResourceController {
     );
 
     List<TimeSpan> timeSpans = Arrays.asList(
-        TimeSpan.of("today", LocalDate.of(2019, 6, 3), LocalDate.of(2019, 6, 3)),
-        TimeSpan.of("yesterday", LocalDate.of(2019, 6, 2), LocalDate.of(2019, 6, 2)),
-        TimeSpan.of("last7days", LocalDate.of(2019, 5, 27), LocalDate.of(2019, 6, 2))
+        timeSpanFactory.today(),
+        timeSpanFactory.yesterday(),
+        timeSpanFactory.past(7, DAYS)
     );
 
-    TimeSpan ts = TimeSpan.of("custom", LocalDate.of(2019, 3, 6), LocalDate.of(2019, 3, 12));
+    TimeSpan ts = TimeSpan.ofCustom(LocalDate.of(2019, 3, 6), LocalDate.of(2019, 3, 12));
     Stats<LocalDate> stats = Stats.ofLinks(entries, ts, timeSpans);
 
     StatsResource resource = statsAssembler.toResource(stats);
