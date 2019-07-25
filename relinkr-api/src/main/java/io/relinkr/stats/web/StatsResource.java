@@ -11,12 +11,12 @@ import org.springframework.hateoas.Resources;
 @Getter
 public class StatsResource extends Resources<StatEntry> {
 
-    @JsonProperty("timespan")
-    private TimeSpan timeSpan;
+  @JsonProperty("timespan")
+  private TimeSpan timeSpan;
 
-    public StatsResource(Stats stats, Link... links) {
-        super(stats.getEntries(), links);
-        timeSpan = stats.getTimeSpan();
-    }
+  public StatsResource(Stats stats, Link... links) {
+    super(stats.getEntries(), links);
+    timeSpan = stats.getCurrentTimeSpan();
+  }
 
 }

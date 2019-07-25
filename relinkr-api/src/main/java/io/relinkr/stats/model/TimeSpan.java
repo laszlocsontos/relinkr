@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(staticName = "of")
 public class TimeSpan {
 
-    private final String name;
-    private final LocalDate startDate;
-    private final LocalDate endDate;
+  private final String name;
+  private final LocalDate startDate;
+  private final LocalDate endDate;
 
 }

@@ -12,39 +12,39 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor(access = PRIVATE)
-public class Stats <K> {
+public class Stats<K> {
 
-    private final StatType type;
-    private final Collection<StatEntry<K>> entries;
+  private final StatType type;
+  private final Collection<StatEntry<K>> entries;
 
-    private final TimeSpan timeSpan;
-    private final Collection<TimeSpan> availableTimeSpans;
+  private final TimeSpan currentTimeSpan;
+  private final Collection<TimeSpan> availableTimeSpans;
 
-    public static Stats<LocalDate> ofLinks(
-        Collection<StatEntry<LocalDate>> entries, TimeSpan timeSpan,
-        Collection<TimeSpan> availableTimeSpans) {
+  public static Stats<LocalDate> ofLinks(
+      Collection<StatEntry<LocalDate>> entries, TimeSpan timeSpan,
+      Collection<TimeSpan> availableTimeSpans) {
 
-      return new Stats<>(LINKS, entries, timeSpan, availableTimeSpans);
-    }
+    return new Stats<>(LINKS, entries, timeSpan, availableTimeSpans);
+  }
 
-    public static Stats<LocalDate> ofClicks(
-        Collection<StatEntry<LocalDate>> entries, TimeSpan timeSpan,
-        Collection<TimeSpan> availableTimeSpans) {
+  public static Stats<LocalDate> ofClicks(
+      Collection<StatEntry<LocalDate>> entries, TimeSpan timeSpan,
+      Collection<TimeSpan> availableTimeSpans) {
 
-      return new Stats<>(CLICKS, entries, timeSpan, availableTimeSpans);
-    }
+    return new Stats<>(CLICKS, entries, timeSpan, availableTimeSpans);
+  }
 
-    public static Stats<String> ofVisitors(
-        Collection<StatEntry<String>> entries, TimeSpan timeSpan,
-        Collection<TimeSpan> availableTimeSpans) {
+  public static Stats<String> ofVisitors(
+      Collection<StatEntry<String>> entries, TimeSpan timeSpan,
+      Collection<TimeSpan> availableTimeSpans) {
 
-      return new Stats<>(VISITORS, entries, timeSpan, availableTimeSpans);
-    }
+    return new Stats<>(VISITORS, entries, timeSpan, availableTimeSpans);
+  }
 
-    public enum StatType {
-        LINKS,
-        CLICKS,
-        VISITORS
-    }
+  public enum StatType {
+    LINKS,
+    CLICKS,
+    VISITORS
+  }
 
 }

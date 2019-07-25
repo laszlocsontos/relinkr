@@ -9,7 +9,7 @@ import org.springframework.hateoas.core.Relation;
 @Relation(collectionRelation = "data")
 public class StatEntry<K> {
 
-    private final K key;
-    private final int value;
+  private final K key;
+  private final int value;
 
 }
