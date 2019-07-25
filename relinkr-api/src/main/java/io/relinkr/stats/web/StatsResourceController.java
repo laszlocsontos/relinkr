@@ -27,6 +27,7 @@ import io.relinkr.stats.model.Stats;
 import io.relinkr.stats.model.TimePeriod;
 import io.relinkr.stats.model.TimeSpan;
 import io.relinkr.stats.model.TimeSpanFactory;
+import io.relinkr.stats.service.StatsService;
 import io.relinkr.user.model.UserId;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -37,7 +38,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Provides the REST API for retrieving statistics.
@@ -49,6 +49,7 @@ public class StatsResourceController {
 
   private final StatsResourceAssembler statsAssembler = new StatsResourceAssembler();
   private final TimeSpanFactory timeSpanFactory;
+  private final StatsService statsService;
 
   // TODO: Add path variable: requested timespan
   @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
@@ -83,7 +84,9 @@ public class StatsResourceController {
       @CurrentUser UserId userId, @PathVariable TimePeriod period)
       throws ApplicationException {
 
-    throw new NotImplementedException();
+    TimeSpan timeSpan = timeSpanFactory.period(period);
+    Stats<LocalDate> clickStats = statsService.getClicksStats(userId, timeSpan);
+    return ok(statsAssembler.toResource(clickStats));
   }
 
   @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
@@ -92,7 +95,9 @@ public class StatsResourceController {
       @CurrentUser UserId userId, @PathVariable TimePeriod period)
       throws ApplicationException {
 
-    throw new NotImplementedException();
+    TimeSpan timeSpan = timeSpanFactory.period(period);
+    Stats<LocalDate> clickStats = statsService.getClicksStats(userId, timeSpan);
+    return ok(statsAssembler.toResource(clickStats));
   }
 
 }
