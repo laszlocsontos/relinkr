@@ -19,6 +19,7 @@ import Vuex from 'vuex'
 import auth from './modules/auth';
 import profile from './modules/profile';
 import link from './modules/link';
+import stats from './modules/stats';
 import createLogger from 'vuex/dist/logger';
 
 Vue.use(Vuex);
@@ -29,7 +30,8 @@ export default new Vuex.Store({
   modules: {
     auth,
     profile,
-    link
+    link,
+    stats
   },
   strict: debug,
   plugins: debug ? [createLogger()] : []

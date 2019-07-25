@@ -18,19 +18,12 @@
 
 import _ from 'lodash';
 import {get, post, put} from '../../api';
-import axios from 'axios';
 
 const PAGE_SIZE = 10;
 
 // initial state
 const state = {
   userLinkStatuses: {},
-  _linksStats: {},
-  _clicksStats: {},
-  _visitorsStats: {},
-  linksCount: null, // do not display any number until the data is fetched
-  clicksCount: null,
-  visitorsCount: null,
   page: {
     size: 0,
     totalElements: 0,
@@ -45,12 +38,7 @@ const getters = {
   hasNextStatus: state => (id, nextStatus) => {
     const paths = state.userLinkStatuses[id];
     return _.some(paths, (path) => _.endsWith(path, nextStatus));
-  },
-  // Pass a copy of the state to prevent "vuex store state modified outside mutation
-  // handlers" error, the Chart modifies this data if there are multiple charts on the page
-  getLinksStats: () => _.cloneDeep(state._linksStats),
-  getClicksStats: () => _.cloneDeep(state._clicksStats),
-  getVisitorsStats: () => _.cloneDeep(state._visitorsStats)
+  }
 };
 
 const mutations = {
@@ -81,27 +69,6 @@ const mutations = {
         },
         {}
     );
-  },
-  setStats(state, {statType, data}) {
-    const embeddedData = _.defaultTo(_.get(data, '_embedded.data'), []);
-    const dataArray = [];
-    const labelsArray = [];
-
-    let totalCount = 0;
-    for(const element of embeddedData) {
-      dataArray.push(element.value);
-      labelsArray.push(element.key);
-      totalCount += element.value;
-    }
-
-    state[`${statType}Count`] = totalCount;
-    state[`_${statType}Stats`] = {
-      datasets: [{
-        label: `# of ${statType}`,
-        data: dataArray
-      }],
-      labels: labelsArray
-    };
   }
 };
 
@@ -138,16 +105,6 @@ const actions = {
     post({endpoint: "/v1/links", data: link})
     .then(successCallback)
     .catch(failureCallback);
-  },
-  fetchStats({commit}, statType) {
-    // statType: links/clicks/visitors
-    axios({method: 'GET', url: `/mocks/${statType}/1`})
-    .then(response => {
-      commit(`setStats`, {statType: statType, data: response.data});
-    })
-    .catch(err => {
-      console.log("error", err);
-    });
   }
 };
 

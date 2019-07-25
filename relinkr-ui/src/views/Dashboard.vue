@@ -120,12 +120,12 @@ import { mapState } from 'vuex';
       this.fetchStats('visitors');
     },
     computed: {
-      ...mapGetters('link', {linksStats: 'getLinksStats', clicksStats: 'getClicksStats',
+      ...mapGetters('stats', {linksStats: 'getLinksStats', clicksStats: 'getClicksStats',
         visitorsStats: 'getVisitorsStats'}),
-      ...mapState('link', ['linksCount', 'clicksCount', 'visitorsCount'])
+      ...mapState('stats', ['linksCount', 'clicksCount', 'visitorsCount'])
     },
     methods: {
-      ...mapActions('link', ['fetchStats'])
+      ...mapActions('stats', ['fetchStats'])
     }
   }
 </script>
