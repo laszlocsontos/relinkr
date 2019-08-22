@@ -18,11 +18,13 @@ package io.relinkr.stats.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.hateoas.core.Relation;
 
 @Getter
 @RequiredArgsConstructor(staticName = "of")
 @Relation(collectionRelation = "data")
+@ToString(of = {"key", "value"})
 public class StatEntry<K> {
 
   private final K key;

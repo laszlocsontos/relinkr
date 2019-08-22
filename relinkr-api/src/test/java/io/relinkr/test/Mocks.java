@@ -48,6 +48,7 @@ import io.relinkr.visitor.model.Visitor;
 import io.relinkr.visitor.model.VisitorId;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,6 +70,7 @@ public final class Mocks {
 
   public static final Instant FIXED_INSTANT = ofEpochSecond(5553091772L);
   public static final LocalDateTime FIXED_TIMESTAMP = LocalDateTime.ofInstant(FIXED_INSTANT, UTC);
+  public static final LocalDate FIXED_DATE = FIXED_TIMESTAMP.toLocalDate();
   public static final Clock FIXED_CLOCK = Clock.fixed(FIXED_INSTANT, UTC);
 
   public static final String LONG_URL_BASE_S

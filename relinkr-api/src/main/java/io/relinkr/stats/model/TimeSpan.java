@@ -32,6 +32,10 @@ public class TimeSpan {
   private final LocalDate startDate;
   private final LocalDate endDate;
 
+  public boolean contains(@NonNull LocalDate date) {
+    return !date.isBefore(startDate) && !date.isAfter(endDate);
+  }
+
   static TimeSpan of(
       @NonNull TimePeriod period, @NonNull LocalDate startDate, @NonNull LocalDate endDate) {
 
