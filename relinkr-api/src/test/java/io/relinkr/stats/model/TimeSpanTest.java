@@ -16,40 +16,80 @@
 
 package io.relinkr.stats.model;
 
-import static org.junit.Assert.*;
+import static io.relinkr.stats.model.TimePeriod.CUSTOM;
+import static io.relinkr.stats.model.TimePeriod.TODAY;
+import static io.relinkr.test.Mocks.FIXED_DATE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class TimeSpanTest {
 
-  @Test(expected = IllegalArgumentException.class)
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
+
+  @Test
   public void givenNullPeriod_whenCreate_thenIllegalArgumentException() {
+    expectedException.expect(IllegalArgumentException.class);
+    expectedException.expectMessage("period is marked @NonNull but is null");
 
+    TimeSpan.of(null, FIXED_DATE, FIXED_DATE);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void givenNullStartDate_whenCreate_thenIllegalArgumentException() {
+    expectedException.expect(IllegalArgumentException.class);
+    expectedException.expectMessage("startDate is marked @NonNull but is null");
 
+    TimeSpan.of(TODAY, null, FIXED_DATE);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void givenNullEndDate_whenCreate_thenIllegalArgumentException() {
+    expectedException.expect(IllegalArgumentException.class);
+    expectedException.expectMessage("endDate is marked @NonNull but is null");
 
+    TimeSpan.of(TODAY, FIXED_DATE, null);
   }
 
   @Test
-  public void givenValidStartAndEndDate_whenCreate_thenCustomTimeSpanCreated() {
-    fail();
-  }
+  public void givenValidStartAndEndDate_whenCreate_thenCustomSpanCreated() {
+    TimeSpan timeSpan = TimeSpan.ofCustom(FIXED_DATE, FIXED_DATE);
 
-  @Test(expected = IllegalArgumentException.class)
-  public void givenInvalidStartAndEndDate_whenCreate_thenCustomTimeSpanCreated() {
-    // This means that end date is before the start date
+    assertEquals(CUSTOM, timeSpan.getPeriod());
+    assertEquals(FIXED_DATE, timeSpan.getStartDate());
+    assertEquals(FIXED_DATE, timeSpan.getEndDate());
   }
 
   @Test
-  public void givenPeriodAndValidStartAndEndDate_whenCreate_thenTimeSpanWithPeriodCreated() {
-    fail();
+  public void givenInvalidStartAndEndDate_whenCreate_thenIllegalArgumentException() {
+    expectedException.expect(IllegalArgumentException.class);
+    expectedException.expectMessage("endDate cannot be earlier that startDate");
+
+    TimeSpan.of(TODAY, FIXED_DATE, FIXED_DATE.minusDays(1));
+  }
+
+  @Test
+  public void givenDateBeforeStartDate_whenContains_thenFalse() {
+    TimeSpan timeSpan = TimeSpan.ofCustom(FIXED_DATE, FIXED_DATE.plusDays(1));
+    assertFalse(timeSpan.contains(FIXED_DATE.minusDays(1)));
+  }
+
+  @Test
+  public void givenDateAfterEndDate_whenContains_thenFalse() {
+    TimeSpan timeSpan = TimeSpan.ofCustom(FIXED_DATE, FIXED_DATE.plusDays(1));
+    assertFalse(timeSpan.contains(FIXED_DATE.plusDays(2)));
+  }
+
+  @Test
+  public void givenDateBetweenStartAndEndDate_whenContains_thenTrue() {
+    TimeSpan timeSpan = TimeSpan.ofCustom(FIXED_DATE, FIXED_DATE.plusDays(1));
+    assertTrue(timeSpan.contains(FIXED_DATE));
+    assertTrue(timeSpan.contains(FIXED_DATE.plusDays(1)));
   }
 
 }
