@@ -20,12 +20,14 @@ import static io.relinkr.stats.model.TimePeriod.CUSTOM;
 import static lombok.AccessLevel.PRIVATE;
 
 import java.time.LocalDate;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor(access = PRIVATE)
+@EqualsAndHashCode(of = "period, startDate, endDate")
 public class TimeSpan {
 
   private final TimePeriod period;

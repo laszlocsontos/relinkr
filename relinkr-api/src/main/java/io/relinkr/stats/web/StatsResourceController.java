@@ -22,7 +22,6 @@ import static org.springframework.http.ResponseEntity.ok;
 import io.relinkr.core.model.ApplicationException;
 import io.relinkr.core.security.authn.annotation.CurrentUser;
 import io.relinkr.core.security.authz.annotation.AuthorizeRolesOrOwner;
-import io.relinkr.stats.model.StatEntry;
 import io.relinkr.stats.model.Stats;
 import io.relinkr.stats.model.TimePeriod;
 import io.relinkr.stats.model.TimeSpan;
@@ -30,9 +29,7 @@ import io.relinkr.stats.service.StatsService;
 import io.relinkr.user.model.UserId;
 import java.time.Clock;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.function.BiFunction;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -60,26 +57,13 @@ public class StatsResourceController {
     this.clock = clockProvider.getIfAvailable(Clock::systemUTC);
   }
 
-  // TODO: Add path variable: requested timespan
   @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
   @GetMapping(path = "/links/{period}", produces = HAL_JSON_VALUE)
   HttpEntity<StatsResource> getLinksStats(
       @CurrentUser UserId userId, @PathVariable TimePeriod period)
       throws ApplicationException {
 
-    List<StatEntry<LocalDate>> entries = Arrays.asList(
-        StatEntry.of(LocalDate.of(2018, 3, 6), 5),
-        StatEntry.of(LocalDate.of(2018, 3, 7), 2)
-    );
-
-    List<TimeSpan> availableTimeSpans = Collections.emptyList();
-
-    TimeSpan currentTimeSpan = toTimeSpan(period);
-
-    Stats<LocalDate> stats = Stats.ofLinks(entries, currentTimeSpan, availableTimeSpans);
-
-    StatsResource resource = statsAssembler.toResource(stats);
-    return ok(resource);
+    return generateResponse(userId, period, statsService::getLinksStats);
   }
 
   @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
@@ -88,9 +72,7 @@ public class StatsResourceController {
       @CurrentUser UserId userId, @PathVariable TimePeriod period)
       throws ApplicationException {
 
-    TimeSpan timeSpan = toTimeSpan(period);
-    Stats<LocalDate> clickStats = statsService.getClicksStats(userId, timeSpan);
-    return ok(statsAssembler.toResource(clickStats));
+    return generateResponse(userId, period, statsService::getClicksStats);
   }
 
   @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
@@ -99,9 +81,15 @@ public class StatsResourceController {
       @CurrentUser UserId userId, @PathVariable TimePeriod period)
       throws ApplicationException {
 
+    return generateResponse(userId, period, statsService::getVisitorsStats);
+  }
+
+  private <K> HttpEntity<StatsResource> generateResponse(
+      UserId userId, TimePeriod period, BiFunction<UserId, TimeSpan, Stats<K>> statsGetter) {
+
     TimeSpan timeSpan = toTimeSpan(period);
-    Stats<LocalDate> clickStats = statsService.getClicksStats(userId, timeSpan);
-    return ok(statsAssembler.toResource(clickStats));
+    Stats<K> stats = statsGetter.apply(userId, timeSpan);
+    return ok(statsAssembler.toResource(stats));
   }
 
   private TimeSpan toTimeSpan(TimePeriod period) {

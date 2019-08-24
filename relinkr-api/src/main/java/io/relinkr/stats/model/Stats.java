@@ -20,6 +20,7 @@ import static io.relinkr.stats.model.Stats.StatType.CLICKS;
 import static io.relinkr.stats.model.Stats.StatType.LINKS;
 import static io.relinkr.stats.model.Stats.StatType.VISITORS;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.stream.Collectors.toList;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -109,7 +110,9 @@ public class Stats<K> {
     for (StatEntry<LocalDate> entry : entries) {
       if (!currentTimeSpan.contains(entry.getKey())) {
         throw new IllegalArgumentException(
-            "Current timespan doesn't cover " + entry.getKey().format(ISO_DATE)
+            "Current timespan from " + currentTimeSpan.getStartDate().format(ISO_DATE)
+                + " to " + currentTimeSpan.getEndDate().format(ISO_DATE)
+                + " doesn't cover " + entry.getKey().format(ISO_DATE)
         );
       }
     }

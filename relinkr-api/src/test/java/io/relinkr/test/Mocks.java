@@ -16,9 +16,11 @@
 
 package io.relinkr.test;
 
+import static io.relinkr.stats.model.TimePeriod.PAST_WEEK;
 import static java.time.Instant.ofEpochMilli;
 import static java.time.Instant.ofEpochSecond;
 import static java.time.ZoneOffset.UTC;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonMap;
 import static java.util.Collections.unmodifiableMap;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -37,6 +39,8 @@ import io.relinkr.link.model.LinkId;
 import io.relinkr.link.model.LongUrl;
 import io.relinkr.link.model.Tag;
 import io.relinkr.link.model.UtmParameters;
+import io.relinkr.stats.model.StatEntry;
+import io.relinkr.stats.model.TimeSpan;
 import io.relinkr.user.model.EmailAddress;
 import io.relinkr.user.model.Gender;
 import io.relinkr.user.model.Role;
@@ -50,6 +54,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.data.domain.PageRequest;
@@ -206,6 +211,40 @@ public final class Mocks {
 
   public static final SimpleGrantedAuthority AUTHORITY_USER =
       new SimpleGrantedAuthority("ROLE_USER");
+
+  public static final TimeSpan TIME_SPAN = PAST_WEEK.toTimeSpan(FIXED_DATE);
+
+  public static final StatEntry<LocalDate> DATE_ENTRY_1 = StatEntry.of(TIME_SPAN.getStartDate(), 1);
+
+  public static final StatEntry<LocalDate> DATE_ENTRY_2 =
+      StatEntry.of(TIME_SPAN.getStartDate().plusDays(1), 2);
+
+  public static final StatEntry<LocalDate> DATE_ENTRY_3 =
+      StatEntry.of(TIME_SPAN.getStartDate().plusDays(2), 3);
+
+  public static final StatEntry<LocalDate> DATE_ENTRY_4 =
+      StatEntry.of(TIME_SPAN.getStartDate().plusDays(3), 4);
+
+  public static final StatEntry<LocalDate> DATE_ENTRY_5 =
+      StatEntry.of(TIME_SPAN.getStartDate().plusDays(4), 1);
+
+  public static final StatEntry<LocalDate> DATE_ENTRY_6 =
+      StatEntry.of(TIME_SPAN.getStartDate().plusDays(5), 0);
+
+  public static final StatEntry<LocalDate> DATE_ENTRY_7 =
+      StatEntry.of(TIME_SPAN.getStartDate().plusDays(6), 1);
+
+  public static final Collection<StatEntry<LocalDate>> ENTRIES_BY_DATE = asList(
+      DATE_ENTRY_3, DATE_ENTRY_1, DATE_ENTRY_2, DATE_ENTRY_7, DATE_ENTRY_4,
+      DATE_ENTRY_5, DATE_ENTRY_6
+  );
+
+  public static final StatEntry<String> STRING_ENTRY_1 = StatEntry.of("new", 1);
+  public static final StatEntry<String> STRING_ENTRY_2 = StatEntry.of("returning", 2);
+
+  public static final Collection<StatEntry<String>> ENTRIES_BY_STRING =
+      asList(STRING_ENTRY_2, STRING_ENTRY_1);
+
 
   static {
     try {

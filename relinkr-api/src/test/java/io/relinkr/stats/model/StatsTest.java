@@ -3,7 +3,18 @@ package io.relinkr.stats.model;
 import static io.relinkr.stats.model.Stats.StatType.CLICKS;
 import static io.relinkr.stats.model.Stats.StatType.LINKS;
 import static io.relinkr.stats.model.Stats.StatType.VISITORS;
-import static io.relinkr.test.Mocks.FIXED_DATE;
+import static io.relinkr.test.Mocks.DATE_ENTRY_1;
+import static io.relinkr.test.Mocks.DATE_ENTRY_2;
+import static io.relinkr.test.Mocks.DATE_ENTRY_3;
+import static io.relinkr.test.Mocks.DATE_ENTRY_4;
+import static io.relinkr.test.Mocks.DATE_ENTRY_5;
+import static io.relinkr.test.Mocks.DATE_ENTRY_6;
+import static io.relinkr.test.Mocks.DATE_ENTRY_7;
+import static io.relinkr.test.Mocks.ENTRIES_BY_DATE;
+import static io.relinkr.test.Mocks.ENTRIES_BY_STRING;
+import static io.relinkr.test.Mocks.STRING_ENTRY_1;
+import static io.relinkr.test.Mocks.STRING_ENTRY_2;
+import static io.relinkr.test.Mocks.TIME_SPAN;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -17,21 +28,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 public class StatsTest {
-
-  private static final StatEntry<LocalDate> DATE_ENTRY_1 = StatEntry.of(FIXED_DATE, 1);
-  private static final StatEntry<LocalDate> DATE_ENTRY_2 = StatEntry.of(FIXED_DATE.plusDays(1), 1);
-  private static final StatEntry<LocalDate> DATE_ENTRY_3 = StatEntry.of(FIXED_DATE.plusDays(2), 1);
-
-  private static final Collection<StatEntry<LocalDate>> ENTRIES_BY_DATE =
-      asList(DATE_ENTRY_3, DATE_ENTRY_1, DATE_ENTRY_2);
-
-  private static final StatEntry<String> STRING_ENTRY_1 = StatEntry.of("new", 1);
-  private static final StatEntry<String> STRING_ENTRY_2 = StatEntry.of("returning", 2);
-
-  private static final Collection<StatEntry<String>> ENTRIES_BY_STRING =
-      asList(STRING_ENTRY_2, STRING_ENTRY_1);
-
-  private static final TimeSpan TIME_SPAN = TimeSpan.ofCustom(FIXED_DATE, FIXED_DATE.plusDays(2));
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -69,10 +65,12 @@ public class StatsTest {
     // overlap with the time span
     expectedException.expect(IllegalArgumentException.class);
 
-    LocalDate extraDate = FIXED_DATE.minusDays(1);
+    LocalDate extraDate = TIME_SPAN.getStartDate().minusDays(1);
 
     expectedException.expectMessage(
-        "Current timespan doesn't cover " + extraDate.format(ISO_DATE)
+        "Current timespan from " + ISO_DATE.format(TIME_SPAN.getStartDate())
+            + " to " + ISO_DATE.format(TIME_SPAN.getEndDate())
+            + " doesn't cover " + ISO_DATE.format(extraDate)
     );
 
     Collection<StatEntry<LocalDate>> entries = new ArrayList<>(ENTRIES_BY_DATE);
@@ -87,7 +85,15 @@ public class StatsTest {
     Stats<LocalDate> stats = Stats.ofLinks(ENTRIES_BY_DATE, TIME_SPAN, emptyList());
 
     assertEquals(LINKS, stats.getType());
-    assertEquals(asList(DATE_ENTRY_1, DATE_ENTRY_2, DATE_ENTRY_3), stats.getEntries());
+
+    assertEquals(
+        asList(
+            DATE_ENTRY_1, DATE_ENTRY_2, DATE_ENTRY_3,
+            DATE_ENTRY_4, DATE_ENTRY_5, DATE_ENTRY_6,
+            DATE_ENTRY_7
+        ),
+        stats.getEntries()
+    );
   }
 
   // ofClicks
@@ -123,10 +129,12 @@ public class StatsTest {
     // overlap with the time span
     expectedException.expect(IllegalArgumentException.class);
 
-    LocalDate extraDate = FIXED_DATE.minusDays(1);
+    LocalDate extraDate = TIME_SPAN.getStartDate().minusDays(1);
 
     expectedException.expectMessage(
-        "Current timespan doesn't cover " + extraDate.format(ISO_DATE)
+        "Current timespan from " + ISO_DATE.format(TIME_SPAN.getStartDate())
+            + " to " + ISO_DATE.format(TIME_SPAN.getEndDate())
+            + " doesn't cover " + ISO_DATE.format(extraDate)
     );
 
     Collection<StatEntry<LocalDate>> entries = new ArrayList<>(ENTRIES_BY_DATE);
@@ -141,7 +149,15 @@ public class StatsTest {
     Stats<LocalDate> stats = Stats.ofClicks(ENTRIES_BY_DATE, TIME_SPAN, emptyList());
 
     assertEquals(CLICKS, stats.getType());
-    assertEquals(asList(DATE_ENTRY_1, DATE_ENTRY_2, DATE_ENTRY_3), stats.getEntries());
+
+    assertEquals(
+        asList(
+            DATE_ENTRY_1, DATE_ENTRY_2, DATE_ENTRY_3,
+            DATE_ENTRY_4, DATE_ENTRY_5, DATE_ENTRY_6,
+            DATE_ENTRY_7
+        ),
+        stats.getEntries()
+    );
   }
 
   // ofVisitors
