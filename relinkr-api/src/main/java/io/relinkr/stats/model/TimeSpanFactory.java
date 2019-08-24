@@ -16,14 +16,9 @@
 
 package io.relinkr.stats.model;
 
-import static io.relinkr.stats.model.TimePeriod.PAST_MONTH;
-import static io.relinkr.stats.model.TimePeriod.PAST_QUARTER;
+import static io.relinkr.stats.model.TimePeriod.CUSTOM;
 import static io.relinkr.stats.model.TimePeriod.PAST_WEEK;
-import static io.relinkr.stats.model.TimePeriod.PAST_YEAR;
-import static io.relinkr.stats.model.TimePeriod.THIS_MONTH;
-import static io.relinkr.stats.model.TimePeriod.THIS_QUARTER;
 import static io.relinkr.stats.model.TimePeriod.THIS_WEEK;
-import static io.relinkr.stats.model.TimePeriod.THIS_YEAR;
 import static io.relinkr.stats.model.TimePeriod.TODAY;
 import static io.relinkr.stats.model.TimePeriod.YESTERDAY;
 
@@ -48,8 +43,13 @@ public class TimeSpanFactory {
   }
 
   public TimeSpan period(TimePeriod period) {
-    // TODO: Add a proper implementation here
-    return TimeSpan.ofCustom(LocalDate.of(2016, 7, 25), LocalDate.of(2016, 7, 25));
+    if (CUSTOM.equals(period)) {
+      throw new IllegalArgumentException("Unsupported period: " + period);
+    }
+
+    LocalDate today = LocalDate.now(clock);
+
+    return period.toTimeSpan(today);
   }
 
   public TimeSpan today() {
@@ -66,30 +66,6 @@ public class TimeSpanFactory {
 
   public TimeSpan pastWeek() {
     return period(PAST_WEEK);
-  }
-
-  public TimeSpan thisMonth() {
-    return period(THIS_MONTH);
-  }
-
-  public TimeSpan pastMonth() {
-    return period(PAST_MONTH);
-  }
-
-  public TimeSpan thisQuarter() {
-    return period(THIS_QUARTER);
-  }
-
-  public TimeSpan pastQuarter() {
-    return period(PAST_QUARTER);
-  }
-
-  public TimeSpan thisYear() {
-    return period(THIS_YEAR);
-  }
-
-  public TimeSpan pastYear() {
-    return period(PAST_YEAR);
   }
 
 }

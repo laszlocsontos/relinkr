@@ -16,21 +16,98 @@
 
 package io.relinkr.stats.model;
 
+import static java.time.DayOfWeek.MONDAY;
+import static java.time.DayOfWeek.SUNDAY;
+import static java.time.temporal.ChronoField.DAY_OF_WEEK;
+
+import java.time.LocalDate;
+
 public enum TimePeriod {
-  TODAY,
-  YESTERDAY,
 
-  THIS_WEEK,
-  PAST_WEEK,
+  TODAY {
+    @Override
+    TimeSpan toTimeSpan(LocalDate today) {
+      return TimeSpan.of(this, today, today);
+    }
 
-  THIS_MONTH,
-  PAST_MONTH,
+  },
 
-  THIS_QUARTER,
-  PAST_QUARTER,
+  YESTERDAY {
+    @Override
+    TimeSpan toTimeSpan(LocalDate today) {
+      LocalDate yesterday = today.minusDays(1);
+      return TimeSpan.of(this, yesterday, yesterday);
+    }
 
-  THIS_YEAR,
-  PAST_YEAR,
+  },
 
-  CUSTOM;
+  THIS_WEEK {
+    @Override
+    TimeSpan toTimeSpan(LocalDate today) {
+      LocalDate startDate = today.with(DAY_OF_WEEK, MONDAY.getValue());
+      LocalDate endDate = today.with(DAY_OF_WEEK, SUNDAY.getValue());
+      return TimeSpan.of(this, startDate, endDate);
+    }
+
+  },
+
+  PAST_WEEK {
+    @Override
+    TimeSpan toTimeSpan(LocalDate today) {
+      LocalDate startDate = today.with(DAY_OF_WEEK, MONDAY.getValue()).minusWeeks(1);
+      LocalDate endDate = today.with(DAY_OF_WEEK, SUNDAY.getValue()).minusWeeks(1);
+      return TimeSpan.of(this, startDate, endDate);
+    }
+
+  },
+
+  THIS_MONTH {
+    @Override
+    TimeSpan toTimeSpan(LocalDate today) {
+      LocalDate startDate = today.withDayOfMonth(1);
+      LocalDate endDate = today.plusMonths(1).withDayOfMonth(1).minusDays(1);
+      return TimeSpan.of(this, startDate, endDate);
+    }
+
+  },
+
+  PAST_MONTH {
+    @Override
+    TimeSpan toTimeSpan(LocalDate today) {
+      LocalDate startDate = today.minusMonths(1).withDayOfMonth(1);
+      LocalDate endDate = today.withDayOfMonth(1).minusDays(1);
+      return TimeSpan.of(this, startDate, endDate);
+    }
+
+  },
+
+  THIS_YEAR {
+    @Override
+    TimeSpan toTimeSpan(LocalDate today) {
+      LocalDate startDate = today.withDayOfYear(1);
+      LocalDate endDate = today.plusYears(1).withDayOfYear(1).minusDays(1);
+      return TimeSpan.of(this, startDate, endDate);
+    }
+
+  },
+
+  PAST_YEAR {
+    @Override
+    TimeSpan toTimeSpan(LocalDate today) {
+      LocalDate startDate = today.minusYears(1).withDayOfYear(1);
+      LocalDate endDate = today.withDayOfYear(1).minusDays(1);
+      return TimeSpan.of(this, startDate, endDate);
+    }
+
+  },
+
+  CUSTOM {
+    @Override
+    TimeSpan toTimeSpan(LocalDate today) {
+      throw new UnsupportedOperationException("Custom TimeSpan cannot be converted to TimeSpan");
+    }
+  };
+
+  abstract TimeSpan toTimeSpan(LocalDate today);
+
 }
