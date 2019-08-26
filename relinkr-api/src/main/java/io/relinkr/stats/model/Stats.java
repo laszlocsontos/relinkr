@@ -26,6 +26,7 @@ import static lombok.AccessLevel.PRIVATE;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Set;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -99,8 +100,10 @@ public class Stats<K> {
   private static void checkEntries(
       @NonNull Collection<StatEntry<LocalDate>> entries, @NonNull TimeSpan currentTimeSpan) {
 
+    Set<LocalDate> allDates = currentTimeSpan.getAllDates();
+
     for (StatEntry<LocalDate> entry : entries) {
-      if (!currentTimeSpan.contains(entry.getKey())) {
+      if (!allDates.contains(entry.getKey())) {
         throw new IllegalArgumentException(
             "Current timespan from " + ISO_DATE.format(currentTimeSpan.getStartDate())
                 + " to " + ISO_DATE.format(currentTimeSpan.getEndDate())

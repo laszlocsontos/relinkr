@@ -20,6 +20,8 @@ import static io.relinkr.stats.model.TimePeriod.CUSTOM;
 import static lombok.AccessLevel.PRIVATE;
 
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -34,8 +36,14 @@ public class TimeSpan {
   private final LocalDate startDate;
   private final LocalDate endDate;
 
-  public boolean contains(@NonNull LocalDate date) {
-    return !date.isBefore(startDate) && !date.isAfter(endDate);
+  public Set<LocalDate> getAllDates() {
+    Set<LocalDate> allDates = new LinkedHashSet<>();
+    LocalDate date = startDate;
+    while (!date.isAfter(endDate)) {
+      allDates.add(date);
+      date = date.plusDays(1);
+    }
+    return allDates;
   }
 
   static TimeSpan of(

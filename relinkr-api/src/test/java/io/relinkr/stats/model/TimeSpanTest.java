@@ -19,9 +19,9 @@ package io.relinkr.stats.model;
 import static io.relinkr.stats.model.TimePeriod.CUSTOM;
 import static io.relinkr.stats.model.TimePeriod.TODAY;
 import static io.relinkr.test.Mocks.FIXED_DATE;
+import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -74,22 +74,12 @@ public class TimeSpanTest {
   }
 
   @Test
-  public void givenDateBeforeStartDate_whenContains_thenFalse() {
-    TimeSpan timeSpan = TimeSpan.ofCustom(FIXED_DATE, FIXED_DATE.plusDays(1));
-    assertFalse(timeSpan.contains(FIXED_DATE.minusDays(1)));
-  }
-
-  @Test
-  public void givenDateAfterEndDate_whenContains_thenFalse() {
-    TimeSpan timeSpan = TimeSpan.ofCustom(FIXED_DATE, FIXED_DATE.plusDays(1));
-    assertFalse(timeSpan.contains(FIXED_DATE.plusDays(2)));
-  }
-
-  @Test
-  public void givenDateBetweenStartAndEndDate_whenContains_thenTrue() {
-    TimeSpan timeSpan = TimeSpan.ofCustom(FIXED_DATE, FIXED_DATE.plusDays(1));
-    assertTrue(timeSpan.contains(FIXED_DATE));
-    assertTrue(timeSpan.contains(FIXED_DATE.plusDays(1)));
+  public void givenDate_whenGetAllDates_thenContainsAll() {
+    TimeSpan timeSpan = TimeSpan.ofCustom(FIXED_DATE, FIXED_DATE.plusDays(2));
+    assertThat(
+        timeSpan.getAllDates(),
+        contains(FIXED_DATE, FIXED_DATE.plusDays(1), FIXED_DATE.plusDays(2))
+    );
   }
 
 }
