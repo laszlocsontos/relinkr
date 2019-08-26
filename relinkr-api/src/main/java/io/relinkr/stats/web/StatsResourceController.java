@@ -26,13 +26,15 @@ import io.relinkr.stats.model.StatEntry;
 import io.relinkr.stats.model.Stats;
 import io.relinkr.stats.model.TimePeriod;
 import io.relinkr.stats.model.TimeSpan;
-import io.relinkr.stats.model.TimeSpanFactory;
 import io.relinkr.stats.service.StatsService;
 import io.relinkr.user.model.UserId;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,13 +45,20 @@ import org.springframework.web.bind.annotation.RestController;
  * Provides the REST API for retrieving statistics.
  */
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/v1/stats")
 public class StatsResourceController {
 
   private final StatsResourceAssembler statsAssembler = new StatsResourceAssembler();
-  private final TimeSpanFactory timeSpanFactory;
   private final StatsService statsService;
+  private final Clock clock;
+
+  @Autowired
+  public StatsResourceController(
+      StatsService statsService, ObjectProvider<Clock> clockProvider) {
+
+    this.statsService = statsService;
+    this.clock = clockProvider.getIfAvailable(Clock::systemUTC);
+  }
 
   // TODO: Add path variable: requested timespan
   @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
@@ -63,14 +72,9 @@ public class StatsResourceController {
         StatEntry.of(LocalDate.of(2018, 3, 7), 2)
     );
 
-    List<TimeSpan> availableTimeSpans = Arrays.asList(
-        timeSpanFactory.today(),
-        timeSpanFactory.yesterday(),
-        timeSpanFactory.thisWeek(),
-        timeSpanFactory.pastWeek()
-    );
+    List<TimeSpan> availableTimeSpans = Collections.emptyList();
 
-    TimeSpan currentTimeSpan = timeSpanFactory.period(period);
+    TimeSpan currentTimeSpan = toTimeSpan(period);
 
     Stats<LocalDate> stats = Stats.ofLinks(entries, currentTimeSpan, availableTimeSpans);
 
@@ -84,7 +88,7 @@ public class StatsResourceController {
       @CurrentUser UserId userId, @PathVariable TimePeriod period)
       throws ApplicationException {
 
-    TimeSpan timeSpan = timeSpanFactory.period(period);
+    TimeSpan timeSpan = toTimeSpan(period);
     Stats<LocalDate> clickStats = statsService.getClicksStats(userId, timeSpan);
     return ok(statsAssembler.toResource(clickStats));
   }
@@ -95,9 +99,14 @@ public class StatsResourceController {
       @CurrentUser UserId userId, @PathVariable TimePeriod period)
       throws ApplicationException {
 
-    TimeSpan timeSpan = timeSpanFactory.period(period);
+    TimeSpan timeSpan = toTimeSpan(period);
     Stats<LocalDate> clickStats = statsService.getClicksStats(userId, timeSpan);
     return ok(statsAssembler.toResource(clickStats));
+  }
+
+  private TimeSpan toTimeSpan(TimePeriod period) {
+    LocalDate today = LocalDate.now(clock);
+    return period.toTimeSpan(today);
   }
 
 }

@@ -21,13 +21,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import io.relinkr.stats.model.TimeSpanFactory;
 import io.relinkr.stats.web.StatsResourceControllerTest.TestConfig;
 import io.relinkr.test.security.AbstractResourceControllerTest;
 import java.time.Clock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -61,11 +59,6 @@ public class StatsResourceControllerTest extends AbstractResourceControllerTest 
     @Bean
     Clock clock() {
       return FIXED_CLOCK;
-    }
-
-    @Bean
-    TimeSpanFactory timeSpanFactory(ObjectProvider<Clock> clockProvider) {
-      return new TimeSpanFactory(clockProvider);
     }
 
   }
