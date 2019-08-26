@@ -16,6 +16,7 @@
 
 package io.relinkr.stats.web;
 
+import static io.relinkr.stats.model.TimePeriod.CUSTOM;
 import static io.relinkr.test.Mocks.ENTRIES_BY_DATE;
 import static io.relinkr.test.Mocks.ENTRIES_BY_STRING;
 import static io.relinkr.test.Mocks.FIXED_CLOCK;
@@ -34,12 +35,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import io.relinkr.stats.model.StatEntry;
 import io.relinkr.stats.model.Stats;
+import io.relinkr.stats.model.TimePeriod;
 import io.relinkr.stats.model.TimeSpan;
 import io.relinkr.stats.service.StatsService;
 import io.relinkr.stats.web.StatsResourceControllerTest.TestConfig;
 import io.relinkr.test.security.AbstractResourceControllerTest;
 import java.time.Clock;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -127,17 +132,25 @@ public class StatsResourceControllerTest extends AbstractResourceControllerTest 
       index++;
     }
 
+    String baseStatsUrl =
+        "http://localhost/v1/stats/" + expectedStats.getType().name().toLowerCase();
+
     TimeSpan timeSpan = expectedStats.getCurrentTimeSpan();
     String periodAsString = timeSpan.getPeriod().name();
 
+    List<String> expectedOtherPeriods = Arrays.stream(TimePeriod.values())
+        .filter(it -> !CUSTOM.equals(it) && !it.equals(timeSpan.getPeriod()))
+        .map(Enum::name)
+        .collect(Collectors.toList());
+
+    for (String otherPeriod : expectedOtherPeriods) {
+      actions.andExpect(
+          jsonPath("$._links." + otherPeriod + ".href", is(baseStatsUrl + "/" + otherPeriod))
+      );
+    }
+
     actions
-        .andExpect(
-            jsonPath("$._links.self.href",
-                is("http://localhost/v1/stats/" + expectedStats.getType().name().toLowerCase()
-                    + "/" + periodAsString
-                )
-            )
-        )
+        .andExpect(jsonPath("$._links.self.href", is(baseStatsUrl + "/" + periodAsString)))
         .andExpect(jsonPath("$.timespan.period", is(periodAsString)))
         .andExpect(jsonPath("$.timespan.startDate", is(ISO_DATE.format(timeSpan.getStartDate()))))
         .andExpect(jsonPath("$.timespan.endDate", is(ISO_DATE.format(timeSpan.getEndDate()))));
