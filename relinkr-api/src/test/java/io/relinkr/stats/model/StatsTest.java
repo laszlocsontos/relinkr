@@ -17,7 +17,6 @@ import static io.relinkr.test.Mocks.STRING_ENTRY_2;
 import static io.relinkr.test.Mocks.TIME_SPAN;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
@@ -39,7 +38,7 @@ public class StatsTest {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("entries is marked @NonNull but is null");
 
-    Stats.ofLinks(null, TIME_SPAN, emptyList());
+    Stats.ofLinks(null, TIME_SPAN);
   }
 
   @Test
@@ -47,7 +46,7 @@ public class StatsTest {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("currentTimeSpan is marked @NonNull but is null");
 
-    Stats.ofLinks(ENTRIES_BY_DATE, null, emptyList());
+    Stats.ofLinks(ENTRIES_BY_DATE, null);
   }
 
   @Test
@@ -55,7 +54,7 @@ public class StatsTest {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("availableTimeSpans is marked @NonNull but is null");
 
-    Stats.ofLinks(null, TIME_SPAN, null);
+    Stats.ofLinks(null, TIME_SPAN);
   }
 
   @Test
@@ -76,13 +75,13 @@ public class StatsTest {
     Collection<StatEntry<LocalDate>> entries = new ArrayList<>(ENTRIES_BY_DATE);
     entries.add(StatEntry.of(extraDate, 1));
 
-    Stats.ofLinks(entries, TIME_SPAN, emptyList());
+    Stats.ofLinks(entries, TIME_SPAN);
   }
 
   @Test
   public void givenValidEntriesAndCurrentTimeSpan_whenOfLinks_thenOrderedAccordingToKey() {
     // In case of link and click statistics the data must be ordered according to the key (date)
-    Stats<LocalDate> stats = Stats.ofLinks(ENTRIES_BY_DATE, TIME_SPAN, emptyList());
+    Stats<LocalDate> stats = Stats.ofLinks(ENTRIES_BY_DATE, TIME_SPAN);
 
     assertEquals(LINKS, stats.getType());
 
@@ -103,7 +102,7 @@ public class StatsTest {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("entries is marked @NonNull but is null");
 
-    Stats.ofClicks(null, TIME_SPAN, emptyList());
+    Stats.ofClicks(null, TIME_SPAN);
   }
 
   @Test
@@ -111,7 +110,7 @@ public class StatsTest {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("currentTimeSpan is marked @NonNull but is null");
 
-    Stats.ofClicks(ENTRIES_BY_DATE, null, emptyList());
+    Stats.ofClicks(ENTRIES_BY_DATE, null);
   }
 
   @Test
@@ -119,7 +118,7 @@ public class StatsTest {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("availableTimeSpans is marked @NonNull but is null");
 
-    Stats.ofLinks(null, TIME_SPAN, null);
+    Stats.ofLinks(null, TIME_SPAN);
   }
 
   @Test
@@ -140,13 +139,13 @@ public class StatsTest {
     Collection<StatEntry<LocalDate>> entries = new ArrayList<>(ENTRIES_BY_DATE);
     entries.add(StatEntry.of(extraDate, 1));
 
-    Stats.ofClicks(entries, TIME_SPAN, emptyList());
+    Stats.ofClicks(entries, TIME_SPAN);
   }
 
   @Test
   public void givenValidEntriesAndCurrentTimeSpan_whenOfClicks_thenOrderedAccordingToKey() {
     // In case of link and click statistics the data must be ordered according to the key (date)
-    Stats<LocalDate> stats = Stats.ofClicks(ENTRIES_BY_DATE, TIME_SPAN, emptyList());
+    Stats<LocalDate> stats = Stats.ofClicks(ENTRIES_BY_DATE, TIME_SPAN);
 
     assertEquals(CLICKS, stats.getType());
 
@@ -167,7 +166,7 @@ public class StatsTest {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("entries is marked @NonNull but is null");
 
-    Stats.ofVisitors(null, TIME_SPAN, emptyList());
+    Stats.ofVisitors(null, TIME_SPAN);
   }
 
   @Test
@@ -175,7 +174,7 @@ public class StatsTest {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("currentTimeSpan is marked @NonNull but is null");
 
-    Stats.ofVisitors(ENTRIES_BY_STRING, null, emptyList());
+    Stats.ofVisitors(ENTRIES_BY_STRING, null);
   }
 
   @Test
@@ -183,13 +182,13 @@ public class StatsTest {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("availableTimeSpans is marked @NonNull but is null");
 
-    Stats.ofVisitors(ENTRIES_BY_STRING, TIME_SPAN, null);
+    Stats.ofVisitors(ENTRIES_BY_STRING, TIME_SPAN);
   }
 
   @Test
   public void givenValidEntriesAndCurrentTimeSpan_whenOfVisitors_thenOrderedAccordingToValue() {
     // In case of visitor statistics the data must be ordered according to the value
-    Stats<String> stats = Stats.ofVisitors(ENTRIES_BY_STRING, TIME_SPAN, emptyList());
+    Stats<String> stats = Stats.ofVisitors(ENTRIES_BY_STRING, TIME_SPAN);
 
     assertEquals(VISITORS, stats.getType());
     assertEquals(asList(STRING_ENTRY_1, STRING_ENTRY_2), stats.getEntries());

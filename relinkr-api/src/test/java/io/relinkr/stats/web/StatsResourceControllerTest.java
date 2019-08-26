@@ -23,7 +23,6 @@ import static io.relinkr.test.Mocks.FIXED_CLOCK;
 import static io.relinkr.test.Mocks.TIME_SPAN;
 import static io.relinkr.test.Mocks.USER_ID;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
-import static java.util.Collections.emptyList;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -62,14 +61,9 @@ import org.springframework.test.web.servlet.ResultActions;
 @WebMvcTest(controllers = StatsResourceController.class)
 public class StatsResourceControllerTest extends AbstractResourceControllerTest {
 
-  private static final Stats<LocalDate> LINK_STATS =
-      Stats.ofLinks(ENTRIES_BY_DATE, TIME_SPAN, emptyList());
-
-  private static final Stats<LocalDate> CLICK_STATS =
-      Stats.ofClicks(ENTRIES_BY_DATE, TIME_SPAN, emptyList());
-
-  private static final Stats<String> VISITOR_STATS =
-      Stats.ofVisitors(ENTRIES_BY_STRING, TIME_SPAN, emptyList());
+  private static final Stats<LocalDate> LINK_STATS = Stats.ofLinks(ENTRIES_BY_DATE, TIME_SPAN);
+  private static final Stats<LocalDate> CLICK_STATS = Stats.ofClicks(ENTRIES_BY_DATE, TIME_SPAN);
+  private static final Stats<String> VISITOR_STATS = Stats.ofVisitors(ENTRIES_BY_STRING, TIME_SPAN);
 
   @MockBean
   private StatsService statsService;
