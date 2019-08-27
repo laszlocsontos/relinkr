@@ -16,6 +16,7 @@
 
 package io.relinkr.stats.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import org.springframework.hateoas.core.Relation;
 @RequiredArgsConstructor(staticName = "of")
 @Relation(collectionRelation = "data")
 @ToString(of = {"key", "value"})
+@EqualsAndHashCode(of = {"key", "value"})
 public class StatEntry<K> {
 
   @NonNull

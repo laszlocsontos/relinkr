@@ -24,9 +24,9 @@ class ClickStatsRepository extends AbstractDateKeyedStatsRepository {
 
   private static final String SQL = "SELECT c.visit_date AS key, count(*) AS value FROM click c "
       + "WHERE c.visit_timestamp >= :start_date "
-      + "AND c.visit_timestamp <= date :end_date "
+      + "AND c.visit_timestamp <= :end_date "
       + "AND c.user_id = :user_id "
-      + "GROUP BY c.visit_date;";
+      + "GROUP BY c.visit_date";
 
   ClickStatsRepository(NamedParameterJdbcOperations namedParameterJdbcOperations) {
     super(SQL, namedParameterJdbcOperations);

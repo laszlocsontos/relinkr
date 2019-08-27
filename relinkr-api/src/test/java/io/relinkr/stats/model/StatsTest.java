@@ -162,7 +162,6 @@ public class StatsTest {
     expectedException.expectMessage("currentTimeSpan is marked @NonNull but is null");
 
     Stats.ofVisitors(ENTRIES_BY_STRING, null);
-    arrayContainingInAnyOrder()
   }
 
   @Test

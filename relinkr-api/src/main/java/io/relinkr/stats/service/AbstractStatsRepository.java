@@ -53,12 +53,19 @@ class AbstractStatsRepository<K> implements StatsRepository<K> {
     };
 
     try {
+      if (log.isDebugEnabled()) {
+        log.debug(
+            "Executing SQL {} with parameters: {}, {}, {}.",
+            sql, userId, ISO_DATE.format(startDate), ISO_DATE.format(endDate)
+        );
+      }
+
       return namedParameterJdbcOperations.query(sql, sqlParameterSource, rowMapper);
     } catch (DataAccessException dae) {
       Throwable cause = dae.getMostSpecificCause();
 
       log.error(
-          "Error executing SQL {}, parameters: {}, {}, {}; reason: {}.",
+          "Error executing SQL {} with parameters: {}, {}, {}; reason: {}.",
           sql, userId, ISO_DATE.format(startDate), ISO_DATE.format(endDate), cause.getMessage(),
           cause
       );

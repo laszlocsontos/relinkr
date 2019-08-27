@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
 class LinkStatsRepository extends AbstractDateKeyedStatsRepository {
 
   private static final String SQL = "SELECT l.created_date AS key, count(*) AS value FROM ("
-      + "SELECT DATE(l.created_date) AS created_date, l.id FROM link l "
+      + "SELECT CAST(l.created_date AS DATE) AS created_date, l.id FROM link l "
       + "WHERE l.created_date >= :start_date AND l.created_date <= :end_date "
       + "AND l.user_id = :user_id"
       + ") AS l "
