@@ -20,13 +20,16 @@ import static io.relinkr.stats.model.Stats.StatType.CLICKS;
 import static io.relinkr.stats.model.Stats.StatType.LINKS;
 import static io.relinkr.stats.model.Stats.StatType.VISITORS;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
+import static java.util.Collections.unmodifiableCollection;
 import static java.util.stream.Collectors.toList;
 import static lombok.AccessLevel.PRIVATE;
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -50,11 +53,11 @@ public class Stats<K> {
   public static Stats<LocalDate> ofLinks(
       Collection<StatEntry<LocalDate>> entries, TimeSpan currentTimeSpan) {
 
-    checkEntries(entries, currentTimeSpan);
+    Collection<StatEntry<LocalDate>> sortedEntries = mergeAndSortEntries(entries, currentTimeSpan);
 
     return new Stats<>(
         LINKS,
-        orderBy(entries, Comparator.comparing(StatEntry::getKey)),
+        sortedEntries,
         currentTimeSpan
     );
   }
@@ -69,11 +72,11 @@ public class Stats<K> {
   public static Stats<LocalDate> ofClicks(
       Collection<StatEntry<LocalDate>> entries, TimeSpan currentTimeSpan) {
 
-    checkEntries(entries, currentTimeSpan);
+    Collection<StatEntry<LocalDate>> sortedEntries = mergeAndSortEntries(entries, currentTimeSpan);
 
     return new Stats<>(
         CLICKS,
-        orderBy(entries, Comparator.comparing(StatEntry::getKey)),
+        sortedEntries,
         currentTimeSpan
     );
   }
@@ -97,9 +100,10 @@ public class Stats<K> {
     );
   }
 
-  private static void checkEntries(
+  private static Collection<StatEntry<LocalDate>> mergeAndSortEntries(
       @NonNull Collection<StatEntry<LocalDate>> entries, @NonNull TimeSpan currentTimeSpan) {
 
+    Map<LocalDate, StatEntry<LocalDate>> entryMap = new TreeMap<>();
     Set<LocalDate> allDates = currentTimeSpan.getAllDates();
 
     for (StatEntry<LocalDate> entry : entries) {
@@ -110,7 +114,17 @@ public class Stats<K> {
                 + " doesn't cover " + ISO_DATE.format(entry.getKey())
         );
       }
+
+      entryMap.put(entry.getKey(), entry);
     }
+
+    // Add an entry with zero value for missing keys
+    allDates.forEach(key -> entryMap.merge(
+        key, StatEntry.of(key, 0), (oldValue, value) -> oldValue == null ? value : oldValue
+    ));
+
+    // Returns values ordered by the natural ordering of keys (date)
+    return unmodifiableCollection(entryMap.values());
   }
 
   private static <K> Collection<StatEntry<K>> orderBy(

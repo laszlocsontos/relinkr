@@ -17,6 +17,7 @@
 package io.relinkr.stats.model;
 
 import static io.relinkr.stats.model.TimePeriod.CUSTOM;
+import static java.util.Collections.unmodifiableSet;
 import static lombok.AccessLevel.PRIVATE;
 
 import java.time.LocalDate;
@@ -36,14 +37,14 @@ public class TimeSpan {
   private final LocalDate startDate;
   private final LocalDate endDate;
 
-  public Set<LocalDate> getAllDates() {
+  Set<LocalDate> getAllDates() {
     Set<LocalDate> allDates = new LinkedHashSet<>();
     LocalDate date = startDate;
     while (!date.isAfter(endDate)) {
       allDates.add(date);
       date = date.plusDays(1);
     }
-    return allDates;
+    return unmodifiableSet(allDates);
   }
 
   static TimeSpan of(

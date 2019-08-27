@@ -17,7 +17,9 @@ import static io.relinkr.test.Mocks.STRING_ENTRY_2;
 import static io.relinkr.test.Mocks.TIME_SPAN;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -50,14 +52,6 @@ public class StatsTest {
   }
 
   @Test
-  public void givenNullAvailableTimeSpans_whenOfLinks_thenIllegalArgumentException() {
-    expectedException.expect(IllegalArgumentException.class);
-    expectedException.expectMessage("availableTimeSpans is marked @NonNull but is null");
-
-    Stats.ofLinks(null, TIME_SPAN);
-  }
-
-  @Test
   public void givenInvalidEntriesOrCurrentTimeSpan_whenOfLinks_thenIllegalArgumentException() {
     // The given list of statistics entries must precisely match the given current timespan; that is
     // for every given day there must be an entry and there must not be such entries which do not
@@ -85,13 +79,13 @@ public class StatsTest {
 
     assertEquals(LINKS, stats.getType());
 
-    assertEquals(
-        asList(
+    assertThat(
+        stats.getEntries(),
+        contains(
             DATE_ENTRY_1, DATE_ENTRY_2, DATE_ENTRY_3,
             DATE_ENTRY_4, DATE_ENTRY_5, DATE_ENTRY_6,
             DATE_ENTRY_7
-        ),
-        stats.getEntries()
+        )
     );
   }
 
@@ -111,14 +105,6 @@ public class StatsTest {
     expectedException.expectMessage("currentTimeSpan is marked @NonNull but is null");
 
     Stats.ofClicks(ENTRIES_BY_DATE, null);
-  }
-
-  @Test
-  public void givenNullAvailableTimeSpans_whenOfClicks_thenIllegalArgumentException() {
-    expectedException.expect(IllegalArgumentException.class);
-    expectedException.expectMessage("availableTimeSpans is marked @NonNull but is null");
-
-    Stats.ofLinks(null, TIME_SPAN);
   }
 
   @Test
@@ -149,13 +135,13 @@ public class StatsTest {
 
     assertEquals(CLICKS, stats.getType());
 
-    assertEquals(
-        asList(
+    assertThat(
+        stats.getEntries(),
+        contains(
             DATE_ENTRY_1, DATE_ENTRY_2, DATE_ENTRY_3,
             DATE_ENTRY_4, DATE_ENTRY_5, DATE_ENTRY_6,
             DATE_ENTRY_7
-        ),
-        stats.getEntries()
+        )
     );
   }
 
@@ -175,14 +161,6 @@ public class StatsTest {
     expectedException.expectMessage("currentTimeSpan is marked @NonNull but is null");
 
     Stats.ofVisitors(ENTRIES_BY_STRING, null);
-  }
-
-  @Test
-  public void givenNullAvailableTimeSpans_whenOfVisitors_thenIllegalArgumentException() {
-    expectedException.expect(IllegalArgumentException.class);
-    expectedException.expectMessage("availableTimeSpans is marked @NonNull but is null");
-
-    Stats.ofVisitors(ENTRIES_BY_STRING, TIME_SPAN);
   }
 
   @Test
