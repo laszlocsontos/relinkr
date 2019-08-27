@@ -17,6 +17,7 @@
 package io.relinkr.stats.model;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.hateoas.core.Relation;
@@ -27,7 +28,10 @@ import org.springframework.hateoas.core.Relation;
 @ToString(of = {"key", "value"})
 public class StatEntry<K> {
 
+  @NonNull
   private final K key;
+
+  @NonNull
   private final int value;
 
 }

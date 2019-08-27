@@ -17,6 +17,7 @@ import static io.relinkr.test.Mocks.STRING_ENTRY_2;
 import static io.relinkr.test.Mocks.TIME_SPAN;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -161,6 +162,7 @@ public class StatsTest {
     expectedException.expectMessage("currentTimeSpan is marked @NonNull but is null");
 
     Stats.ofVisitors(ENTRIES_BY_STRING, null);
+    arrayContainingInAnyOrder()
   }
 
   @Test

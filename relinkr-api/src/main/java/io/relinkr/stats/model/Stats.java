@@ -30,6 +30,8 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -103,6 +105,7 @@ public class Stats<K> {
   private static Collection<StatEntry<LocalDate>> mergeAndSortEntries(
       @NonNull Collection<StatEntry<LocalDate>> entries, @NonNull TimeSpan currentTimeSpan) {
 
+    entries.stream().collect(Collectors.toMap(StatEntry::getKey, Function.identity()));
     Map<LocalDate, StatEntry<LocalDate>> entryMap = new TreeMap<>();
     Set<LocalDate> allDates = currentTimeSpan.getAllDates();
 

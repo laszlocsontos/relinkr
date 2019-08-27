@@ -16,38 +16,48 @@
 
 package io.relinkr.stats.service;
 
-import io.relinkr.click.service.ClickRepository;
-import io.relinkr.link.service.LinkRepository;
+import io.relinkr.stats.model.StatEntry;
 import io.relinkr.stats.model.Stats;
 import io.relinkr.stats.model.TimeSpan;
 import io.relinkr.user.model.UserId;
-import io.relinkr.visitor.service.VisitorRepository;
 import java.time.LocalDate;
+import java.util.Collection;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class StatsServiceImpl implements StatsService {
 
-  private final LinkRepository linkRepository;
-  private final ClickRepository clickRepository;
-  private final VisitorRepository visitorRepository;
+  private final StatsRepository<LocalDate> linkRepository;
+  private final StatsRepository<LocalDate> clickRepository;
+  private final StatsRepository<String> visitorRepository;
 
   @Override
   public Stats<LocalDate> getLinksStats(@NonNull UserId userId, @NonNull TimeSpan timeSpan) {
-    return null;
+    Collection<StatEntry<LocalDate>> entries =
+        linkRepository.fetchStats(userId, timeSpan.getStartDate(), timeSpan.getEndDate());
+
+    return Stats.ofLinks(entries, timeSpan);
   }
 
   @Override
   public Stats<LocalDate> getClicksStats(@NonNull UserId userId, @NonNull TimeSpan timeSpan) {
-    return null;
+    Collection<StatEntry<LocalDate>> entries =
+        clickRepository.fetchStats(userId, timeSpan.getStartDate(), timeSpan.getEndDate());
+
+    return Stats.ofClicks(entries, timeSpan);
   }
 
   @Override
   public Stats<String> getVisitorsStats(@NonNull UserId userId, @NonNull TimeSpan timeSpan) {
-    return null;
+    Collection<StatEntry<String>> entries =
+        visitorRepository.fetchStats(userId, timeSpan.getStartDate(), timeSpan.getEndDate());
+
+    return Stats.ofVisitors(entries, timeSpan);
   }
 
 }
