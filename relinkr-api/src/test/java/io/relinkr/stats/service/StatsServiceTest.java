@@ -61,7 +61,7 @@ public class StatsServiceTest {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("userId is marked @NonNull but is null");
 
-    statsService.getLinksStats(null, TIME_SPAN);
+    statsService.getLinkStats(null, TIME_SPAN);
   }
 
   @Test
@@ -69,7 +69,7 @@ public class StatsServiceTest {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("userId is marked @NonNull but is null");
 
-    statsService.getClicksStats(null, TIME_SPAN);
+    statsService.getClickStats(null, TIME_SPAN);
   }
 
   @Test
@@ -77,7 +77,7 @@ public class StatsServiceTest {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("userId is marked @NonNull but is null");
 
-    statsService.getVisitorsStats(null, TIME_SPAN);
+    statsService.getVisitorStats(null, TIME_SPAN);
   }
 
   @Test
@@ -85,7 +85,7 @@ public class StatsServiceTest {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("timeSpan is marked @NonNull but is null");
 
-    statsService.getLinksStats(USER_ID, null);
+    statsService.getLinkStats(USER_ID, null);
   }
 
   @Test
@@ -93,7 +93,7 @@ public class StatsServiceTest {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("timeSpan is marked @NonNull but is null");
 
-    statsService.getClicksStats(USER_ID, null);
+    statsService.getClickStats(USER_ID, null);
   }
 
   @Test
@@ -101,7 +101,7 @@ public class StatsServiceTest {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("timeSpan is marked @NonNull but is null");
 
-    statsService.getVisitorsStats(USER_ID, null);
+    statsService.getVisitorStats(USER_ID, null);
   }
 
   @Test
@@ -109,7 +109,7 @@ public class StatsServiceTest {
     given(linkStatsRepository.fetchStats(USER_ID, TIME_SPAN.getStartDate(), TIME_SPAN.getEndDate()))
         .willReturn(ENTRIES_BY_DATE);
 
-    statsService.getLinksStats(USER_ID, TIME_SPAN);
+    statsService.getLinkStats(USER_ID, TIME_SPAN);
 
     then(linkStatsRepository)
         .should()
@@ -122,7 +122,7 @@ public class StatsServiceTest {
         clickStatsRepository.fetchStats(USER_ID, TIME_SPAN.getStartDate(), TIME_SPAN.getEndDate())
     ).willReturn(ENTRIES_BY_DATE);
 
-    statsService.getClicksStats(USER_ID, TIME_SPAN);
+    statsService.getClickStats(USER_ID, TIME_SPAN);
 
     then(clickStatsRepository)
         .should()
@@ -135,7 +135,7 @@ public class StatsServiceTest {
         visitorStatsRepository.fetchStats(USER_ID, TIME_SPAN.getStartDate(), TIME_SPAN.getEndDate())
     ).willReturn(ENTRIES_BY_STRING);
 
-    statsService.getVisitorsStats(USER_ID, TIME_SPAN);
+    statsService.getVisitorStats(USER_ID, TIME_SPAN);
 
     then(visitorStatsRepository)
         .should()

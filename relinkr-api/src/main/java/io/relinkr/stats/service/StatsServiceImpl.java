@@ -37,7 +37,7 @@ public class StatsServiceImpl implements StatsService {
   private final StatsRepository<String> visitorStatsRepository;
 
   @Override
-  public Stats<LocalDate> getLinksStats(@NonNull UserId userId, @NonNull TimeSpan timeSpan) {
+  public Stats<LocalDate> getLinkStats(@NonNull UserId userId, @NonNull TimeSpan timeSpan) {
     Collection<StatEntry<LocalDate>> entries =
         linkStatsRepository.fetchStats(userId, timeSpan.getStartDate(), timeSpan.getEndDate());
 
@@ -45,7 +45,7 @@ public class StatsServiceImpl implements StatsService {
   }
 
   @Override
-  public Stats<LocalDate> getClicksStats(@NonNull UserId userId, @NonNull TimeSpan timeSpan) {
+  public Stats<LocalDate> getClickStats(@NonNull UserId userId, @NonNull TimeSpan timeSpan) {
     Collection<StatEntry<LocalDate>> entries =
         clickStatsRepository.fetchStats(userId, timeSpan.getStartDate(), timeSpan.getEndDate());
 
@@ -53,7 +53,7 @@ public class StatsServiceImpl implements StatsService {
   }
 
   @Override
-  public Stats<String> getVisitorsStats(@NonNull UserId userId, @NonNull TimeSpan timeSpan) {
+  public Stats<String> getVisitorStats(@NonNull UserId userId, @NonNull TimeSpan timeSpan) {
     Collection<StatEntry<String>> entries =
         visitorStatsRepository.fetchStats(userId, timeSpan.getStartDate(), timeSpan.getEndDate());
 

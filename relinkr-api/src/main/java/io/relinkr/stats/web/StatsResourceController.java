@@ -72,7 +72,7 @@ public class StatsResourceController {
       @CurrentUser UserId userId, @PathVariable TimePeriod period)
       throws ApplicationException {
 
-    return generateResponse(userId, period, statsService::getLinksStats);
+    return generateResponse(userId, period, statsService::getLinkStats);
   }
 
   @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
@@ -81,7 +81,7 @@ public class StatsResourceController {
       @CurrentUser UserId userId, @PathVariable TimePeriod period)
       throws ApplicationException {
 
-    return generateResponse(userId, period, statsService::getClicksStats);
+    return generateResponse(userId, period, statsService::getClickStats);
   }
 
   @AuthorizeRolesOrOwner(roles = {"ROLE_USER"})
@@ -90,7 +90,7 @@ public class StatsResourceController {
       @CurrentUser UserId userId, @PathVariable TimePeriod period)
       throws ApplicationException {
 
-    return generateResponse(userId, period, statsService::getVisitorsStats);
+    return generateResponse(userId, period, statsService::getVisitorStats);
   }
 
   private <K> HttpEntity<StatsResource> generateResponse(

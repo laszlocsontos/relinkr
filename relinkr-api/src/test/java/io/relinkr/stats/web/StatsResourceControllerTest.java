@@ -71,14 +71,14 @@ public class StatsResourceControllerTest extends AbstractResourceControllerTest 
   @Test
   @WithMockUser(username = "1") // USER_ID
   public void givenAuthenticatedUser_whenGetLinksStats_thenOk() throws Exception {
-    given(statsService.getLinksStats(eq(USER_ID), eq(TIME_SPAN))).willReturn(LINK_STATS);
+    given(statsService.getLinkStats(eq(USER_ID), eq(TIME_SPAN))).willReturn(LINK_STATS);
 
     ResultActions resultActions = mockMvc
         .perform(get("/v1/stats/links/" + TIME_SPAN.getPeriod().name()))
         .andExpect(status().isOk())
         .andDo(print());
 
-    then(statsService).should().getLinksStats(eq(USER_ID), eq(TIME_SPAN));
+    then(statsService).should().getLinkStats(eq(USER_ID), eq(TIME_SPAN));
 
     assertStats(LINK_STATS, resultActions);
   }
@@ -86,14 +86,14 @@ public class StatsResourceControllerTest extends AbstractResourceControllerTest 
   @Test
   @WithMockUser(username = "1") // USER_ID
   public void givenAuthenticatedUser_whenClickStats_thenOk() throws Exception {
-    given(statsService.getClicksStats(eq(USER_ID), eq(TIME_SPAN))).willReturn(CLICK_STATS);
+    given(statsService.getClickStats(eq(USER_ID), eq(TIME_SPAN))).willReturn(CLICK_STATS);
 
     ResultActions resultActions = mockMvc
         .perform(get("/v1/stats/clicks/" + TIME_SPAN.getPeriod().name()))
         .andExpect(status().isOk())
         .andDo(print());
 
-    then(statsService).should().getClicksStats(eq(USER_ID), eq(TIME_SPAN));
+    then(statsService).should().getClickStats(eq(USER_ID), eq(TIME_SPAN));
 
     assertStats(CLICK_STATS, resultActions);
   }
@@ -101,14 +101,14 @@ public class StatsResourceControllerTest extends AbstractResourceControllerTest 
   @Test
   @WithMockUser(username = "1") // USER_ID
   public void givenAuthenticatedUser_whenVisitorStats_thenOk() throws Exception {
-    given(statsService.getVisitorsStats(eq(USER_ID), eq(TIME_SPAN))).willReturn(VISITOR_STATS);
+    given(statsService.getVisitorStats(eq(USER_ID), eq(TIME_SPAN))).willReturn(VISITOR_STATS);
 
     ResultActions resultActions = mockMvc
         .perform(get("/v1/stats/visitors/" + TIME_SPAN.getPeriod().name()))
         .andExpect(status().isOk())
         .andDo(print());
 
-    then(statsService).should().getVisitorsStats(eq(USER_ID), eq(TIME_SPAN));
+    then(statsService).should().getVisitorStats(eq(USER_ID), eq(TIME_SPAN));
 
     assertStats(VISITOR_STATS, resultActions);
   }

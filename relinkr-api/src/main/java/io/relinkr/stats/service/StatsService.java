@@ -33,7 +33,7 @@ public interface StatsService {
    * @param timeSpan {@link TimeSpan} for which the statistics should be calculated
    * @return Statistics of link for the given {@code timeSpan}
    */
-  Stats<LocalDate> getLinksStats(UserId userId, TimeSpan timeSpan);
+  Stats<LocalDate> getLinkStats(UserId userId, TimeSpan timeSpan);
 
   /**
    * Gather time-series statistics for clicks of links owned by the given {@code userId}.
@@ -42,7 +42,7 @@ public interface StatsService {
    * @param timeSpan {@link TimeSpan} for which the statistics should be calculated
    * @return Statistics of clicks for the given {@code timeSpan}
    */
-  Stats<LocalDate> getClicksStats(UserId userId, TimeSpan timeSpan);
+  Stats<LocalDate> getClickStats(UserId userId, TimeSpan timeSpan);
 
   /**
    * Gather new vs. returning statistics for visitors of links owned by the given {@code userId}.
@@ -51,6 +51,6 @@ public interface StatsService {
    * @param timeSpan {@link TimeSpan} for which the statistics should be calculated
    * @return Statistics of visitors for the given {@code timeSpan}
    */
-  Stats<String> getVisitorsStats(UserId userId, TimeSpan timeSpan);
+  Stats<String> getVisitorStats(UserId userId, TimeSpan timeSpan);
 
 }
