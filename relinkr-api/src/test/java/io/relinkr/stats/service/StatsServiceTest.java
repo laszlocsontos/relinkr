@@ -16,8 +16,130 @@
 
 package io.relinkr.stats.service;
 
-import static org.junit.Assert.*;
+import static io.relinkr.test.Mocks.ENTRIES_BY_DATE;
+import static io.relinkr.test.Mocks.ENTRIES_BY_STRING;
+import static io.relinkr.test.Mocks.TIME_SPAN;
+import static io.relinkr.test.Mocks.USER_ID;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
+import java.time.LocalDate;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
+@RunWith(MockitoJUnitRunner.class)
 public class StatsServiceTest {
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
+
+  @Mock
+  private StatsRepository<LocalDate> linkStatsRepository;
+
+  @Mock
+  private StatsRepository<LocalDate> clickStatsRepository;
+
+  @Mock
+  private StatsRepository<String> visitorStatsRepository;
+
+  private StatsService statsService;
+
+  @Before
+  public void setUp() {
+    statsService = new StatsServiceImpl(
+        linkStatsRepository, clickStatsRepository, visitorStatsRepository
+    );
+  }
+
+  @Test
+  public void givenNullUserId_whenGetLinksStats_thenIllegalArgumentException() {
+    expectedException.expect(IllegalArgumentException.class);
+    expectedException.expectMessage("userId is marked @NonNull but is null");
+
+    statsService.getLinksStats(null, TIME_SPAN);
+  }
+
+  @Test
+  public void givenNullUserId_whenGetClicksStats_thenIllegalArgumentException() {
+    expectedException.expect(IllegalArgumentException.class);
+    expectedException.expectMessage("userId is marked @NonNull but is null");
+
+    statsService.getClicksStats(null, TIME_SPAN);
+  }
+
+  @Test
+  public void givenNullUserId_whenGetVisitorsStats_thenIllegalArgumentException() {
+    expectedException.expect(IllegalArgumentException.class);
+    expectedException.expectMessage("userId is marked @NonNull but is null");
+
+    statsService.getVisitorsStats(null, TIME_SPAN);
+  }
+
+  @Test
+  public void givenNullTimeSpan_whenGetLinksStats_thenIllegalArgumentException() {
+    expectedException.expect(IllegalArgumentException.class);
+    expectedException.expectMessage("timeSpan is marked @NonNull but is null");
+
+    statsService.getLinksStats(USER_ID, null);
+  }
+
+  @Test
+  public void givenNullTimeSpan_whenGetClicksStats_thenIllegalArgumentException() {
+    expectedException.expect(IllegalArgumentException.class);
+    expectedException.expectMessage("timeSpan is marked @NonNull but is null");
+
+    statsService.getClicksStats(USER_ID, null);
+  }
+
+  @Test
+  public void givenNullTimeSpan_whenGetVisitorsStats_thenIllegalArgumentException() {
+    expectedException.expect(IllegalArgumentException.class);
+    expectedException.expectMessage("timeSpan is marked @NonNull but is null");
+
+    statsService.getVisitorsStats(USER_ID, null);
+  }
+
+  @Test
+  public void givenUserIdAndTimeSpan_whenGetLinksStats_thenIllegalArgumentException() {
+    given(linkStatsRepository.fetchStats(USER_ID, TIME_SPAN.getStartDate(), TIME_SPAN.getEndDate()))
+        .willReturn(ENTRIES_BY_DATE);
+
+    statsService.getLinksStats(USER_ID, TIME_SPAN);
+
+    then(linkStatsRepository)
+        .should()
+        .fetchStats(USER_ID, TIME_SPAN.getStartDate(), TIME_SPAN.getEndDate());
+  }
+
+  @Test
+  public void givenUserIdAndTimeSpan_whenGetClicksStats_thenIllegalArgumentException() {
+    given(
+        clickStatsRepository.fetchStats(USER_ID, TIME_SPAN.getStartDate(), TIME_SPAN.getEndDate())
+    ).willReturn(ENTRIES_BY_DATE);
+
+    statsService.getClicksStats(USER_ID, TIME_SPAN);
+
+    then(clickStatsRepository)
+        .should()
+        .fetchStats(USER_ID, TIME_SPAN.getStartDate(), TIME_SPAN.getEndDate());
+  }
+
+  @Test
+  public void givenUserIdAndTimeSpan_whenGetVisitorsStats_thenIllegalArgumentException() {
+    given(
+        visitorStatsRepository.fetchStats(USER_ID, TIME_SPAN.getStartDate(), TIME_SPAN.getEndDate())
+    ).willReturn(ENTRIES_BY_STRING);
+
+    statsService.getVisitorsStats(USER_ID, TIME_SPAN);
+
+    then(visitorStatsRepository)
+        .should()
+        .fetchStats(USER_ID, TIME_SPAN.getStartDate(), TIME_SPAN.getEndDate());
+  }
 
 }

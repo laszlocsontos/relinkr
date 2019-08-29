@@ -32,14 +32,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class StatsServiceImpl implements StatsService {
 
-  private final StatsRepository<LocalDate> linkRepository;
-  private final StatsRepository<LocalDate> clickRepository;
-  private final StatsRepository<String> visitorRepository;
+  private final StatsRepository<LocalDate> linkStatsRepository;
+  private final StatsRepository<LocalDate> clickStatsRepository;
+  private final StatsRepository<String> visitorStatsRepository;
 
   @Override
   public Stats<LocalDate> getLinksStats(@NonNull UserId userId, @NonNull TimeSpan timeSpan) {
     Collection<StatEntry<LocalDate>> entries =
-        linkRepository.fetchStats(userId, timeSpan.getStartDate(), timeSpan.getEndDate());
+        linkStatsRepository.fetchStats(userId, timeSpan.getStartDate(), timeSpan.getEndDate());
 
     return Stats.ofLinks(entries, timeSpan);
   }
@@ -47,7 +47,7 @@ public class StatsServiceImpl implements StatsService {
   @Override
   public Stats<LocalDate> getClicksStats(@NonNull UserId userId, @NonNull TimeSpan timeSpan) {
     Collection<StatEntry<LocalDate>> entries =
-        clickRepository.fetchStats(userId, timeSpan.getStartDate(), timeSpan.getEndDate());
+        clickStatsRepository.fetchStats(userId, timeSpan.getStartDate(), timeSpan.getEndDate());
 
     return Stats.ofClicks(entries, timeSpan);
   }
@@ -55,7 +55,7 @@ public class StatsServiceImpl implements StatsService {
   @Override
   public Stats<String> getVisitorsStats(@NonNull UserId userId, @NonNull TimeSpan timeSpan) {
     Collection<StatEntry<String>> entries =
-        visitorRepository.fetchStats(userId, timeSpan.getStartDate(), timeSpan.getEndDate());
+        visitorStatsRepository.fetchStats(userId, timeSpan.getStartDate(), timeSpan.getEndDate());
 
     return Stats.ofVisitors(entries, timeSpan);
   }
