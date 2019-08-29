@@ -26,16 +26,17 @@
               align="center">
             <div slot="header">
               <b-dropdown text="Links" split dropright variant="primary">
-                <b-dropdown-item active>Today</b-dropdown-item>
-                <b-dropdown-item>Yesterday</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('TODAY')" :active="isPeriodActive('TODAY')">Today</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('YESTERDAY')" :active="isPeriodActive('YESTERDAY')">Yesterday</b-dropdown-item>
                 <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-item>Last 7 days</b-dropdown-item>
-                <b-dropdown-item>Last 14 days</b-dropdown-item>
-                <b-dropdown-item>Last 28 days</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('THIS_WEEK')" :active="isPeriodActive('THIS_WEEK')">This Week</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('PAST_WEEK')" :active="isPeriodActive('PAST_WEEK')">Past Week</b-dropdown-item>
                 <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-item>Mar 2019</b-dropdown-item>
-                <b-dropdown-item>Feb 2019</b-dropdown-item>
-                <b-dropdown-item>Jan 2019</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('THIS_MONTH')" :active="isPeriodActive('THIS_MONTH')">This Month</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('PAST_MONTH')" :active="isPeriodActive('PAST_MONTH')">Past Month</b-dropdown-item>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-item @click="onPeriodChange('THIS_YEAR')" :active="isPeriodActive('THIS_YEAR')">This Year</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('PAST_YEAR')" :active="isPeriodActive('PAST_YEAR')">Past Year</b-dropdown-item>
               </b-dropdown>
             </div>
             <b-card-body>
@@ -50,16 +51,17 @@
               align="center">
             <div slot="header">
               <b-dropdown text="Clicks" split dropright variant="primary">
-                <b-dropdown-item active>Today</b-dropdown-item>
-                <b-dropdown-item>Yesterday</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('TODAY')" :active="isPeriodActive('TODAY')">Today</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('YESTERDAY')" :active="isPeriodActive('YESTERDAY')">Yesterday</b-dropdown-item>
                 <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-item>Last 7 days</b-dropdown-item>
-                <b-dropdown-item>Last 14 days</b-dropdown-item>
-                <b-dropdown-item>Last 28 days</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('THIS_WEEK')" :active="isPeriodActive('THIS_WEEK')">This Week</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('PAST_WEEK')" :active="isPeriodActive('PAST_WEEK')">Past Week</b-dropdown-item>
                 <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-item>Mar 2019</b-dropdown-item>
-                <b-dropdown-item>Feb 2019</b-dropdown-item>
-                <b-dropdown-item>Jan 2019</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('THIS_MONTH')" :active="isPeriodActive('THIS_MONTH')">This Month</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('PAST_MONTH')" :active="isPeriodActive('PAST_MONTH')">Past Month</b-dropdown-item>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-item @click="onPeriodChange('THIS_YEAR')" :active="isPeriodActive('THIS_YEAR')">This Year</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('PAST_YEAR')" :active="isPeriodActive('PAST_YEAR')">Past Year</b-dropdown-item>
               </b-dropdown>
             </div>
             <b-card-body>
@@ -74,16 +76,17 @@
               align="center">
             <div slot="header">
               <b-dropdown text="Visitors" split dropright variant="primary">
-                <b-dropdown-item active>Today</b-dropdown-item>
-                <b-dropdown-item>Yesterday</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('TODAY')" :active="isPeriodActive('TODAY')">Today</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('YESTERDAY')" :active="isPeriodActive('YESTERDAY')">Yesterday</b-dropdown-item>
                 <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-item>Last 7 days</b-dropdown-item>
-                <b-dropdown-item>Last 14 days</b-dropdown-item>
-                <b-dropdown-item>Last 28 days</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('THIS_WEEK')" :active="isPeriodActive('THIS_WEEK')">This Week</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('PAST_WEEK')" :active="isPeriodActive('PAST_WEEK')">Past Week</b-dropdown-item>
                 <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-item>Mar 2019</b-dropdown-item>
-                <b-dropdown-item>Feb 2019</b-dropdown-item>
-                <b-dropdown-item>Jan 2019</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('THIS_MONTH')" :active="isPeriodActive('THIS_MONTH')">This Month</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('PAST_MONTH')" :active="isPeriodActive('PAST_MONTH')">Past Month</b-dropdown-item>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-item @click="onPeriodChange('THIS_YEAR')" :active="isPeriodActive('THIS_YEAR')">This Year</b-dropdown-item>
+                <b-dropdown-item @click="onPeriodChange('PAST_YEAR')" :active="isPeriodActive('PAST_YEAR')">Past Year</b-dropdown-item>
               </b-dropdown>
             </div>
             <b-card-body>
@@ -113,9 +116,7 @@
       DoughnutChart, LineChart, PageTemplate
     },
     mounted() {
-      this.fetchStats('links');
-      this.fetchStats('clicks');
-      this.fetchStats('visitors');
+      this.fetchAllStats('THIS_WEEK');
     },
     computed: {
       ...mapGetters('stats', {
@@ -123,10 +124,21 @@
         clicksStats: 'getClicksStats',
         visitorsStats: 'getVisitorsStats'
       }),
-      ...mapState('stats', ['linksCount', 'clicksCount', 'visitorsCount'])
+      ...mapState('stats', ['period', 'linksCount', 'clicksCount', 'visitorsCount'])
     },
     methods: {
-      ...mapActions('stats', ['fetchStats'])
+      ...mapActions('stats', ['fetchStats']),
+      isPeriodActive(period) {
+        return (this.period === period);
+      },
+      onPeriodChange(newPeriod) {
+        this.fetchAllStats(newPeriod);
+      },
+      fetchAllStats(period) {
+        this.fetchStats({statType: 'links', period: period});
+        this.fetchStats({statType: 'clicks', period: period});
+        this.fetchStats({statType: 'visitors', period: period});
+      }
     }
   }
 </script>

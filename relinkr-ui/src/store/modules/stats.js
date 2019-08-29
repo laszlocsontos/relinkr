@@ -19,8 +19,12 @@
 import _ from 'lodash';
 import {get} from '../../api';
 
+const DEFAULT_PERIOD = 'THIS_WEEK';
+
 // initial state
 const state = {
+  period: DEFAULT_PERIOD,
+
   linksStats: {},
   clicksStats: {},
   visitorsStats: {},
@@ -42,17 +46,19 @@ const getters = {
 
 const mutations = {
   setStats(state, {statType, data}) {
+    state.period = _.defaultTo(_.get(data, 'timespan.period'), DEFAULT_PERIOD);
+
     const embeddedData = _.defaultTo(_.get(data, '_embedded.data'), []);
     const dataArray = [];
-    const labelsArray = [];
 
+    const labelsArray = [];
     let totalCount = 0;
     for (const element of embeddedData) {
       dataArray.push(element.value);
       labelsArray.push(element.key);
       totalCount += element.value;
-    }
 
+    }
     state[`${statType}Count`] = totalCount;
     state[`${statType}Stats`] = {
       datasets: [{
@@ -65,9 +71,9 @@ const mutations = {
 };
 
 const actions = {
-  fetchStats({commit}, statType) {
+  fetchStats({commit}, {statType, period}) {
     // statType: links/clicks/visitors
-    get({endpoint: `/v1/stats/${statType}/THIS_WEEK`})
+    get({endpoint: `/v1/stats/${statType}/${period}`})
     .then(response => {
       commit(`setStats`, {statType: statType, data: response.data});
     })
