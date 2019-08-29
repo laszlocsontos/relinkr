@@ -17,7 +17,7 @@
 /* eslint-disable no-console */
 
 import _ from 'lodash';
-import axios from 'axios';
+import {get} from '../../api';
 
 // initial state
 const state = {
@@ -67,7 +67,7 @@ const mutations = {
 const actions = {
   fetchStats({commit}, statType) {
     // statType: links/clicks/visitors
-    axios({method: 'GET', url: `/mocks/${statType}/1`})
+    get({endpoint: `/v1/stats/${statType}/THIS_WEEK`})
     .then(response => {
       commit(`setStats`, {statType: statType, data: response.data});
     })
