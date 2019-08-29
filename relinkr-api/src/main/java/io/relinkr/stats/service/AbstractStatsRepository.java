@@ -34,7 +34,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 @Slf4j
 @RequiredArgsConstructor
-class AbstractStatsRepository<K> implements StatsRepository<K> {
+abstract class AbstractStatsRepository<K> implements StatsRepository<K> {
 
   private final String sql;
   private final KeyMapper<K> keyMapper;

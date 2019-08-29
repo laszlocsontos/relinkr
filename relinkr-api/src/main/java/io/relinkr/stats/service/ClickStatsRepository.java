@@ -17,9 +17,9 @@
 package io.relinkr.stats.service;
 
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 class ClickStatsRepository extends AbstractDateKeyedStatsRepository {
 
   private static final String SQL = "SELECT c.visit_date AS key, count(*) AS value FROM click c "

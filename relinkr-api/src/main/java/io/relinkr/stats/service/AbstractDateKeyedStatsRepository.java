@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 
-class AbstractDateKeyedStatsRepository extends AbstractStatsRepository<LocalDate> {
+abstract class AbstractDateKeyedStatsRepository extends AbstractStatsRepository<LocalDate> {
 
   private static KeyMapper<LocalDate> DATE_KEY_MAPPER = rs -> Optional.of(rs.getTimestamp(1))
       .map(Timestamp::toLocalDateTime)

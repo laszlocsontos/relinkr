@@ -17,9 +17,9 @@
 package io.relinkr.stats.service;
 
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 class VisitorStatsRepository extends AbstractStatsRepository<String> {
 
   private static final String SQL = "SELECT 'returning' AS key, COUNT(*) AS value FROM ("

@@ -17,9 +17,9 @@
 package io.relinkr.stats.service;
 
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 class LinkStatsRepository extends AbstractDateKeyedStatsRepository {
 
   private static final String SQL = "SELECT l.created_date AS key, count(*) AS value FROM ("
