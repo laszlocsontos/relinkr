@@ -48,7 +48,7 @@ abstract class AbstractStatsRepository<K> implements StatsRepository<K> {
 
     RowMapper<StatEntry<K>> rowMapper = (rs, rowNum) -> {
       K key = keyMapper.mapRow(rs);
-      Integer value = rs.getObject(2, Integer.class);
+      int value = rs.getInt(2);
       return StatEntry.of(key, value);
     };
 
