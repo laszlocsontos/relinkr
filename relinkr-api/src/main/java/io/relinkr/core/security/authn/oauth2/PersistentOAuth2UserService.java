@@ -16,6 +16,7 @@
 
 package io.relinkr.core.security.authn.oauth2;
 
+import static java.util.Locale.ENGLISH;
 import static java.util.stream.Collectors.toSet;
 import static org.springframework.security.oauth2.core.OAuth2ErrorCodes.SERVER_ERROR;
 
@@ -99,7 +100,7 @@ public class PersistentOAuth2UserService
       throws OAuth2AuthenticationException {
 
     try {
-      return userProfileFactory.create(registrationId.toUpperCase(), userAttributes);
+      return userProfileFactory.create(registrationId.toUpperCase(ENGLISH), userAttributes);
     } catch (RuntimeException re) {
       throw createOAuth2Error(INVALID_PROFILE, re);
     }
