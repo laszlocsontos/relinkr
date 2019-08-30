@@ -16,14 +16,13 @@
 
 package io.relinkr.core.web;
 
+import static org.springframework.http.HttpHeaders.EMPTY;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NOT_IMPLEMENTED;
-import static org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST;
-import static org.springframework.web.util.WebUtils.ERROR_EXCEPTION_ATTRIBUTE;
 
 import io.relinkr.core.model.ApplicationException;
 import io.relinkr.core.model.EntityAlreadyExistsException;
@@ -40,8 +39,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
- * Common error handler for the controller layer, where custom, application specific exceptions
- * (eg. {@link EntityNotFoundException}) are mapped to appropriate response codes.
+ * Common error handler for the controller layer, where custom, application specific exceptions (eg.
+ * {@link EntityNotFoundException}) are mapped to appropriate response codes.
  */
 @Slf4j
 @RestControllerAdvice
@@ -49,58 +48,55 @@ public class RestErrorHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(ApplicationException.class)
   public ResponseEntity<Object> handleApplicationException(final ApplicationException ex) {
-    return handleExceptionInternal(ex, BAD_REQUEST);
+    return doHandleException(ex, EMPTY, BAD_REQUEST);
   }
 
   @ExceptionHandler(EntityAlreadyExistsException.class)
   public ResponseEntity<Object> handleEntityExistsException(
       final EntityAlreadyExistsException ex) {
-    return handleExceptionInternal(ex, BAD_REQUEST);
+    return doHandleException(ex, EMPTY, BAD_REQUEST);
   }
 
   @ExceptionHandler(EntityConflictsException.class)
   public ResponseEntity<Object> handleEntityConflictsException(
       final EntityConflictsException ex) {
-    return handleExceptionInternal(ex, CONFLICT);
+    return doHandleException(ex, EMPTY, CONFLICT);
   }
 
   @ExceptionHandler(EntityNotFoundException.class)
   public ResponseEntity<Object> handleEntityNotFoundException(final EntityNotFoundException ex) {
-    return handleExceptionInternal(ex, NOT_FOUND);
+    return doHandleException(ex, EMPTY, NOT_FOUND);
   }
 
   @ExceptionHandler(AccessDeniedException.class)
   public ResponseEntity<Object> handleAccessDeniedException(final AccessDeniedException ex) {
-    return handleExceptionInternal(ex, FORBIDDEN);
+    return doHandleException(ex, EMPTY, FORBIDDEN);
   }
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<Object> handleException(final Exception ex) {
     log.error(ex.getMessage(), ex);
-    return handleExceptionInternal(ex, INTERNAL_SERVER_ERROR);
+    return doHandleException(ex, EMPTY, INTERNAL_SERVER_ERROR);
   }
 
   @ExceptionHandler(UnsupportedOperationException.class)
   public ResponseEntity<Object> handleUnsupportedOperationException(
       final UnsupportedOperationException ex) {
 
-    return handleExceptionInternal(ex, NOT_IMPLEMENTED);
+    return doHandleException(ex, EMPTY, NOT_IMPLEMENTED);
   }
 
   @Override
   protected ResponseEntity<Object> handleExceptionInternal(
       Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-    // Request may be null in test cases
-    if (request != null && INTERNAL_SERVER_ERROR.equals(status)) {
-      request.setAttribute(ERROR_EXCEPTION_ATTRIBUTE, ex, SCOPE_REQUEST);
-    }
-
-    return new ResponseEntity<>(RestErrorResponse.of(status, ex), headers, status);
+    return doHandleException(ex, headers, status);
   }
 
-  private ResponseEntity<Object> handleExceptionInternal(Exception ex, HttpStatus status) {
-    return handleExceptionInternal(ex, null, null, status, null);
+  private ResponseEntity<Object> doHandleException(
+      Exception ex, HttpHeaders headers, HttpStatus status) {
+
+    return new ResponseEntity<>(RestErrorResponse.of(status, ex), headers, status);
   }
 
 }
