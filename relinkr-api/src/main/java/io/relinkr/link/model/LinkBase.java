@@ -76,7 +76,6 @@ public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
   private void setLinkStatus(LinkStatus linkStatus, Set<LinkStatus> expectedLinkStatuses)
       throws InvalidLinkStatusException {
 
-    expectedLinkStatuses = getLinkStatus().getNextLinkStatuses();
     if (!expectedLinkStatuses.contains(linkStatus)) {
       throw InvalidLinkStatusException.forLinkStatus(linkStatus, expectedLinkStatuses);
     }
