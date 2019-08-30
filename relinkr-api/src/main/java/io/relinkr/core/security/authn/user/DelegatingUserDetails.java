@@ -31,6 +31,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @RequiredArgsConstructor(staticName = "of")
 class DelegatingUserDetails implements UserDetails {
 
+  private static final long serialVersionUID = -23720924843013653L;
+
   private final User delegate;
 
   @Override

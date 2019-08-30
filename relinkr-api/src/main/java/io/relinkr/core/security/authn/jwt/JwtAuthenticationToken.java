@@ -26,6 +26,8 @@ import org.springframework.security.core.Authentication;
  */
 class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
+  private static final long serialVersionUID = 3496531445017693747L;
+
   private final String bearerToken;
 
   private JwtAuthenticationToken(String bearerToken) {

@@ -51,6 +51,8 @@ import org.springframework.util.CollectionUtils;
 @Table(name = "user_")
 public class User extends AbstractEntity<UserId> implements Ownable {
 
+  private static final long serialVersionUID = 9213827145542811922L;
+
   public static final String ROLE_PREFIX = "ROLE_";
 
   @Embedded

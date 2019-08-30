@@ -24,6 +24,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PROTECTED)
 public class LinkId extends AbstractId<Link> {
 
+  private static final long serialVersionUID = -5311539333158616427L;
+
   public LinkId(long id) {
     super(id);
   }

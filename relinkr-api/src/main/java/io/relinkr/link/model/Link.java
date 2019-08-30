@@ -40,6 +40,8 @@ import org.hashids.Hashids;
 @Entity
 public class Link extends LinkBase<LinkId> {
 
+  private static final long serialVersionUID = 7628232383862608990L;
+
   // FIXME: The theoretical maximum length could be decreased to 9 characters, according to
   //    round(log(Hashids.MAX_NUMBER) / log(len(HASHIDS_ALPHABET))).
   static final int HASHIDS_LENGTH = 10;

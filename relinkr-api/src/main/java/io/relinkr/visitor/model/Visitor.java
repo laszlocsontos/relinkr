@@ -30,6 +30,8 @@ import lombok.Getter;
 @Entity
 public class Visitor extends AbstractEntity<VisitorId> {
 
+  private static final long serialVersionUID = -1273665863437392380L;
+
   /**
    * Creates a new {@code Visitor} with an empty ID.
    */

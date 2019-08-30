@@ -26,6 +26,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PROTECTED)
 public class UserId extends AbstractId<User> {
 
+  private static final long serialVersionUID = 1808942031238065852L;
+
   public UserId(long id) {
     super(id);
   }

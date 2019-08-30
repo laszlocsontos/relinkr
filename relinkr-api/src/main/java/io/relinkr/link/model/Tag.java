@@ -33,6 +33,8 @@ import lombok.ToString;
 @ToString(of = "tagName")
 public class Tag implements Serializable {
 
+  private static final long serialVersionUID = 2998897603932607615L;
+
   private String tagName;
 
   public Tag(String tagName) {

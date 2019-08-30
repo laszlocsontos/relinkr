@@ -26,6 +26,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PACKAGE)
 public class ClickId extends AbstractId<Click> {
 
+  private static final long serialVersionUID = 9044075687901185668L;
+
   public ClickId(long id) {
     super(id);
   }

@@ -42,6 +42,8 @@ import lombok.NonNull;
 @Entity
 public class Click extends OwnableEntity<ClickId> {
 
+  private static final long serialVersionUID = -3755886925030895975L;
+
   @Embedded
   @AttributeOverride(name = "id", column = @Column(name = "link_id"))
   private LinkId linkId;
