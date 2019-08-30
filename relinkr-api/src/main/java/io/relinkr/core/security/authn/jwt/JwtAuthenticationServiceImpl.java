@@ -174,7 +174,7 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
 
     long userId;
     try {
-      userId = Long.valueOf(claimsSet.getSubject());
+      userId = Long.parseLong(claimsSet.getSubject());
     } catch (NumberFormatException nfe) {
       throw new BadCredentialsException(nfe.getMessage(), nfe);
     }
