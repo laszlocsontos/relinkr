@@ -38,6 +38,12 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
  */
 class OAuth2AuthorizationRequestDeserializer extends JsonDeserializer<OAuth2AuthorizationRequest> {
 
+  private static final TypeReference<Set<String>> VALUE_REF_STRING_SET =
+      new TypeReference<Set<String>>() { };
+
+  private static final TypeReference<Map<String, Object>> VALUE_REF_STRING_OBJECT_MAP =
+      new TypeReference<Map<String, Object>>() { };
+
   @Override
   public OAuth2AuthorizationRequest deserialize(JsonParser jp, DeserializationContext dctx)
       throws IOException {
@@ -56,12 +62,10 @@ class OAuth2AuthorizationRequestDeserializer extends JsonDeserializer<OAuth2Auth
     }
 
     Set<String> scopes = mapper.convertValue(
-        jsonNode.get("authorities"), new TypeReference<Set<String>>() {
-        });
+        jsonNode.get("authorities"), VALUE_REF_STRING_SET);
 
     Map<String, Object> additionalParameters = mapper.convertValue(
-        jsonNode.get("additionalParameters"), new TypeReference<Map<String, Object>>() {
-        });
+        jsonNode.get("additionalParameters"), VALUE_REF_STRING_OBJECT_MAP);
 
     return builder
         .clientId(readJsonNode(jsonNode, "clientId").asText())
