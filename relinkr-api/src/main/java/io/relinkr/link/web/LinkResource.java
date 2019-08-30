@@ -96,7 +96,7 @@ class LinkResource extends AbstractResource {
 
   @Data
   @NoArgsConstructor
-  class UtmParametersResource {
+  static class UtmParametersResource {
 
     private String utmSource;
     private String utmMedium;

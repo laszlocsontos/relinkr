@@ -102,7 +102,7 @@ class UserResource extends AbstractResource {
 
   @Data
   @NoArgsConstructor
-  class UserProfileResource {
+  static class UserProfileResource {
 
     private UserProfileType userProfileType;
     private String userProfileId;
@@ -143,7 +143,7 @@ class UserResource extends AbstractResource {
 
   @Data
   @NoArgsConstructor
-  class UserPreferencesResource {
+  static class UserPreferencesResource {
 
     private TimeZone timeZone;
     private Locale locale;
