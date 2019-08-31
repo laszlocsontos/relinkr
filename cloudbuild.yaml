@@ -16,7 +16,7 @@ steps:
   ## Prepare
   - name: node:10.15.3
     entrypoint: npm
-    args: ['install']
+    args: ['install', '--prefix', 'relinkr-ui']
   ## Compile
   - name: node:10.15.3
     entrypoint: npm
