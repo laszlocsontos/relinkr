@@ -19,6 +19,7 @@ package io.relinkr.user.model;
 import static javax.persistence.EnumType.STRING;
 import static lombok.AccessLevel.PACKAGE;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -42,7 +43,9 @@ import lombok.ToString;
 @RequiredArgsConstructor(staticName = "of")
 @EqualsAndHashCode
 @ToString(of = {"userProfileType", "fullName"})
-public class UserProfile {
+public class UserProfile implements Serializable {
+
+  private static final long serialVersionUID = 3311727408768297384L;
 
   @NonNull
   @Enumerated(STRING)

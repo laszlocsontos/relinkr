@@ -22,6 +22,7 @@ import static org.springframework.security.oauth2.core.OAuth2ErrorCodes.SERVER_E
 
 import io.relinkr.user.model.EmailAddress;
 import io.relinkr.user.model.User;
+import io.relinkr.user.model.UserId;
 import io.relinkr.user.model.UserProfile;
 import io.relinkr.user.service.UserProfileFactory;
 import io.relinkr.user.service.UserService;
@@ -38,6 +39,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.util.Assert;
 
 /**
  * Delegates obtaining the user attributes of the End-User (Resource Owner) from the UserInfo
@@ -119,13 +121,16 @@ public class PersistentOAuth2UserService
   private OAuth2User createOAuth2User(
       Map<String, Object> originalAttributes, User user, UserProfile userProfile) {
 
-    Set<GrantedAuthority> authorities = user.getAuthorities().stream()
+    final Set<GrantedAuthority> authorities = user.getAuthorities().stream()
         .map(SimpleGrantedAuthority::new)
         .collect(toSet());
 
     Map<String, Object> userAttributes = new HashMap<>(originalAttributes);
 
-    userAttributes.put(USER_ID_ATTRIBUTE, user.getId().getId());
+    UserId userId = user.getId();
+    Assert.notNull(userId, "userId cannot be null");
+
+    userAttributes.put(USER_ID_ATTRIBUTE, userId.getId());
     userAttributes.put(USER_PROFILE_TYPE_ATTRIBUTE, userProfile.getUserProfileType());
 
     return new DefaultOAuth2User(authorities, userAttributes, USER_ID_ATTRIBUTE);

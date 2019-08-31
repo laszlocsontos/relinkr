@@ -22,6 +22,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 import static org.springframework.util.StringUtils.tokenizeToStringArray;
 import static org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.relinkr.core.model.ApplicationException;
 import io.relinkr.core.model.EntityNotFoundException;
 import io.relinkr.link.model.Link;
@@ -33,6 +34,7 @@ import io.relinkr.visitor.web.VisitorIdCookieResolver;
 import java.net.URI;
 import java.time.Clock;
 import javax.servlet.http.HttpServletRequest;
+import lombok.NonNull;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -128,7 +130,11 @@ public class RedirectController {
         .build();
   }
 
-  private void emitRedirectedEvent(Link link, ServletWebRequest webRequest) {
+  @SuppressFBWarnings(
+      value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+      justification = "link cannot be null here"
+  )
+  private void emitRedirectedEvent(@NonNull Link link, ServletWebRequest webRequest) {
     VisitorId existingVisitorId =
         visitorIdCookieResolver.resolveVisitorId(webRequest.getRequest()).orElse(null);
 

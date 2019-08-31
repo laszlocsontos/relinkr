@@ -39,7 +39,7 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false)
 public abstract class AbstractId<E> implements EntityClassAwareId<E> {
 
-  private Long id;
+  private long id;
 
   @Override
   public String toString() {

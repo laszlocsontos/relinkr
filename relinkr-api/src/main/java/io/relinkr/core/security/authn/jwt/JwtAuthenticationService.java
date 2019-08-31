@@ -16,6 +16,7 @@
 
 package io.relinkr.core.security.authn.jwt;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -47,6 +48,7 @@ public interface JwtAuthenticationService extends AuthenticationProvider {
   Authentication parseJwtToken(String jwtToken) throws AuthenticationException;
 
   @Override
+  @SuppressFBWarnings(value = "BC_UNCONFIRMED_CAST", justification = "Cast is confirmed")
   default Authentication authenticate(Authentication authentication) {
     Assert.isInstanceOf(JwtAuthenticationToken.class, authentication);
     JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authentication;

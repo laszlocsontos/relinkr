@@ -29,6 +29,8 @@ import lombok.Getter;
 @Getter
 public class RedirectedEvent extends GenericApplicationEvent<LinkId> {
 
+  private static final long serialVersionUID = -6492437630231733038L;
+
   private final VisitorId visitorId;
   private final String ipAddress;
   private final UserId userId;

@@ -41,7 +41,9 @@ import lombok.NonNull;
  */
 @MappedSuperclass
 public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
-    extends OwnableEntity<ID> implements Ownable {
+    extends OwnableEntity<ID> {
+
+  private static final long serialVersionUID = 7257056726654252651L;
 
   LinkBase(@NonNull UserId userId) {
     super(userId);

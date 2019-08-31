@@ -20,6 +20,7 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.stream.Collectors.toMap;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.io.Serializable;
 import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -45,7 +46,9 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @Embeddable
 @EqualsAndHashCode
-public class LongUrl {
+public class LongUrl implements Serializable {
+
+  private static final long serialVersionUID = -6894255399882709562L;
 
   // https://gist.github.com/dperini/729294
   private static final Pattern HTTP_URL_PATTERN = Pattern.compile(

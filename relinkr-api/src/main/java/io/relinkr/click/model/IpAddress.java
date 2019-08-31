@@ -16,6 +16,7 @@
 
 package io.relinkr.click.model;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.regex.Pattern;
@@ -30,7 +31,9 @@ import lombok.NonNull;
  */
 @Getter
 @Embeddable
-public class IpAddress {
+public class IpAddress implements Serializable {
+
+  private static final long serialVersionUID = -2872589534555756759L;
 
   // Preliminary regex match is to avoid hostname lookups when this class is constructed with
   // a non-numeric value.

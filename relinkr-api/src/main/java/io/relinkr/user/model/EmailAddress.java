@@ -18,6 +18,7 @@ package io.relinkr.user.model;
 
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
+import java.io.Serializable;
 import java.util.regex.Pattern;
 import javax.persistence.Embeddable;
 import lombok.EqualsAndHashCode;
@@ -31,7 +32,9 @@ import lombok.ToString;
 @Embeddable
 @EqualsAndHashCode(of = "value")
 @ToString(of = "value")
-public class EmailAddress {
+public class EmailAddress implements Serializable {
+
+  private static final long serialVersionUID = -1266330477962194584L;
 
   private static final Pattern EMAIL_ADDRESS_PATTERN =
       Pattern.compile("\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\b", CASE_INSENSITIVE);

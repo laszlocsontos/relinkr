@@ -21,6 +21,7 @@ import static java.util.Locale.ENGLISH;
 import static lombok.AccessLevel.PACKAGE;
 
 import io.relinkr.core.model.TimeZone;
+import java.io.Serializable;
 import java.util.Locale;
 import javax.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -40,7 +41,9 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode
 @ToString(of = {"timeZone", "locale"})
-public class UserPreferences {
+public class UserPreferences implements Serializable {
+
+  private static final long serialVersionUID = 5866970614995291299L;
 
   public static final UserPreferences DEFAULT = UserPreferences.of(UTC, ENGLISH);
 

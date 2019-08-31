@@ -17,6 +17,7 @@
 package io.relinkr.core.security.authn.user;
 
 import io.relinkr.user.model.UserProfileType;
+import java.io.Serializable;
 import java.util.Collection;
 import lombok.Getter;
 import lombok.NonNull;
@@ -83,7 +84,9 @@ public class UserAuthenticationToken extends AbstractAuthenticationToken {
 
   @Getter
   @RequiredArgsConstructor(staticName = "of")
-  public static class Details {
+  public static class Details implements Serializable {
+
+    private static final long serialVersionUID = -3939212904883588108L;
 
     private final UserProfileType userProfileType;
     private final long expiresAt;

@@ -123,7 +123,7 @@ public class UserResourceControllerTest extends AbstractResourceControllerTest {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
-        .andExpect(jsonPath("$.userId", is(user.getId().getId().intValue())))
+        .andExpect(jsonPath("$.userId", is((int)user.getId().getId())))
         .andExpect(jsonPath("$.expiresAt", is(FIXED_INSTANT.getEpochSecond())));
   }
 

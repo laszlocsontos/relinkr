@@ -38,6 +38,6 @@ public interface EntityClassAwareId<E> extends Serializable {
    *
    * @return entity's ID
    */
-  Long getId();
+  long getId();
 
 }

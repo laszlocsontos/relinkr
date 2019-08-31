@@ -16,6 +16,7 @@
 
 package io.relinkr.link.model;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,7 +33,9 @@ import org.springframework.util.StringUtils;
 @Embeddable
 @EqualsAndHashCode
 @ToString
-public class UtmParameters {
+public class UtmParameters implements Serializable {
+
+  private static final long serialVersionUID = 591509236308508122L;
 
   static final String UTM_SOURCE = "utm_source";
   static final String UTM_MEDIUM = "utm_medium";
