@@ -35,6 +35,7 @@ import static org.springframework.data.domain.Pageable.unpaged;
 
 import io.relinkr.core.model.EntityNotFoundException;
 import io.relinkr.link.model.Link;
+import io.relinkr.link.model.LinkBase;
 import io.relinkr.link.model.LinkId;
 import java.net.URI;
 import java.util.List;
@@ -90,11 +91,11 @@ public class LinkServiceTest {
 
   @Test
   public void givenArchivedLink_whenActivateLink_thenSavedLinkIsActivated() {
-    link.markArchived();
+    Link link = this.link.markArchived();
     given(linkRepository.findById(linkId)).willReturn(Optional.of(link));
     linkService.activateLink(linkId);
 
-    Link link = captureSavedLink();
+    link = captureSavedLink();
     assertEquals(ACTIVE, link.getLinkStatus());
   }
 
@@ -173,7 +174,7 @@ public class LinkServiceTest {
 
   @Test(expected = EntityNotFoundException.class)
   public void givenArchivedLink_GetTargetUrl_thenEntityNotFoundException() {
-    link.markArchived();
+    Link link = this.link.markArchived();
     String path = link.getPath();
     given(linkRepository.findByPath(path)).willReturn(Optional.of(link));
     linkService.getTargetUrl(path);

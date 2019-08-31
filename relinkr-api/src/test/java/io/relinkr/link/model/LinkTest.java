@@ -44,12 +44,12 @@ public class LinkTest {
 
   @Before
   public void setUp() {
-    link = new Link(LONG_URL_WITHOUT_UTM, USER_ID);
+    link = Link.of(USER_ID, LONG_URL_WITHOUT_UTM);
   }
 
   @Test
   public void givenLinkWithoutUtm_whenApplyMinimalUtm_thenApplied() {
-    link.apply(UTM_PARAMETERS_MINIMAL);
+    Link link = this.link.apply(UTM_PARAMETERS_MINIMAL);
     assertEquals(UTM_PARAMETERS_MINIMAL, link.longUrl.getUtmParameters().get());
   }
 
@@ -60,18 +60,22 @@ public class LinkTest {
 
   @Test
   public void givenLinkWithoutTags_whenAddTag_thenAdded() {
-    link.addTag(TAG_A);
-    link.addTag(TAG_B);
-    Set<Tag> tags = link.getTags();
+    Set<Tag> tags = link
+        .addTag(TAG_A)
+        .addTag(TAG_B)
+        .getTags();
+
     assertThat(tags, contains(TAG_A, TAG_B));
   }
 
   @Test
   public void givenLinkWithTags_whenRemoveTag_thenRemoved() {
-    link.addTag(TAG_A);
-    link.addTag(TAG_B);
-    link.removeTag(TAG_B);
-    Set<Tag> tags = link.getTags();
+    Set<Tag> tags = link
+        .addTag(TAG_A)
+        .addTag(TAG_B)
+        .removeTag(TAG_B)
+        .getTags();
+
     assertThat(tags, hasItem(TAG_A));
     assertThat(tags, not(hasItem(TAG_B)));
   }
@@ -98,48 +102,40 @@ public class LinkTest {
 
   @Test
   public void givenValidUrl_whenUpdateLongUrl_thenUpdated() {
-    link.updateLongUrl(LONG_URL_BASE_S);
+    Link link = this.link.updateLongUrl(LONG_URL_BASE_S);
     assertEquals(LONG_URL_BASE_S, link.getLongUrl().toString());
     assertEquals(LONG_URL_BASE_S, link.getTargetUrl().toString());
   }
 
   @Test
   public void givenNewLink_whenMarkActive_thenActivated() {
-    link.markActive();
-    assertEquals(ACTIVE, link.getLinkStatus());
+    assertEquals(ACTIVE, link.markActive().getLinkStatus());
   }
 
   @Test
   public void givenActiveLink_whenMarkArchived_thenArchived() {
-    link.markActive();
-    link.markArchived();
-    assertEquals(ARCHIVED, link.getLinkStatus());
+    assertEquals(ARCHIVED, link.markActive().markArchived().getLinkStatus());
   }
 
   @Test
   public void givenNewLink_whenMarkBroken_thenBroken() {
-    link.markBroken();
-    assertEquals(BROKEN, link.getLinkStatus());
+    assertEquals(BROKEN, link.markBroken().getLinkStatus());
   }
 
   @Test(expected = InvalidLinkStatusException.class)
   public void givenActiveLink_whenMarkActive_thenInvalidLinkStatusException() {
-    link.markActive();
-    link.markActive();
-    assertEquals(ACTIVE, link.getLinkStatus());
+    assertEquals(ACTIVE, link.markActive().markActive().getLinkStatus());
   }
 
   @Test(expected = InvalidLinkStatusException.class)
   public void givenPendingLink_whenMarkArchived_thenInvalidLinkStatusException() {
     link.markArchived();
-    assertEquals(ARCHIVED, link.getLinkStatus());
+    assertEquals(ARCHIVED, link.markArchived().getLinkStatus());
   }
 
   @Test(expected = InvalidLinkStatusException.class)
   public void givenArchivedLink_whenMarkBroken_thenInvalidLinkStatusException() {
-    link.markArchived();
-    link.markBroken();
-    assertEquals(BROKEN, link.getLinkStatus());
+    assertEquals(BROKEN, link.markArchived().markBroken().getLinkStatus());
   }
 
 }

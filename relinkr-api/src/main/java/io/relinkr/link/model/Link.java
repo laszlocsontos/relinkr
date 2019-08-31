@@ -17,6 +17,7 @@
 package io.relinkr.link.model;
 
 import static io.relinkr.link.model.LinkStatus.PENDING;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 import static javax.persistence.EnumType.STRING;
 
@@ -66,27 +67,43 @@ public class Link extends LinkBase<LinkId> {
   @ElementCollection
   private Set<Tag> tags = new LinkedHashSet<>();
 
-  public Link(
-      @NonNull String longUrl, UtmParameters utmParameters, @NonNull UserId userId)
-      throws InvalidUrlException {
-
-    this(LongUrl.from(longUrl, utmParameters), userId);
-  }
-
-  public Link(@NonNull String longUrl, @NonNull UserId userId) throws InvalidUrlException {
-    this(longUrl, null, userId);
-  }
-
-  Link(@NonNull LongUrl longUrl, @NonNull UserId userId) {
+  private Link(UserId userId, LongUrl longUrl, String path, LinkStatus linkStatus, Set<Tag> tags) {
     super(userId);
+
     this.longUrl = longUrl;
-    path = generatePath();
+    this.path = path;
+    this.linkStatus = linkStatus;
+    this.tags = tags;
   }
 
   /*
    * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
    */
   Link() {
+  }
+
+  /**
+   * Factory method for creation a new {@code Link}.
+   *
+   * @param userId  Owner's ID
+   * @param longUrl Long URL
+   * @return new Link
+   */
+  public static Link of(UserId userId, LongUrl longUrl) {
+    String path = generatePath();
+    return new Link(userId, longUrl, path, PENDING, emptySet());
+  }
+
+  /**
+   * Factory method for creation a new {@code Link}.
+   *
+   * @param userId  Owner's ID
+   * @param longUrl Long URL
+   * @return new Link
+   */
+  public static Link of(UserId userId, String longUrl, UtmParameters utmParameters) {
+    String path = generatePath();
+    return new Link(userId, LongUrl.from(longUrl, utmParameters), path, PENDING, emptySet());
   }
 
   public URI getLongUrl() {
@@ -111,8 +128,10 @@ public class Link extends LinkBase<LinkId> {
   }
 
   @Override
-  void setLinkStatus(LinkStatus linkStatus) {
-    this.linkStatus = linkStatus;
+  Link setLinkStatus(LinkStatus linkStatus) {
+    Link link = new Link(getUserId(), longUrl, path, linkStatus, tags);
+    link.setId(this.getId());
+    return link;
   }
 
   /**
@@ -120,20 +139,30 @@ public class Link extends LinkBase<LinkId> {
    *
    * @param utmParameters UTM parameters to apply
    */
-  public void apply(UtmParameters utmParameters) {
-    longUrl = longUrl.apply(utmParameters);
+  public Link apply(UtmParameters utmParameters) {
+    Link link = new Link(getUserId(), longUrl.apply(utmParameters), path, linkStatus, tags);
+    link.setId(getId());
+    return link;
   }
 
   public Set<Tag> getTags() {
     return unmodifiableSet(tags);
   }
 
-  public void addTag(Tag tag) {
+  public Link addTag(Tag tag) {
+    Set<Tag> tags = new LinkedHashSet<>(this.tags);
     tags.add(tag);
+    Link link = new Link(getUserId(), longUrl, path, linkStatus, tags);
+    link.setId(getId());
+    return link;
   }
 
-  public void removeTag(Tag tag) {
+  public Link removeTag(Tag tag) {
+    Set<Tag> tags = new LinkedHashSet<>(this.tags);
     tags.remove(tag);
+    Link link = new Link(getUserId(), longUrl, path, linkStatus, tags);
+    link.setId(getId());
+    return link;
   }
 
   @Override
@@ -141,23 +170,26 @@ public class Link extends LinkBase<LinkId> {
     return getTargetUrl().toString();
   }
 
-  public void updateLongUrl(@NonNull String longUrl) throws InvalidUrlException {
-    updateLongUrl(longUrl, this.longUrl.getUtmParameters().orElse(null));
+  public Link updateLongUrl(@NonNull String longUrl) throws InvalidUrlException {
+    return updateLongUrl(longUrl, this.longUrl.getUtmParameters().orElse(null));
   }
 
   /**
    * Updates this {@code Link} with the given {@code longUrl} and {@code utmParameters}.
    *
-   * @param longUrl A {@link LongUrl} used to update this {@code Link}
+   * @param longUrl       A {@link LongUrl} used to update this {@code Link}
    * @param utmParameters An {@link UtmParameters} instance used to update this {@code Link}
    * @throws InvalidUrlException when the given {@code longUrl} is invalid
    */
-  public void updateLongUrl(String longUrl, UtmParameters utmParameters)
+  public Link updateLongUrl(String longUrl, UtmParameters utmParameters)
       throws InvalidUrlException {
-    this.longUrl = LongUrl.from(longUrl, utmParameters);
+
+    Link link = new Link(getUserId(), LongUrl.from(longUrl, utmParameters), path, linkStatus, tags);
+    link.setId(this.getId());
+    return link;
   }
 
-  private String generatePath() {
+  private static String generatePath() {
     long pathIdentity = IdentityGenerator.getInstance().generate();
     return HASHIDS.encode(pathIdentity);
   }

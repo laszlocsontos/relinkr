@@ -63,26 +63,26 @@ public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
    * @param longUrl A {@link LongUrl} used to update this {@code Link}
    * @throws InvalidUrlException when the given {@code longUrl} is invalid
    */
-  public abstract void updateLongUrl(@NonNull String longUrl) throws InvalidUrlException;
+  public abstract LinkBase<ID> updateLongUrl(@NonNull String longUrl) throws InvalidUrlException;
 
   public abstract Set<Tag> getTags();
 
-  public abstract void addTag(Tag tag);
+  public abstract LinkBase<ID> addTag(Tag tag);
 
-  public abstract void removeTag(Tag tag);
+  public abstract LinkBase<ID> removeTag(Tag tag);
 
   public abstract LinkStatus getLinkStatus();
 
-  abstract void setLinkStatus(LinkStatus linkStatus);
+  abstract LinkBase<ID> setLinkStatus(LinkStatus linkStatus);
 
-  private void setLinkStatus(LinkStatus linkStatus, Set<LinkStatus> expectedLinkStatuses)
+  private LinkBase<ID> setLinkStatus(LinkStatus linkStatus, Set<LinkStatus> expectedLinkStatuses)
       throws InvalidLinkStatusException {
 
     if (!expectedLinkStatuses.contains(linkStatus)) {
       throw InvalidLinkStatusException.forLinkStatus(linkStatus, expectedLinkStatuses);
     }
 
-    setLinkStatus(linkStatus);
+    return setLinkStatus(linkStatus);
   }
 
   /**
@@ -102,16 +102,16 @@ public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
     );
   }
 
-  public void markActive() throws InvalidLinkStatusException {
-    setLinkStatus(ACTIVE, getLinkStatus().getNextLinkStatuses());
+  public <L extends LinkBase<ID>> L markActive() throws InvalidLinkStatusException {
+    return (L) setLinkStatus(ACTIVE, getLinkStatus().getNextLinkStatuses());
   }
 
-  public void markArchived() throws InvalidLinkStatusException {
-    setLinkStatus(ARCHIVED, getLinkStatus().getNextLinkStatuses());
+  public <L extends LinkBase<ID>> L markArchived() throws InvalidLinkStatusException {
+    return (L) setLinkStatus(ARCHIVED, getLinkStatus().getNextLinkStatuses());
   }
 
-  public void markBroken() throws InvalidLinkStatusException {
-    setLinkStatus(BROKEN, getLinkStatus().getNextLinkStatuses());
+  public <L extends LinkBase<ID>> L markBroken() throws InvalidLinkStatusException {
+    return (L) setLinkStatus(BROKEN, getLinkStatus().getNextLinkStatuses());
   }
 
 }

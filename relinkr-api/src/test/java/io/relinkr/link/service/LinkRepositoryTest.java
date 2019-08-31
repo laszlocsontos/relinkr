@@ -35,7 +35,7 @@ public class LinkRepositoryTest extends OwnableRepositoryTest<Link, LinkId, Link
 
   @Override
   protected Link createEntity() {
-    return new Link(LONG_URL_WITHOUT_UTM_S, UTM_PARAMETERS_FULL, USER_ID);
+    return Link.of(USER_ID, LONG_URL_WITHOUT_UTM_S, UTM_PARAMETERS_FULL);
   }
 
   @Override

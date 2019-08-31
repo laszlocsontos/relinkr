@@ -74,8 +74,7 @@ class LinkServiceImpl implements LinkService {
     Assert.hasText(longUrl, "longUrl must contain text");
     Assert.notNull(userId, "userId cannot be null");
 
-    Link link = new Link(longUrl, utmParameters, userId);
-    link.markActive();
+    Link link = Link.of(userId, longUrl, utmParameters).markActive();
 
     return linkRepository.save(link);
   }
@@ -83,17 +82,15 @@ class LinkServiceImpl implements LinkService {
   @Override
   public void activateLink(@NonNull LinkId id)
       throws EntityNotFoundException, InvalidLinkStatusException {
-    Link link = getLink(id);
-    link.markActive();
 
+    Link link = getLink(id).markActive();
     linkRepository.save(link);
   }
 
   @Override
   public void archiveLink(@NonNull LinkId id)
       throws EntityNotFoundException, InvalidLinkStatusException {
-    Link link = getLink(id);
-    link.markArchived();
+    Link link = getLink(id).markArchived();
 
     linkRepository.save(link);
   }
@@ -102,8 +99,7 @@ class LinkServiceImpl implements LinkService {
   public void addTag(@NonNull LinkId id, String tagName) throws EntityNotFoundException {
     Assert.hasText(tagName, "tagName must contain text");
 
-    Link link = getLink(id);
-    link.addTag(new Tag(tagName));
+    Link link = getLink(id).addTag(new Tag(tagName));
 
     linkRepository.save(link);
   }
@@ -146,8 +142,7 @@ class LinkServiceImpl implements LinkService {
   public Link updateUtmParameters(@NonNull LinkId linkId, UtmParameters utmParameters)
       throws EntityNotFoundException {
 
-    Link link = getLink(linkId);
-    link.apply(utmParameters);
+    Link link = getLink(linkId).apply(utmParameters);
     return linkRepository.save(link);
   }
 

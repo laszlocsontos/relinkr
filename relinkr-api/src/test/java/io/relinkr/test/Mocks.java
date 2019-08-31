@@ -318,10 +318,9 @@ public final class Mocks {
   }
 
   public static Link createLink() throws ApplicationException {
-    Link link = new Link(LONG_URL_WITHOUT_UTM_S, UTM_PARAMETERS_FULL, USER_ID);
+    Link link = Link.of(USER_ID, LONG_URL_WITHOUT_UTM_S, UTM_PARAMETERS_FULL);
     link.setId(LINK_ID);
-    link.markActive();
-    return link;
+    return link.markActive();
   }
 
   public static User createUser() {
