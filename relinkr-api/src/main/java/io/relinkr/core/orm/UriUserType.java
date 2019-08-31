@@ -18,6 +18,7 @@ package io.relinkr.core.orm;
 
 import static org.hibernate.type.StandardBasicTypes.STRING;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.Serializable;
 import java.net.URI;
 import java.sql.PreparedStatement;
@@ -74,6 +75,10 @@ public class UriUserType implements UserType, StringRepresentableType<URI> {
   }
 
   @Override
+  @SuppressFBWarnings(
+      value = "EI_EXPOSE_REP",
+      justification = "sqlTypes() doesn't expose internal state"
+  )
   public int[] sqlTypes() {
     return URI_SQL_TYPES;
   }
