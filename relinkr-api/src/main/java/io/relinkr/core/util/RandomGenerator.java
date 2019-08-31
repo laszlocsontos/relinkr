@@ -21,6 +21,8 @@ import java.security.SecureRandom;
 import java.util.Random;
 import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * The default algorithm NativePRNG uses {@code /dev/random} which might block when there is no
@@ -37,7 +39,8 @@ import lombok.extern.slf4j.Slf4j;
  * @see <a href="https://www.2uo.de/myths-about-urandom/#man-page">Myths about /dev/urandom</a>
  */
 @Slf4j
-final class RandomGenerator {
+@Component
+public class RandomGenerator {
 
   // The default algorithm NativePRNG uses /dev/random which might block when there is no
   // sufficient entropy in the entropy pool. As a result the system could stall upon startup. Here
@@ -51,16 +54,11 @@ final class RandomGenerator {
   //  https://www.2uo.de/myths-about-urandom/#man-page
   private static final String ALGORITHM = "NativePRNGNonBlocking";
 
-  private static final RandomGenerator INSTANCE = new RandomGenerator();
-
   private final ThreadLocal<Random> threadLocalRandom;
 
-  private RandomGenerator() {
+  @Autowired
+  public RandomGenerator() {
     threadLocalRandom = ThreadLocal.withInitial(this::createSecureRandom);
-  }
-
-  static RandomGenerator getInstance() {
-    return INSTANCE;
   }
 
   private Random createSecureRandom() {

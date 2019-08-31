@@ -27,6 +27,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Before;
 import org.junit.Test;
 
 @Slf4j
@@ -35,7 +36,13 @@ public class IdentityGeneratorTest {
   private static final long TIME_DIFF = 10000;
   private static final Instant INSTANT = IdentityGenerator.EPOCH.plusMillis(TIME_DIFF);
 
-  private IdentityGenerator identityGenerator = IdentityGenerator.getInstance();
+  private IdentityGenerator identityGenerator;
+
+  @Before
+  public void setUp() {
+    RandomGenerator randomGenerator = new RandomGenerator();
+    identityGenerator = new IdentityGenerator(randomGenerator);
+  }
 
   @Test
   public void testCollision() throws Exception {

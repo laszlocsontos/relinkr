@@ -32,7 +32,7 @@ import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import io.relinkr.core.security.authn.user.UserAuthenticationToken;
-import io.relinkr.core.util.IdentityGenerator;
+import io.relinkr.core.util.IdGenerator;
 import io.relinkr.user.model.UserProfileType;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -72,7 +72,7 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
   private final JWSSigner signer;
   private final JWSVerifier verifier;
 
-  private final IdentityGenerator identityGenerator;
+  private final IdGenerator idGenerator;
 
   /**
    * Creates a new {@code JwtAuthenticationService}.
@@ -80,16 +80,16 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
    * @param clock Clock (defaults to system's UTC clock)
    * @param privateKey RSA private key for signing JWT tokens
    * @param publicKey RSA public key for verifying JWT tokens' signature
-   * @param identityGenerator ID generator for assigning unique IDs to tokens
+   * @param idGenerator ID generator for assigning unique IDs to tokens
    */
   public JwtAuthenticationServiceImpl(
       ObjectProvider<Clock> clock,
-      PrivateKey privateKey, PublicKey publicKey, IdentityGenerator identityGenerator) {
+      PrivateKey privateKey, PublicKey publicKey, IdGenerator idGenerator) {
 
     this.clock = clock.getIfAvailable(Clock::systemUTC);
     this.verifier = new RSASSAVerifier((RSAPublicKey) publicKey);
     this.signer = new RSASSASigner(privateKey);
-    this.identityGenerator = identityGenerator;
+    this.idGenerator = idGenerator;
   }
 
   @Override
@@ -100,7 +100,7 @@ public class JwtAuthenticationServiceImpl implements JwtAuthenticationService {
     long currentTimeMillis = clock.millis();
 
     JWTClaimsSet.Builder claimsSetBuilder = new JWTClaimsSet.Builder()
-        .jwtID(String.valueOf(identityGenerator.generate()))
+        .jwtID(String.valueOf(idGenerator.generate()))
         .subject(authentication.getName())
         .expirationTime(new Date(currentTimeMillis + (long) minutes * 60 * 1000))
         .issueTime(new Date(currentTimeMillis));

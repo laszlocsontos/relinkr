@@ -40,7 +40,7 @@ public class LinkRepositoryTest extends OwnableRepositoryTest<Link, LinkId, Link
 
   @Override
   protected LinkId getId() {
-    return LinkId.of(IdentityGenerator.getInstance().generate());
+    return LinkId.of(idGenerator.generate());
   }
 
   @Override

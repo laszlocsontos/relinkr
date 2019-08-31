@@ -17,6 +17,7 @@
 package io.relinkr.core.security.authn.jwt;
 
 import io.relinkr.core.security.authn.jwt.JwtConfig.JwtProperties;
+import io.relinkr.core.util.IdGenerator;
 import io.relinkr.core.util.IdentityGenerator;
 import java.security.Key;
 import java.security.KeyFactory;
@@ -75,11 +76,11 @@ public class JwtConfig {
 
   @Bean
   public JwtAuthenticationService jwtTokenService(
-      ObjectProvider<Clock> clock, JwtProperties jwtProperties) {
+      ObjectProvider<Clock> clock, IdGenerator idGenerator, JwtProperties jwtProperties) {
     return new JwtAuthenticationServiceImpl(
         clock,
         jwtProperties.getPrivateKey(), jwtProperties.getPublicKey(),
-        IdentityGenerator.getInstance()
+        idGenerator
     );
   }
 

@@ -47,6 +47,8 @@ public class Link extends LinkBase<LinkId> {
   //    round(log(Hashids.MAX_NUMBER) / log(len(HASHIDS_ALPHABET))).
   static final int HASHIDS_LENGTH = 10;
 
+  private static final IdentityGenerator IDENTITY_GENERATOR = new IdentityGenerator();
+
   private static final String HASHIDS_SALT = "6cY$S!08HpP$pWRpEErhGp7H3307a^67";
 
   private static final String HASHIDS_ALPHABET =
@@ -202,7 +204,7 @@ public class Link extends LinkBase<LinkId> {
   }
 
   private static String generatePath() {
-    long pathIdentity = IdentityGenerator.getInstance().generate();
+    long pathIdentity = IDENTITY_GENERATOR.generate();
     return HASHIDS.encode(pathIdentity);
   }
 

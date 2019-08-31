@@ -19,6 +19,7 @@ package io.relinkr.core.orm;
 import io.relinkr.core.convert.LongToEntityClassAwareIdConverter;
 import io.relinkr.core.util.IdGenerator;
 import io.relinkr.core.util.IdentityGenerator;
+import io.relinkr.core.util.RandomGenerator;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.Properties;
@@ -49,7 +50,7 @@ public class TimeBasedIdentifierGenerator implements Configurable, IdentifierGen
   private String entityName;
 
   public TimeBasedIdentifierGenerator() {
-    this(IdentityGenerator.getInstance());
+    idGenerator = new IdentityGenerator();
   }
 
   TimeBasedIdentifierGenerator(IdGenerator idGenerator) {

@@ -22,6 +22,8 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Database agnostic unique ID generator inspired by
@@ -42,6 +44,7 @@ import java.time.LocalDateTime;
  *
  * <p>With this technique 16.384 unique IDs can be generated per millisecond.
  */
+@Component
 public final class IdentityGenerator implements IdGenerator {
 
   /**
@@ -49,22 +52,22 @@ public final class IdentityGenerator implements IdGenerator {
    */
   static final Instant EPOCH = LocalDateTime.of(2019, 3, 1, 0, 0, 0, 0).toInstant(UTC);
 
-  private static final IdentityGenerator INSTANCE = new IdentityGenerator();
-
   private final ThreadLocal<Serial> threadLocalSerial;
 
-  private IdentityGenerator(RandomGenerator randomGenerator) {
+  /**
+   * Creates a new {@link IdGenerator}.
+   */
+  public IdentityGenerator() {
+    // FIXME: Investigate the complexity of using Spring's @Configurable for injecting into
+    //  non-managed objects
+    this(new RandomGenerator());
+  }
+
+  @Autowired
+  public IdentityGenerator(RandomGenerator randomGenerator) {
     threadLocalSerial = ThreadLocal.withInitial(
         () -> new Serial(randomGenerator.nextInt(), randomGenerator.nextInt())
     );
-  }
-
-  private IdentityGenerator() {
-    this(RandomGenerator.getInstance());
-  }
-
-  public static IdentityGenerator getInstance() {
-    return INSTANCE;
   }
 
   /**

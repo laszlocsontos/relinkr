@@ -26,8 +26,12 @@ import io.relinkr.core.orm.AbstractId;
 import io.relinkr.core.orm.BaseRepository;
 import io.relinkr.core.orm.JpaConfig;
 import io.relinkr.core.orm.UtcLocalDateTimeProvider;
+import io.relinkr.core.util.IdGenerator;
+import io.relinkr.core.util.IdentityGenerator;
+import io.relinkr.core.util.RandomGenerator;
 import io.relinkr.test.orm.BaseRepositoryTest.TestConfig;
 import java.util.Optional;
+import java.util.Random;
 import javax.persistence.EntityManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,6 +50,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Import(TestConfig.class)
 @ActiveProfiles("test")
 public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extends AbstractId<E>, R extends BaseRepository<E, ID>> {
+
+  @Autowired
+  protected IdGenerator idGenerator;
 
   @Autowired
   protected R repository;
@@ -121,6 +128,16 @@ public abstract class BaseRepositoryTest<E extends AbstractEntity<ID>, ID extend
     @Bean
     DateTimeProvider utcLocalDateTimeProvider() {
       return new UtcLocalDateTimeProvider();
+    }
+
+    @Bean
+    RandomGenerator randomGenerator() {
+      return new RandomGenerator();
+    }
+
+    @Bean
+    IdGenerator idGenerator(RandomGenerator randomGenerator) {
+      return new IdentityGenerator(randomGenerator);
     }
 
   }
