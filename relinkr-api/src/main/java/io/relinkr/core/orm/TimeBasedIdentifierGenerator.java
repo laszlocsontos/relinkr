@@ -16,10 +16,10 @@
 
 package io.relinkr.core.orm;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.relinkr.core.convert.LongToEntityClassAwareIdConverter;
 import io.relinkr.core.util.IdGenerator;
 import io.relinkr.core.util.IdentityGenerator;
-import io.relinkr.core.util.RandomGenerator;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.Properties;
@@ -34,12 +34,17 @@ import org.hibernate.persister.entity.EntityPersister;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.type.Type;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.util.Assert;
 
 /**
  * Identifier generation strategy based upon {@link IdentityGenerator}. It leverages
  * {@link LongToEntityClassAwareIdConverter} for converting simple long value to type-safe
  * identifier objects.
  */
+@SuppressFBWarnings(
+    value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR",
+    justification = "Hibernate calls configure() before generate()"
+)
 public class TimeBasedIdentifierGenerator implements Configurable, IdentifierGenerator {
 
   private final ConcurrentMap<String, EntityPersister> cache = new ConcurrentHashMap<>();
@@ -61,16 +66,7 @@ public class TimeBasedIdentifierGenerator implements Configurable, IdentifierGen
   public void configure(Type type, Properties params, ServiceRegistry serviceRegistry)
       throws MappingException {
 
-    Class<?> idClass = type.getReturnedClass();
-    if (EntityClassAwareId.class.isAssignableFrom(idClass)) {
-      conversionStrategy = new LongToEntityClassAwareIdConverter(idClass);
-    } else if (Long.class.equals(idClass)) {
-      conversionStrategy = (it -> it);
-    } else if (long.class.equals(idClass)) {
-      conversionStrategy = Long::valueOf;
-    } else {
-      throw new MappingException("unsupported class: " + idClass.getName());
-    }
+    conversionStrategy = initConversionStrategy(type.getReturnedClass());
 
     entityName = Optional
         .ofNullable(params.getProperty(ENTITY_NAME))
@@ -86,9 +82,30 @@ public class TimeBasedIdentifierGenerator implements Configurable, IdentifierGen
 
     Serializable id = entityPersister.getIdentifier(object, session);
 
+    Assert.notNull(
+        conversionStrategy,
+        "conversionStrategy has not been initialized in configure()"
+    );
+
     return Optional
         .ofNullable(id)
         .orElseGet(() -> conversionStrategy.convert(idGenerator.generate()));
+  }
+
+  private Converter<Long, ? extends Serializable> initConversionStrategy(Class<?> idClass) {
+    if (EntityClassAwareId.class.isAssignableFrom(idClass)) {
+      return new LongToEntityClassAwareIdConverter(idClass);
+    }
+
+    if (Long.class.equals(idClass)) {
+      return (it -> it);
+    }
+
+    if (long.class.equals(idClass)) {
+      return Long::valueOf;
+    }
+
+    throw new MappingException("unsupported class: " + idClass.getName());
   }
 
 }

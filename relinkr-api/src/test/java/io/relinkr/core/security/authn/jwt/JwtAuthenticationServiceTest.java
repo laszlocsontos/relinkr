@@ -33,6 +33,9 @@ import static org.junit.Assert.assertTrue;
 
 import io.relinkr.core.security.authn.jwt.JwtAuthenticationServiceTest.TestConfig;
 import io.relinkr.core.security.authn.user.UserAuthenticationToken.Details;
+import io.relinkr.core.util.IdGenerator;
+import io.relinkr.core.util.IdentityGenerator;
+import io.relinkr.core.util.RandomGenerator;
 import java.time.Clock;
 import java.util.Collection;
 import java.util.HashMap;
@@ -178,6 +181,16 @@ public class JwtAuthenticationServiceTest {
     @Bean
     Clock clock() {
       return FIXED_CLOCK;
+    }
+
+    @Bean
+    RandomGenerator randomGenerator() {
+      return new RandomGenerator();
+    }
+
+    @Bean
+    IdGenerator idGenerator(RandomGenerator randomGenerator) {
+      return new IdentityGenerator(randomGenerator);
     }
 
   }

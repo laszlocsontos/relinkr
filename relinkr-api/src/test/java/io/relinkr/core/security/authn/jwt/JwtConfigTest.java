@@ -16,21 +16,30 @@
 
 package io.relinkr.core.security.authn.jwt;
 
+import static io.relinkr.test.Mocks.FIXED_CLOCK;
 import static org.junit.Assert.assertEquals;
 
 import io.relinkr.core.security.authn.jwt.JwtConfig.JwtProperties;
+import io.relinkr.core.security.authn.jwt.JwtConfigTest.TestConfig;
+import io.relinkr.core.util.IdGenerator;
+import io.relinkr.core.util.IdentityGenerator;
+import io.relinkr.core.util.RandomGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.time.Clock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
-@SpringBootTest(classes = JwtConfig.class)
+@SpringBootTest(classes = TestConfig.class)
 public class JwtConfigTest {
 
   @Autowired
@@ -48,6 +57,27 @@ public class JwtConfigTest {
     PublicKey publicKey = jwtProperties.getPublicKey();
     assertEquals("RSA", publicKey.getAlgorithm());
     assertEquals("X.509", publicKey.getFormat());
+  }
+
+  @Configuration
+  @Import(JwtConfig.class)
+  static class TestConfig {
+
+    @Bean
+    Clock clock() {
+      return FIXED_CLOCK;
+    }
+
+    @Bean
+    RandomGenerator randomGenerator() {
+      return new RandomGenerator();
+    }
+
+    @Bean
+    IdGenerator idGenerator(RandomGenerator randomGenerator) {
+      return new IdentityGenerator(randomGenerator);
+    }
+
   }
 
 }

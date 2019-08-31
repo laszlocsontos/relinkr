@@ -19,6 +19,9 @@ package io.relinkr.test.security;
 import io.relinkr.core.security.authn.WebSecurityConfig;
 import io.relinkr.core.security.authn.jwt.JwtConfig;
 import io.relinkr.core.security.authn.oauth2.OAuth2AuthorizationRequestsCookieResolver;
+import io.relinkr.core.util.IdGenerator;
+import io.relinkr.core.util.IdentityGenerator;
+import io.relinkr.core.util.RandomGenerator;
 import io.relinkr.test.security.AbstractWebSecurityTest.TestConfig;
 import io.relinkr.user.service.UserProfileFactory;
 import io.relinkr.user.service.UserService;
@@ -26,6 +29,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.test.context.ActiveProfiles;
@@ -56,6 +60,16 @@ public abstract class AbstractWebSecurityTest {
   @TestConfiguration
   @Import({WebSecurityConfig.class, JwtConfig.class})
   public static class TestConfig {
+
+    @Bean
+    RandomGenerator randomGenerator() {
+      return new RandomGenerator();
+    }
+
+    @Bean
+    IdGenerator idGenerator(RandomGenerator randomGenerator) {
+      return new IdentityGenerator(randomGenerator);
+    }
 
   }
 
