@@ -110,8 +110,8 @@ public class StatsResourceController {
       implements ResourceAssembler<Stats<?>, StatsResource> {
 
     @Override
-    public StatsResource toResource(Stats<?> stats) {
-      StatsResource resource = new StatsResource(stats);
+    public StatsResource<?> toResource(Stats<?> stats) {
+      StatsResource<?> resource = StatsResource.of(stats);
 
       TimeSpan timeSpan = stats.getCurrentTimeSpan();
       TimePeriod period = timeSpan.getPeriod();

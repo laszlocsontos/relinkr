@@ -21,6 +21,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.relinkr.stats.model.StatEntry;
 import io.relinkr.stats.model.Stats;
 import io.relinkr.stats.model.TimeSpan;
+import java.util.Collection;
 import lombok.Getter;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;
@@ -30,14 +31,18 @@ import org.springframework.hateoas.Resources;
     value = {"EQ_DOESNT_OVERRIDE_EQUALS"},
     justification = "Overriding equals() wouldn't contribute to the class' identity"
 )
-class StatsResource extends Resources<StatEntry> {
+class StatsResource<K> extends Resources<StatEntry<K>> {
 
   @JsonProperty("timespan")
-  private TimeSpan timeSpan;
+  private final TimeSpan timeSpan;
 
-  StatsResource(Stats stats, Link... links) {
-    super(stats.getEntries(), links);
-    timeSpan = stats.getCurrentTimeSpan();
+  private StatsResource(Collection<StatEntry<K>> entries, TimeSpan timeSpan, Link... links) {
+    super(entries, links);
+    this.timeSpan = timeSpan;
+  }
+
+  static <K> StatsResource of(Stats<K> stats, Link... links) {
+    return new StatsResource<>(stats.getEntries(), stats.getCurrentTimeSpan(), links);
   }
 
 }
