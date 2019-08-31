@@ -19,21 +19,23 @@ package io.relinkr.link.web;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.relinkr.core.web.AbstractResource;
+import io.relinkr.core.web.EntityResource;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.model.LinkStatus;
 import io.relinkr.link.model.MissingUtmParameterException;
 import io.relinkr.link.model.Tag;
 import io.relinkr.link.model.UtmParameters;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
+import org.springframework.hateoas.ResourceSupport;
 import org.springframework.hateoas.core.Relation;
 
 /**
@@ -46,7 +48,10 @@ import org.springframework.hateoas.core.Relation;
     value = {"EQ_DOESNT_OVERRIDE_EQUALS"},
     justification = "Overriding equals() wouldn't contribute to the class' identity"
 )
-class LinkResource extends AbstractResource {
+class LinkResource extends ResourceSupport {
+
+  @JsonUnwrapped
+  private final EntityResource entityResource;
 
   private final String longUrl;
 
@@ -58,12 +63,12 @@ class LinkResource extends AbstractResource {
   private final String path;
   private final String targetUrl;
 
-  @JsonCreator
   LinkResource(
-      String longUrl, Set<String> tags, LinkStatus linkStatus,
-      @JsonProperty("utmParameters") UtmParametersResource utmParametersResource,
-      String path, String targetUrl) {
+      EntityResource entityResource, String longUrl,
+      Set<String> tags, LinkStatus linkStatus,
+      UtmParametersResource utmParametersResource, String path, String targetUrl) {
 
+    this.entityResource = entityResource;
     this.longUrl = longUrl;
     this.tags = tags;
     this.linkStatus = linkStatus;
@@ -72,13 +77,16 @@ class LinkResource extends AbstractResource {
     this.targetUrl = targetUrl;
   }
 
-  private LinkResource(
-      @NonNull Link entity,
+  @JsonCreator
+  LinkResource(
+      String resourceId,
+      LocalDateTime createdDate, LocalDateTime lastModifiedDate,
+      Integer version,
       String longUrl, Set<String> tags, LinkStatus linkStatus,
-      UtmParametersResource utmParametersResource, String path, String targetUrl) {
+      @JsonProperty("utmParameters") UtmParametersResource utmParametersResource,
+      String path, String targetUrl) {
 
-    super(entity);
-
+    this.entityResource = EntityResource.of(resourceId, createdDate, lastModifiedDate, version);
     this.longUrl = longUrl;
     this.tags = tags;
     this.linkStatus = linkStatus;
@@ -106,7 +114,8 @@ class LinkResource extends AbstractResource {
     String targetUrl = link.getTargetUrl().toString();
 
     return new LinkResource(
-        link, longUrl, tags, linkStatus, utmParametersResource, path, targetUrl
+        EntityResource.of(link),
+        longUrl, tags, linkStatus, utmParametersResource, path, targetUrl
     );
   }
 
@@ -123,7 +132,7 @@ class LinkResource extends AbstractResource {
         .map(UtmParametersResource::of).orElse(null);
 
     return new LinkResource(
-        longUrl, Collections.emptySet(), null, utmParametersResource, null, null
+        null, longUrl, Collections.emptySet(), null, utmParametersResource, null, null
     );
   }
 

@@ -21,9 +21,10 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.relinkr.core.model.TimeZone;
-import io.relinkr.core.web.AbstractResource;
+import io.relinkr.core.web.EntityResource;
 import io.relinkr.user.model.Gender;
 import io.relinkr.user.model.User;
 import io.relinkr.user.model.UserPreferences;
@@ -38,6 +39,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.springframework.hateoas.ResourceSupport;
 import org.springframework.hateoas.core.Relation;
 import org.springframework.util.Assert;
 
@@ -51,7 +53,10 @@ import org.springframework.util.Assert;
     value = {"EQ_DOESNT_OVERRIDE_EQUALS"},
     justification = "Overriding equals() wouldn't contribute to the class' identity"
 )
-class UserResource extends AbstractResource {
+class UserResource extends ResourceSupport {
+
+  @JsonUnwrapped
+  private final EntityResource entityResource;
 
   private final String emailAddress;
 
@@ -62,13 +67,12 @@ class UserResource extends AbstractResource {
   private final UserPreferencesResource userPreferencesResource;
 
   private UserResource(
-      User user,
+      EntityResource entityResource,
       String emailAddress,
       UserProfileResource userProfileResource,
       UserPreferencesResource userPreferencesResource) {
 
-    super(user);
-
+    this.entityResource = entityResource;
     this.emailAddress = emailAddress;
     this.userProfileResource = userProfileResource;
     this.userPreferencesResource = userPreferencesResource;
@@ -86,7 +90,7 @@ class UserResource extends AbstractResource {
         UserPreferencesResource.of(user.getUserPreferences());
 
     UserResource userResource = new UserResource(
-        user, emailAddress, userProfileResource, userPreferencesResource
+        EntityResource.of(user), emailAddress, userProfileResource, userPreferencesResource
     );
 
     userResource.add(linkTo(UserResourceController.class).slash(user.getId()).withSelfRel());

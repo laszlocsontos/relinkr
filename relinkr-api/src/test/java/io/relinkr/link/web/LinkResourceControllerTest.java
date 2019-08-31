@@ -276,7 +276,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   public void givenLinkOwnedByCurrentUserWithoutUtmParameters_whenUpdateLink_BadRequest()
       throws Exception {
 
-    LinkResource linkResource = new LinkResource(null, null, null, null, null, null);
+    LinkResource linkResource = new LinkResource(null, null, null, null, null, null, null);
 
     LinkId linkId = link.getId();
 
