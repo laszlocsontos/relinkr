@@ -35,7 +35,6 @@ import static org.springframework.data.domain.Pageable.unpaged;
 
 import io.relinkr.core.model.EntityNotFoundException;
 import io.relinkr.link.model.Link;
-import io.relinkr.link.model.LinkBase;
 import io.relinkr.link.model.LinkId;
 import java.net.URI;
 import java.util.List;
