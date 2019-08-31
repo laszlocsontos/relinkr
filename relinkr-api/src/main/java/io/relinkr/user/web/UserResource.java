@@ -21,6 +21,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.relinkr.core.model.TimeZone;
 import io.relinkr.core.web.AbstractResource;
 import io.relinkr.user.model.Gender;
@@ -48,6 +49,10 @@ import org.springframework.util.Assert;
 @Setter
 @NoArgsConstructor
 @Relation(value = "user", collectionRelation = "users")
+@SuppressFBWarnings(
+    value = {"EQ_DOESNT_OVERRIDE_EQUALS"},
+    justification = "Overriding equals() wouldn't contribute to the class' identity"
+)
 class UserResource extends AbstractResource {
 
   private String emailAddress;

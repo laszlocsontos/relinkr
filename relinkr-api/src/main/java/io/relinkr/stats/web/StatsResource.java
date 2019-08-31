@@ -17,6 +17,7 @@
 package io.relinkr.stats.web;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.relinkr.stats.model.StatEntry;
 import io.relinkr.stats.model.Stats;
 import io.relinkr.stats.model.TimeSpan;
@@ -25,12 +26,16 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;
 
 @Getter
-public class StatsResource extends Resources<StatEntry> {
+@SuppressFBWarnings(
+    value = {"EQ_DOESNT_OVERRIDE_EQUALS"},
+    justification = "Overriding equals() wouldn't contribute to the class' identity"
+)
+class StatsResource extends Resources<StatEntry> {
 
   @JsonProperty("timespan")
   private TimeSpan timeSpan;
 
-  public StatsResource(Stats stats, Link... links) {
+  StatsResource(Stats stats, Link... links) {
     super(stats.getEntries(), links);
     timeSpan = stats.getCurrentTimeSpan();
   }

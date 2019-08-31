@@ -18,6 +18,7 @@ package io.relinkr.link.web;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.relinkr.core.web.AbstractResource;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.model.LinkStatus;
@@ -40,6 +41,10 @@ import org.springframework.hateoas.core.Relation;
 @Setter
 @NoArgsConstructor
 @Relation(value = "link", collectionRelation = "links")
+@SuppressFBWarnings(
+    value = {"EQ_DOESNT_OVERRIDE_EQUALS"},
+    justification = "Overriding equals() wouldn't contribute to the class' identity"
+)
 class LinkResource extends AbstractResource {
 
   private String longUrl;
