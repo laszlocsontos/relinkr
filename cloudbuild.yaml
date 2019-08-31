@@ -13,6 +13,10 @@ steps:
   - name: gcr.io/cloud-builders/gsutil
     args: ['cp', 'relinkr-api/target/coverage.svg', 'gs://build.craftingjava.com/relinkr']
   # Front-end
+  ## Prepare
+  - name: node:10.15.3
+    entrypoint: npm
+    args: ['install']
   ## Compile
   - name: node:10.15.3
     entrypoint: npm
