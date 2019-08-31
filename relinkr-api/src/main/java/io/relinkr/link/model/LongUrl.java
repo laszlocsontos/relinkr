@@ -19,6 +19,7 @@ package io.relinkr.link.model;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.stream.Collectors.toMap;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -103,6 +104,10 @@ public class LongUrl {
   LongUrl() {
   }
 
+  @SuppressFBWarnings(
+      value = {"NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"},
+      justification = "NPE is not possible in UriComponentsBuilder.path()"
+  )
   LongUrl(@NonNull String url, UtmParameters utmParameters) throws InvalidUrlException {
     UriComponents uriComponents = parseUrl(url);
 

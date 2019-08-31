@@ -21,6 +21,7 @@ import static org.springframework.util.ReflectionUtils.findField;
 import static org.springframework.util.ReflectionUtils.makeAccessible;
 import static org.springframework.util.ReflectionUtils.setField;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.relinkr.click.model.ClickId;
 import io.relinkr.core.convert.EntityClassAwareIdToStringConverter;
 import io.relinkr.core.convert.StringToEntityClassAwareIdConverter;
@@ -105,6 +106,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
   }
 
+  @SuppressFBWarnings(
+      value = {"NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"},
+      justification = "findField() never return nulls"
+  )
   private void setValue(Field field, Object value) {
     // Remove final modifier
     Field modifiersField = findField(Field.class, "modifiers");
