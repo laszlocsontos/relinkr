@@ -1,11 +1,17 @@
 steps:
-  # Run unit tests
+  # Back-end
+  ## Run unit tests
   - name: maven:3.6.1-jdk-11-slim
     entrypoint: 'mvn'
     args: ['-f', 'relinkr-api', '-B', 'verify']
-  # Copy code coverage report to project's build bucket
+  ## Copy code coverage report to project's build bucket
   - name: gcr.io/cloud-builders/gsutil
     args: ['-m', 'rsync', '-r', '-d', 'relinkr-api/target/site/jacoco', 'gs://build.craftingjava.com/relinkr/jacoco']
-  # Copy code coverage badge to project's build bucket
+  ## Copy code coverage badge to project's build bucket
   - name: gcr.io/cloud-builders/gsutil
     args: ['cp', 'relinkr-api/target/coverage.svg', 'gs://build.craftingjava.com/relinkr']
+  # Front-end
+  ## Compile
+  - name: node:10.15.3
+    entrypoint: npm
+    args: ['run', 'build', '--prefix', 'relinkr-ui']
