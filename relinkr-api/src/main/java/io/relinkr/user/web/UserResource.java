@@ -36,7 +36,6 @@ import java.util.Optional;
 import javax.persistence.Enumerated;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.hateoas.core.Relation;
@@ -47,7 +46,6 @@ import org.springframework.util.Assert;
  */
 @Getter
 @Setter
-@NoArgsConstructor
 @Relation(value = "user", collectionRelation = "users")
 @SuppressFBWarnings(
     value = {"EQ_DOESNT_OVERRIDE_EQUALS"},
@@ -55,30 +53,44 @@ import org.springframework.util.Assert;
 )
 class UserResource extends AbstractResource {
 
-  private String emailAddress;
+  private final String emailAddress;
 
   @JsonProperty("userProfile")
-  private UserProfileResource userProfileResource;
+  private final UserProfileResource userProfileResource;
 
   @JsonProperty("userPreferences")
-  private UserPreferencesResource userPreferencesResource;
+  private final UserPreferencesResource userPreferencesResource;
 
-  private UserResource(@NonNull User user, UserProfileType userProfileType) {
+  private UserResource(
+      User user,
+      String emailAddress,
+      UserProfileResource userProfileResource,
+      UserPreferencesResource userPreferencesResource) {
+
     super(user);
 
-    this.emailAddress = user.getEmailAddress().getValue();
-
-    userProfileResource = Optional.ofNullable(userProfileType)
-        .flatMap(user::getUserProfile)
-        .map(UserProfileResource::new)
-        .orElse(null);
-
-    userPreferencesResource = new UserPreferencesResource(user.getUserPreferences());
+    this.emailAddress = emailAddress;
+    this.userProfileResource = userProfileResource;
+    this.userPreferencesResource = userPreferencesResource;
   }
 
   static UserResource of(@NonNull User user, UserProfileType userProfileType) {
-    UserResource userResource = new UserResource(user, userProfileType);
+    String emailAddress = user.getEmailAddress().getValue();
+
+    UserProfileResource userProfileResource = Optional.ofNullable(userProfileType)
+        .flatMap(user::getUserProfile)
+        .map(UserProfileResource::of)
+        .orElse(null);
+
+    UserPreferencesResource userPreferencesResource =
+        UserPreferencesResource.of(user.getUserPreferences());
+
+    UserResource userResource = new UserResource(
+        user, emailAddress, userProfileResource, userPreferencesResource
+    );
+
     userResource.add(linkTo(UserResourceController.class).slash(user.getId()).withSelfRel());
+
     return userResource;
   }
 
@@ -106,56 +118,79 @@ class UserResource extends AbstractResource {
   }
 
   @Data
-  @NoArgsConstructor
   static class UserProfileResource {
 
-    private UserProfileType userProfileType;
-    private String userProfileId;
+    private final UserProfileType userProfileType;
+    private final String userProfileId;
 
-    private String fullName;
-    private String givenName;
-    private String middleName;
-    private String familyName;
+    private final String fullName;
+    private final String givenName;
+    private final String middleName;
+    private final String familyName;
 
-    private URI profileUrl;
-    private URI pictureUrl;
+    private final URI profileUrl;
+    private final URI pictureUrl;
 
     @Enumerated(STRING)
-    private Gender gender;
+    private final Gender gender;
 
-    private LocalDate birthDate;
+    private final LocalDate birthDate;
 
-    UserProfileResource(UserProfile userProfile) {
-      userProfileType = userProfile.getUserProfileType();
+    UserProfileResource(
+        UserProfileType userProfileType, String userProfileId,
+        String fullName, String givenName, String middleName, String familyName,
+        URI profileUrl, URI pictureUrl, Gender gender, LocalDate birthDate) {
+
+      this.userProfileType = userProfileType;
+      this.userProfileId = userProfileId;
+      this.fullName = fullName;
+      this.givenName = givenName;
+      this.middleName = middleName;
+      this.familyName = familyName;
+      this.profileUrl = profileUrl;
+      this.pictureUrl = pictureUrl;
+      this.gender = gender;
+      this.birthDate = birthDate;
+    }
+
+    static UserProfileResource of(UserProfile userProfile) {
+      UserProfileType userProfileType = userProfile.getUserProfileType();
       Assert.notNull(userProfileType, "userProfileType cannot be null");
 
-      userProfileId = userProfile.getUserProfileId();
+      String userProfileId = userProfile.getUserProfileId();
       Assert.notNull(userProfileId, "userProfileId cannot be null");
 
-      userProfile.getFullName().ifPresent(this::setFullName);
-      userProfile.getGivenName().ifPresent(this::setGivenName);
-      userProfile.getMiddleName().ifPresent(this::setMiddleName);
-      userProfile.getFamilyName().ifPresent(this::setFamilyName);
-
-      userProfile.getProfileUrl().ifPresent(this::setProfileUrl);
-      userProfile.getPictureUrl().ifPresent(this::setPictureUrl);
-
-      userProfile.getGender().ifPresent(this::setGender);
-      userProfile.getBirthDate().ifPresent(this::setBirthDate);
+      return new UserProfileResource(
+          userProfileType,
+          userProfileId,
+          userProfile.getFullName().orElse(null),
+          userProfile.getGivenName().orElse(null),
+          userProfile.getMiddleName().orElse(null),
+          userProfile.getFamilyName().orElse(null),
+          userProfile.getProfileUrl().orElse(null),
+          userProfile.getPictureUrl().orElse(null),
+          userProfile.getGender().orElse(null),
+          userProfile.getBirthDate().orElse(null)
+      );
     }
 
   }
 
   @Data
-  @NoArgsConstructor
   static class UserPreferencesResource {
 
-    private TimeZone timeZone;
-    private Locale locale;
+    private final TimeZone timeZone;
+    private final Locale locale;
 
-    UserPreferencesResource(UserPreferences userPreferences) {
-      timeZone = userPreferences.getTimeZone();
-      locale = userPreferences.getLocale();
+    UserPreferencesResource(TimeZone timeZone, Locale locale) {
+      this.timeZone = timeZone;
+      this.locale = locale;
+    }
+
+    static UserPreferencesResource of(UserPreferences userPreferences) {
+      TimeZone timeZone = userPreferences.getTimeZone();
+      Locale locale = userPreferences.getLocale();
+      return new UserPreferencesResource(timeZone, locale);
     }
 
   }

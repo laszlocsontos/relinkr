@@ -48,7 +48,7 @@ public abstract class AbstractResource extends ResourceSupport {
    *
    * @param entity Entity to create a DTO from
    */
-  public AbstractResource(@NonNull AbstractEntity entity) {
+  protected AbstractResource(@NonNull AbstractEntity entity) {
     this.resourceId = Optional.ofNullable(entity.getId()).map(String::valueOf).orElse(null);
     this.createdDate = entity.getCreatedDate();
     this.lastModifiedDate = entity.getLastModifiedDate();
