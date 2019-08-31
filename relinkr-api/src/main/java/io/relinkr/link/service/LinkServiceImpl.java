@@ -90,8 +90,8 @@ class LinkServiceImpl implements LinkService {
   @Override
   public void archiveLink(@NonNull LinkId id)
       throws EntityNotFoundException, InvalidLinkStatusException {
-    Link link = getLink(id).markArchived();
 
+    Link link = getLink(id).markArchived();
     linkRepository.save(link);
   }
 
@@ -100,7 +100,6 @@ class LinkServiceImpl implements LinkService {
     Assert.hasText(tagName, "tagName must contain text");
 
     Link link = getLink(id).addTag(new Tag(tagName));
-
     linkRepository.save(link);
   }
 
@@ -108,8 +107,7 @@ class LinkServiceImpl implements LinkService {
   public void removeTag(@NonNull LinkId id, String tagName) throws EntityNotFoundException {
     Assert.hasText(tagName, "tagName must contain text");
 
-    Link link = getLink(id);
-    link.removeTag(new Tag(tagName));
+    Link link = getLink(id).removeTag(new Tag(tagName));
     linkRepository.save(link);
   }
 
@@ -117,8 +115,7 @@ class LinkServiceImpl implements LinkService {
   public Link updateLongUrl(@NonNull LinkId id, String longUrl) throws EntityNotFoundException {
     Assert.hasText(longUrl, "longUrl must contain text");
 
-    Link link = getLink(id);
-    link.updateLongUrl(longUrl);
+    Link link = getLink(id).updateLongUrl(longUrl);
     return linkRepository.save(link);
   }
 
@@ -128,8 +125,7 @@ class LinkServiceImpl implements LinkService {
 
     Assert.hasText(longUrl, "longUrl must contain text");
 
-    Link link = getLink(linkId);
-    link.updateLongUrl(longUrl, utmParameters);
+    Link link = getLink(linkId).updateLongUrl(longUrl, utmParameters);
     return linkRepository.save(link);
   }
 
