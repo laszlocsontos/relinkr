@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor(access = PRIVATE)
-@EqualsAndHashCode(of = "period, startDate, endDate")
+@EqualsAndHashCode(of = {"period", "startDate", "endDate"})
 public class TimeSpan {
 
   private final TimePeriod period;
