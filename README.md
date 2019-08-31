@@ -1,6 +1,6 @@
 # reLinkR
 
-[![Cloud Build Status](https://storage.googleapis.com/build.craftingjava.com/build/relinkr.svg)](https://github.com/sbsends/cloud-build-badge)
+[![Cloud Build Status](https://storage.googleapis.com/build.craftingjava.com/build/relinkr-master.svg)](https://github.com/sbsends/cloud-build-badge)
 [![Coverage Status](http://storage.googleapis.com/build.craftingjava.com/relinkr/coverage.svg)](http://storage.googleapis.com/build.craftingjava.com/relinkr/jacoco/index.html)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
