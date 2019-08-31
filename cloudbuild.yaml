@@ -1,7 +1,8 @@
 steps:
   # Back-end
   ## Run unit tests
-  - name: maven:3.6.1-jdk-11-slim
+  ## Downgrade Maven due to https://github.com/gleclaire/findbugs-maven-plugin/pull/35
+  - name: maven:3.5.4-jdk-8-slim
     entrypoint: 'mvn'
     args: ['-f', 'relinkr-api', '-B', 'verify']
   ## Copy code coverage report to project's build bucket
