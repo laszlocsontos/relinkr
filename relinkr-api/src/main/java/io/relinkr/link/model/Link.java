@@ -149,6 +149,12 @@ public class Link extends LinkBase<LinkId> {
     return unmodifiableSet(tags);
   }
 
+  /**
+   * @see LinkBase#addTag(Tag).
+   *
+   * @param tag Tag to add
+   * @return new {@code Link}
+   */
   public Link addTag(Tag tag) {
     Set<Tag> tags = new LinkedHashSet<>(this.tags);
     tags.add(tag);
@@ -157,6 +163,12 @@ public class Link extends LinkBase<LinkId> {
     return link;
   }
 
+  /**
+   * @see LinkBase#removeTag(Tag).
+   *
+   * @param tag Tag to remove
+   * @return new {@code Link}
+   */
   public Link removeTag(Tag tag) {
     Set<Tag> tags = new LinkedHashSet<>(this.tags);
     tags.remove(tag);

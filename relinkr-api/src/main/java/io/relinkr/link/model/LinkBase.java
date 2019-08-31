@@ -64,10 +64,27 @@ public abstract class LinkBase<ID extends AbstractId<? extends LinkBase<ID>>>
    */
   public abstract LinkBase<ID> updateLongUrl(@NonNull String longUrl) throws InvalidUrlException;
 
+  /**
+   * Retrieves the tags of this link.
+   *
+   * @return Set of tags
+   */
   public abstract Set<Tag> getTags();
 
+  /**
+   * Adds a new a tag by creating a new {@code Link} and leaving the state of {@code this} one.
+   *
+   * @param tag Tag to add
+   * @return New {@code Link} with the tag added
+   */
   public abstract LinkBase<ID> addTag(Tag tag);
 
+  /**
+   * Removes a tag by creating a new {@code Link} and leaving the state of {@code this} one.
+   *
+   * @param tag Tag to remove
+   * @return New {@code Link} with the tag removed
+   */
   public abstract LinkBase<ID> removeTag(Tag tag);
 
   public abstract LinkStatus getLinkStatus();
