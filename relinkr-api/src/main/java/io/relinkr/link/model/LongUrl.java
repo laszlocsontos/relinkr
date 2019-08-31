@@ -94,27 +94,47 @@ public class LongUrl {
   @Embedded
   private UtmParameters utmParameters;
 
-  public LongUrl(String url) throws InvalidUrlException {
-    this(url, null);
-  }
-
   /*
    * http://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html_single/#persistent-classes-pojo-constructor
    */
   LongUrl() {
   }
 
+  private LongUrl(URI longUrl, URI targetUrl, UtmParameters utmParameters) {
+    this.longUrl = longUrl;
+    this.targetUrl = targetUrl;
+    this.utmParameters = utmParameters;
+  }
+
+  /**
+   * Factory method for creating a new {@code LongUrl} instance with the following parameters.
+   *
+   * @param url Original (long) URL, cannot be {@code null}
+   * @throws InvalidUrlException is thrown in case of an invalid URL is given
+   */
+  public static LongUrl from(String url) throws InvalidUrlException {
+    return from(url, null);
+  }
+
+  /**
+   * Factory method for creating a new {@code LongUrl} instance with the following parameters
+   *
+   * @param url Original (long) URL, cannot be {@code null}
+   * @param initialUtmParameters UTM parameters (optional, ie. can be {@code null})
+   * @throws InvalidUrlException is thrown in case of an invalid URL is given
+   */
   @SuppressFBWarnings(
       value = {"NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"},
       justification = "NPE is not possible in UriComponentsBuilder.path()"
   )
-  LongUrl(@NonNull String url, UtmParameters utmParameters) throws InvalidUrlException {
+  public static LongUrl from(@NonNull String url, UtmParameters initialUtmParameters) {
     UriComponents uriComponents = parseUrl(url);
 
     MultiValueMap<String, String> queryParams =
         new LinkedMultiValueMap<>(uriComponents.getQueryParams());
 
-    this.utmParameters = createUtmParameters(utmParameters, queryParams.toSingleValueMap());
+    final UtmParameters utmParameters =
+        createUtmParameters(initialUtmParameters, queryParams.toSingleValueMap());
 
     queryParams.remove(UtmParameters.UTM_SOURCE);
     queryParams.remove(UtmParameters.UTM_MEDIUM);
@@ -122,7 +142,7 @@ public class LongUrl {
     queryParams.remove(UtmParameters.UTM_TERM);
     queryParams.remove(UtmParameters.UTM_CONTENT);
 
-    longUrl = UriComponentsBuilder
+    URI longUrl = UriComponentsBuilder
         .newInstance()
         .scheme(uriComponents.getScheme())
         .userInfo(uriComponents.getUserInfo())
@@ -133,18 +153,20 @@ public class LongUrl {
         .fragment(uriComponents.getFragment())
         .build()
         .toUri();
+
+    return new LongUrl(longUrl, createTargetUrl(longUrl, utmParameters), utmParameters);
   }
 
   /**
    * Factory method for creating a new {@code LongUrl} instance with the following parameters
    *
    * @param uri Original (long) URL, cannot be {@code null}
-   * @param utmParameters UTM parameters (optional, ie. can be {@code null}
+   * @param utmParameters UTM parameters (optional, ie. can be {@code null})
    * @throws InvalidUrlException is thrown in case of an invalid URL is given
    */
   public static LongUrl from(@NonNull URI uri, UtmParameters utmParameters) {
     try {
-      return new LongUrl(uri.toString(), utmParameters);
+      return LongUrl.from(uri.toString(), utmParameters);
     } catch (InvalidUrlException iue) {
       // This should never happen as url itself is a valid java.net.URL.
       throw new AssertionError("Internal error: longUrl=" + uri, iue);
@@ -191,10 +213,6 @@ public class LongUrl {
    * @return the full target URL
    */
   public URI getTargetUrl() {
-    if (targetUrl == null) {
-      targetUrl = createTargetUrl();
-    }
-
     return targetUrl;
   }
 
@@ -211,7 +229,7 @@ public class LongUrl {
     return getTargetUrl().toString();
   }
 
-  private URI createTargetUrl() {
+  private static URI createTargetUrl(URI longUrl, UtmParameters utmParameters) {
     Assert.notNull(longUrl, "longUrl cannot be null");
 
     UriComponentsBuilder targetUrlBuilder = UriComponentsBuilder.fromUri(longUrl);
@@ -232,7 +250,7 @@ public class LongUrl {
     return targetUrlBuilder.build().toUri();
   }
 
-  private UtmParameters createUtmParameters(
+  private static UtmParameters createUtmParameters(
       UtmParameters initialUtmParameters, Map<String, String> utmParameterMap) {
 
     if (initialUtmParameters != null) {

@@ -70,7 +70,7 @@ public class Link extends LinkBase<LinkId> {
       @NonNull String longUrl, UtmParameters utmParameters, @NonNull UserId userId)
       throws InvalidUrlException {
 
-    this(new LongUrl(longUrl, utmParameters), userId);
+    this(LongUrl.from(longUrl, utmParameters), userId);
   }
 
   public Link(@NonNull String longUrl, @NonNull UserId userId) throws InvalidUrlException {
@@ -154,7 +154,7 @@ public class Link extends LinkBase<LinkId> {
    */
   public void updateLongUrl(String longUrl, UtmParameters utmParameters)
       throws InvalidUrlException {
-    this.longUrl = new LongUrl(longUrl, utmParameters);
+    this.longUrl = LongUrl.from(longUrl, utmParameters);
   }
 
   private String generatePath() {

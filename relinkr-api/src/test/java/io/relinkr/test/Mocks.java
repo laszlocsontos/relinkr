@@ -248,11 +248,11 @@ public final class Mocks {
 
   static {
     try {
-      LONG_URL_BASE = new LongUrl(LONG_URL_BASE_S);
-      LONG_URL_WITHOUT_UTM = new LongUrl(LONG_URL_WITHOUT_UTM_S);
-      LONG_URL_VALID_UTM = new LongUrl(LONG_URL_VALID_UTM_S);
-      LONG_URL_VALID_UTM_EMPTY_TC = new LongUrl(LONG_URL_VALID_UTM_S_EMPTY_TC);
-      LONG_URL_INVALID_UTM = new LongUrl(LONG_URL_INVALID_UTM_S);
+      LONG_URL_BASE = LongUrl.from(LONG_URL_BASE_S);
+      LONG_URL_WITHOUT_UTM = LongUrl.from(LONG_URL_WITHOUT_UTM_S);
+      LONG_URL_VALID_UTM = LongUrl.from(LONG_URL_VALID_UTM_S);
+      LONG_URL_VALID_UTM_EMPTY_TC = LongUrl.from(LONG_URL_VALID_UTM_S_EMPTY_TC);
+      LONG_URL_INVALID_UTM = LongUrl.from(LONG_URL_INVALID_UTM_S);
 
       UTM_PARAMETERS_FULL = new UtmParameters(
           UTM_SOURCE_V,
