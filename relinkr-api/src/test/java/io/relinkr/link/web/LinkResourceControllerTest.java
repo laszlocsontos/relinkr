@@ -119,7 +119,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   @Test
   @WithMockUser(username = "1") // USER_ID
   public void givenAuthenticatedUser_whenAddLink_thenAddedAndOwnedByUser() throws Exception {
-    LinkResource linkResource = new LinkResource(
+    LinkResource linkResource = LinkResource.of(
         link.getLongUrl().toString(),
         link.getUtmParameters().orElse(null)
     );
@@ -146,7 +146,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
       throws Exception {
     String longUrl = link.getLongUrl().toString();
     UtmParameters utmParameters = link.getUtmParameters().get();
-    LinkResource linkResource = new LinkResource(longUrl, utmParameters);
+    LinkResource linkResource = LinkResource.of(longUrl, utmParameters);
 
     LinkId linkId = link.getId();
 
@@ -172,7 +172,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
 
     String longUrl = link.getLongUrl().toString();
     UtmParameters utmParameters = link.getUtmParameters().get();
-    LinkResource linkResource = new LinkResource(longUrl, utmParameters);
+    LinkResource linkResource = LinkResource.of(longUrl, utmParameters);
 
     LinkId linkId = link.getId();
 
@@ -194,7 +194,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
       throws Exception {
 
     UtmParameters utmParameters = link.getUtmParameters().get();
-    LinkResource linkResource = new LinkResource(null, utmParameters);
+    LinkResource linkResource = LinkResource.of(null, utmParameters);
 
     LinkId linkId = link.getId();
 
@@ -213,7 +213,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   @WithMockUser(username = "1") // USER_ID
   public void givenLinkOwnedByCurrentUserWithLongUrl_whenUpdateLink_thenUpdated() throws Exception {
     String longUrl = link.getLongUrl().toString();
-    LinkResource linkResource = new LinkResource(longUrl);
+    LinkResource linkResource = LinkResource.of(longUrl);
 
     LinkId linkId = link.getId();
 
@@ -234,7 +234,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   @WithMockUser(username = "0") // USER_ID_ZERO
   public void givenLinkOwnedByOtherUserWithLongUrl_whenUpdateLink_thenForbidden() throws Exception {
     String longUrl = link.getLongUrl().toString();
-    LinkResource linkResource = new LinkResource(longUrl);
+    LinkResource linkResource = LinkResource.of(longUrl);
 
     LinkId linkId = link.getId();
 
@@ -254,7 +254,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
       throws Exception {
 
     UtmParameters utmParameters = link.getUtmParameters().orElse(null);
-    LinkResource linkResource = new LinkResource(utmParameters);
+    LinkResource linkResource = LinkResource.of(utmParameters);
 
     LinkId linkId = link.getId();
 
@@ -276,7 +276,7 @@ public class LinkResourceControllerTest extends AbstractResourceControllerTest {
   public void givenLinkOwnedByCurrentUserWithoutUtmParameters_whenUpdateLink_BadRequest()
       throws Exception {
 
-    LinkResource linkResource = new LinkResource();
+    LinkResource linkResource = new LinkResource(null, null, null, null, null, null);
 
     LinkId linkId = link.getId();
 

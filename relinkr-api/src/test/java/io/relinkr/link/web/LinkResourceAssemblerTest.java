@@ -46,7 +46,7 @@ public class LinkResourceAssemblerTest {
 
   @Before
   public void setUp() {
-    linkResource = new LinkResource("https://google.com");
+    linkResource = LinkResource.of("https://google.com");
     linkResourceAssembler = new LinkResourceAssembler(environment);
 
     RequestAttributes requestAttributes = new ServletWebRequest(new MockHttpServletRequest());

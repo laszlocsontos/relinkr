@@ -16,6 +16,7 @@
 
 package io.relinkr.link.web;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -25,12 +26,13 @@ import io.relinkr.link.model.LinkStatus;
 import io.relinkr.link.model.MissingUtmParameterException;
 import io.relinkr.link.model.Tag;
 import io.relinkr.link.model.UtmParameters;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.hateoas.core.Relation;
 
@@ -39,7 +41,6 @@ import org.springframework.hateoas.core.Relation;
  */
 @Getter
 @Setter
-@NoArgsConstructor
 @Relation(value = "link", collectionRelation = "links")
 @SuppressFBWarnings(
     value = {"EQ_DOESNT_OVERRIDE_EQUALS"},
@@ -47,49 +48,83 @@ import org.springframework.hateoas.core.Relation;
 )
 class LinkResource extends AbstractResource {
 
-  private String longUrl;
+  private final String longUrl;
 
-  private Set<String> tags;
-  private LinkStatus linkStatus;
+  private final Set<String> tags;
+  private final LinkStatus linkStatus;
 
   @JsonProperty("utmParameters")
-  private UtmParametersResource utmParametersResource;
-  private String path;
-  private String targetUrl;
+  private final UtmParametersResource utmParametersResource;
+  private final String path;
+  private final String targetUrl;
+
+  @JsonCreator
+  LinkResource(
+      String longUrl, Set<String> tags, LinkStatus linkStatus,
+      @JsonProperty("utmParameters") UtmParametersResource utmParametersResource,
+      String path, String targetUrl) {
+
+    this.longUrl = longUrl;
+    this.tags = tags;
+    this.linkStatus = linkStatus;
+    this.utmParametersResource = utmParametersResource;
+    this.path = path;
+    this.targetUrl = targetUrl;
+  }
+
+  private LinkResource(
+      @NonNull Link entity,
+      String longUrl, Set<String> tags, LinkStatus linkStatus,
+      UtmParametersResource utmParametersResource, String path, String targetUrl) {
+
+    super(entity);
+
+    this.longUrl = longUrl;
+    this.tags = tags;
+    this.linkStatus = linkStatus;
+    this.utmParametersResource = utmParametersResource;
+    this.path = path;
+    this.targetUrl = targetUrl;
+  }
 
   /**
    * Creates a new DTO representing a {@link Link}.
    *
    * @param link that {@code Link} this DTO will represent
    */
-  LinkResource(Link link) {
-    super(link);
+  static LinkResource of(Link link) {
+    String longUrl = link.getLongUrl().toString();
 
-    longUrl = link.getLongUrl().toString();
+    Set<String> tags = link.getTags().stream().map(Tag::getTagName).collect(Collectors.toSet());
 
-    tags = link.getTags().stream().map(Tag::getTagName).collect(Collectors.toSet());
+    LinkStatus linkStatus = link.getLinkStatus();
 
-    linkStatus = link.getLinkStatus();
+    UtmParametersResource utmParametersResource =
+        link.getUtmParameters().map(UtmParametersResource::of).orElse(null);
 
-    utmParametersResource =
-        link.getUtmParameters().map(UtmParametersResource::new).orElse(null);
+    String path = link.getPath();
+    String targetUrl = link.getTargetUrl().toString();
 
-    path = link.getPath();
-    targetUrl = link.getTargetUrl().toString();
+    return new LinkResource(
+        link, longUrl, tags, linkStatus, utmParametersResource, path, targetUrl
+    );
   }
 
-  LinkResource(String longUrl) {
-    this(longUrl, null);
+  static LinkResource of(String longUrl) {
+    return of(longUrl, null);
   }
 
-  LinkResource(UtmParameters utmParameters) {
-    this(null, utmParameters);
+  static LinkResource of(UtmParameters utmParameters) {
+    return of(null, utmParameters);
   }
 
-  LinkResource(String longUrl, UtmParameters utmParameters) {
-    this.longUrl = longUrl;
-    this.utmParametersResource = Optional.ofNullable(utmParameters)
-        .map(UtmParametersResource::new).orElse(null);
+  static LinkResource of(String longUrl, UtmParameters utmParameters) {
+    UtmParametersResource utmParametersResource = Optional.ofNullable(utmParameters)
+        .map(UtmParametersResource::of).orElse(null);
+
+    return new LinkResource(
+        longUrl, Collections.emptySet(), null, utmParametersResource, null, null
+    );
   }
 
   @JsonIgnore
@@ -100,21 +135,33 @@ class LinkResource extends AbstractResource {
   }
 
   @Data
-  @NoArgsConstructor
   static class UtmParametersResource {
 
-    private String utmSource;
-    private String utmMedium;
-    private String utmCampaign;
-    private String utmTerm;
-    private String utmContent;
+    private final String utmSource;
+    private final String utmMedium;
+    private final String utmCampaign;
+    private final String utmTerm;
+    private final String utmContent;
 
-    UtmParametersResource(UtmParameters utmParameters) {
-      utmSource = utmParameters.getUtmSource();
-      utmMedium = utmParameters.getUtmMedium();
-      utmCampaign = utmParameters.getUtmCampaign();
-      utmParameters.getUtmContent().ifPresent(this::setUtmContent);
-      utmParameters.getUtmTerm().ifPresent(this::setUtmTerm);
+    @JsonCreator
+    UtmParametersResource(
+        String utmSource, String utmMedium, String utmCampaign, String utmTerm, String utmContent) {
+
+      this.utmSource = utmSource;
+      this.utmMedium = utmMedium;
+      this.utmCampaign = utmCampaign;
+      this.utmTerm = utmTerm;
+      this.utmContent = utmContent;
+    }
+
+    static UtmParametersResource of(UtmParameters utmParameters) {
+      String utmSource = utmParameters.getUtmSource();
+      String utmMedium = utmParameters.getUtmMedium();
+      String utmCampaign = utmParameters.getUtmCampaign();
+      String utmContent = utmParameters.getUtmContent().orElse(null);
+      String utmTerm = utmParameters.getUtmTerm().orElse(null);
+
+      return new UtmParametersResource(utmSource, utmMedium, utmCampaign, utmTerm, utmContent);
     }
 
   }

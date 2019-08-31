@@ -65,7 +65,7 @@ public class LinkResourceAssembler
 
   @Override
   protected LinkResource instantiateResource(Link link) {
-    return new LinkResource(link);
+    return LinkResource.of(link);
   }
 
   void addUserLinkStatus(
