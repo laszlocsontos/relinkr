@@ -27,7 +27,7 @@ steps:
     args: ['cp', 'relinkr-api/target/relinkr-api.jar', 'gs://build.craftingjava.com/relinkr/release/relinkr-api-$SHORT_SHA.jar']
   ## Package Front-end
   - name: gcr.io/$PROJECT_ID/zip
-    args: ['-r', '/tmp/relinkr-ui-$SHORT_SHA.zip', 'relinkr-ui', '-x', '*dist*', '-x', '*node_modules*']
+    args: ['-r', 'relinkr-ui-$SHORT_SHA.zip', 'relinkr-ui', '-x', '*dist*', '-x', '*node_modules*']
   ## Publish Front-end
   - name: gcr.io/cloud-builders/gsutil
-    args: ['cp', '/tmp/relinkr-ui-$SHORT_SHA.zip', 'gs://build.craftingjava.com/relinkr/release']
+    args: ['cp', 'relinkr-ui-$SHORT_SHA.zip', 'gs://build.craftingjava.com/relinkr/release']
