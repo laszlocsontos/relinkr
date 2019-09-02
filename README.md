@@ -1,7 +1,7 @@
 # reLinkR
 
 [![Cloud Build Status](https://storage.googleapis.com/build.craftingjava.com/build/relinkr-master.svg)](https://github.com/sbsends/cloud-build-badge)
-[![Coverage Status](http://storage.googleapis.com/build.craftingjava.com/relinkr/coverage.svg)](http://storage.googleapis.com/build.craftingjava.com/relinkr/jacoco/index.html)
+[![Coverage Status](http://storage.googleapis.com/build.craftingjava.com/relinkr/test/coverage.svg)](http://storage.googleapis.com/build.craftingjava.com/relinkr/test/jacoco/index.html)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 reLinkR is an URL shortener which was originally created for replacing Bit.ly and a bunch of Python scripts in my social media workflow. 
