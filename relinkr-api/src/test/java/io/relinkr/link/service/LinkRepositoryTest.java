@@ -20,11 +20,16 @@ import static io.relinkr.test.Mocks.LINK_ID;
 import static io.relinkr.test.Mocks.LONG_URL_WITHOUT_UTM_S;
 import static io.relinkr.test.Mocks.USER_ID;
 import static io.relinkr.test.Mocks.UTM_PARAMETERS_FULL;
+import static org.junit.Assert.assertTrue;
 
-import io.relinkr.core.util.IdentityGenerator;
 import io.relinkr.link.model.Link;
 import io.relinkr.link.model.LinkId;
 import io.relinkr.test.orm.OwnableRepositoryTest;
+import java.net.URI;
+import java.util.Optional;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -32,6 +37,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 @DataJpaTest
 @RunWith(SpringRunner.class)
 public class LinkRepositoryTest extends OwnableRepositoryTest<Link, LinkId, LinkRepository> {
+
+  @PersistenceContext
+  private EntityManager entityManager;
+
+  @Test
+  public void givenSavedEntity_whenFindById_thenTargetUrlHasValue() {
+    Link savedEntity = saveEntity(this.entity);
+    entityManager.refresh(savedEntity);
+    Optional<URI> entityOptional = Optional.of(savedEntity).map(Link::getTargetUrl);
+    assertTrue(entityOptional.isPresent());
+  }
 
   @Override
   protected Link createEntity() {
