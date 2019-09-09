@@ -30,6 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import javax.persistence.PostLoad;
 import javax.persistence.Transient;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -265,6 +266,15 @@ public class LongUrl implements Serializable {
     } catch (MissingUtmParameterException mupe) {
       return null;
     }
+  }
+
+  /**
+   * The targetUrl is not persisted to the database and hence when loading {@code LongUrl} the field will remain null.
+   * Because of this we need to calculate it after it has been loaded.
+   */
+  @PostLoad
+  private void postLoad() {
+    this.targetUrl = createTargetUrl(this.longUrl, this.utmParameters);
   }
 
 }
