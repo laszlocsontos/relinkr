@@ -269,8 +269,8 @@ public class LongUrl implements Serializable {
   }
 
   /**
-   * The targetUrl is not persisted to the database and hence when loading {@code LongUrl} the field will remain null.
-   * Because of this we need to calculate it after it has been loaded.
+   * The targetUrl is not persisted to the database and hence when loading {@code LongUrl} the field
+   * will remain null. Because of this we need to calculate it after it has been loaded.
    */
   @PostLoad
   private void postLoad() {
