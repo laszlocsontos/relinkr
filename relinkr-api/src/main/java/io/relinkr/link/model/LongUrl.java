@@ -273,6 +273,7 @@ public class LongUrl implements Serializable {
    * will remain null. Because of this we need to calculate it after it has been loaded.
    */
   @PostLoad
+  @SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD")
   private void postLoad() {
     this.targetUrl = createTargetUrl(this.longUrl, this.utmParameters);
   }
