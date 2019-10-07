@@ -8,10 +8,10 @@ steps:
     args: ['-f', 'relinkr-api', '-B', 'verify']
   ## Copy code coverage report to project's build bucket
   - name: gcr.io/cloud-builders/gsutil
-    args: ['-m', 'rsync', '-r', '-d', 'relinkr-api/target/site/jacoco', 'gs://build.craftingjava.com/relinkr/test/jacoco']
+    args: ['-m', 'rsync', '-r', '-d', 'relinkr-api/target/site/jacoco', 'gs://build.craftingjava.com/$REPO_NAME/$BRANCH_NAME/test/jacoco']
   ## Copy code coverage badge to project's build bucket
   - name: gcr.io/cloud-builders/gsutil
-    args: ['cp', 'relinkr-api/target/coverage.svg', 'gs://build.craftingjava.com/relinkr/test']
+    args: ['cp', 'relinkr-api/target/coverage.svg', 'gs://build.craftingjava.com/$REPO_NAME/$BRANCH_NAME/test']
   # Front-end
   ## Prepare
   - name: node:10.15.3
@@ -24,10 +24,10 @@ steps:
   # Publish release
   ## Publish Back-end
   - name: gcr.io/cloud-builders/gsutil
-    args: ['cp', 'relinkr-api/target/relinkr-api.jar', 'gs://build.craftingjava.com/relinkr/release/relinkr-api-$SHORT_SHA.jar']
+    args: ['cp', 'relinkr-api/target/relinkr-api.jar', 'gs://build.craftingjava.com/$REPO_NAME/$BRANCH_NAME/release/relinkr-api-$SHORT_SHA.jar']
   ## Package Front-end
   - name: gcr.io/$PROJECT_ID/zip
     args: ['-r', 'relinkr-ui-$SHORT_SHA.zip', 'relinkr-ui', '-x', '*dist*', '-x', '*node_modules*']
   ## Publish Front-end
   - name: gcr.io/cloud-builders/gsutil
-    args: ['cp', 'relinkr-ui-$SHORT_SHA.zip', 'gs://build.craftingjava.com/relinkr/release']
+    args: ['cp', 'relinkr-ui-$SHORT_SHA.zip', 'gs://build.craftingjava.com/$REPO_NAME/$BRANCH_NAME/release']
